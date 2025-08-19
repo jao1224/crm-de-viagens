@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'TravelFlow',
-  description: 'Um sistema inteligente de gestão de viagens.',
+  title: 'EstateFlow',
+  description: 'Um sistema inteligente de gestão imobiliária.',
 };
 
 export default function RootLayout({

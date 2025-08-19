@@ -4,10 +4,10 @@ export default function ProcessesPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-headline text-primary">Itinerários</CardTitle>
+        <CardTitle className="font-headline text-primary">Processos</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">A área de criação e gerenciamento de itinerários de viagem estará disponível aqui.</p>
+        <p className="text-muted-foreground">A área de criação e gerenciamento de processos e documentação estará disponível aqui.</p>
       </CardContent>
     </Card>
   );

@@ -24,7 +24,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 const formSchema = z.object({
   packageDetails: z.string().min(10, {
-    message: 'Detalhes do pacote devem ter pelo menos 10 caracteres.',
+    message: 'Os detalhes do imóvel devem ter pelo menos 10 caracteres.',
   }),
   userPreferences: z.string().optional(),
 });
@@ -67,8 +67,8 @@ export function NegotiationForm() {
     <Dialog>
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-2xl text-primary">Iniciar Nova Reserva</CardTitle>
-          <CardDescription>Preencha os detalhes para iniciar uma nova reserva e use nossa IA para obter sugestões de pacotes.</CardDescription>
+          <CardTitle className="font-headline text-2xl text-primary">Iniciar Nova Negociação</CardTitle>
+          <CardDescription>Preencha os detalhes para iniciar uma nova negociação e use nossa IA para obter sugestões de imóveis.</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -78,15 +78,15 @@ export function NegotiationForm() {
                 name="packageDetails"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Detalhes do Pacote</FormLabel>
+                    <FormLabel>Detalhes do Imóvel</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Viagem para a Disney, 7 dias, hotel com piscina..."
+                        placeholder="Ex: Apartamento 3 quartos, 2 vagas, na Zona Sul..."
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Descreva a viagem que o cliente está interessado.
+                      Descreva o imóvel que o cliente está interessado.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -100,7 +100,7 @@ export function NegotiationForm() {
                     <FormLabel>Preferências do Cliente (Opcional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Gosta de praias, prefere voos diretos, orçamento de até R$5000..."
+                        placeholder="Ex: Busca andar alto, prefere condomínio com lazer, orçamento de até R$1.000.000..."
                         {...field}
                       />
                     </FormControl>
@@ -139,7 +139,7 @@ export function NegotiationForm() {
       {recommendations && (
         <DialogContent className="sm:max-w-[625px]">
             <DialogHeader>
-                <DialogTitle className="font-headline text-primary">Pacotes Recomendados</DialogTitle>
+                <DialogTitle className="font-headline text-primary">Imóveis Recomendados</DialogTitle>
                 <DialogDescription>
                     Com base nos detalhes fornecidos, aqui estão algumas sugestões.
                 </DialogDescription>
