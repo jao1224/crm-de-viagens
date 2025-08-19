@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,12 +15,37 @@ import { useToast } from '@/hooks/use-toast';
 import { mockItineraries } from '@/lib/mock-data';
 import Link from 'next/link';
 
+const LOCAL_STORAGE_KEY = 'itineraries';
+
 export default function ItinerariesPage() {
-  const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
+  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+
+  // Load itineraries from localStorage on initial render
+  useEffect(() => {
+    try {
+      const storedItineraries = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedItineraries) {
+        setItineraries(JSON.parse(storedItineraries));
+      } else {
+        setItineraries(mockItineraries);
+      }
+    } catch (error) {
+      console.error("Failed to parse itineraries from localStorage", error);
+      setItineraries(mockItineraries);
+    }
+  }, []);
+
+  // Save itineraries to localStorage whenever they change
+  useEffect(() => {
+    // We don't save the initial empty array
+    if (itineraries.length > 0) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(itineraries));
+    }
+  }, [itineraries]);
 
   const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -47,12 +72,6 @@ export default function ItinerariesPage() {
     );
     setItineraries(updatedItineraries);
     
-    // Update mock data source
-    const index = mockItineraries.findIndex(it => it.id === itineraryToArchive.id);
-    if (index !== -1) {
-        mockItineraries[index].status = 'Arquivado';
-    }
-
     toast({
         title: "Itinerário Arquivado",
         description: `O itinerário "${itineraryToArchive.title}" foi arquivado.`
@@ -66,27 +85,18 @@ export default function ItinerariesPage() {
         const updatedList = itineraries.map(it => it.id === selectedItinerary.id ? updatedItinerary : it)
         setItineraries(updatedList);
         
-        // Update mock data source
-        const index = mockItineraries.findIndex(it => it.id === selectedItinerary.id);
-        if (index !== -1) {
-            mockItineraries[index] = updatedItinerary;
-        }
-
         toast({ title: "Itinerário Atualizado", description: "As alterações foram salvas."});
     } else {
         // Add
         const newItinerary = {
             ...values,
-            id: (mockItineraries.length + 1).toString(),
+            id: (itineraries.length + Date.now()).toString(), // more unique id
             status: 'Em rascunho' as Itinerary['status'],
         };
         // Update state
         const updatedList = [newItinerary, ...itineraries];
         setItineraries(updatedList);
         
-        // Update mock data source
-        mockItineraries.unshift(newItinerary);
-
         toast({ title: "Itinerário Criado", description: `O itinerário "${newItinerary.title}" foi criado como rascunho.`});
     }
     setIsFormOpen(false);

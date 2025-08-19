@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { mockItineraries } from '@/lib/mock-data';
 import type { Itinerary } from '@/lib/types';
-import { ChevronLeft, Map, Clock, FileText } from 'lucide-react';
+import { ChevronLeft, Map, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
+import { mockItineraries } from '@/lib/mock-data';
+
+const LOCAL_STORAGE_KEY = 'itineraries';
 
 const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -21,20 +23,27 @@ const getStatusVariant = (status: Itinerary['status']) => {
 };
 
 export default function ItineraryDetailPage({ params }: { params: { id: string } }) {
-  // We can't share state between pages without a state manager.
-  // For this prototype, we assume the detail page can also access the mock data.
-  // In a real app, this would be a fetch from an API.
   const [itinerary, setItinerary] = useState<Itinerary | undefined>(undefined);
   const { toast } = useToast();
   const { id } = params;
 
   useEffect(() => {
-    // In a real app, you'd fetch by ID. Here, we find from the mock array.
-    // This will not find newly created itineraries that only exist in the parent page's state.
-    // The "correct" fix would involve a shared state (Context, Zustand, Redux) or fetching from a backend.
-    // For the prototype, let's assume the mock data is the single source of truth.
-    const foundItinerary = mockItineraries.find((i) => i.id === id);
+    let allItineraries: Itinerary[] = [];
+    try {
+      const storedItineraries = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedItineraries) {
+        allItineraries = JSON.parse(storedItineraries);
+      } else {
+        allItineraries = mockItineraries;
+      }
+    } catch (error) {
+      console.error("Failed to parse itineraries from localStorage", error);
+      allItineraries = mockItineraries;
+    }
+    
+    const foundItinerary = allItineraries.find((i) => i.id === id);
     setItinerary(foundItinerary);
+
   }, [id]);
 
 
@@ -46,23 +55,22 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
   };
 
   if (!itinerary) {
-    // This logic needs to be robust. For now, we check if itinerary is loaded.
-    const tempItinerary = mockItineraries.find((i) => i.id === id);
-     if(!tempItinerary) {
-        return (
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">Itinerário não encontrado</h1>
-            <p className="text-muted-foreground">O roteiro que você está procurando não existe ou não foi salvo.</p>
-            <Button asChild className="mt-4">
-              <Link href="/processes">
-                <ChevronLeft className="mr-2" />
-                Voltar para Itinerários
-              </Link>
-            </Button>
-          </div>
-        );
-     }
-     setItinerary(tempItinerary);
+      return (
+        <div className="text-center p-8">
+          <Card>
+            <CardContent className="p-6">
+              <h1 className="text-2xl font-bold mb-2">Carregando itinerário...</h1>
+              <p className="text-muted-foreground">Se o itinerário não carregar, ele pode não existir ou ter sido removido.</p>
+              <Button asChild className="mt-4">
+                <Link href="/processes">
+                  <ChevronLeft className="mr-2" />
+                  Voltar para Itinerários
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      );
   }
 
   return (
