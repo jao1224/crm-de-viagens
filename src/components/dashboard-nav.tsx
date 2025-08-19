@@ -22,7 +22,7 @@ export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/properties', label: 'Pacotes', icon: Package },
   { href: '/reservations', label: 'Reservas', icon: CalendarCheck },
-  { href: '/recommendations', label: 'Recomendações', icon: Wand2 },
+  { href: '/negotiations', label: 'Recomendações', icon: Wand2 },
   { href: '/processes', label: 'Itinerários', icon: Map },
   { href: '/agenda', label: 'Agenda', icon: Calendar },
   { href: '/financial', label: 'Faturamento', icon: DollarSign },
