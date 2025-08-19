@@ -25,9 +25,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import type { Itinerary } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { mockTravelPackages } from '@/lib/mock-data';
 import { Textarea } from './ui/textarea';
+import { Loader2, Wand2 } from 'lucide-react';
+import { generateItinerary } from '@/ai/flows/generate-itinerary-flow';
+import { useToast } from '@/hooks/use-toast';
+
 
 const itineraryFormSchema = z.object({
   title: z.string().min(5, { message: 'O título deve ter pelo menos 5 caracteres.' }),
@@ -45,6 +49,9 @@ interface ItineraryFormProps {
 }
 
 export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: ItineraryFormProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
+  
   const form = useForm<ItineraryFormValues>({
     resolver: zodResolver(itineraryFormSchema),
     defaultValues: {
@@ -70,6 +77,39 @@ export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: Iti
   const handleFormSubmit = (values: ItineraryFormValues) => {
     onSubmit(values);
     form.reset();
+  }
+
+  const handleGenerateDescription = async () => {
+    const { title, package: packageTitle } = form.getValues();
+    if (!title || !packageTitle) {
+      toast({
+        variant: 'destructive',
+        title: 'Campos Obrigatórios',
+        description: 'Por favor, preencha o título do itinerário e selecione um pacote para gerar a descrição.'
+      });
+      return;
+    }
+    
+    setIsGenerating(true);
+    try {
+      const result = await generateItinerary({ title, packageTitle });
+      if (result.description) {
+        form.setValue('description', result.description, { shouldValidate: true });
+        toast({
+          title: "Descrição Gerada!",
+          description: "A descrição do roteiro foi gerada com sucesso.",
+        });
+      }
+    } catch (error) {
+      console.error("Error generating itinerary description:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Erro de IA',
+        description: 'Não foi possível gerar a descrição. Tente novamente.'
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   }
 
   const dialogTitle = itinerary ? 'Editar Itinerário' : 'Criar Novo Itinerário';
@@ -126,10 +166,20 @@ export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: Iti
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descrição Detalhada do Roteiro</FormLabel>
+                  <div className='flex justify-between items-center mb-2'>
+                    <FormLabel>Descrição Detalhada do Roteiro</FormLabel>
+                    <Button type="button" size="sm" variant="ghost" onClick={handleGenerateDescription} disabled={isGenerating}>
+                      {isGenerating ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Wand2 className="mr-2 h-4 w-4" />
+                      )}
+                       Gerar com IA
+                    </Button>
+                  </div>
                   <FormControl>
                     <Textarea 
-                        placeholder="Detalhe o dia a dia da viagem, incluindo atividades, passeios, etc." 
+                        placeholder="Detalhe o dia a dia da viagem ou use a IA para gerar uma sugestão." 
                         className="min-h-[150px]"
                         {...field} 
                     />
