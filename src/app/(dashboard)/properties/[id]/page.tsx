@@ -101,7 +101,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
           <div className="mt-6 text-center">
             <Button size="lg" disabled={property.status === 'Esgotado'} asChild>
-                <Link href="/negotiations">Reservar Agora</Link>
+                <Link href="/reservations">Reservar Agora</Link>
             </Button>
           </div>
 

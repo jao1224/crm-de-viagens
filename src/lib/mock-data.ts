@@ -1,4 +1,4 @@
-import type { TravelPackage, Kpi, Booking, Appointment, User } from './types';
+import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation } from './types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
@@ -42,3 +42,11 @@ export const mockUsers: User[] = [
   { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100' },
   { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
 ];
+
+export const mockReservations: Reservation[] = [
+    { id: '1', customerName: 'João Silva', packageName: 'Resort Tropical em Cancún', travelDate: '2024-08-15', status: 'Confirmada', totalPrice: 9000, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '2', customerName: 'Maria Garcia', packageName: 'Aventura nos Alpes Suíços', travelDate: '2024-09-05', status: 'Pendente', totalPrice: 14400, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '3', customerName: 'Pedro Martins', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '4', customerName: 'Ana Rodrigues', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '5', customerName: 'Lucas Almeida', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, agentAvatarUrl: 'https://placehold.co/100x100' },
+  ];

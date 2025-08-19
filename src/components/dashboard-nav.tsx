@@ -12,6 +12,7 @@ import {
   Users,
   LineChart,
   Shield,
+  Wand2,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -20,7 +21,8 @@ import type { NavItem } from '@/lib/types';
 export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/properties', label: 'Pacotes', icon: Package },
-  { href: '/negotiations', label: 'Reservas', icon: CalendarCheck },
+  { href: '/reservations', label: 'Reservas', icon: CalendarCheck },
+  { href: '/recommendations', label: 'Recomendações', icon: Wand2 },
   { href: '/processes', label: 'Itinerários', icon: Map },
   { href: '/agenda', label: 'Agenda', icon: Calendar },
   { href: '/financial', label: 'Faturamento', icon: DollarSign },
@@ -37,7 +39,7 @@ export function SimpleDashboardNav() {
          <SidebarMenuItem key={item.href}>
             <Link href={item.href}>
               <SidebarMenuButton
-                isActive={pathname === item.href}
+                isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
                 tooltip={{ children: item.label, side: "right", align: "center" }}
               >
                 <item.icon />

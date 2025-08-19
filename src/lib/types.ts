@@ -51,3 +51,13 @@ export type User = {
   status: 'Ativo' | 'Inativo';
   avatarUrl: string;
 };
+
+export type Reservation = {
+  id: string;
+  customerName: string;
+  packageName: string;
+  travelDate: string;
+  status: 'Confirmada' | 'Pendente' | 'Cancelada';
+  totalPrice: number;
+  agentAvatarUrl: string;
+};
