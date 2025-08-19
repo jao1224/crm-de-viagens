@@ -47,10 +47,10 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
             <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${eventDetails.colorClass}`}>
             {eventIcons[appointment.type]}
             </div>
-            <div className="flex-1 space-y-1">
+            <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
                   <p className="text-lg font-semibold">{appointment.title}</p>
-                  <span className="text-xs text-muted-foreground">{appointment.date}</span>
+                  <span className="text-sm text-muted-foreground">{appointment.date}</span>
               </div>
               <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
@@ -77,15 +77,15 @@ export default function AgendaPage() {
     });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-      <div className="lg:col-span-2">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="lg:col-span-1">
         <Card>
-          <CardContent className="p-0">
+          <CardContent className="p-0 flex justify-center">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              className="w-full"
+              className="w-auto"
             />
           </CardContent>
         </Card>
