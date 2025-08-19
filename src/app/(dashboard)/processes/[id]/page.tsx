@@ -72,7 +72,7 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
           <div className="prose max-w-none text-foreground mt-6 dark:prose-invert">
             <h3 className="font-headline text-xl text-primary flex items-center gap-2"><Map className="w-5 h-5" /> Roteiro Detalhado</h3>
             {/* Using a div with whitespace-pre-wrap to respect newlines from the description */}
-            <div className="whitespace-pre-wrap">
+            <div className="whitespace-pre-wrap text-foreground">
                 {itinerary.description}
             </div>
           </div>
