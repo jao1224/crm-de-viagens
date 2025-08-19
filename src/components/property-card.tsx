@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { TravelPackage } from '@/lib/types';
-import { Users, Sun, Mountain, Briefcase, Tag } from 'lucide-react';
+import { Users, Sun, Mountain, Briefcase, Tag, Calendar } from 'lucide-react';
 
 type PropertyCardProps = {
   property: TravelPackage;
