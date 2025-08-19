@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { mockTravelPackages } from '@/lib/mock-data';
 import type { TravelPackage } from '@/lib/types';
-import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft } from 'lucide-react';
+import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 
 const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
@@ -12,6 +12,8 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
         case 'Praia': return <Sun className="w-5 h-5" />;
         case 'Montanha': return <Mountain className="w-5 h-5" />;
         case 'Negócios': return <Briefcase className="w-5 h-5" />;
+        case 'Família': return <HeartHandshake className="w-5 h-5" />;
+        case 'Cidade':
         default: return <Tag className="w-5 h-5" />;
     }
 }

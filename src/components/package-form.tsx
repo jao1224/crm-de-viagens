@@ -32,7 +32,7 @@ const packageFormSchema = z.object({
   price: z.coerce.number().min(0, { message: 'O preço deve ser um valor positivo.' }),
   duration: z.coerce.number().int().min(1, { message: 'A duração deve ser de pelo menos 1 dia.' }),
   travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
-  type: z.enum(['Praia', 'Montanha', 'Cidade', 'Negócios']),
+  type: z.enum(['Praia', 'Montanha', 'Cidade', 'Negócios', 'Família']),
 });
 
 type PackageFormValues = z.infer<typeof packageFormSchema>;
@@ -121,6 +121,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
                         <SelectItem value="Montanha">Montanha</SelectItem>
                         <SelectItem value="Cidade">Cidade</SelectItem>
                         <SelectItem value="Negócios">Negócios</SelectItem>
+                        <SelectItem value="Família">Família</SelectItem>
                       </SelectContent>
                     </Select>
                   <FormMessage />

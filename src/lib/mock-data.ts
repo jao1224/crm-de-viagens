@@ -8,6 +8,8 @@ export const mockTravelPackages: TravelPackage[] = [
   { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://placehold.co/600x400', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 1, dataAiHint: 'new york' },
   { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 2, dataAiHint: 'safari tanzania' },
   { id: '6', title: 'Férias em Roma e Vaticano', destination: 'Roma, Itália', price: 5900, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 7, travelers: 2, dataAiHint: 'rome city' },
+  { id: '7', title: 'Diversão em Família em Orlando', destination: 'Orlando, EUA', price: 15000, imageUrl: 'https://placehold.co/600x400', type: 'Família', status: 'Disponível', duration: 10, travelers: 4, dataAiHint: 'amusement park' },
+  { id: '8', title: 'Combo Cultural: Rio e Salvador', destination: 'Rio de Janeiro & Salvador, Brasil', price: 6200, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 14, travelers: 2, dataAiHint: 'brazil culture' },
 ];
 
 export const mockKpis: Kpi[] = [
@@ -49,6 +51,7 @@ export const mockReservations: Reservation[] = [
     { id: '3', customerName: 'Pedro Martins', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '4', customerName: 'Ana Rodrigues', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '5', customerName: 'Lucas Almeida', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '6', customerName: 'Família Oliveira', packageName: 'Diversão em Família em Orlando', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, agentAvatarUrl: 'https://placehold.co/100x100' },
   ];
 
 export const mockItineraries: Itinerary[] = [

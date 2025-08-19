@@ -7,7 +7,7 @@ export type TravelPackage = {
   destination: string;
   price: number;
   imageUrl: string;
-  type: 'Praia' | 'Montanha' | 'Negócios' | 'Cidade';
+  type: 'Praia' | 'Montanha' | 'Negócios' | 'Cidade' | 'Família';
   status: 'Disponível' | 'Esgotado';
   duration: number;
   travelers: number;

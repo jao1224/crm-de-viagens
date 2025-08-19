@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { TravelPackage } from '@/lib/types';
-import { Users, Sun, Mountain, Briefcase, Tag, Calendar } from 'lucide-react';
+import { Users, Sun, Mountain, Briefcase, Tag, Calendar, HeartHandshake } from 'lucide-react';
 
 type PropertyCardProps = {
   property: TravelPackage;
@@ -15,6 +15,8 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
         case 'Praia': return <Sun className="w-4 h-4 text-primary/70" />;
         case 'Montanha': return <Mountain className="w-4 h-4 text-primary/70" />;
         case 'Negócios': return <Briefcase className="w-4 h-4 text-primary/70" />;
+        case 'Família': return <HeartHandshake className="w-4 h-4 text-primary/70" />;
+        case 'Cidade':
         default: return <Tag className="w-4 h-4 text-primary/70" />;
     }
 }
