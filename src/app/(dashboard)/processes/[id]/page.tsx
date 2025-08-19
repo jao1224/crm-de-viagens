@@ -52,7 +52,7 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
         return (
           <div className="text-center">
             <h1 className="text-2xl font-bold">Itinerário não encontrado</h1>
-            <p className="text-muted-foreground">O roteiro que você está procurando não existe.</p>
+            <p className="text-muted-foreground">O roteiro que você está procurando não existe ou não foi salvo.</p>
             <Button asChild className="mt-4">
               <Link href="/processes">
                 <ChevronLeft className="mr-2" />
