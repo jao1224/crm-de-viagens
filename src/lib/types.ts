@@ -49,4 +49,4 @@ export type User = {
   role: 'Administrador' | 'Agente de Viagem' | 'Cliente';
   status: 'Ativo' | 'Inativo';
   avatarUrl: string;
-}
+};
