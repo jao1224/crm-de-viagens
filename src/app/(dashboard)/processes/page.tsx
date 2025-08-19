@@ -42,32 +42,51 @@ export default function ItinerariesPage() {
   }
   
   const handleArchive = (itineraryToArchive: Itinerary) => {
-    setItineraries(itineraries.map(it => 
+    const updatedItineraries = itineraries.map(it => 
         it.id === itineraryToArchive.id ? { ...it, status: 'Arquivado' } : it
-    ));
+    );
+    setItineraries(updatedItineraries);
+    
+    // Update mock data source
+    const index = mockItineraries.findIndex(it => it.id === itineraryToArchive.id);
+    if (index !== -1) {
+        mockItineraries[index].status = 'Arquivado';
+    }
+
     toast({
         title: "Itinerário Arquivado",
         description: `O itinerário "${itineraryToArchive.title}" foi arquivado.`
     });
   }
 
-  const handleFormSubmit = (values: Omit<Itinerary, 'id' | 'status'>) => {
-    let newItinerary: Itinerary;
+  const handleFormSubmit = (values: Omit<Itinerary, 'id' | 'status'> & {description: string}) => {
     if (selectedItinerary) {
         // Edit
         const updatedItinerary = { ...selectedItinerary, ...values };
-        setItineraries(itineraries.map(it => it.id === selectedItinerary.id ? updatedItinerary : it));
-        mockItineraries[mockItineraries.findIndex(it => it.id === selectedItinerary.id)] = updatedItinerary;
+        const updatedList = itineraries.map(it => it.id === selectedItinerary.id ? updatedItinerary : it)
+        setItineraries(updatedList);
+        
+        // Update mock data source
+        const index = mockItineraries.findIndex(it => it.id === selectedItinerary.id);
+        if (index !== -1) {
+            mockItineraries[index] = updatedItinerary;
+        }
+
         toast({ title: "Itinerário Atualizado", description: "As alterações foram salvas."});
     } else {
         // Add
-        newItinerary = {
+        const newItinerary = {
             ...values,
             id: (mockItineraries.length + 1).toString(),
-            status: 'Em rascunho'
+            status: 'Em rascunho' as Itinerary['status'],
         };
-        setItineraries([newItinerary, ...itineraries]);
-        mockItineraries.push(newItinerary);
+        // Update state
+        const updatedList = [newItinerary, ...itineraries];
+        setItineraries(updatedList);
+        
+        // Update mock data source
+        mockItineraries.unshift(newItinerary);
+
         toast({ title: "Itinerário Criado", description: `O itinerário "${newItinerary.title}" foi criado como rascunho.`});
     }
     setIsFormOpen(false);
