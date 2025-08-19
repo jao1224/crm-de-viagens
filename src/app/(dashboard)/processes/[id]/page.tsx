@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -6,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { mockItineraries } from '@/lib/mock-data';
 import type { Itinerary } from '@/lib/types';
 import { ChevronLeft, Map, Clock, FileText } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -18,6 +21,14 @@ const getStatusVariant = (status: Itinerary['status']) => {
 
 export default function ItineraryDetailPage({ params }: { params: { id: string } }) {
   const itinerary = mockItineraries.find((i) => i.id === params.id);
+  const { toast } = useToast();
+
+  const handlePdfGeneration = () => {
+    toast({
+      title: "Funcionalidade em Desenvolvimento",
+      description: "A geração de PDF para o roteiro será implementada em breve.",
+    });
+  };
 
   if (!itinerary) {
     return (
@@ -75,7 +86,7 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
           </div>
 
           <div className="mt-8 text-center">
-            <Button size="lg">
+            <Button size="lg" onClick={handlePdfGeneration}>
                 <FileText className="mr-2" />
                 Gerar PDF do Roteiro
             </Button>
@@ -86,4 +97,3 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
     </div>
   );
 }
-
