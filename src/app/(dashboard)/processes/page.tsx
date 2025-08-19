@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ export default function ItinerariesPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
+  const router = useRouter();
 
   const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -68,6 +70,10 @@ export default function ItinerariesPage() {
     setIsFormOpen(false);
     setSelectedItinerary(null);
   }
+  
+  const handleRowClick = (itineraryId: string) => {
+    router.push(`/processes/${itineraryId}`);
+  };
 
   return (
     <>
@@ -96,17 +102,19 @@ export default function ItinerariesPage() {
             </TableHeader>
             <TableBody>
                 {itineraries.map((itinerary) => (
-                <TableRow key={itinerary.id}>
+                <TableRow 
+                    key={itinerary.id} 
+                    onClick={() => handleRowClick(itinerary.id)}
+                    className="cursor-pointer"
+                >
                     <TableCell className="font-medium">
-                        <Link href={`/processes/${itinerary.id}`} className="hover:underline">
-                            {itinerary.title}
-                        </Link>
+                        {itinerary.title}
                     </TableCell>
                     <TableCell className="text-muted-foreground">{itinerary.package}</TableCell>
                     <TableCell>
                     <Badge variant={getStatusVariant(itinerary.status)}>{itinerary.status}</Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                         <Button aria-haspopup="true" size="icon" variant="ghost">
