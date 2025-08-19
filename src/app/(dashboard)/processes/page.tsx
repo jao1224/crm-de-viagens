@@ -7,21 +7,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { Itinerary } from '@/lib/types';
 import { ItineraryForm } from '@/components/itinerary-form';
 import { useToast } from '@/hooks/use-toast';
-
-const mockItineraries: Itinerary[] = [
-  { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado' },
-  { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado' },
-  { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho' },
-  { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado' },
-  { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho' },
-];
+import { mockItineraries as initialItineraries } from '@/lib/mock-data';
+import Link from 'next/link';
 
 export default function ItinerariesPage() {
-  const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
+  const [itineraries, setItineraries] = useState<Itinerary[]>(initialItineraries);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
@@ -103,7 +97,11 @@ export default function ItinerariesPage() {
             <TableBody>
                 {itineraries.map((itinerary) => (
                 <TableRow key={itinerary.id}>
-                    <TableCell className="font-medium">{itinerary.title}</TableCell>
+                    <TableCell className="font-medium">
+                        <Link href={`/processes/${itinerary.id}`} className="hover:underline">
+                            {itinerary.title}
+                        </Link>
+                    </TableCell>
                     <TableCell className="text-muted-foreground">{itinerary.package}</TableCell>
                     <TableCell>
                     <Badge variant={getStatusVariant(itinerary.status)}>{itinerary.status}</Badge>
@@ -118,7 +116,11 @@ export default function ItinerariesPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuItem asChild>
+                            <Link href={`/processes/${itinerary.id}`}>Detalhes</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem onSelect={() => handleEdit(itinerary)}>Editar</DropdownMenuItem>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem onSelect={() => handleArchive(itinerary)} disabled={itinerary.status === 'Arquivado'}>
                             Arquivar
                         </DropdownMenuItem>

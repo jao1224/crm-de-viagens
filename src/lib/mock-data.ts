@@ -1,4 +1,4 @@
-import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation } from './types';
+import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itinerary } from './types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
@@ -49,4 +49,12 @@ export const mockReservations: Reservation[] = [
     { id: '3', customerName: 'Pedro Martins', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '4', customerName: 'Ana Rodrigues', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '5', customerName: 'Lucas Almeida', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, agentAvatarUrl: 'https://placehold.co/100x100' },
+  ];
+
+export const mockItineraries: Itinerary[] = [
+    { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado' },
+    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado' },
+    { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho' },
+    { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado' },
+    { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho' },
   ];
