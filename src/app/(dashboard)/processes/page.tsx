@@ -12,11 +12,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import type { Itinerary } from '@/lib/types';
 import { ItineraryForm } from '@/components/itinerary-form';
 import { useToast } from '@/hooks/use-toast';
-import { mockItineraries as initialItineraries } from '@/lib/mock-data';
+import { mockItineraries } from '@/lib/mock-data';
 import Link from 'next/link';
 
 export default function ItinerariesPage() {
-  const [itineraries, setItineraries] = useState<Itinerary[]>(initialItineraries);
+  const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
@@ -52,19 +52,22 @@ export default function ItinerariesPage() {
   }
 
   const handleFormSubmit = (values: Omit<Itinerary, 'id' | 'status'>) => {
+    let newItinerary: Itinerary;
     if (selectedItinerary) {
         // Edit
         const updatedItinerary = { ...selectedItinerary, ...values };
         setItineraries(itineraries.map(it => it.id === selectedItinerary.id ? updatedItinerary : it));
+        mockItineraries[mockItineraries.findIndex(it => it.id === selectedItinerary.id)] = updatedItinerary;
         toast({ title: "Itinerário Atualizado", description: "As alterações foram salvas."});
     } else {
         // Add
-        const newItinerary: Itinerary = {
+        newItinerary = {
             ...values,
-            id: (itineraries.length + 1).toString(),
+            id: (mockItineraries.length + 1).toString(),
             status: 'Em rascunho'
         };
         setItineraries([newItinerary, ...itineraries]);
+        mockItineraries.push(newItinerary);
         toast({ title: "Itinerário Criado", description: `O itinerário "${newItinerary.title}" foi criado como rascunho.`});
     }
     setIsFormOpen(false);
