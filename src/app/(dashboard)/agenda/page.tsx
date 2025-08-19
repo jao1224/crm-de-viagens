@@ -43,21 +43,23 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
     const eventDetails = eventTypeMapping[appointment.type];
 
     return (
-        <div className={`flex items-start gap-4 p-3 hover:bg-muted/50 rounded-lg transition-colors border-l-4 ${eventDetails.borderColorClass}`}>
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${eventDetails.colorClass}`}>
+        <div className={`flex items-start gap-4 p-4 hover:bg-muted/50 rounded-lg transition-colors border-l-4 ${eventDetails.borderColorClass}`}>
+            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${eventDetails.colorClass}`}>
             {eventIcons[appointment.type]}
             </div>
-            <div className="flex-1">
-            <div className="flex items-center justify-between">
-                <p className="font-semibold">{appointment.title}</p>
-                <span className="text-xs text-muted-foreground">{appointment.date}</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-                Cliente: <span className="font-medium text-foreground">{appointment.customer}</span>
-            </p>
-            <p className="text-sm text-muted-foreground">
-                Pacote: <span className="font-medium text-foreground">{appointment.package}</span>
-            </p>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold">{appointment.title}</p>
+                  <span className="text-xs text-muted-foreground">{appointment.date}</span>
+              </div>
+              <div className="space-y-1 text-sm">
+                <p className="text-muted-foreground">
+                    Cliente: <span className="font-medium text-foreground">{appointment.customer}</span>
+                </p>
+                <p className="text-muted-foreground">
+                    Pacote: <span className="font-medium text-foreground">{appointment.package}</span>
+                </p>
+              </div>
             </div>
         </div>
     );
