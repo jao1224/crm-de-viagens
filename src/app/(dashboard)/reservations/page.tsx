@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -44,6 +45,13 @@ export default function ReservationsPage() {
             description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
         });
         setIsFormOpen(false);
+    };
+
+    const handleActionClick = (action: string) => {
+        toast({
+            title: "Funcionalidade em Desenvolvimento",
+            description: `A ação de "${action}" será implementada em breve.`,
+        });
     };
 
 
@@ -110,10 +118,10 @@ export default function ReservationsPage() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                        <DropdownMenuItem>Detalhes</DropdownMenuItem>
-                                        <DropdownMenuItem>Editar</DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleActionClick('Detalhes')}>Detalhes</DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleActionClick('Editar')}>Editar</DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem className="text-destructive">Cancelar</DropdownMenuItem>
+                                        <DropdownMenuItem className="text-destructive" onSelect={() => handleActionClick('Cancelar')}>Cancelar</DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
