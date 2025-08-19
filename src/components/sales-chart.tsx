@@ -7,16 +7,16 @@ import { mockSalesData } from '@/lib/mock-data';
 
 export function SalesChart() {
   const chartConfig = {
-    repasse: { label: 'Repasse', color: 'hsl(var(--chart-3))' },
-    novo: { label: 'Novo', color: 'hsl(var(--chart-1))' },
-    usado: { label: 'Usado', color: 'hsl(var(--chart-2))' },
+    praia: { label: 'Praia', color: 'hsl(var(--chart-1))' },
+    montanha: { label: 'Montanha', color: 'hsl(var(--chart-2))' },
+    cidade: { label: 'Cidade', color: 'hsl(var(--chart-3))' },
   }
 
   return (
     <Card className="col-span-1 lg:col-span-2">
       <CardHeader>
         <CardTitle className="font-headline text-2xl text-primary">Performance de Vendas</CardTitle>
-        <CardDescription>Vendas por tipo de imóvel nos últimos 6 meses.</CardDescription>
+        <CardDescription>Vendas por tipo de pacote nos últimos 6 meses.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -31,9 +31,9 @@ export function SalesChart() {
               />
               <YAxis />
               <Tooltip cursor={{fill: 'hsl(var(--background))'}} content={<ChartTooltipContent />} />
-              <Bar dataKey="repasse" fill="var(--color-repasse)" radius={4} />
-              <Bar dataKey="novo" fill="var(--color-novo)" radius={4} />
-              <Bar dataKey="usado" fill="var(--color-usado)" radius={4} />
+              <Bar dataKey="praia" fill="var(--color-praia)" radius={4} />
+              <Bar dataKey="montanha" fill="var(--color-montanha)" radius={4} />
+              <Bar dataKey="cidade" fill="var(--color-cidade)" radius={4} />
             </BarChart>
         </ChartContainer>
       </CardContent>

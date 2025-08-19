@@ -1,16 +1,15 @@
 import type { LucideIcon } from "lucide-react";
 
-export type Property = {
+export type TravelPackage = {
   id: string;
   title: string;
-  address: string;
+  destination: string;
   price: number;
   imageUrl: string;
-  type: 'Casa' | 'Apartamento' | 'Lote';
-  status: 'Novo' | 'Usado' | 'Repasse';
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
+  type: 'Praia' | 'Montanha' | 'Negócios' | 'Cidade';
+  status: 'Disponível' | 'Esgotado';
+  duration: number;
+  travelers: number;
   dataAiHint: string;
 };
 
@@ -22,18 +21,18 @@ export type Kpi = {
   icon: LucideIcon;
 };
 
-export type Sale = {
+export type Booking = {
   month: string;
-  repasse: number;
-  novo: number;
-  usado: number;
+  praia: number;
+  montanha: number;
+  cidade: number;
 };
 
 export type Appointment = {
   id: string;
   title: string;
   time: string;
-  type: 'personal' | 'team' | 'company';
+  type: 'client' | 'team' | 'provider';
   attendees: string[];
 };
 

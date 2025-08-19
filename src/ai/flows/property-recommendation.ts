@@ -1,56 +1,56 @@
-// use server'
+'use server'
 
 /**
- * @fileOverview An intelligent property recommendation AI agent.
+ * @fileOverview An intelligent travel package recommendation AI agent.
  *
- * - propertyRecommendation - A function that handles the property recommendation process.
- * - PropertyRecommendationInput - The input type for the propertyRecommendation function.
- * - PropertyRecommendationOutput - The return type for the propertyRecommendation function.
+ * - travelPackageRecommendation - A function that handles the travel package recommendation process.
+ * - TravelPackageRecommendationInput - The input type for the travelPackageRecommendation function.
+ * - TravelPackageRecommendationOutput - The return type for the travelPackageRecommendation function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const PropertyRecommendationInputSchema = z.object({
-  propertyDetails: z
+const TravelPackageRecommendationInputSchema = z.object({
+  packageDetails: z
     .string()
     .describe(
-      'Details of the property the user is currently viewing or has searched for.'
+      'Details of the travel package the user is currently viewing or has searched for.'
     ),
-  userPreferences: z.string().optional().describe('The user preferences.'),
+  userPreferences: z.string().optional().describe('The user preferences for travel.'),
 });
-export type PropertyRecommendationInput = z.infer<typeof PropertyRecommendationInputSchema>;
+export type TravelPackageRecommendationInput = z.infer<typeof TravelPackageRecommendationInputSchema>;
 
-const PropertyRecommendationOutputSchema = z.object({
-  recommendedProperties: z
+const TravelPackageRecommendationOutputSchema = z.object({
+  recommendedPackages: z
     .string()
-    .describe('A list of recommended properties based on the input property details and user preferences.'),
+    .describe('A list of recommended travel packages based on the input package details and user preferences.'),
 });
-export type PropertyRecommendationOutput = z.infer<typeof PropertyRecommendationOutputSchema>;
+export type TravelPackageRecommendationOutput = z.infer<typeof TravelPackageRecommendationOutputSchema>;
 
-export async function propertyRecommendation(input: PropertyRecommendationInput): Promise<PropertyRecommendationOutput> {
-  return propertyRecommendationFlow(input);
+export async function travelPackageRecommendation(input: TravelPackageRecommendationInput): Promise<TravelPackageRecommendationOutput> {
+  return travelPackageRecommendationFlow(input);
 }
 
 const prompt = ai.definePrompt({
-  name: 'propertyRecommendationPrompt',
-  input: {schema: PropertyRecommendationInputSchema},
-  output: {schema: PropertyRecommendationOutputSchema},
-  prompt: `You are an expert real estate agent specializing in property recommendations.
+  name: 'travelPackageRecommendationPrompt',
+  input: {schema: TravelPackageRecommendationInputSchema},
+  output: {schema: TravelPackageRecommendationOutputSchema},
+  prompt: `You are an expert travel agent specializing in personalized travel package recommendations.
 
-You will use the following information to recommend similar properties to the user.
+You will use the following information to recommend similar travel packages to the user.
 
-Property Details: {{{propertyDetails}}}
+Package Details: {{{packageDetails}}}
 User Preferences: {{{userPreferences}}}
 
-Based on the property details and user preferences, recommend a list of similar properties.`,
+Based on the package details and user preferences, recommend a list of similar travel packages.`,
 });
 
-const propertyRecommendationFlow = ai.defineFlow(
+const travelPackageRecommendationFlow = ai.defineFlow(
   {
-    name: 'propertyRecommendationFlow',
-    inputSchema: PropertyRecommendationInputSchema,
-    outputSchema: PropertyRecommendationOutputSchema,
+    name: 'travelPackageRecommendationFlow',
+    inputSchema: TravelPackageRecommendationInputSchema,
+    outputSchema: TravelPackageRecommendationOutputSchema,
   },
   async input => {
     const {output} = await prompt(input);

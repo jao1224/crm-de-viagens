@@ -2,12 +2,21 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { Property } from '@/lib/types';
-import { BedDouble, Bath, Ruler, Tag, Home } from 'lucide-react';
+import type { TravelPackage } from '@/lib/types';
+import { Users, Sun, Mountain, Briefcase, Tag } from 'lucide-react';
 
 type PropertyCardProps = {
-  property: Property;
+  property: TravelPackage;
 };
+
+const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
+    switch (type) {
+        case 'Praia': return <Sun className="w-4 h-4 text-primary/70" />;
+        case 'Montanha': return <Mountain className="w-4 h-4 text-primary/70" />;
+        case 'Negócios': return <Briefcase className="w-4 h-4 text-primary/70" />;
+        default: return <Tag className="w-4 h-4 text-primary/70" />;
+    }
+}
 
 export function PropertyCard({ property }: PropertyCardProps) {
   return (
@@ -22,25 +31,24 @@ export function PropertyCard({ property }: PropertyCardProps) {
           data-ai-hint={property.dataAiHint}
         />
         <div className="absolute top-2 right-2 flex gap-2">
-          <Badge variant="secondary">{property.type}</Badge>
-          <Badge>{property.status}</Badge>
+          <Badge variant={property.status === 'Esgotado' ? 'destructive' : 'secondary'}>{property.status}</Badge>
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <CardTitle className="font-headline text-lg text-primary mb-2 truncate">{property.title}</CardTitle>
-        <p className="text-sm text-muted-foreground truncate">{property.address}</p>
+        <p className="text-sm text-muted-foreground truncate">{property.destination}</p>
         <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
           <div className="flex items-center gap-1 text-muted-foreground">
-            <BedDouble className="w-4 h-4 text-primary/70" />
-            <span>{property.bedrooms}</span>
+            <TypeIcon type={property.type} />
+            <span>{property.type}</span>
+          </div>
+           <div className="flex items-center gap-1 text-muted-foreground">
+            <Users className="w-4 h-4 text-primary/70" />
+            <span>{property.travelers}</span>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
-            <Bath className="w-4 h-4 text-primary/70" />
-            <span>{property.bathrooms}</span>
-          </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Ruler className="w-4 h-4 text-primary/70" />
-            <span>{property.area} m²</span>
+            <Calendar className="w-4 h-4 text-primary/70" />
+            <span>{property.duration} dias</span>
           </div>
         </div>
       </CardContent>

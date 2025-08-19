@@ -18,26 +18,26 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Wand2 } from 'lucide-react';
-import { propertyRecommendation, PropertyRecommendationOutput } from '@/ai/flows/property-recommendation';
+import { travelPackageRecommendation, TravelPackageRecommendationOutput } from '@/ai/flows/property-recommendation';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 
 const formSchema = z.object({
-  propertyDetails: z.string().min(10, {
-    message: 'Detalhes da propriedade devem ter pelo menos 10 caracteres.',
+  packageDetails: z.string().min(10, {
+    message: 'Detalhes do pacote devem ter pelo menos 10 caracteres.',
   }),
   userPreferences: z.string().optional(),
 });
 
 export function NegotiationForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState<PropertyRecommendationOutput | null>(null);
+  const [recommendations, setRecommendations] = useState<TravelPackageRecommendationOutput | null>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      propertyDetails: '',
+      packageDetails: '',
       userPreferences: '',
     },
   });
@@ -46,7 +46,10 @@ export function NegotiationForm() {
     setIsLoading(true);
     setRecommendations(null);
     try {
-      const result = await propertyRecommendation(values);
+      const result = await travelPackageRecommendation({
+        packageDetails: values.packageDetails,
+        userPreferences: values.userPreferences,
+      });
       setRecommendations(result);
     } catch (error) {
       console.error('Error getting recommendations:', error);
@@ -64,26 +67,26 @@ export function NegotiationForm() {
     <Dialog>
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-2xl text-primary">Iniciar Nova Negociação</CardTitle>
-          <CardDescription>Preencha os detalhes para iniciar uma nova negociação e use nossa IA para obter sugestões.</CardDescription>
+          <CardTitle className="font-headline text-2xl text-primary">Iniciar Nova Reserva</CardTitle>
+          <CardDescription>Preencha os detalhes para iniciar uma nova reserva e use nossa IA para obter sugestões de pacotes.</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent className="space-y-6">
               <FormField
                 control={form.control}
-                name="propertyDetails"
+                name="packageDetails"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Detalhes do Imóvel</FormLabel>
+                    <FormLabel>Detalhes do Pacote</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Apartamento 3 quartos, 1 suíte, 2 vagas, perto do parque..."
+                        placeholder="Ex: Viagem para a Disney, 7 dias, hotel com piscina..."
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Descreva o imóvel que o cliente está interessado.
+                      Descreva a viagem que o cliente está interessado.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -97,7 +100,7 @@ export function NegotiationForm() {
                     <FormLabel>Preferências do Cliente (Opcional)</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Ex: Gosta de andar alto, prefere área de lazer completa..."
+                        placeholder="Ex: Gosta de praias, prefere voos diretos, orçamento de até R$5000..."
                         {...field}
                       />
                     </FormControl>
@@ -136,13 +139,13 @@ export function NegotiationForm() {
       {recommendations && (
         <DialogContent className="sm:max-w-[625px]">
             <DialogHeader>
-                <DialogTitle className="font-headline text-primary">Propriedades Recomendadas</DialogTitle>
+                <DialogTitle className="font-headline text-primary">Pacotes Recomendados</DialogTitle>
                 <DialogDescription>
                     Com base nos detalhes fornecidos, aqui estão algumas sugestões.
                 </DialogDescription>
             </DialogHeader>
             <div className="prose prose-sm max-w-none text-foreground dark:prose-invert rounded-md border p-4 max-h-[60vh] overflow-y-auto">
-                {recommendations.recommendedProperties}
+                {recommendations.recommendedPackages}
             </div>
         </DialogContent>
       )}

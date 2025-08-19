@@ -3,14 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, User, Building } from 'lucide-react';
+import { Users, User, Briefcase } from 'lucide-react';
 
 const AppointmentItem = ({ appointment }: { appointment: Appointment }) => (
   <div className="flex items-start gap-4 p-3 hover:bg-muted/50 rounded-lg transition-colors">
      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-      {appointment.type === 'personal' && <User className="h-5 w-5" />}
+      {appointment.type === 'client' && <User className="h-5 w-5" />}
       {appointment.type === 'team' && <Users className="h-5 w-5" />}
-      {appointment.type === 'company' && <Building className="h-5 w-5" />}
+      {appointment.type === 'provider' && <Briefcase className="h-5 w-5" />}
     </div>
     <div className="flex-1">
       <p className="font-semibold">{appointment.title}</p>
@@ -42,21 +42,21 @@ export default function AgendaPage() {
                 <CardTitle className="font-headline text-primary">Compromissos</CardTitle>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="team" className="w-full">
+                <Tabs defaultValue="client" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="personal">Pessoal</TabsTrigger>
+                    <TabsTrigger value="client">Clientes</TabsTrigger>
                     <TabsTrigger value="team">Equipe</TabsTrigger>
-                    <TabsTrigger value="company">Imobiliária</TabsTrigger>
+                    <TabsTrigger value="provider">Fornecedores</TabsTrigger>
                 </TabsList>
                 <div className="mt-4 max-h-[450px] overflow-y-auto pr-2">
-                    <TabsContent value="personal">
-                        {mockAppointments.filter(a => a.type === 'personal').map(app => <AppointmentItem key={app.id} appointment={app} />)}
+                    <TabsContent value="client">
+                        {mockAppointments.filter(a => a.type === 'client').map(app => <AppointmentItem key={app.id} appointment={app} />)}
                     </TabsContent>
                     <TabsContent value="team">
                         {mockAppointments.filter(a => a.type === 'team').map(app => <AppointmentItem key={app.id} appointment={app} />)}
                     </TabsContent>
-                    <TabsContent value="company">
-                        {mockAppointments.filter(a => a.type === 'company').map(app => <AppointmentItem key={app.id} appointment={app} />)}
+                    <TabsContent value="provider">
+                        {mockAppointments.filter(a => a.type === 'provider').map(app => <AppointmentItem key={app.id} appointment={app} />)}
                     </TabsContent>
                 </div>
                 </Tabs>

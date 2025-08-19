@@ -4,15 +4,13 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
   LayoutDashboard,
-  Building2,
-  Handshake,
-  ClipboardList,
+  Package,
+  CalendarCheck,
+  Map,
   Calendar,
   DollarSign,
   Shield,
-  User,
   LineChart,
-  Home
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -21,13 +19,13 @@ import { cn } from '@/lib/utils';
 
 export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/properties', label: 'Imóveis', icon: Building2 },
-  { href: '/negotiations', label: 'Negociações', icon: Handshake },
-  { href: '/processes', label: 'Processos', icon: ClipboardList },
+  { href: '/properties', label: 'Pacotes', icon: Package },
+  { href: '/negotiations', label: 'Reservas', icon: CalendarCheck },
+  { href: '/processes', label: 'Itinerários', icon: Map },
   { href: '/agenda', label: 'Agenda', icon: Calendar },
-  { href: '/financial', label: 'Financeiro', icon: DollarSign },
+  { href: '/financial', label: 'Faturamento', icon: DollarSign },
   { href: '/reports', label: 'Relatórios', icon: LineChart },
-  { href: '/admin', label: 'Administrativo', icon: Shield },
+  { href: '/admin', label: 'Admin', icon: Shield },
 ];
 
 export function DashboardNav() {
