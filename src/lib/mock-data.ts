@@ -27,11 +27,12 @@ export const mockSalesData: Booking[] = [
 ];
 
 export const mockAppointments: Appointment[] = [
-  { id: '1', title: 'Reunião com Família Silva', time: '10:00 - 11:00', type: 'client', attendees: ['João Silva', 'Maria Costa'] },
-  { id: '2', title: 'Alinhamento com Fornecedor', time: '14:00 - 15:00', type: 'provider', attendees: ['Hotel Palace'] },
-  { id: '3', title: 'Almoço com Cliente VIP', time: '12:30 - 13:30', type: 'client', attendees: ['Carlos Pereira'] },
-  { id: '4', title: 'Reunião de Equipe Semanal', time: '16:00 - 16:30', type: 'team', attendees: ['Todos'] },
-  { id: '5', title: 'Call de Fechamento - Viagem Japão', time: '09:00 - 09:30', type: 'client', attendees: ['Ana Beatriz', 'Cliente Y'] },
+  { id: '1', title: 'Reunião de Planejamento', customer: 'Família Silva', package: 'Resort em Cancún', date: 'Hoje, 10:00', type: 'meeting' },
+  { id: '2', title: 'Embarque Voo JJ8130', customer: 'Carlos Pereira', package: 'Aventura nos Alpes', date: 'Amanhã, 08:30', type: 'departure' },
+  { id: '3', title: 'Pagamento Final', customer: 'Ana Beatriz', package: 'Tour em Quioto', date: 'Amanhã, 18:00', type: 'payment' },
+  { id: '4', title: 'Lembrete: Check-in Hotel', customer: 'Sr. e Sra. Lima', package: 'Férias em Roma', date: '25/07, 14:00', type: 'reminder' },
+  { id: '5', title: 'Reunião de Follow-up', customer: 'Mariana Costa', package: 'Viagem a Nova York', date: '26/07, 11:00', type: 'meeting' },
+  { id: '6', title: 'Embarque Voo EK262', customer: 'Jorge Martins', package: 'Safari na Tanzânia', date: '28/07, 22:00', type: 'departure' },
 ];
 
 export const mockUsers: User[] = [

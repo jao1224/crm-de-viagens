@@ -31,9 +31,10 @@ export type Booking = {
 export type Appointment = {
   id: string;
   title: string;
-  time: string;
-  type: 'client' | 'team' | 'provider';
-  attendees: string[];
+  date: string;
+  type: 'meeting' | 'departure' | 'payment' | 'reminder';
+  customer: string;
+  package: string;
 };
 
 export type NavItem = {
