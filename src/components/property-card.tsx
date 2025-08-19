@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <p className="text-xl font-bold font-headline text-primary">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(property.price)}
         </p>
-        <Button>Detalhes</Button>
+        <Link href={`/properties/${property.id}`} passHref>
+            <Button>Detalhes</Button>
+        </Link>
       </CardFooter>
     </Card>
   );
