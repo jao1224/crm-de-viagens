@@ -68,4 +68,5 @@ export type Itinerary = {
   title: string;
   package: string;
   status: 'Em rascunho' | 'Publicado' | 'Arquivado';
+  description: string;
 };

@@ -27,10 +27,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import type { Itinerary } from '@/lib/types';
 import { useEffect } from 'react';
 import { mockTravelPackages } from '@/lib/mock-data';
+import { Textarea } from './ui/textarea';
 
 const itineraryFormSchema = z.object({
   title: z.string().min(5, { message: 'O título deve ter pelo menos 5 caracteres.' }),
   package: z.string({ required_error: 'É necessário vincular um pacote.' }),
+  description: z.string().min(10, { message: 'A descrição deve ter pelo menos 10 caracteres.' }),
 });
 
 type ItineraryFormValues = z.infer<typeof itineraryFormSchema>;
@@ -38,13 +40,17 @@ type ItineraryFormValues = z.infer<typeof itineraryFormSchema>;
 interface ItineraryFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSubmit: (values: ItineraryFormValues) => void;
+  onSubmit: (values: Omit<Itinerary, 'id' | 'status'>) => void;
   itinerary: Itinerary | null;
 }
 
 export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: ItineraryFormProps) {
   const form = useForm<ItineraryFormValues>({
     resolver: zodResolver(itineraryFormSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+    }
   });
 
   useEffect(() => {
@@ -55,6 +61,7 @@ export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: Iti
             form.reset({
                 title: '',
                 package: undefined,
+                description: '',
             });
         }
     }
@@ -72,7 +79,7 @@ export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: Iti
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
@@ -110,6 +117,23 @@ export function ItineraryForm({ isOpen, onOpenChange, onSubmit, itinerary }: Iti
                         ))}
                       </SelectContent>
                     </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descrição Detalhada do Roteiro</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                        placeholder="Detalhe o dia a dia da viagem, incluindo atividades, passeios, etc." 
+                        className="min-h-[150px]"
+                        {...field} 
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -52,9 +52,9 @@ export const mockReservations: Reservation[] = [
   ];
 
 export const mockItineraries: Itinerary[] = [
-    { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado' },
-    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado' },
-    { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho' },
-    { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado' },
-    { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho' },
+    { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado', description: 'Este é um espaço para a descrição completa do itinerário. Detalhe o dia a dia da viagem, incluindo atividades, passeios, dicas de restaurantes e informações sobre os locais a serem visitados.\n\n**Dia 1:** Chegada em Roma, traslado para o hotel e jantar de boas-vindas.\n**Dia 2:** Tour guiado pelo Coliseu, Fórum Romano e Monte Palatino.\n**Dia 3:** Visita ao Vaticano: Basílica de São Pedro, Museus do Vaticano e Capela Sistina.\n**Dia 4:** Dia livre para explorar a cidade ou fazer um tour gastronômico opcional.' },
+    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado', description: 'Um roteiro para amantes da natureza, com caminhadas por trilhas cênicas, passeios de barco em lagos de água cristalina e vistas deslumbrantes dos Alpes Suíços.' },
+    { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho', description: 'Combine relaxamento nas praias de Cancún com a aventura de explorar recifes de corais e as misteriosas ruínas da civilização maia na Península de Yucatán.' },
+    { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado', description: 'Otimize sua viagem de negócios com um roteiro que inclui tempo para reuniões importantes, mas também para descobrir os principais pontos turísticos, restaurantes e shows da Big Apple.' },
+    { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho', description: 'Uma imersão na cultura japonesa, visitando os mais belos templos e jardins de Quioto, participando de uma cerimônia do chá e explorando o bairro das gueixas, Gion.' },
   ];

@@ -69,20 +69,12 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
         </CardHeader>
         <CardContent className="p-6">
           
-          <div className="prose max-w-none text-foreground mt-6">
+          <div className="prose max-w-none text-foreground mt-6 dark:prose-invert">
             <h3 className="font-headline text-xl text-primary flex items-center gap-2"><Map className="w-5 h-5" /> Roteiro Detalhado</h3>
-            <p>
-                Este é um espaço para a descrição completa do itinerário. Detalhe o dia a dia da viagem, incluindo atividades, passeios, dicas de restaurantes e informações sobre os locais a serem visitados.
-            </p>
-            <ul>
-                <li><strong>Dia 1:</strong> Chegada em Roma, traslado para o hotel e jantar de boas-vindas.</li>
-                <li><strong>Dia 2:</strong> Tour guiado pelo Coliseu, Fórum Romano e Monte Palatino.</li>
-                <li><strong>Dia 3:</strong> Visita ao Vaticano: Basílica de São Pedro, Museus do Vaticano e Capela Sistina.</li>
-                <li><strong>Dia 4:</strong> Dia livre para explorar a cidade ou fazer um tour gastronômico opcional.</li>
-            </ul>
-             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
-            </p>
+            {/* Using a div with whitespace-pre-wrap to respect newlines from the description */}
+            <div className="whitespace-pre-wrap">
+                {itinerary.description}
+            </div>
           </div>
 
           <div className="mt-8 text-center">
