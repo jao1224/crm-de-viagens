@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 
 export type TravelPackage = {
@@ -60,4 +61,11 @@ export type Reservation = {
   status: 'Confirmada' | 'Pendente' | 'Cancelada';
   totalPrice: number;
   agentAvatarUrl: string;
+};
+
+export type Itinerary = {
+  id: string;
+  title: string;
+  package: string;
+  status: 'Em rascunho' | 'Publicado' | 'Arquivado';
 };
