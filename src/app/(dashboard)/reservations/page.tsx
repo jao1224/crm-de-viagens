@@ -13,10 +13,15 @@ import { mockReservations } from "@/lib/mock-data";
 import type { Reservation } from "@/lib/types";
 import { ReservationForm } from '@/components/reservation-form';
 import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { ReservationDetailsDialog } from '@/components/reservation-details-dialog';
 
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [isCancelAlertOpen, setIsCancelAlertOpen] = useState(false);
+    const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
     const { toast } = useToast();
 
 
@@ -30,30 +35,60 @@ export default function ReservationsPage() {
     };
 
     const handleAddReservation = () => {
+        setSelectedReservation(null);
+        setIsFormOpen(true);
+    };
+    
+    const handleEditReservation = (reservation: Reservation) => {
+        setSelectedReservation(reservation);
         setIsFormOpen(true);
     };
 
+    const handleDetailsReservation = (reservation: Reservation) => {
+        setSelectedReservation(reservation);
+        setIsDetailsOpen(true);
+    }
+    
+    const handleCancelReservation = (reservation: Reservation) => {
+        setSelectedReservation(reservation);
+        setIsCancelAlertOpen(true);
+    }
+
+    const confirmCancel = () => {
+        if (!selectedReservation) return;
+        
+        const updatedReservations = reservations.map(r => 
+            r.id === selectedReservation.id ? { ...r, status: 'Cancelada' as const } : r
+        );
+        setReservations(updatedReservations);
+
+        toast({ title: "Reserva Cancelada", description: `A reserva de ${selectedReservation.customerName} foi cancelada.` });
+        setIsCancelAlertOpen(false);
+        setSelectedReservation(null);
+    };
+
     const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl'>) => {
-        const newReservation: Reservation = {
-            ...values,
-            id: (reservations.length + 1).toString(),
-            agentAvatarUrl: 'https://placehold.co/100x100',
-        };
-        setReservations([newReservation, ...reservations]);
-        toast({
-            title: "Reserva Criada",
-            description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
-        });
+        if (selectedReservation) {
+            // Edit
+            const updatedReservation = { ...selectedReservation, ...values };
+            setReservations(reservations.map(r => (r.id === selectedReservation.id ? updatedReservation : r)));
+            toast({ title: "Reserva Atualizada", description: `A reserva de ${updatedReservation.customerName} foi atualizada.` });
+        } else {
+            // Add
+            const newReservation: Reservation = {
+                ...values,
+                id: (reservations.length + 1).toString(),
+                agentAvatarUrl: 'https://placehold.co/100x100',
+            };
+            setReservations([newReservation, ...reservations]);
+            toast({
+                title: "Reserva Criada",
+                description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
+            });
+        }
         setIsFormOpen(false);
+        setSelectedReservation(null);
     };
-
-    const handleActionClick = (action: string) => {
-        toast({
-            title: "Funcionalidade em Desenvolvimento",
-            description: `A ação de "${action}" será implementada em breve.`,
-        });
-    };
-
 
   return (
       <>
@@ -118,10 +153,16 @@ export default function ReservationsPage() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                        <DropdownMenuItem onSelect={() => handleActionClick('Detalhes')}>Detalhes</DropdownMenuItem>
-                                        <DropdownMenuItem onSelect={() => handleActionClick('Editar')}>Editar</DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleDetailsReservation(reservation)}>Detalhes</DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={() => handleEditReservation(reservation)}>Editar</DropdownMenuItem>
                                         <DropdownMenuSeparator />
-                                        <DropdownMenuItem className="text-destructive" onSelect={() => handleActionClick('Cancelar')}>Cancelar</DropdownMenuItem>
+                                        <DropdownMenuItem 
+                                            className="text-destructive" 
+                                            onSelect={() => handleCancelReservation(reservation)}
+                                            disabled={reservation.status === 'Cancelada'}
+                                        >
+                                            Cancelar
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </TableCell>
@@ -131,11 +172,35 @@ export default function ReservationsPage() {
             </Table>
             </CardContent>
         </Card>
+        
         <ReservationForm 
             isOpen={isFormOpen}
             onOpenChange={setIsFormOpen}
             onSubmit={handleFormSubmit}
+            reservation={selectedReservation}
         />
+        
+        <ReservationDetailsDialog
+            isOpen={isDetailsOpen}
+            onOpenChange={setIsDetailsOpen}
+            reservation={selectedReservation}
+        />
+        
+        <AlertDialog open={isCancelAlertOpen} onOpenChange={setIsCancelAlertOpen}>
+            <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription>
+                Essa ação não pode ser desfeita. Isso definirá o status da reserva como "Cancelada".
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setSelectedReservation(null)}>Voltar</AlertDialogCancel>
+                <AlertDialogAction onClick={confirmCancel}>Sim, cancelar</AlertDialogAction>
+            </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+
       </>
   );
 }

@@ -1,5 +1,7 @@
+
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -29,6 +31,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { mockTravelPackages } from '@/lib/mock-data';
+import type { Reservation } from '@/lib/types';
 
 const reservationFormSchema = z.object({
   customerName: z.string().min(2, { message: 'O nome do cliente é obrigatório.' }),
@@ -44,28 +47,50 @@ interface ReservationFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onSubmit: (values: ReservationFormValues) => void;
+  reservation: Reservation | null;
 }
 
-export function ReservationForm({ isOpen, onOpenChange, onSubmit }: ReservationFormProps) {
+export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }: ReservationFormProps) {
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationFormSchema),
-    defaultValues: {
-      customerName: '',
-      status: 'Pendente',
-    },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+        if (reservation) {
+            form.reset({
+                ...reservation,
+                travelDate: new Date(reservation.travelDate), // Convert string to Date
+            });
+        } else {
+            form.reset({
+                customerName: '',
+                packageName: undefined,
+                travelDate: undefined,
+                totalPrice: 0,
+                status: 'Pendente',
+            });
+        }
+    }
+  }, [reservation, form, isOpen]);
+
 
   const handleFormSubmit = (values: ReservationFormValues) => {
     onSubmit(values);
     form.reset();
   }
+  
+  const dialogTitle = reservation ? 'Editar Reserva' : 'Nova Reserva';
+  const dialogDescription = reservation 
+    ? 'Altere os detalhes para atualizar a reserva.' 
+    : 'Preencha os detalhes para criar uma nova reserva.';
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Nova Reserva</DialogTitle>
-          <DialogDescription>Preencha os detalhes para criar uma nova reserva.</DialogDescription>
+          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -88,7 +113,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit }: ReservationF
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Pacote</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione um pacote" />
@@ -136,7 +161,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit }: ReservationF
                                     selected={field.value}
                                     onSelect={field.onChange}
                                     disabled={(date) =>
-                                        date < new Date() || date < new Date("1900-01-01")
+                                        date < new Date("1900-01-01")
                                     }
                                     initialFocus
                                 />
@@ -166,7 +191,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit }: ReservationF
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o status" />
@@ -188,7 +213,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit }: ReservationF
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type="submit">Criar Reserva</Button>
+              <Button type="submit">{reservation ? 'Salvar Alterações' : 'Criar Reserva'}</Button>
             </DialogFooter>
           </form>
         </Form>
