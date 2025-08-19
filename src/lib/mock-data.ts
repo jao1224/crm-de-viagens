@@ -1,4 +1,4 @@
-import type { TravelPackage, Kpi, Booking, Appointment } from './types';
+import type { TravelPackage, Kpi, Booking, Appointment, User } from './types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
@@ -32,4 +32,12 @@ export const mockAppointments: Appointment[] = [
   { id: '3', title: 'Almoço com Cliente VIP', time: '12:30 - 13:30', type: 'client', attendees: ['Carlos Pereira'] },
   { id: '4', title: 'Reunião de Equipe Semanal', time: '16:00 - 16:30', type: 'team', attendees: ['Todos'] },
   { id: '5', title: 'Call de Fechamento - Viagem Japão', time: '09:00 - 09:30', type: 'client', attendees: ['Ana Beatriz', 'Cliente Y'] },
+];
+
+export const mockUsers: User[] = [
+  { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
+  { id: '2', name: 'Bruno Lima', email: 'bruno.lima@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
+  { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
+  { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100' },
+  { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
 ];

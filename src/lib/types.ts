@@ -41,3 +41,12 @@ export type NavItem = {
   label: string;
   icon: LucideIcon;
 };
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: 'Administrador' | 'Agente de Viagem' | 'Cliente';
+  status: 'Ativo' | 'Inativo';
+  avatarUrl: string;
+}
