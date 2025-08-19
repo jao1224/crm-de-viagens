@@ -26,15 +26,16 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
   // In a real app, this would be a fetch from an API.
   const [itinerary, setItinerary] = useState<Itinerary | undefined>(undefined);
   const { toast } = useToast();
+  const { id } = params;
 
   useEffect(() => {
     // In a real app, you'd fetch by ID. Here, we find from the mock array.
     // This will not find newly created itineraries that only exist in the parent page's state.
     // The "correct" fix would involve a shared state (Context, Zustand, Redux) or fetching from a backend.
     // For the prototype, let's assume the mock data is the single source of truth.
-    const foundItinerary = mockItineraries.find((i) => i.id === params.id);
+    const foundItinerary = mockItineraries.find((i) => i.id === id);
     setItinerary(foundItinerary);
-  }, [params.id]);
+  }, [id]);
 
 
   const handlePdfGeneration = () => {
@@ -46,7 +47,7 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
 
   if (!itinerary) {
     // This logic needs to be robust. For now, we check if itinerary is loaded.
-    const tempItinerary = mockItineraries.find((i) => i.id === params.id);
+    const tempItinerary = mockItineraries.find((i) => i.id === id);
      if(!tempItinerary) {
         return (
           <div className="text-center">
