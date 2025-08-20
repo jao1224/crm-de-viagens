@@ -17,7 +17,7 @@ import { navItems } from './dashboard-nav';
 
 export function DashboardHeader() {
   const pathname = usePathname();
-  const pageTitle = navItems.find((item) => item.href === pathname)?.label || 'Dashboard';
+  const pageTitle = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'))?.label || 'Dashboard';
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
