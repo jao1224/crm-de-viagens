@@ -22,12 +22,12 @@ export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/packages', label: 'Pacotes', icon: Package },
   { href: '/reservations', label: 'Reservas', icon: CalendarCheck },
-  { href: '/negotiations', label: 'Recomendações', icon: Wand2 },
+  { href: '/recomendacoes', label: 'Recomendações', icon: Wand2 },
   { href: '/itineraries', label: 'Itinerários', icon: Map },
   { href: '/agenda', label: 'Agenda', icon: Calendar },
-  { href: '/financial', label: 'Faturamento', icon: DollarSign },
-  { href: '/reports', label: 'Relatórios', icon: LineChart },
-  { href: '/clients', label: 'Clientes', icon: Users },
+  { href: '/faturamento', label: 'Faturamento', icon: DollarSign },
+  { href: '/relatorios', label: 'Relatórios', icon: LineChart },
+  { href: '/clientes', label: 'Clientes', icon: Users },
   { href: '/admin', label: 'Admin', icon: UserCog },
 ];
 
