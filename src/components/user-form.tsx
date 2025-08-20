@@ -22,15 +22,12 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { User } from '@/lib/types';
 import { useEffect } from 'react';
 
 const userFormSchema = z.object({
   name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
   email: z.string().email({ message: 'Por favor, insira um email válido.' }),
-  role: z.enum(['Administrador', 'Agente de Viagem', 'Cliente']),
-  status: z.enum(['Ativo', 'Inativo']),
 });
 
 type UserFormValues = z.infer<typeof userFormSchema>;
@@ -48,8 +45,6 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user }: UserFormProps
     defaultValues: {
       name: '',
       email: '',
-      role: 'Cliente',
-      status: 'Ativo',
     },
   });
 
@@ -60,16 +55,14 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user }: UserFormProps
       form.reset({
         name: '',
         email: '',
-        role: 'Cliente',
-        status: 'Ativo',
       });
     }
   }, [user, form, isOpen]);
 
-  const dialogTitle = user ? 'Editar Usuário' : 'Adicionar Novo Usuário';
+  const dialogTitle = user ? 'Editar Cliente' : 'Adicionar Novo Cliente';
   const dialogDescription = user
-    ? 'Altere os dados abaixo para atualizar o usuário.'
-    : 'Preencha os campos abaixo para criar um novo usuário.';
+    ? 'Altere os dados abaixo para atualizar o cliente.'
+    : 'Preencha os campos abaixo para criar um novo cliente.';
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -106,58 +99,13 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user }: UserFormProps
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Perfil</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione um perfil" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Administrador">Administrador</SelectItem>
-                        <SelectItem value="Agente de Viagem">Agente de Viagem</SelectItem>
-                        <SelectItem value="Cliente">Cliente</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Ativo">Ativo</SelectItem>
-                        <SelectItem value="Inativo">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <DialogFooter className="pt-4">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type="submit">{user ? 'Salvar Alterações' : 'Criar Usuário'}</Button>
+              <Button type="submit">{user ? 'Salvar Alterações' : 'Criar Cliente'}</Button>
             </DialogFooter>
           </form>
         </Form>

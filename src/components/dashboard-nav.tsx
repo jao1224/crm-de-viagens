@@ -11,7 +11,6 @@ import {
   DollarSign,
   Users,
   LineChart,
-  Shield,
   Wand2,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
@@ -27,7 +26,7 @@ export const navItems: NavItem[] = [
   { href: '/agenda', label: 'Agenda', icon: Calendar },
   { href: '/financial', label: 'Faturamento', icon: DollarSign },
   { href: '/reports', label: 'Relatórios', icon: LineChart },
-  { href: '/admin', label: 'Admin', icon: Shield },
+  { href: '/clients', label: 'Clientes', icon: Users },
 ];
 
 
