@@ -60,11 +60,13 @@ const prompt = ai.definePrompt({
 2.  **Consulte os Pacotes Disponíveis:** Analise a lista de pacotes JSON abaixo. Considere título, destino, tipo, duração, preço e status (apenas pacotes 'Disponível').
 3.  **Selecione os Melhores Pacotes:** Escolha os 2 ou 3 pacotes que melhor correspondem à solicitação. Para cada pacote escolhido, forneça o \`packageId\` e uma \`justification\` clara e concisa do porquê ele é uma boa opção.
 4.  **Crie o Texto da Proposta:** Escreva um texto amigável e persuasivo (\`proposalText\`) para ser enviado ao cliente.
+    *   O texto deve ser limpo, coeso e profissional, pronto para ser copiado e colado.
+    *   **NÃO** inclua o "packageId" ou qualquer outra informação técnica no texto da proposta. Apenas o nome do pacote e a justificativa.
+    *   Use Markdown para formatação leve (negrito para os nomes dos pacotes, por exemplo), mas evite excessos como '***'.
     *   Comece com uma saudação calorosa.
     *   Mencione que você analisou a solicitação dele.
     *   Apresente os pacotes recomendados de forma atraente, usando as justificativas que você criou.
     *   Termine com uma chamada para ação, convidando o cliente a conversar sobre as opções.
-    *   Use Markdown para formatação leve (negrito, itálico).
 
 ---
 
