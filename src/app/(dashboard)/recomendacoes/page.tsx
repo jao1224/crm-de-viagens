@@ -25,9 +25,17 @@ import {
   DialogFooter,
   DialogClose
 } from '@/components/ui/dialog';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Wand2, Copy, PlusCircle } from 'lucide-react';
+import { Loader2, Wand2, Copy, PlusCircle, ChevronDown, PenSquare } from 'lucide-react';
 import { recommendPackages, RecommendPackagesOutput } from '@/ai/flows/property-recommendation';
 import { useToast } from '@/hooks/use-toast';
 import { mockTravelPackages, mockNegotiations } from '@/lib/mock-data';
@@ -35,6 +43,7 @@ import { PropertyCard } from '@/components/property-card';
 import { Separator } from '@/components/ui/separator';
 import type { Negotiation } from '@/lib/types';
 import { KanbanCard } from '@/components/kanban-card';
+import { NegotiationForm } from '@/components/negotiation-form';
 
 const formSchema = z.object({
   clientRequest: z.string().min(10, {
@@ -42,17 +51,12 @@ const formSchema = z.object({
   }),
 });
 
-const kanbanLanes: { title: Negotiation['status']; deals: Negotiation[] }[] = [
-    { title: 'Lead', deals: mockNegotiations.filter(d => d.status === 'Lead') },
-    { title: 'Proposta Enviada', deals: mockNegotiations.filter(d => d.status === 'Proposta Enviada') },
-    { title: 'Em Negociação', deals: mockNegotiations.filter(d => d.status === 'Em Negociação') },
-    { title: 'Ganhos', deals: mockNegotiations.filter(d => d.status === 'Ganhos') },
-];
-
 export default function NegotiationsPage() {
+  const [negotiations, setNegotiations] = useState<Negotiation[]>(mockNegotiations);
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<RecommendPackagesOutput | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isAiFormOpen, setIsAiFormOpen] = useState(false);
+  const [isManualFormOpen, setIsManualFormOpen] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,8 +65,15 @@ export default function NegotiationsPage() {
       clientRequest: '',
     },
   });
+  
+  const kanbanLanes: { title: Negotiation['status']; deals: Negotiation[] }[] = [
+    { title: 'Lead', deals: negotiations.filter(d => d.status === 'Lead') },
+    { title: 'Proposta Enviada', deals: negotiations.filter(d => d.status === 'Proposta Enviada') },
+    { title: 'Em Negociação', deals: negotiations.filter(d => d.status === 'Em Negociação') },
+    { title: 'Ganhos', deals: negotiations.filter(d => d.status === 'Ganhos') },
+  ];
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onAiSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setRecommendations(null);
     try {
@@ -79,8 +90,23 @@ export default function NegotiationsPage() {
       });
     } finally {
       setIsLoading(false);
-      setIsFormOpen(false); // Close dialog on submission
+      setIsAiFormOpen(false); // Close dialog on submission
     }
+  }
+
+  const handleManualSubmit = (values: Omit<Negotiation, 'id' | 'agentId' | 'status'>) => {
+    const newNegotiation: Negotiation = {
+        ...values,
+        id: (negotiations.length + Date.now()).toString(),
+        agentId: '2', // Hardcoded agent for now
+        status: 'Lead',
+    };
+    setNegotiations([newNegotiation, ...negotiations]);
+    toast({
+        title: "Negociação Adicionada!",
+        description: `A negociação para ${newNegotiation.customerName} foi criada.`
+    })
+    setIsManualFormOpen(false);
   }
 
   const copyToClipboard = () => {
@@ -100,73 +126,36 @@ export default function NegotiationsPage() {
 
 
   return (
+    <>
     <div className="space-y-6">
        <Card>
         <CardHeader className="flex flex-row items-center justify-between">
             <div>
                 <CardTitle className="font-headline text-2xl text-primary">Pipeline de Vendas</CardTitle>
                 <CardDescription>
-                    Use o assistente de IA para criar novas negociações e acompanhe seu progresso aqui.
+                    Crie novas negociações e acompanhe seu progresso aqui.
                 </CardDescription>
             </div>
-            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-                <DialogTrigger asChild>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                     <Button>
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Nova Negociação com IA
+                        Nova Negociação
+                        <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-lg">
-                    <DialogHeader>
-                        <DialogTitle className="font-headline text-2xl text-primary">Assistente Inteligente de Vendas</DialogTitle>
-                        <DialogDescription>
-                            Descreva o que o cliente procura e a IA encontrará os melhores pacotes e criará um rascunho de proposta.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-                            <FormField
-                            control={form.control}
-                            name="clientRequest"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>O que seu cliente busca?</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                    placeholder="Ex: 'Quero uma viagem romântica para a praia, com um bom hotel e duração de 7 dias. Orçamento em torno de R$ 9.000 para o casal.'"
-                                    rows={4}
-                                    {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    Seja o mais detalhado possível para obter as melhores recomendações.
-                                </FormDescription>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button type="button" variant="outline">Cancelar</Button>
-                                </DialogClose>
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? (
-                                    <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        Buscando...
-                                    </>
-                                    ) : (
-                                    <>
-                                        <Wand2 className="mr-2 h-4 w-4" />
-                                        Obter Recomendações
-                                    </>
-                                    )}
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </Form>
-                </DialogContent>
-            </Dialog>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setIsAiFormOpen(true)}>
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        <span>Usar Assistente de IA</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setIsManualFormOpen(true)}>
+                        <PenSquare className="mr-2 h-4 w-4" />
+                        <span>Adicionar Manualmente</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
         </CardHeader>
         <CardContent>
             <div className="flex gap-4 overflow-x-auto p-1">
@@ -228,7 +217,67 @@ export default function NegotiationsPage() {
       )}
 
     </div>
+    
+    {/* AI Form Dialog */}
+    <Dialog open={isAiFormOpen} onOpenChange={setIsAiFormOpen}>
+        <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+                <DialogTitle className="font-headline text-2xl text-primary">Assistente Inteligente de Vendas</DialogTitle>
+                <DialogDescription>
+                    Descreva o que o cliente procura e a IA encontrará os melhores pacotes e criará um rascunho de proposta.
+                </DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onAiSubmit)} className="space-y-4 pt-4">
+                    <FormField
+                    control={form.control}
+                    name="clientRequest"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>O que seu cliente busca?</FormLabel>
+                        <FormControl>
+                            <Textarea
+                            placeholder="Ex: 'Quero uma viagem romântica para a praia, com um bom hotel e duração de 7 dias. Orçamento em torno de R$ 9.000 para o casal.'"
+                            rows={4}
+                            {...field}
+                            />
+                        </FormControl>
+                        <FormDescription>
+                            Seja o mais detalhado possível para obter as melhores recomendações.
+                        </FormDescription>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button type="button" variant="outline">Cancelar</Button>
+                        </DialogClose>
+                        <Button type="submit" disabled={isLoading}>
+                            {isLoading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Buscando...
+                            </>
+                            ) : (
+                            <>
+                                <Wand2 className="mr-2 h-4 w-4" />
+                                Obter Recomendações
+                            </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </Form>
+        </DialogContent>
+    </Dialog>
+
+    {/* Manual Form Dialog */}
+    <NegotiationForm 
+        isOpen={isManualFormOpen}
+        onOpenChange={setIsManualFormOpen}
+        onSubmit={handleManualSubmit}
+    />
+    </>
   );
 }
-
-    
