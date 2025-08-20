@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -33,9 +32,10 @@ import { useToast } from '@/hooks/use-toast';
 import { mockTravelPackages, mockNegotiations } from '@/lib/mock-data';
 import { PropertyCard } from '@/components/property-card';
 import { Separator } from '@/components/ui/separator';
-import type { Negotiation } from '@/lib/types';
+import type { Negotiation, TravelPackage } from '@/lib/types';
 import { KanbanCard } from '@/components/kanban-card';
 import { NegotiationForm } from '@/components/negotiation-form';
+import { PackageDetailsDialog } from '@/components/package-details-dialog';
 
 const formSchema = z.object({
   clientRequest: z.string().min(10, {
@@ -49,6 +49,8 @@ export default function NegotiationsPage() {
   const [recommendations, setRecommendations] = useState<RecommendPackagesOutput | null>(null);
   const [isAiFormOpen, setIsAiFormOpen] = useState(false);
   const [isManualFormOpen, setIsManualFormOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -110,6 +112,11 @@ export default function NegotiationsPage() {
       });
     }
   };
+  
+  const handleDetailsClick = (pkg: TravelPackage) => {
+    setSelectedPackage(pkg);
+    setIsDetailsOpen(true);
+  }
 
   const recommendedPackagesDetails = recommendations?.recommendedPackages.map(rec => {
       const pkg = mockTravelPackages.find(p => p.id === rec.packageId);
@@ -185,7 +192,7 @@ export default function NegotiationsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recommendedPackagesDetails?.map((pkg) => (
                            pkg && <div key={pkg.id}>
-                                <PropertyCard property={pkg} />
+                                <PropertyCard property={pkg} onDetailsClick={() => handleDetailsClick(pkg)} />
                                 <div className="mt-2 p-3 bg-accent/20 text-accent-foreground/80 rounded-b-lg text-xs">
                                     <p><span className="font-bold text-primary/80">Justificativa da IA:</span> {pkg.justification}</p>
                                 </div>
@@ -259,6 +266,12 @@ export default function NegotiationsPage() {
         isOpen={isManualFormOpen}
         onOpenChange={setIsManualFormOpen}
         onSubmit={handleManualSubmit}
+    />
+    
+    <PackageDetailsDialog
+        isOpen={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        pkg={selectedPackage}
     />
     </>
   );

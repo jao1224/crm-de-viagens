@@ -8,13 +8,15 @@ import type { TravelPackage } from '@/lib/types';
 import { PlusCircle } from 'lucide-react';
 import { PackageForm } from '@/components/package-form';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { PackageDetailsDialog } from '@/components/package-details-dialog';
 
 const filterTypes: (TravelPackage['type'] | 'Todos')[] = ['Todos', 'Praia', 'Montanha', 'Cidade', 'Negócios', 'Família'];
 
 export default function PackagesPage() {
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const [activeFilter, setActiveFilter] = useState<TravelPackage['type'] | 'Todos'>('Todos');
   const { toast } = useToast();
 
@@ -34,6 +36,11 @@ export default function PackagesPage() {
     setIsFormOpen(false);
   };
   
+  const handleDetailsClick = (pkg: TravelPackage) => {
+    setSelectedPackage(pkg);
+    setIsDetailsOpen(true);
+  }
+
   const filteredPackages = activeFilter === 'Todos' 
     ? packages 
     : packages.filter(pkg => pkg.type === activeFilter);
@@ -63,7 +70,7 @@ export default function PackagesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPackages.map((pkg) => (
-          <PropertyCard key={pkg.id} property={pkg} />
+          <PropertyCard key={pkg.id} property={pkg} onDetailsClick={() => handleDetailsClick(pkg)} />
         ))}
       </div>
 
@@ -71,6 +78,12 @@ export default function PackagesPage() {
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
         onSubmit={handleFormSubmit}
+      />
+
+      <PackageDetailsDialog
+        isOpen={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        pkg={selectedPackage}
       />
     </>
   );

@@ -8,6 +8,7 @@ import { Users, Sun, Mountain, Briefcase, Tag, Calendar, HeartHandshake } from '
 
 type PropertyCardProps = {
   property: TravelPackage;
+  onDetailsClick: () => void;
 };
 
 const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
@@ -21,7 +22,7 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
     }
 }
 
-export function PropertyCard({ property }: PropertyCardProps) {
+export function PropertyCard({ property, onDetailsClick }: PropertyCardProps) {
   return (
     <Card className="overflow-hidden flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="p-0 relative">
@@ -59,9 +60,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <p className="text-xl font-bold font-headline text-primary">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(property.price)}
         </p>
-        <Link href={`/packages/${property.id}`} passHref>
-            <Button>Detalhes</Button>
-        </Link>
+        <Button onClick={onDetailsClick}>Detalhes</Button>
       </CardFooter>
     </Card>
   );
