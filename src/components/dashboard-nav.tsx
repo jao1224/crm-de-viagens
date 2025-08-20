@@ -13,6 +13,7 @@ import {
   LineChart,
   Wand2,
   UserCog,
+  CheckSquare,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -29,6 +30,7 @@ export const navItems: NavItem[] = [
   { href: '/reports', label: 'Relatórios', icon: LineChart },
   { href: '/clients', label: 'Clientes', icon: Users },
   { href: '/admin', label: 'Admin', icon: UserCog },
+  { href: '/checklist', label: 'Checklist', icon: CheckSquare },
 ];
 
 
