@@ -15,37 +15,12 @@ import { useToast } from '@/hooks/use-toast';
 import { mockItineraries } from '@/lib/mock-data';
 import Link from 'next/link';
 
-const LOCAL_STORAGE_KEY = 'itineraries';
-
 export default function ItinerariesPage() {
-  const [itineraries, setItineraries] = useState<Itinerary[]>([]);
+  const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
   const router = useRouter();
-
-  // Load itineraries from localStorage on initial render
-  useEffect(() => {
-    try {
-      const storedItineraries = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (storedItineraries) {
-        setItineraries(JSON.parse(storedItineraries));
-      } else {
-        setItineraries(mockItineraries);
-      }
-    } catch (error) {
-      console.error("Failed to parse itineraries from localStorage", error);
-      setItineraries(mockItineraries);
-    }
-  }, []);
-
-  // Save itineraries to localStorage whenever they change
-  useEffect(() => {
-    // We don't save the initial empty array
-    if (itineraries.length > 0) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(itineraries));
-    }
-  }, [itineraries]);
 
   const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {

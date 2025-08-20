@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react';
 import { mockItineraries } from '@/lib/mock-data';
 import { ItineraryForm } from '@/components/itinerary-form';
 
-const LOCAL_STORAGE_KEY = 'itineraries';
 
 const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -24,48 +23,24 @@ const getStatusVariant = (status: Itinerary['status']) => {
 };
 
 export default function ItineraryDetailPage({ params }: { params: { id: string } }) {
+  const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
   const [itinerary, setItinerary] = useState<Itinerary | undefined>(undefined);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { toast } = useToast();
   const { id } = params;
 
   useEffect(() => {
-    let allItineraries: Itinerary[] = [];
-    try {
-      const storedItineraries = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (storedItineraries) {
-        allItineraries = JSON.parse(storedItineraries);
-      } else {
-        allItineraries = mockItineraries;
-      }
-    } catch (error) {
-      console.error("Failed to parse itineraries from localStorage", error);
-      allItineraries = mockItineraries;
-    }
-    
-    const foundItinerary = allItineraries.find((i) => i.id === id);
+    const foundItinerary = itineraries.find((i) => i.id === id);
     setItinerary(foundItinerary);
-
-  }, [id]);
+  }, [id, itineraries]);
 
   const handleFormSubmit = (values: Omit<Itinerary, 'id' | 'status'>) => {
     if (itinerary) {
       const updatedItinerary = { ...itinerary, ...values };
+      const updatedList = itineraries.map(it => it.id === itinerary.id ? updatedItinerary : it);
+      setItineraries(updatedList);
       
-      try {
-        const storedItineraries = localStorage.getItem(LOCAL_STORAGE_KEY);
-        let allItineraries: Itinerary[] = storedItineraries ? JSON.parse(storedItineraries) : mockItineraries;
-        
-        const updatedList = allItineraries.map(it => it.id === itinerary.id ? updatedItinerary : it);
-        
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedList));
-        setItinerary(updatedItinerary); // Update the state on the details page as well
-        
-        toast({ title: "Itinerário Atualizado", description: "As alterações foram salvas com sucesso."});
-      } catch (error) {
-        console.error("Failed to update itinerary in localStorage", error);
-        toast({ title: "Erro ao Salvar", description: "Não foi possível salvar as alterações.", variant: 'destructive'});
-      }
+      toast({ title: "Itinerário Atualizado", description: "As alterações foram salvas com sucesso."});
     }
     setIsFormOpen(false);
   }
