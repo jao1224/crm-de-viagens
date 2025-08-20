@@ -25,14 +25,6 @@ import {
   DialogFooter,
   DialogClose
 } from '@/components/ui/dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Wand2, Copy, PlusCircle, ChevronDown, PenSquare } from 'lucide-react';
@@ -136,26 +128,16 @@ export default function NegotiationsPage() {
                     Crie novas negociações e acompanhe seu progresso aqui.
                 </CardDescription>
             </div>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Nova Negociação
-                        <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onSelect={() => setIsAiFormOpen(true)}>
-                        <Wand2 className="mr-2 h-4 w-4" />
-                        <span>Usar Assistente de IA</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => setIsManualFormOpen(true)}>
-                        <PenSquare className="mr-2 h-4 w-4" />
-                        <span>Adicionar Manualmente</span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-
+             <div className="flex gap-2">
+                <Button onClick={() => setIsAiFormOpen(true)}>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Usar Assistente de IA
+                </Button>
+                <Button variant="outline" onClick={() => setIsManualFormOpen(true)}>
+                    <PenSquare className="mr-2 h-4 w-4" />
+                    Adicionar Manualmente
+                </Button>
+            </div>
         </CardHeader>
         <CardContent>
             <div className="flex gap-4 overflow-x-auto p-1">
