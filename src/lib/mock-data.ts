@@ -1,3 +1,4 @@
+
 import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itinerary } from './types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
