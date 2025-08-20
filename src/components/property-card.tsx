@@ -59,7 +59,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         <p className="text-xl font-bold font-headline text-primary">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(property.price)}
         </p>
-        <Link href={`/properties/${property.id}`} passHref>
+        <Link href={`/packages/${property.id}`} passHref>
             <Button>Detalhes</Button>
         </Link>
       </CardFooter>
