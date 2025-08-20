@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { UserForm } from "@/components/user-form";
+import { UserForm } from '@/components/user-form';
 import { mockUsers } from "@/lib/mock-data";
 import type { User } from '@/lib/types';
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminPage() {
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>(mockUsers.filter(u => u.role !== 'Cliente'));
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -25,7 +25,6 @@ export default function AdminPage() {
     switch (role) {
       case 'Administrador': return 'default';
       case 'Agente de Viagem': return 'secondary';
-      case 'Cliente': return 'outline';
       default: return 'outline';
     }
   };
@@ -57,7 +56,7 @@ export default function AdminPage() {
     setSelectedUser(null);
   };
   
-  const handleFormSubmit = (values: Omit<User, 'id' | 'avatarUrl'>) => {
+  const handleFormSubmit = (values: Omit<User, 'id' | 'avatarUrl' | 'role' | 'status'>) => {
     if (selectedUser) {
       // Edit
       const updatedUser = { ...selectedUser, ...values };
@@ -65,12 +64,14 @@ export default function AdminPage() {
       toast({ title: "Usuário Atualizado", description: `Os dados de ${updatedUser.name} foram atualizados.` });
     } else {
       // Add
-      const newUser = { 
+      const newUser: User = { 
         ...values, 
-        id: (users.length + 1).toString(),
-        avatarUrl: 'https://placehold.co/100x100'
+        id: (users.length + 1 + Date.now()).toString(),
+        avatarUrl: 'https://placehold.co/100x100',
+        role: 'Agente de Viagem', // Default role for new users
+        status: 'Ativo'
       };
-      setUsers([...users, newUser]);
+      setUsers([newUser, ...users]);
       toast({ title: "Usuário Adicionado", description: `O usuário ${newUser.name} foi adicionado com sucesso.` });
     }
     setIsFormOpen(false);
@@ -151,6 +152,7 @@ export default function AdminPage() {
         onOpenChange={setIsFormOpen}
         onSubmit={handleFormSubmit}
         user={selectedUser}
+        isClientForm={false}
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>

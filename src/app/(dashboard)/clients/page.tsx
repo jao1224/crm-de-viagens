@@ -135,6 +135,7 @@ export default function ClientsPage() {
         onOpenChange={setIsFormOpen}
         onSubmit={handleFormSubmit}
         user={selectedUser}
+        isClientForm={true}
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>

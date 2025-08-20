@@ -12,6 +12,7 @@ import {
   Users,
   LineChart,
   Wand2,
+  UserCog,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -27,6 +28,7 @@ export const navItems: NavItem[] = [
   { href: '/financial', label: 'Faturamento', icon: DollarSign },
   { href: '/reports', label: 'Relatórios', icon: LineChart },
   { href: '/clients', label: 'Clientes', icon: Users },
+  { href: '/admin', label: 'Admin', icon: UserCog },
 ];
 
 
