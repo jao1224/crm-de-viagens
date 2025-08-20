@@ -1,5 +1,5 @@
 
-import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itinerary } from './types';
+import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itinerary, Negotiation } from './types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
@@ -63,3 +63,14 @@ export const mockItineraries: Itinerary[] = [
     { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado', description: 'Otimize sua viagem de negócios com um roteiro que inclui tempo para reuniões importantes, mas também para descobrir os principais pontos turísticos, restaurantes e shows da Big Apple.' },
     { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho', description: 'Uma imersão na cultura japonesa, visitando os mais belos templos e jardins de Quioto, participando de uma cerimônia do chá e explorando o bairro das gueixas, Gion.' },
   ];
+
+  export const mockNegotiations: Negotiation[] = [
+    { id: '1', customerName: 'Renata Almeida', packageName: 'Aventura nos Alpes Suíços', value: 14400, agentId: '2', status: 'Lead' },
+    { id: '2', customerName: 'Fernando Costa', packageName: 'Safari na Tanzânia', value: 25000, agentId: '2', status: 'Proposta Enviada' },
+    { id: '3', customerName: 'Beatriz Santos', packageName: 'Combo Cultural: Rio e Salvador', value: 12400, agentId: '4', status: 'Em Negociação' },
+    { id: '4', customerName: 'Tiago Nunes', packageName: 'Resort Tropical em Cancún', value: 9000, agentId: '2', status: 'Ganhos' },
+    { id: '5', customerName: 'Mariana Lima', packageName: 'Férias em Roma e Vaticano', value: 5900, agentId: '2', status: 'Proposta Enviada' },
+    { id: '6', customerName: 'Família Martins', packageName: 'Diversão em Família em Orlando', value: 15000, agentId: '4', status: 'Lead' },
+  ];
+
+    

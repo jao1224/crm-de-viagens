@@ -30,15 +30,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2, Wand2, Copy, PlusCircle } from 'lucide-react';
 import { recommendPackages, RecommendPackagesOutput } from '@/ai/flows/property-recommendation';
 import { useToast } from '@/hooks/use-toast';
-import { mockTravelPackages } from '@/lib/mock-data';
+import { mockTravelPackages, mockNegotiations } from '@/lib/mock-data';
 import { PropertyCard } from '@/components/property-card';
 import { Separator } from '@/components/ui/separator';
+import type { Negotiation } from '@/lib/types';
+import { KanbanCard } from '@/components/kanban-card';
 
 const formSchema = z.object({
   clientRequest: z.string().min(10, {
     message: 'A solicitação do cliente deve ter pelo menos 10 caracteres.',
   }),
 });
+
+const kanbanLanes: { title: Negotiation['status']; deals: Negotiation[] }[] = [
+    { title: 'Lead', deals: mockNegotiations.filter(d => d.status === 'Lead') },
+    { title: 'Proposta Enviada', deals: mockNegotiations.filter(d => d.status === 'Proposta Enviada') },
+    { title: 'Em Negociação', deals: mockNegotiations.filter(d => d.status === 'Em Negociação') },
+    { title: 'Ganhos', deals: mockNegotiations.filter(d => d.status === 'Ganhos') },
+];
 
 export default function NegotiationsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -160,10 +169,20 @@ export default function NegotiationsPage() {
             </Dialog>
         </CardHeader>
         <CardContent>
-             <div className="text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg">
-                <p className='font-medium'>Pipeline de Vendas (Kanban)</p>
-                <p className='text-sm'>As colunas do funil (Lead, Proposta, Negociação, etc.) e os cards de negociação aparecerão aqui em breve.</p>
-             </div>
+            <div className="flex gap-4 overflow-x-auto p-1">
+              {kanbanLanes.map(lane => (
+                <div key={lane.title} className="flex-shrink-0 w-72 rounded-lg">
+                    <div className='p-2'>
+                        <h3 className="text-sm font-semibold text-foreground mb-2">{lane.title} ({lane.deals.length})</h3>
+                    </div>
+                  <div className="space-y-3 p-2 bg-muted/50 rounded-lg h-full min-h-[200px]">
+                    {lane.deals.map(deal => (
+                      <KanbanCard key={deal.id} deal={deal} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
         </CardContent>
        </Card>
       
@@ -211,3 +230,5 @@ export default function NegotiationsPage() {
     </div>
   );
 }
+
+    

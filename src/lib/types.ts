@@ -24,10 +24,9 @@ export type Kpi = {
 
 export type Booking = {
   month: string;
-  praia: number;
-  montanha: number;
-  cidade: number;
+  [key: string]: number | string; // Allow dynamic keys for package types
 };
+
 
 export type Appointment = {
   id: string;
@@ -75,3 +74,14 @@ export type Itinerary = {
   status: 'Em rascunho' | 'Publicado' | 'Arquivado';
   description: string;
 };
+
+export type Negotiation = {
+    id: string;
+    customerName: string;
+    packageName: string;
+    value: number;
+    agentId: string;
+    status: 'Lead' | 'Proposta Enviada' | 'Em Negociação' | 'Ganhos' | 'Perdido';
+}
+
+    
