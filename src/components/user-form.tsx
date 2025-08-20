@@ -23,12 +23,15 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import type { User } from '@/lib/types';
+import type { User, TravelStyle } from '@/lib/types';
+import { travelStyles } from '@/lib/types';
 import { useEffect } from 'react';
 
 const userFormSchema = z.object({
   name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
   email: z.string().email({ message: 'Por favor, insira um email válido.' }),
+  phone: z.string().optional(),
+  travelStyle: z.enum(travelStyles).optional(),
   role: z.enum(['Administrador', 'Agente de Viagem', 'Cliente']).optional(),
   status: z.enum(['Ativo', 'Inativo']).optional(),
 });
@@ -56,6 +59,8 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
         form.reset({
           name: '',
           email: '',
+          phone: '',
+          travelStyle: undefined,
           role: isClientForm ? 'Cliente' : 'Agente de Viagem',
           status: 'Ativo',
         });
@@ -98,19 +103,60 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Ex: joao.silva@email.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="Ex: joao.silva@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Telefone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: +55 11 98765-4321" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            {isClientForm && (
+              <FormField
+                control={form.control}
+                name="travelStyle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estilo de Viagem Preferido</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione um estilo" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {travelStyles.map(style => (
+                            <SelectItem key={style} value={style}>{style}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
 
             {!isClientForm && (
               <div className="grid grid-cols-2 gap-4">

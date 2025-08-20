@@ -44,6 +44,9 @@ export type NavItem = {
   icon: LucideIcon;
 };
 
+export const travelStyles = ['Luxo', 'Aventura', 'Cultural', 'Romântica', 'Corporativa', 'Econômica'] as const;
+export type TravelStyle = typeof travelStyles[number];
+
 export type User = {
   id: string;
   name: string;
@@ -51,6 +54,8 @@ export type User = {
   role: 'Administrador' | 'Agente de Viagem' | 'Cliente';
   status: 'Ativo' | 'Inativo';
   avatarUrl: string;
+  phone?: string;
+  travelStyle?: TravelStyle;
 };
 
 export type Reservation = {

@@ -38,11 +38,12 @@ export const mockAppointments: Appointment[] = [
 ];
 
 export const mockUsers: User[] = [
-  { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
-  { id: '2', name: 'Bruno Lima', email: 'bruno.lima@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
-  { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
-  { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100' },
-  { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100' },
+  { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 11 98765-4321' },
+  { id: '2', name: 'Bruno Lima', email: 'bruno.lima@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 21 91234-5678' },
+  { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 31 99876-5432', travelStyle: 'Luxo' },
+  { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 41 98765-1234' },
+  { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 51 91122-3344', travelStyle: 'Aventura' },
+  { id: '6', name: 'Fábio Martins', email: 'fabio.martins@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 61 95566-7788', travelStyle: 'Cultural' },
 ];
 
 export const mockReservations: Reservation[] = [

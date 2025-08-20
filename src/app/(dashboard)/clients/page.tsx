@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { UserForm } from "@/components/user-form";
 import { mockUsers } from "@/lib/mock-data";
-import type { User } from '@/lib/types';
+import type { User, TravelStyle } from '@/lib/types';
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 
@@ -44,7 +44,7 @@ export default function ClientsPage() {
     setSelectedUser(null);
   };
   
-  const handleFormSubmit = (values: Pick<User, 'name' | 'email'>) => {
+  const handleFormSubmit = (values: Pick<User, 'name' | 'email' | 'phone' | 'travelStyle'>) => {
     if (selectedUser) {
       // Edit
       const updatedUser = { ...selectedUser, ...values };
@@ -85,6 +85,7 @@ export default function ClientsPage() {
                   <TableRow>
                       <TableHead>Cliente</TableHead>
                       <TableHead>Contato</TableHead>
+                      <TableHead>Estilo de Viagem</TableHead>
                       <TableHead>
                           <span className="sr-only">Ações</span>
                       </TableHead>
@@ -106,6 +107,14 @@ export default function ClientsPage() {
                           </TableCell>
                           <TableCell>
                                 <p className="text-sm text-muted-foreground">{user.email}</p>
+                                <p className="text-xs text-muted-foreground">{user.phone}</p>
+                          </TableCell>
+                          <TableCell>
+                            {user.travelStyle ? (
+                              <Badge variant="outline">{user.travelStyle}</Badge>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">N/A</span>
+                            )}
                           </TableCell>
                           <TableCell>
                               <DropdownMenu>
