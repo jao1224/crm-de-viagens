@@ -160,8 +160,9 @@ export default function NegotiationsPage() {
             </Dialog>
         </CardHeader>
         <CardContent>
-             <div className="text-center text-muted-foreground p-8">
-                <p>O pipeline de vendas (Kanban) aparecerá aqui.</p>
+             <div className="text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg">
+                <p className='font-medium'>Pipeline de Vendas (Kanban)</p>
+                <p className='text-sm'>As colunas do funil (Lead, Proposta, Negociação, etc.) e os cards de negociação aparecerão aqui em breve.</p>
              </div>
         </CardContent>
        </Card>
