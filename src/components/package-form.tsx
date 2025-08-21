@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -34,6 +35,7 @@ const packageFormSchema = z.object({
   duration: z.coerce.number().int().min(1, { message: 'A duração deve ser de pelo menos 1 dia.' }),
   travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
   type: z.enum(['Praia', 'Montanha', 'Cidade', 'Negócios', 'Família']),
+  imageUrl: z.string().url({ message: 'Por favor, insira uma URL de imagem válida.' }).optional().or(z.literal('')),
 });
 
 type PackageFormValues = z.infer<typeof packageFormSchema>;
@@ -62,6 +64,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
           duration: 1,
           travelers: 1,
           type: 'Praia',
+          imageUrl: '',
         });
       }
     }
@@ -94,6 +97,19 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
                   <FormLabel>Título do Pacote</FormLabel>
                   <FormControl>
                     <Input placeholder="Ex: Férias Incríveis na Grécia" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL da Imagem</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://exemplo.com/imagem.png" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -31,12 +31,13 @@ export default function PackagesPage() {
     setIsFormOpen(true);
   };
 
-  const handleFormSubmit = (values: Omit<TravelPackage, 'id' | 'status' | 'imageUrl' | 'dataAiHint'>) => {
+  const handleFormSubmit = (values: Omit<TravelPackage, 'id' | 'status' | 'dataAiHint'>) => {
     if (selectedPackage) {
       // Edit mode
       const updatedPackage = { 
         ...selectedPackage, 
         ...values,
+        imageUrl: values.imageUrl || selectedPackage.imageUrl, // Keep old image if new one is empty
         dataAiHint: `${values.type.toLowerCase()} ${values.destination.split(',')[0].toLowerCase()}`
       };
       setPackages(packages.map(p => p.id === selectedPackage.id ? updatedPackage : p));
@@ -50,7 +51,7 @@ export default function PackagesPage() {
         ...values,
         id: (packages.length + Date.now()).toString(),
         status: 'Disponível',
-        imageUrl: 'https://placehold.co/600x400',
+        imageUrl: values.imageUrl || 'https://placehold.co/600x400',
         dataAiHint: `${values.type.toLowerCase()} ${values.destination.split(',')[0].toLowerCase()}`
       };
       setPackages([newPackage, ...packages]);
