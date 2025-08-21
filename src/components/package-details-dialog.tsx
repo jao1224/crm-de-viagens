@@ -5,7 +5,7 @@ import type { TravelPackage } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './ui/dialog';
 import { Badge } from './ui/badge';
 import Image from 'next/image';
-import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake } from 'lucide-react';
+import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake, Pencil } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
 
@@ -13,6 +13,7 @@ interface PackageDetailsDialogProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   pkg: TravelPackage | null;
+  onEdit: () => void;
 }
 
 const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
@@ -26,7 +27,7 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
     }
 }
 
-export function PackageDetailsDialog({ isOpen, onOpenChange, pkg }: PackageDetailsDialogProps) {
+export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: PackageDetailsDialogProps) {
   if (!pkg) return null;
 
   return (
@@ -88,9 +89,15 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg }: PackageDetai
         </div>
 
         <DialogFooter className="p-6 pt-0 flex sm:justify-between w-full">
-            <DialogClose asChild>
-                <Button type="button" variant="outline">Fechar</Button>
-            </DialogClose>
+            <div className="flex gap-2">
+                <Button type="button" variant="outline" onClick={onEdit}>
+                    <Pencil className="mr-2" />
+                    Editar
+                </Button>
+                <DialogClose asChild>
+                    <Button type="button" variant="secondary">Fechar</Button>
+                </DialogClose>
+            </div>
             <Button size="lg" disabled={pkg.status === 'Esgotado'} asChild>
                 <Link href="/reservations">Reservar Agora</Link>
             </Button>

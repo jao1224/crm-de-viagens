@@ -117,6 +117,16 @@ export default function NegotiationsPage() {
     setSelectedPackage(pkg);
     setIsDetailsOpen(true);
   }
+  
+  const handleEditClick = (pkg: TravelPackage) => {
+    // This page doesn't have the form, so we can just log for now
+    // Or ideally, this would be a shared state management
+    console.log("Edit clicked for:", pkg.title);
+    toast({
+        title: "Funcionalidade Indisponível Aqui",
+        description: "A edição de pacotes deve ser feita na página de Pacotes.",
+    });
+  }
 
   const recommendedPackagesDetails = recommendations?.recommendedPackages.map(rec => {
       const pkg = mockTravelPackages.find(p => p.id === rec.packageId);
@@ -192,7 +202,11 @@ export default function NegotiationsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {recommendedPackagesDetails?.map((pkg) => (
                            pkg && <div key={pkg.id}>
-                                <PropertyCard property={pkg} onDetailsClick={() => handleDetailsClick(pkg)} />
+                                <PropertyCard 
+                                  property={pkg} 
+                                  onDetailsClick={() => handleDetailsClick(pkg)}
+                                  onEditClick={() => handleEditClick(pkg)}
+                                />
                                 <div className="mt-2 p-3 bg-accent/20 text-accent-foreground/80 rounded-b-lg text-xs">
                                     <p><span className="font-bold text-primary/80">Justificativa da IA:</span> {pkg.justification}</p>
                                 </div>
@@ -272,6 +286,10 @@ export default function NegotiationsPage() {
         isOpen={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         pkg={selectedPackage}
+        onEdit={() => {
+            setIsDetailsOpen(false);
+            if(selectedPackage) handleEditClick(selectedPackage);
+        }}
     />
     </>
   );

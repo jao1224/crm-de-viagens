@@ -25,6 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import type { TravelPackage } from '@/lib/types';
+import { useEffect } from 'react';
 
 const packageFormSchema = z.object({
   title: z.string().min(5, { message: 'O título deve ter pelo menos 5 caracteres.' }),
@@ -41,23 +42,30 @@ interface PackageFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onSubmit: (values: PackageFormValues) => void;
-  pkg?: TravelPackage | null;
+  pkg: TravelPackage | null;
 }
 
 export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageFormProps) {
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageFormSchema),
-    defaultValues: pkg ? {
-        ...pkg,
-    } : {
-      title: '',
-      destination: '',
-      price: 0,
-      duration: 1,
-      travelers: 1,
-      type: 'Praia',
-    },
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      if (pkg) {
+        form.reset(pkg);
+      } else {
+        form.reset({
+          title: '',
+          destination: '',
+          price: 0,
+          duration: 1,
+          travelers: 1,
+          type: 'Praia',
+        });
+      }
+    }
+  }, [pkg, form, isOpen]);
 
   const handleFormSubmit = (values: PackageFormValues) => {
     onSubmit(values);
@@ -110,7 +118,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo de Pacote</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione o tipo" />

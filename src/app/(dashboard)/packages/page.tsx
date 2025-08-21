@@ -21,20 +21,46 @@ export default function PackagesPage() {
   const [activeFilter, setActiveFilter] = useState<TravelPackage['type'] | 'Todos'>('Todos');
   const { toast } = useToast();
 
+  const handleAddClick = () => {
+    setSelectedPackage(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEditClick = (pkg: TravelPackage) => {
+    setSelectedPackage(pkg);
+    setIsFormOpen(true);
+  };
+
   const handleFormSubmit = (values: Omit<TravelPackage, 'id' | 'status' | 'imageUrl' | 'dataAiHint'>) => {
-    const newPackage: TravelPackage = {
-      ...values,
-      id: (packages.length + 1).toString(),
-      status: 'Disponível',
-      imageUrl: 'https://placehold.co/600x400',
-      dataAiHint: `${values.type.toLowerCase()} ${values.destination.split(',')[0].toLowerCase()}`
-    };
-    setPackages([newPackage, ...packages]);
-    toast({
-      title: 'Pacote Adicionado!',
-      description: `O pacote "${newPackage.title}" foi criado com sucesso.`
-    });
+    if (selectedPackage) {
+      // Edit mode
+      const updatedPackage = { 
+        ...selectedPackage, 
+        ...values,
+        dataAiHint: `${values.type.toLowerCase()} ${values.destination.split(',')[0].toLowerCase()}`
+      };
+      setPackages(packages.map(p => p.id === selectedPackage.id ? updatedPackage : p));
+      toast({
+        title: 'Pacote Atualizado!',
+        description: `O pacote "${updatedPackage.title}" foi atualizado com sucesso.`
+      });
+    } else {
+      // Add mode
+      const newPackage: TravelPackage = {
+        ...values,
+        id: (packages.length + Date.now()).toString(),
+        status: 'Disponível',
+        imageUrl: 'https://placehold.co/600x400',
+        dataAiHint: `${values.type.toLowerCase()} ${values.destination.split(',')[0].toLowerCase()}`
+      };
+      setPackages([newPackage, ...packages]);
+      toast({
+        title: 'Pacote Adicionado!',
+        description: `O pacote "${newPackage.title}" foi criado com sucesso.`
+      });
+    }
     setIsFormOpen(false);
+    setSelectedPackage(null);
   };
   
   const handleDetailsClick = (pkg: TravelPackage) => {
@@ -50,7 +76,7 @@ export default function PackagesPage() {
     <>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-headline text-primary">Todos os Pacotes</h2>
-        <Button onClick={() => setIsFormOpen(true)}>
+        <Button onClick={handleAddClick}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Adicionar Pacote
         </Button>
@@ -71,7 +97,12 @@ export default function PackagesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPackages.map((pkg) => (
-          <PropertyCard key={pkg.id} property={pkg} onDetailsClick={() => handleDetailsClick(pkg)} />
+          <PropertyCard 
+            key={pkg.id} 
+            property={pkg} 
+            onDetailsClick={() => handleDetailsClick(pkg)}
+            onEditClick={() => handleEditClick(pkg)}
+          />
         ))}
       </div>
 
@@ -79,12 +110,17 @@ export default function PackagesPage() {
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
         onSubmit={handleFormSubmit}
+        pkg={selectedPackage}
       />
 
       <PackageDetailsDialog
         isOpen={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         pkg={selectedPackage}
+        onEdit={() => {
+          setIsDetailsOpen(false);
+          if(selectedPackage) handleEditClick(selectedPackage);
+        }}
       />
     </>
   );
