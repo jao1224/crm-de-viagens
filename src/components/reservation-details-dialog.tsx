@@ -5,7 +5,7 @@ import type { Reservation } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './ui/dialog';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { User, Package, Calendar, DollarSign, Info } from 'lucide-react';
+import { User, Package, Calendar, DollarSign, Info, Users } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface ReservationDetailsDialogProps {
@@ -54,6 +54,13 @@ export function ReservationDetailsDialog({ isOpen, onOpenChange, reservation }: 
                     <div className="text-sm">
                         <p className="text-muted-foreground">Pacote</p>
                         <p className="font-medium">{reservation.packageName}</p>
+                    </div>
+                </div>
+                 <div className="flex items-center gap-3">
+                    <Users className="h-5 w-5 text-muted-foreground" />
+                    <div className="text-sm">
+                        <p className="text-muted-foreground">Viajantes</p>
+                        <p className="font-medium">{reservation.travelers}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">

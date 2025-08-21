@@ -60,10 +60,12 @@ export type User = {
 export type Reservation = {
   id: string;
   customerName: string;
+  packageId: string;
   packageName: string;
   travelDate: string;
   status: 'Confirmada' | 'Pendente' | 'Cancelada';
   totalPrice: number;
+  travelers: number;
   agentAvatarUrl: string;
 };
 
@@ -83,5 +85,3 @@ export type Negotiation = {
     agentId: string;
     status: 'Lead' | 'Proposta Enviada' | 'Em Negociação' | 'Ganhos' | 'Perdido';
 }
-
-    

@@ -3,14 +3,14 @@ import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itine
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
-  { id: '1', title: 'Resort Tropical em Cancún', destination: 'Cancún, México', price: 4500, imageUrl: 'https://placehold.co/600x400', type: 'Praia', status: 'Disponível', duration: 7, travelers: 2, dataAiHint: 'beach resort' },
-  { id: '2', title: 'Aventura nos Alpes Suíços', destination: 'Interlaken, Suíça', price: 7200, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 10, travelers: 2, dataAiHint: 'swiss alps' },
-  { id: '3', title: 'Tour Cultural em Quioto', destination: 'Quioto, Japão', price: 6800, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Esgotado', duration: 8, travelers: 2, dataAiHint: 'kyoto temple' },
-  { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://placehold.co/600x400', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 1, dataAiHint: 'new york' },
-  { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 2, dataAiHint: 'safari tanzania' },
-  { id: '6', title: 'Férias em Roma e Vaticano', destination: 'Roma, Itália', price: 5900, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 7, travelers: 2, dataAiHint: 'rome city' },
-  { id: '7', title: 'Diversão em Família em Orlando', destination: 'Orlando, EUA', price: 15000, imageUrl: 'https://placehold.co/600x400', type: 'Família', status: 'Disponível', duration: 10, travelers: 4, dataAiHint: 'amusement park' },
-  { id: '8', title: 'Combo Cultural: Rio e Salvador', destination: 'Rio de Janeiro & Salvador, Brasil', price: 6200, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 14, travelers: 2, dataAiHint: 'brazil culture' },
+  { id: '1', title: 'Resort Tropical em Cancún', destination: 'Cancún, México', price: 4500, imageUrl: 'https://placehold.co/600x400', type: 'Praia', status: 'Disponível', duration: 7, travelers: 10, dataAiHint: 'beach resort' },
+  { id: '2', title: 'Aventura nos Alpes Suíços', destination: 'Interlaken, Suíça', price: 7200, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 10, travelers: 8, dataAiHint: 'swiss alps' },
+  { id: '3', title: 'Tour Cultural em Quioto', destination: 'Quioto, Japão', price: 6800, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Esgotado', duration: 8, travelers: 0, dataAiHint: 'kyoto temple' },
+  { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://placehold.co/600x400', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 20, dataAiHint: 'new york' },
+  { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 4, dataAiHint: 'safari tanzania' },
+  { id: '6', title: 'Férias em Roma e Vaticano', destination: 'Roma, Itália', price: 5900, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 7, travelers: 15, dataAiHint: 'rome city' },
+  { id: '7', title: 'Diversão em Família em Orlando', destination: 'Orlando, EUA', price: 3750, imageUrl: 'https://placehold.co/600x400', type: 'Família', status: 'Disponível', duration: 10, travelers: 10, dataAiHint: 'amusement park' },
+  { id: '8', title: 'Combo Cultural: Rio e Salvador', destination: 'Rio de Janeiro & Salvador, Brasil', price: 6200, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 14, travelers: 6, dataAiHint: 'brazil culture' },
 ];
 
 export const mockKpis: Kpi[] = [
@@ -48,12 +48,12 @@ export const mockUsers: User[] = [
 ];
 
 export const mockReservations: Reservation[] = [
-    { id: '1', customerName: 'João Silva', packageName: 'Resort Tropical em Cancún', travelDate: '2024-08-15', status: 'Confirmada', totalPrice: 9000, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '2', customerName: 'Maria Garcia', packageName: 'Aventura nos Alpes Suíços', travelDate: '2024-09-05', status: 'Pendente', totalPrice: 14400, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '3', customerName: 'Pedro Martins', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '4', customerName: 'Ana Rodrigues', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '5', customerName: 'Lucas Almeida', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '6', customerName: 'Família Oliveira', packageName: 'Diversão em Família em Orlando', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '1', customerName: 'João Silva', packageId: '1', packageName: 'Resort Tropical em Cancún', travelDate: '2024-08-15', status: 'Confirmada', totalPrice: 9000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '2', customerName: 'Maria Garcia', packageId: '2', packageName: 'Aventura nos Alpes Suíços', travelDate: '2024-09-05', status: 'Pendente', totalPrice: 14400, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '3', customerName: 'Pedro Martins', packageId: '6', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '4', customerName: 'Ana Rodrigues', packageId: '4', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, travelers: 1, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '5', customerName: 'Lucas Almeida', packageId: '5', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '6', customerName: 'Família Oliveira', packageId: '7', packageName: 'Diversão em Família em Orlando', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, travelers: 4, agentAvatarUrl: 'https://placehold.co/100x100' },
   ];
 
 export const mockItineraries: Itinerary[] = [
@@ -72,5 +72,3 @@ export const mockItineraries: Itinerary[] = [
     { id: '5', customerName: 'Mariana Lima', packageName: 'Férias em Roma e Vaticano', value: 5900, agentId: '2', status: 'Proposta Enviada' },
     { id: '6', customerName: 'Família Martins', packageName: 'Diversão em Família em Orlando', value: 15000, agentId: '4', status: 'Lead' },
   ];
-
-    

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -8,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { mockReservations } from "@/lib/mock-data";
-import type { Reservation } from "@/lib/types";
+import { mockReservations, mockTravelPackages } from "@/lib/mock-data";
+import type { Reservation, TravelPackage } from "@/lib/types";
 import { ReservationForm } from '@/components/reservation-form';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -17,6 +18,7 @@ import { ReservationDetailsDialog } from '@/components/reservation-details-dialo
 
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
+    const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isCancelAlertOpen, setIsCancelAlertOpen] = useState(false);
@@ -66,24 +68,49 @@ export default function ReservationsPage() {
         setSelectedReservation(null);
     };
 
-    const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl'>) => {
+    const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName'> & { packageId: string; }) => {
+        const selectedPkg = packages.find(p => p.id === values.packageId);
+        if (!selectedPkg) {
+            toast({ variant: 'destructive', title: "Erro", description: "Pacote selecionado não encontrado."});
+            return;
+        }
+
+        const newReservationData = {
+            ...values,
+            packageName: selectedPkg.title,
+            agentAvatarUrl: 'https://placehold.co/100x100', // Placeholder
+        };
+
         if (selectedReservation) {
             // Edit
-            const updatedReservation = { ...selectedReservation, ...values };
+            const updatedReservation = { ...selectedReservation, ...newReservationData };
             setReservations(reservations.map(r => (r.id === selectedReservation.id ? updatedReservation : r)));
             toast({ title: "Reserva Atualizada", description: `A reserva de ${updatedReservation.customerName} foi atualizada.` });
         } else {
             // Add
             const newReservation: Reservation = {
-                ...values,
-                id: (reservations.length + 1).toString(),
-                agentAvatarUrl: 'https://placehold.co/100x100',
+                ...newReservationData,
+                id: (reservations.length + 1 + Date.now()).toString(),
             };
             setReservations([newReservation, ...reservations]);
             toast({
                 title: "Reserva Criada",
                 description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
             });
+            
+             // Sync package availability
+            if (newReservation.status === 'Confirmada') {
+                const pkgToUpdate = packages.find(p => p.id === newReservation.packageId);
+                if (pkgToUpdate && pkgToUpdate.status === 'Disponível') {
+                    const newAvailability = pkgToUpdate.travelers - newReservation.travelers;
+                    const newStatus = newAvailability <= 0 ? 'Esgotado' : 'Disponível';
+                    const updatedPackages = packages.map(p => p.id === newReservation.packageId ? { ...p, travelers: newAvailability, status: newStatus } : p);
+                    setPackages(updatedPackages);
+                    if (newStatus === 'Esgotado') {
+                         toast({ title: "Pacote Esgotado!", description: `O pacote "${pkgToUpdate.title}" não tem mais vagas.` });
+                    }
+                }
+            }
         }
         setIsFormOpen(false);
         setSelectedReservation(null);
@@ -177,6 +204,7 @@ export default function ReservationsPage() {
             onOpenChange={setIsFormOpen}
             onSubmit={handleFormSubmit}
             reservation={selectedReservation}
+            packages={packages}
         />
         
         <ReservationDetailsDialog

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,11 +31,12 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { mockTravelPackages } from '@/lib/mock-data';
-import type { Reservation } from '@/lib/types';
+import type { Reservation, TravelPackage } from '@/lib/types';
 
 const reservationFormSchema = z.object({
   customerName: z.string().min(2, { message: 'O nome do cliente é obrigatório.' }),
-  packageName: z.string({ required_error: 'Selecione um pacote.' }),
+  packageId: z.string({ required_error: 'Selecione um pacote.' }),
+  travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
   travelDate: z.date({ required_error: 'A data da viagem é obrigatória.' }),
   totalPrice: z.coerce.number().min(0, { message: 'O valor deve ser positivo.' }),
   status: z.enum(['Confirmada', 'Pendente', 'Cancelada']),
@@ -48,12 +49,19 @@ interface ReservationFormProps {
   onOpenChange: (isOpen: boolean) => void;
   onSubmit: (values: ReservationFormValues) => void;
   reservation: Reservation | null;
+  packages: TravelPackage[];
 }
 
-export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }: ReservationFormProps) {
+export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, packages }: ReservationFormProps) {
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationFormSchema),
+    defaultValues: {
+      travelers: 1,
+    }
   });
+
+  const selectedPackageId = form.watch('packageId');
+  const travelers = form.watch('travelers');
 
   useEffect(() => {
     if (isOpen) {
@@ -65,14 +73,24 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
         } else {
             form.reset({
                 customerName: '',
-                packageName: undefined,
+                packageId: undefined,
                 travelDate: undefined,
                 totalPrice: 0,
+                travelers: 1,
                 status: 'Pendente',
             });
         }
     }
   }, [reservation, form, isOpen]);
+
+  useEffect(() => {
+    if (selectedPackageId && travelers > 0) {
+      const selectedPkg = packages.find(p => p.id === selectedPackageId);
+      if (selectedPkg) {
+        form.setValue('totalPrice', selectedPkg.price * travelers);
+      }
+    }
+  }, [selectedPackageId, travelers, packages, form]);
 
 
   const handleFormSubmit = (values: ReservationFormValues) => {
@@ -87,7 +105,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
@@ -109,7 +127,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
             />
              <FormField
               control={form.control}
-              name="packageName"
+              name="packageId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Pacote</FormLabel>
@@ -120,8 +138,10 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {mockTravelPackages.map(pkg => (
-                            <SelectItem key={pkg.id} value={pkg.title}>{pkg.title}</SelectItem>
+                        {packages.filter(p => p.status === 'Disponível').map(pkg => (
+                            <SelectItem key={pkg.id} value={pkg.id}>
+                                {pkg.title} ({pkg.travelers} vagas)
+                            </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -131,10 +151,23 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
             />
             <div className="grid grid-cols-2 gap-4">
                 <FormField
+                  control={form.control}
+                  name="travelers"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Nº de Viajantes</FormLabel>
+                      <FormControl>
+                          <Input type="number" min="1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                />
+                <FormField
                 control={form.control}
                 name="travelDate"
                 render={({ field }) => (
-                    <FormItem className='flex flex-col'>
+                    <FormItem className='flex flex-col pt-2'>
                         <FormLabel>Data da Viagem</FormLabel>
                         <Popover>
                             <PopoverTrigger asChild>
@@ -171,6 +204,8 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
                     </FormItem>
                 )}
                 />
+            </div>
+             <div className="grid grid-cols-2 gap-4">
                  <FormField
                     control={form.control}
                     name="totalPrice"
@@ -178,35 +213,35 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation }:
                         <FormItem>
                         <FormLabel>Valor Total (R$)</FormLabel>
                         <FormControl>
-                            <Input type="number" placeholder="Ex: 5300.00" {...field} />
+                            <Input type="number" placeholder="Ex: 5300.00" {...field} readOnly />
                         </FormControl>
                         <FormMessage />
                         </FormItem>
                     )}
                     />
+                 <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione o status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Pendente">Pendente</SelectItem>
+                            <SelectItem value="Confirmada">Confirmada</SelectItem>
+                            <SelectItem value="Cancelada">Cancelada</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
             </div>
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Pendente">Pendente</SelectItem>
-                        <SelectItem value="Confirmada">Confirmada</SelectItem>
-                        <SelectItem value="Cancelada">Cancelada</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <DialogFooter className="pt-4">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
