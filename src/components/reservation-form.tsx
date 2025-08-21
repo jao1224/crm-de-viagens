@@ -31,10 +31,10 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { mockTravelPackages } from '@/lib/mock-data';
-import type { Reservation, TravelPackage } from '@/lib/types';
+import type { Reservation, TravelPackage, User } from '@/lib/types';
 
 const reservationFormSchema = z.object({
-  customerName: z.string().min(2, { message: 'O nome do cliente é obrigatório.' }),
+  customerName: z.string({ required_error: 'O nome do cliente é obrigatório.' }),
   packageId: z.string({ required_error: 'Selecione um pacote.' }),
   travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
   travelDate: z.date({ required_error: 'A data da viagem é obrigatória.' }),
@@ -50,9 +50,10 @@ interface ReservationFormProps {
   onSubmit: (values: ReservationFormValues) => void;
   reservation: Reservation | null;
   packages: TravelPackage[];
+  clients: User[];
 }
 
-export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, packages }: ReservationFormProps) {
+export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, packages, clients }: ReservationFormProps) {
   const form = useForm<ReservationFormValues>({
     resolver: zodResolver(reservationFormSchema),
     defaultValues: {
@@ -72,7 +73,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
             });
         } else {
             form.reset({
-                customerName: '',
+                customerName: undefined,
                 packageId: undefined,
                 travelDate: undefined,
                 totalPrice: 0,
@@ -118,9 +119,20 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome do Cliente</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Maria da Silva" {...field} />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um cliente" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {clients.map(client => (
+                            <SelectItem key={client.id} value={client.name}>
+                                {client.name}
+                            </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -138,7 +150,7 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {packages.filter(p => p.status === 'Disponível').map(pkg => (
+                        {packages.filter(p => p.status === 'Disponível' || p.id === reservation?.packageId).map(pkg => (
                             <SelectItem key={pkg.id} value={pkg.id}>
                                 {pkg.title} ({pkg.travelers} vagas)
                             </SelectItem>

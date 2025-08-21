@@ -25,11 +25,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { mockTravelPackages } from '@/lib/mock-data';
-import type { Negotiation } from '@/lib/types';
+import type { Negotiation, User } from '@/lib/types';
 import { useEffect } from 'react';
 
 const negotiationFormSchema = z.object({
-  customerName: z.string().min(2, { message: 'O nome do cliente é obrigatório.' }),
+  customerName: z.string({ required_error: 'Selecione um cliente.' }),
   packageName: z.string({ required_error: 'Selecione um pacote.' }),
   value: z.coerce.number().min(0, { message: 'O valor da negociação deve ser positivo.' }),
 });
@@ -41,9 +41,10 @@ interface NegotiationFormProps {
   onOpenChange: (isOpen: boolean) => void;
   onSubmit: (values: NegotiationFormValues) => void;
   negotiation?: Negotiation | null;
+  clients: User[];
 }
 
-export function NegotiationForm({ isOpen, onOpenChange, onSubmit, negotiation }: NegotiationFormProps) {
+export function NegotiationForm({ isOpen, onOpenChange, onSubmit, negotiation, clients }: NegotiationFormProps) {
   const form = useForm<NegotiationFormValues>({
     resolver: zodResolver(negotiationFormSchema),
   });
@@ -54,7 +55,7 @@ export function NegotiationForm({ isOpen, onOpenChange, onSubmit, negotiation }:
         form.reset(negotiation);
       } else {
         form.reset({
-          customerName: '',
+          customerName: undefined,
           packageName: undefined,
           value: 0,
         });
@@ -87,9 +88,18 @@ export function NegotiationForm({ isOpen, onOpenChange, onSubmit, negotiation }:
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome do Cliente</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: José Carlos" {...field} />
-                  </FormControl>
+                   <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione um cliente" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {clients.map(client => (
+                        <SelectItem key={client.id} value={client.name}>{client.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

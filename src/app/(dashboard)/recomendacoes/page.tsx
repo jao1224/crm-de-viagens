@@ -29,10 +29,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2, Wand2, Copy, PlusCircle, ChevronDown, PenSquare } from 'lucide-react';
 import { recommendPackages, RecommendPackagesOutput } from '@/ai/flows/property-recommendation';
 import { useToast } from '@/hooks/use-toast';
-import { mockTravelPackages, mockNegotiations } from '@/lib/mock-data';
+import { mockTravelPackages, mockNegotiations, mockUsers } from '@/lib/mock-data';
 import { PropertyCard } from '@/components/property-card';
 import { Separator } from '@/components/ui/separator';
-import type { Negotiation, TravelPackage } from '@/lib/types';
+import type { Negotiation, TravelPackage, User } from '@/lib/types';
 import { KanbanCard } from '@/components/kanban-card';
 import { NegotiationForm } from '@/components/negotiation-form';
 import { PackageDetailsDialog } from '@/components/package-details-dialog';
@@ -43,8 +43,9 @@ const formSchema = z.object({
   }),
 });
 
-export default function NegotiationsPage() {
+export default function RecommendationsPage() {
   const [negotiations, setNegotiations] = useState<Negotiation[]>(mockNegotiations);
+  const [clients] = useState<User[]>(mockUsers.filter(u => u.role === 'Cliente'));
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<RecommendPackagesOutput | null>(null);
   const [isAiFormOpen, setIsAiFormOpen] = useState(false);
@@ -140,7 +141,7 @@ export default function NegotiationsPage() {
        <Card>
         <CardHeader className="flex flex-row items-center justify-between">
             <div>
-                <CardTitle className="font-headline text-2xl text-primary">Pipeline de Vendas</CardTitle>
+                <CardTitle className="font-headline text-2xl text-primary">Recomendações</CardTitle>
                 <CardDescription>
                     Crie novas negociações e acompanhe seu progresso aqui.
                 </CardDescription>
@@ -280,6 +281,7 @@ export default function NegotiationsPage() {
         isOpen={isManualFormOpen}
         onOpenChange={setIsManualFormOpen}
         onSubmit={handleManualSubmit}
+        clients={clients}
     />
     
     <PackageDetailsDialog

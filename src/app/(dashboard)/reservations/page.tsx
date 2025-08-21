@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { mockReservations, mockTravelPackages } from "@/lib/mock-data";
-import type { Reservation, TravelPackage } from "@/lib/types";
+import { mockReservations, mockTravelPackages, mockUsers } from "@/lib/mock-data";
+import type { Reservation, TravelPackage, User } from "@/lib/types";
 import { ReservationForm } from '@/components/reservation-form';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -19,6 +19,7 @@ import { ReservationDetailsDialog } from '@/components/reservation-details-dialo
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
     const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
+    const [clients] = useState<User[]>(mockUsers.filter(u => u.role === 'Cliente'));
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isCancelAlertOpen, setIsCancelAlertOpen] = useState(false);
@@ -111,8 +112,10 @@ export default function ReservationsPage() {
 
     const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName'> & { packageId: string; }) => {
         const selectedPkg = packages.find(p => p.id === values.packageId);
-        if (!selectedPkg) {
-            toast({ variant: 'destructive', title: "Erro", description: "Pacote selecionado não encontrado."});
+        const selectedClient = clients.find(c => c.name === values.customerName);
+
+        if (!selectedPkg || !selectedClient) {
+            toast({ variant: 'destructive', title: "Erro", description: "Pacote ou cliente selecionado não encontrado."});
             return;
         }
 
@@ -256,6 +259,7 @@ export default function ReservationsPage() {
             onSubmit={handleFormSubmit}
             reservation={selectedReservation}
             packages={packages}
+            clients={clients}
         />
         
         <ReservationDetailsDialog
