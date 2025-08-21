@@ -37,6 +37,7 @@ const reservationFormSchema = z.object({
   customerName: z.string({ required_error: 'O nome do cliente é obrigatório.' }),
   packageId: z.string({ required_error: 'Selecione um pacote.' }),
   travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
+  bookingDate: z.date({ required_error: 'A data da reserva é obrigatória.' }),
   travelDate: z.date({ required_error: 'A data da viagem é obrigatória.' }),
   totalPrice: z.coerce.number().min(0, { message: 'O valor deve ser positivo.' }),
   status: z.enum(['Confirmada', 'Pendente', 'Cancelada']),
@@ -47,7 +48,7 @@ type ReservationFormValues = z.infer<typeof reservationFormSchema>;
 interface ReservationFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSubmit: (values: ReservationFormValues) => void;
+  onSubmit: (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName' | 'bookingDate' | 'travelDate'> & { bookingDate: Date, travelDate: Date, packageId: string }) => void;
   reservation: Reservation | null;
   packages: TravelPackage[];
   clients: User[];
@@ -69,12 +70,14 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
         if (reservation) {
             form.reset({
                 ...reservation,
-                travelDate: new Date(reservation.travelDate), // Convert string to Date
+                bookingDate: new Date(reservation.bookingDate),
+                travelDate: new Date(reservation.travelDate),
             });
         } else {
             form.reset({
                 customerName: undefined,
                 packageId: undefined,
+                bookingDate: new Date(),
                 travelDate: undefined,
                 totalPrice: 0,
                 travelers: 1,
@@ -163,17 +166,42 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
             />
             <div className="grid grid-cols-2 gap-4">
                 <FormField
-                  control={form.control}
-                  name="travelers"
-                  render={({ field }) => (
-                      <FormItem>
-                      <FormLabel>Nº de Viajantes</FormLabel>
-                      <FormControl>
-                          <Input type="number" min="1" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                      </FormItem>
-                  )}
+                control={form.control}
+                name="bookingDate"
+                render={({ field }) => (
+                    <FormItem className='flex flex-col pt-2'>
+                        <FormLabel>Data da Reserva</FormLabel>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                            <FormControl>
+                                <Button
+                                variant={"outline"}
+                                className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                )}
+                                >
+                                {field.value ? (
+                                    format(field.value, "dd/MM/yyyy")
+                                ) : (
+                                    <span>Escolha uma data</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                            </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                    </FormItem>
+                )}
                 />
                 <FormField
                 control={form.control}
@@ -254,6 +282,19 @@ export function ReservationForm({ isOpen, onOpenChange, onSubmit, reservation, p
                   )}
                 />
             </div>
+             <FormField
+              control={form.control}
+              name="travelers"
+              render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Nº de Viajantes</FormLabel>
+                  <FormControl>
+                      <Input type="number" min="1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  </FormItem>
+              )}
+            />
             <DialogFooter className="pt-4">
               <DialogClose asChild>
                 <Button type="button" variant="outline">

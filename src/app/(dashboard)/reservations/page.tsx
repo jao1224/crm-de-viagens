@@ -15,6 +15,7 @@ import { ReservationForm } from '@/components/reservation-form';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ReservationDetailsDialog } from '@/components/reservation-details-dialog';
+import { format } from 'date-fns';
 
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
@@ -110,7 +111,7 @@ export default function ReservationsPage() {
         toast({ title: "Status da Reserva Atualizado", description: `A reserva de ${originalReservation.customerName} agora está ${newStatus}.` });
     }
 
-    const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName'> & { packageId: string; }) => {
+    const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName' | 'bookingDate' | 'travelDate'> & { packageId: string; bookingDate: Date; travelDate: Date; }) => {
         const selectedPkg = packages.find(p => p.id === values.packageId);
         const selectedClient = clients.find(c => c.name === values.customerName);
 
@@ -121,6 +122,8 @@ export default function ReservationsPage() {
 
         const newReservationData = {
             ...values,
+            bookingDate: format(values.bookingDate, 'yyyy-MM-dd'),
+            travelDate: format(values.travelDate, 'yyyy-MM-dd'),
             packageName: selectedPkg.title,
             agentAvatarUrl: 'https://placehold.co/100x100', // Placeholder
         };
@@ -179,8 +182,8 @@ export default function ReservationsPage() {
                     <TableRow>
                         <TableHead>Cliente</TableHead>
                         <TableHead>Pacote</TableHead>
+                        <TableHead className="hidden md:table-cell">Data da Reserva</TableHead>
                         <TableHead className="hidden md:table-cell">Data da Viagem</TableHead>
-                        <TableHead className="hidden md:table-cell text-right">Valor</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>
                             <span className="sr-only">Ações</span>
@@ -205,10 +208,10 @@ export default function ReservationsPage() {
                                 <span className="font-medium">{reservation.packageName}</span>
                             </TableCell>
                             <TableCell className="hidden md:table-cell">
-                                {new Date(reservation.travelDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
+                                {new Date(reservation.bookingDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
                             </TableCell>
-                            <TableCell className="hidden md:table-cell text-right">
-                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(reservation.totalPrice)}
+                            <TableCell className="hidden md:table-cell">
+                                {new Date(reservation.travelDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
                             </TableCell>
                             <TableCell>
                                 <Badge variant={getStatusVariant(reservation.status)}>{reservation.status}</Badge>

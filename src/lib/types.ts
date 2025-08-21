@@ -64,6 +64,7 @@ export type Reservation = {
   customerName: string;
   packageId: string;
   packageName: string;
+  bookingDate: string;
   travelDate: string;
   status: 'Confirmada' | 'Pendente' | 'Cancelada';
   totalPrice: number;

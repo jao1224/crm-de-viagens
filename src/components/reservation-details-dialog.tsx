@@ -66,6 +66,13 @@ export function ReservationDetailsDialog({ isOpen, onOpenChange, reservation }: 
                 <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-muted-foreground" />
                     <div className="text-sm">
+                        <p className="text-muted-foreground">Data da Reserva</p>
+                        <p className="font-medium">{new Date(reservation.bookingDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <Calendar className="h-5 w-5 text-muted-foreground" />
+                    <div className="text-sm">
                         <p className="text-muted-foreground">Data da Viagem</p>
                         <p className="font-medium">{new Date(reservation.travelDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</p>
                     </div>
