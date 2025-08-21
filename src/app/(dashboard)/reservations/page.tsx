@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { mockReservations, mockTravelPackages } from "@/lib/mock-data";
@@ -91,6 +91,23 @@ export default function ReservationsPage() {
         setIsCancelAlertOpen(false);
         setSelectedReservation(null);
     };
+    
+    const handleStatusChange = (reservationId: string, newStatus: Reservation['status']) => {
+        const originalReservation = reservations.find(r => r.id === reservationId);
+        if (!originalReservation || originalReservation.status === newStatus) return;
+
+        const travelerChange = 
+            (originalReservation.status === 'Confirmada' ? originalReservation.travelers : 0) - 
+            (newStatus === 'Confirmada' ? originalReservation.travelers : 0);
+
+        updatePackageAvailability(originalReservation.packageId, -travelerChange);
+        
+        const updatedReservations = reservations.map(r => 
+            r.id === reservationId ? { ...r, status: newStatus } : r
+        );
+        setReservations(updatedReservations);
+        toast({ title: "Status da Reserva Atualizado", description: `A reserva de ${originalReservation.customerName} agora está ${newStatus}.` });
+    }
 
     const handleFormSubmit = (values: Omit<Reservation, 'id' | 'agentAvatarUrl' | 'packageName'> & { packageId: string; }) => {
         const selectedPkg = packages.find(p => p.id === values.packageId);
@@ -205,13 +222,23 @@ export default function ReservationsPage() {
                                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
                                         <DropdownMenuItem onSelect={() => handleDetailsReservation(reservation)}>Detalhes</DropdownMenuItem>
                                         <DropdownMenuItem onSelect={() => handleEditReservation(reservation)}>Editar</DropdownMenuItem>
+                                        <DropdownMenuSub>
+                                            <DropdownMenuSubTrigger>Alterar Status</DropdownMenuSubTrigger>
+                                            <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    <DropdownMenuItem onSelect={() => handleStatusChange(reservation.id, 'Pendente')} disabled={reservation.status === 'Pendente'}>Pendente</DropdownMenuItem>
+                                                    <DropdownMenuItem onSelect={() => handleStatusChange(reservation.id, 'Confirmada')} disabled={reservation.status === 'Confirmada'}>Confirmada</DropdownMenuItem>
+                                                    <DropdownMenuItem onSelect={() => handleStatusChange(reservation.id, 'Cancelada')} disabled={reservation.status === 'Cancelada'}>Cancelada</DropdownMenuItem>
+                                                </DropdownMenuSubContent>
+                                            </DropdownMenuPortal>
+                                        </DropdownMenuSub>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem 
                                             className="text-destructive" 
                                             onSelect={() => handleCancelReservation(reservation)}
                                             disabled={reservation.status === 'Cancelada'}
                                         >
-                                            Cancelar
+                                            Cancelar Reserva
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
