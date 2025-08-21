@@ -36,7 +36,7 @@ const packageFormSchema = z.object({
   duration: z.coerce.number().int().min(1, { message: 'A duração deve ser de pelo menos 1 dia.' }),
   travelers: z.coerce.number().int().min(1, { message: 'Deve haver pelo menos 1 viajante.' }),
   type: z.enum(['Praia', 'Montanha', 'Cidade', 'Negócios', 'Família']),
-  imageUrl: z.string().url({ message: 'Por favor, insira uma URL de imagem válida.' }).optional().or(z.literal('')),
+  imageUrl: z.string().optional(),
 });
 
 type PackageFormValues = z.infer<typeof packageFormSchema>;
@@ -49,6 +49,8 @@ interface PackageFormProps {
 }
 
 export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageFormProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageFormSchema),
     defaultValues: {
@@ -62,12 +64,15 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
     }
   });
 
-  const watchedImageUrl = form.watch('imageUrl');
-
   useEffect(() => {
     if (isOpen) {
       if (pkg) {
         form.reset(pkg);
+        if (pkg.imageUrl) {
+          setImagePreview(pkg.imageUrl);
+        } else {
+          setImagePreview(null);
+        }
       } else {
         form.reset({
           title: '',
@@ -78,14 +83,35 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
           type: 'Praia',
           imageUrl: '',
         });
+        setImagePreview(null);
       }
     }
   }, [pkg, form, isOpen]);
   
   const handleFormSubmit = (values: PackageFormValues) => {
-    onSubmit(values);
+    // If a new image was previewed, its data URI is in imagePreview.
+    // If not, we use the existing imageUrl from the form values.
+    const finalValues = {
+      ...values,
+      imageUrl: imagePreview || values.imageUrl || '',
+    };
+    onSubmit(finalValues);
     form.reset();
+    setImagePreview(null);
   }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setImagePreview(dataUrl);
+        form.setValue('imageUrl', dataUrl); // Set the value for the form
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const dialogTitle = pkg ? 'Editar Pacote' : 'Adicionar Novo Pacote';
   const dialogDescription = pkg
@@ -114,29 +140,27 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
                 </FormItem>
               )}
             />
-             <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>URL da Imagem</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://exemplo.com/imagem.png" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+             
+            <FormItem>
+              <FormLabel>Imagem do Pacote</FormLabel>
+              <FormControl>
+                <Input 
+                  type="file" 
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={handleImageChange}
+                  className="file:text-primary file:font-medium"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
 
-            {watchedImageUrl && watchedImageUrl.startsWith('http') && (
+            {imagePreview && (
                 <div className="w-full h-48 relative rounded-md overflow-hidden border">
                     <Image 
-                        src={watchedImageUrl}
+                        src={imagePreview}
                         alt="Pré-visualização do pacote"
                         fill
                         className="object-cover"
-                        onError={(e) => (e.currentTarget.style.display = 'none')}
-                        onLoad={(e) => (e.currentTarget.style.display = 'block')}
                     />
                 </div>
             )}
