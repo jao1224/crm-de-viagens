@@ -24,10 +24,12 @@ const generateBookingPerformanceData = (
     let filteredReservations = reservations.filter(r => r.status === 'Confirmada');
 
     // Filter by date range if provided
-    if (dateRange && dateRange.from && dateRange.to) {
+    if (dateRange && dateRange.from) {
+        // Set to to end of day if only from is set
+        const to = dateRange.to || dateRange.from;
         filteredReservations = filteredReservations.filter(res => {
             const bookingDate = new Date(res.bookingDate);
-            return isWithinInterval(bookingDate, { start: dateRange.from!, end: dateRange.to! });
+            return isWithinInterval(bookingDate, { start: dateRange.from!, end: to });
         });
     }
     
@@ -146,7 +148,7 @@ export default function DashboardPage() {
           <KpiCard key={kpi.title} kpi={kpi} />
         ))}
       </div>
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-1">
         <SalesChart 
           data={bookingData} 
           config={bookingChartConfig}
@@ -155,9 +157,6 @@ export default function DashboardPage() {
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
         />
-        <div className="lg:col-span-1 bg-card rounded-lg border p-4 flex items-center justify-center">
-          <p className="text-muted-foreground">Outros widgets aqui...</p>
-        </div>
       </div>
     </div>
   );
