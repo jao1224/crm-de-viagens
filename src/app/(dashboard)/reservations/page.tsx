@@ -182,8 +182,8 @@ export default function ReservationsPage() {
                     <TableRow>
                         <TableHead>Cliente</TableHead>
                         <TableHead>Pacote</TableHead>
-                        <TableHead className="hidden md:table-cell">Data da Reserva</TableHead>
-                        <TableHead className="hidden md:table-cell">Data da Viagem</TableHead>
+                        <TableHead>Data da Reserva</TableHead>
+                        <TableHead>Data da Viagem</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>
                             <span className="sr-only">Ações</span>
@@ -207,10 +207,10 @@ export default function ReservationsPage() {
                             <TableCell>
                                 <span className="font-medium">{reservation.packageName}</span>
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell>
                                 {new Date(reservation.bookingDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
                             </TableCell>
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell>
                                 {new Date(reservation.travelDate).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}
                             </TableCell>
                             <TableCell>
@@ -289,3 +289,5 @@ export default function ReservationsPage() {
       </>
   );
 }
+
+    
