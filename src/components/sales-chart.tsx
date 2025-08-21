@@ -3,9 +3,13 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-import { mockSalesData } from '@/lib/mock-data';
+import type { Booking } from '@/lib/types';
 
-export function SalesChart() {
+interface SalesChartProps {
+  data: Booking[];
+}
+
+export function SalesChart({ data }: SalesChartProps) {
   const chartConfig = {
     praia: { label: 'Praia', color: 'hsl(var(--chart-1))' },
     montanha: { label: 'Montanha', color: 'hsl(var(--chart-2))' },
@@ -20,7 +24,7 @@ export function SalesChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart data={mockSalesData} accessibilityLayer>
+            <BarChart data={data} accessibilityLayer>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="month"
