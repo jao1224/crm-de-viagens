@@ -31,7 +31,7 @@ const generateBookingPerformanceData = (reservations: Reservation[], packages: T
         const pkg = packages.find(p => p.id === res.packageId);
         if (!pkg) return;
 
-        const date = new Date(res.travelDate);
+        const date = new Date(res.bookingDate);
         const monthIndex = getMonth(date);
         const monthName = format(date, "MMM", { locale: ptBR }).replace('.', '');
 
