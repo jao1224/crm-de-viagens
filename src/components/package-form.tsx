@@ -62,16 +62,12 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
     }
   });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  // Watch for changes in the imageUrl field
   const watchedImageUrl = form.watch('imageUrl');
 
   useEffect(() => {
     if (isOpen) {
       if (pkg) {
         form.reset(pkg);
-        setImagePreview(pkg.imageUrl);
       } else {
         form.reset({
           title: '',
@@ -82,21 +78,10 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
           type: 'Praia',
           imageUrl: '',
         });
-        setImagePreview(null);
       }
     }
   }, [pkg, form, isOpen]);
   
-  useEffect(() => {
-    // Basic URL validation before setting preview
-    if (watchedImageUrl && watchedImageUrl.startsWith('http')) {
-        setImagePreview(watchedImageUrl);
-    } else {
-        setImagePreview(null);
-    }
-  }, [watchedImageUrl]);
-
-
   const handleFormSubmit = (values: PackageFormValues) => {
     onSubmit(values);
     form.reset();
@@ -143,13 +128,15 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
               )}
             />
 
-            {imagePreview && (
+            {watchedImageUrl && watchedImageUrl.startsWith('http') && (
                 <div className="w-full h-48 relative rounded-md overflow-hidden border">
                     <Image 
-                        src={imagePreview}
+                        src={watchedImageUrl}
                         alt="Pré-visualização do pacote"
                         fill
                         className="object-cover"
+                        onError={(e) => (e.currentTarget.style.display = 'none')}
+                        onLoad={(e) => (e.currentTarget.style.display = 'block')}
                     />
                 </div>
             )}
