@@ -192,7 +192,7 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Selecione o status" />
-                              </Trigger>
+                              </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="Ativo">Ativo</SelectItem>
