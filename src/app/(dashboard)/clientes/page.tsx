@@ -45,7 +45,7 @@ export default function ClientsPage() {
     setSelectedUser(null);
   };
   
-  const handleFormSubmit = (values: Pick<User, 'name' | 'email' | 'phone' | 'travelStyle'>) => {
+  const handleFormSubmit = (values: Pick<User, 'name' | 'email' | 'phone' | 'travelStyle' | 'document'>) => {
     if (selectedUser) {
       // Edit
       const updatedUser = { ...selectedUser, ...values };
@@ -86,6 +86,7 @@ export default function ClientsPage() {
                   <TableRow>
                       <TableHead>Cliente</TableHead>
                       <TableHead>Contato</TableHead>
+                      <TableHead>Documento</TableHead>
                       <TableHead>Estilo de Viagem</TableHead>
                       <TableHead>
                           <span className="sr-only">Ações</span>
@@ -109,6 +110,13 @@ export default function ClientsPage() {
                           <TableCell>
                                 <p className="text-sm text-muted-foreground">{user.email}</p>
                                 <p className="text-xs text-muted-foreground">{user.phone}</p>
+                          </TableCell>
+                           <TableCell>
+                                {user.document ? (
+                                    <span className="text-sm text-muted-foreground">{user.document}</span>
+                                ) : (
+                                    <span className="text-xs text-muted-foreground">N/A</span>
+                                )}
                           </TableCell>
                           <TableCell>
                             {user.travelStyle ? (

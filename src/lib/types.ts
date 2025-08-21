@@ -43,7 +43,7 @@ export type NavItem = {
   icon: LucideIcon;
 };
 
-export const travelStyles = ['Luxo', 'Aventura', 'Cultural', 'Romântica', 'Corporativa', 'Econômica'] as const;
+export const travelStyles = ['Luxo', 'Aventura', 'Cultural', 'Econômica'] as const;
 export type TravelStyle = typeof travelStyles[number];
 
 export type User = {
@@ -54,6 +54,7 @@ export type User = {
   status: 'Ativo' | 'Inativo';
   avatarUrl: string;
   phone?: string;
+  document?: string;
   travelStyle?: TravelStyle;
 };
 
