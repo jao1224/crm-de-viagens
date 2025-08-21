@@ -1,4 +1,5 @@
-import { Building2 } from "lucide-react";
+
+import Image from "next/image";
 import { SimpleDashboardNav } from "@/components/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarInset } from "@/components/ui/sidebar";
@@ -13,9 +14,13 @@ export default function DashboardLayout({
       <Sidebar variant="sidebar" collapsible="icon">
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Building2 className="h-6 w-6" />
-            </div>
+            <Image 
+              src="https://placehold.co/40x40.png" 
+              alt="EstateFlow Logo"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
             <span className="font-headline font-extrabold text-2xl text-primary group-data-[collapsible=icon]:hidden">EstateFlow</span>
           </div>
         </SidebarHeader>
