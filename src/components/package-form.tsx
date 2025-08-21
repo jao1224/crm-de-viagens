@@ -120,7 +120,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
@@ -155,7 +155,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
             </FormItem>
 
             {imagePreview && (
-                <div className="w-full h-48 relative rounded-md overflow-hidden border">
+                <div className="w-full h-32 relative rounded-md overflow-hidden border">
                     <Image 
                         src={imagePreview}
                         alt="Pré-visualização do pacote"
