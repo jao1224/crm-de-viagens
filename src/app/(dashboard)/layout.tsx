@@ -15,7 +15,7 @@ export default function DashboardLayout({
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
             <Image 
-              src="https://placehold.co/40x40.png" 
+              src="/logo.png" 
               alt="EstateFlow Logo"
               width={40}
               height={40}
