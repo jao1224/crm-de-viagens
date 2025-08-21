@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { DateRange } from "react-day-picker";
 import { ptBR } from 'date-fns/locale';
+import { Label } from "./ui/label";
 
 
 interface SalesChartProps {
@@ -31,48 +32,51 @@ export function SalesChart({ data, config, chartTitle, chartDescription, dateRan
   return (
     <Card className={cn("w-full", className)}>
       <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="grid gap-1">
               <CardTitle className="font-headline text-2xl text-primary">{chartTitle}</CardTitle>
               <CardDescription>{chartDescription}</CardDescription>
           </div>
-          <Popover>
-              <PopoverTrigger asChild>
-                  <Button
-                  id="date"
-                  variant={"outline"}
-                  className={cn(
-                      "w-full sm:w-[260px] justify-start text-left font-normal",
-                      !dateRange && "text-muted-foreground"
-                  )}
-                  >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateRange?.from ? (
-                      dateRange.to ? (
-                      <>
-                          {format(dateRange.from, "LLL dd, y", { locale: ptBR })} -{" "}
-                          {format(dateRange.to, "LLL dd, y", { locale: ptBR })}
-                      </>
-                      ) : (
-                      format(dateRange.from, "LLL dd, y", { locale: ptBR })
-                      )
-                  ) : (
-                      <span>Escolha um período</span>
-                  )}
-                  </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="end">
-                  <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={dateRange?.from}
-                  selected={dateRange}
-                  onSelect={onDateRangeChange}
-                  numberOfMonths={2}
-                  locale={ptBR}
-                  />
-              </PopoverContent>
-          </Popover>
+          <div className="grid gap-1 text-left sm:text-right">
+            <Label htmlFor="date">Filtrar por Período</Label>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                    id="date"
+                    variant={"outline"}
+                    className={cn(
+                        "w-full sm:w-[260px] justify-start text-left font-normal",
+                        !dateRange && "text-muted-foreground"
+                    )}
+                    >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? (
+                        dateRange.to ? (
+                        <>
+                            {format(dateRange.from, "LLL dd, y", { locale: ptBR })} -{" "}
+                            {format(dateRange.to, "LLL dd, y", { locale: ptBR })}
+                        </>
+                        ) : (
+                        format(dateRange.from, "LLL dd, y", { locale: ptBR })
+                        )
+                    ) : (
+                        <span>Escolha um período</span>
+                    )}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={onDateRangeChange}
+                    numberOfMonths={2}
+                    locale={ptBR}
+                    />
+                </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="pl-2">
