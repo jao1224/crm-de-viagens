@@ -54,10 +54,34 @@ export default function ReservationsPage() {
         setSelectedReservation(reservation);
         setIsCancelAlertOpen(true);
     }
+    
+    // Function to update package availability
+    const updatePackageAvailability = (packageId: string, travelerChange: number) => {
+        setPackages(prevPackages => {
+            const pkgToUpdate = prevPackages.find(p => p.id === packageId);
+            if (!pkgToUpdate) return prevPackages;
+
+            const newAvailability = pkgToUpdate.travelers - travelerChange;
+            const newStatus = newAvailability <= 0 ? 'Esgotado' : 'Disponível';
+            
+            if (newStatus === 'Esgotado' && pkgToUpdate.status === 'Disponível') {
+                 toast({ title: "Pacote Esgotado!", description: `O pacote "${pkgToUpdate.title}" não tem mais vagas.` });
+            }
+
+            return prevPackages.map(p => 
+                p.id === packageId ? { ...p, travelers: newAvailability, status: newStatus } : p
+            );
+        });
+    };
 
     const confirmCancel = () => {
         if (!selectedReservation) return;
         
+        // If the reservation being cancelled was confirmed, add travelers back to the package
+        if (selectedReservation.status === 'Confirmada') {
+            updatePackageAvailability(selectedReservation.packageId, -selectedReservation.travelers);
+        }
+
         const updatedReservations = reservations.map(r => 
             r.id === selectedReservation.id ? { ...r, status: 'Cancelada' as const } : r
         );
@@ -83,9 +107,18 @@ export default function ReservationsPage() {
 
         if (selectedReservation) {
             // Edit
+            const originalReservation = reservations.find(r => r.id === selectedReservation.id);
+            if (!originalReservation) return;
+
             const updatedReservation = { ...selectedReservation, ...newReservationData };
             setReservations(reservations.map(r => (r.id === selectedReservation.id ? updatedReservation : r)));
             toast({ title: "Reserva Atualizada", description: `A reserva de ${updatedReservation.customerName} foi atualizada.` });
+
+            // Handle availability changes on edit
+            const travelerChange = (originalReservation.status === 'Confirmada' ? originalReservation.travelers : 0) - (updatedReservation.status === 'Confirmada' ? updatedReservation.travelers : 0);
+            updatePackageAvailability(updatedReservation.packageId, -travelerChange);
+
+
         } else {
             // Add
             const newReservation: Reservation = {
@@ -98,18 +131,9 @@ export default function ReservationsPage() {
                 description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
             });
             
-             // Sync package availability
+             // Sync package availability only if confirmed
             if (newReservation.status === 'Confirmada') {
-                const pkgToUpdate = packages.find(p => p.id === newReservation.packageId);
-                if (pkgToUpdate && pkgToUpdate.status === 'Disponível') {
-                    const newAvailability = pkgToUpdate.travelers - newReservation.travelers;
-                    const newStatus = newAvailability <= 0 ? 'Esgotado' : 'Disponível';
-                    const updatedPackages = packages.map(p => p.id === newReservation.packageId ? { ...p, travelers: newAvailability, status: newStatus } : p);
-                    setPackages(updatedPackages);
-                    if (newStatus === 'Esgotado') {
-                         toast({ title: "Pacote Esgotado!", description: `O pacote "${pkgToUpdate.title}" não tem mais vagas.` });
-                    }
-                }
+                updatePackageAvailability(newReservation.packageId, newReservation.travelers);
             }
         }
         setIsFormOpen(false);
