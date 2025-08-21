@@ -1,21 +1,18 @@
+
 'use client';
 
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import type { Booking } from '@/lib/types';
+import type { ChartConfig } from '@/components/ui/chart';
 
 interface SalesChartProps {
   data: Booking[];
+  config: ChartConfig;
 }
 
-export function SalesChart({ data }: SalesChartProps) {
-  const chartConfig = {
-    praia: { label: 'Praia', color: 'hsl(var(--chart-1))' },
-    montanha: { label: 'Montanha', color: 'hsl(var(--chart-2))' },
-    cidade: { label: 'Cidade', color: 'hsl(var(--chart-3))' },
-  }
-
+export function SalesChart({ data, config }: SalesChartProps) {
   return (
     <Card className="col-span-1 lg:col-span-2">
       <CardHeader>
@@ -23,7 +20,7 @@ export function SalesChart({ data }: SalesChartProps) {
         <CardDescription>Vendas por tipo de pacote nos últimos 6 meses.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+        <ChartContainer config={config} className="h-[300px] w-full">
             <BarChart data={data} accessibilityLayer>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -35,9 +32,10 @@ export function SalesChart({ data }: SalesChartProps) {
               />
               <YAxis />
               <Tooltip cursor={{fill: 'hsl(var(--background))'}} content={<ChartTooltipContent />} />
-              <Bar dataKey="praia" fill="var(--color-praia)" radius={4} />
-              <Bar dataKey="montanha" fill="var(--color-montanha)" radius={4} />
-              <Bar dataKey="cidade" fill="var(--color-cidade)" radius={4} />
+              <ChartLegend content={<ChartLegendContent />} />
+              {Object.keys(config).map((key) => (
+                 <Bar key={key} dataKey={key} fill={`var(--color-${key})`} radius={4} />
+              ))}
             </BarChart>
         </ChartContainer>
       </CardContent>

@@ -20,14 +20,9 @@ export const mockKpis: Kpi[] = [
   { title: 'Reservas Fechadas', value: '38', change: '+10', changeType: 'increase', icon: CalendarCheck },
 ];
 
-export const mockSalesData: Booking[] = [
-    { month: 'Jan', praia: 5, montanha: 2, cidade: 3 },
-    { month: 'Fev', praia: 7, montanha: 3, cidade: 4 },
-    { month: 'Mar', praia: 10, montanha: 4, cidade: 5 },
-    { month: 'Abr', praia: 8, montanha: 5, cidade: 6 },
-    { month: 'Mai', praia: 12, montanha: 6, cidade: 7 },
-    { month: 'Jun', praia: 15, montanha: 7, cidade: 8 },
-];
+// This is now generated dynamically on the dashboard page
+export const mockSalesData: Booking[] = [];
+
 
 export const mockAppointments: Appointment[] = [
   { id: '1', title: 'Reunião de Planejamento', customer: 'Família Silva', package: 'Resort em Cancún', date: 'Hoje, 10:00', type: 'meeting' },
@@ -41,19 +36,19 @@ export const mockAppointments: Appointment[] = [
 export const mockUsers: User[] = [
   { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 11 98765-4321' },
   { id: '2', name: 'Bruno Lima', email: 'bruno.lima@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 21 91234-5678' },
-  { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 31 99876-5432', travelStyle: 'Luxo' },
+  { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 31 99876-5432', document: '123.456.789-00', travelStyle: 'Luxo', preferences: 'Prefere hotéis com spa e boa gastronomia. Gosta de viajar na primavera.' },
   { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 41 98765-1234' },
-  { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 51 91122-3344', travelStyle: 'Aventura' },
-  { id: '6', name: 'Fábio Martins', email: 'fabio.martins@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 61 95566-7788', travelStyle: 'Cultural' },
+  { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 51 91122-3344', document: '987.654.321-00', travelStyle: 'Aventura', preferences: 'Busca atividades ao ar livre como trekking e rafting. Orçamento flexível.' },
+  { id: '6', name: 'Fábio Martins', email: 'fabio.martins@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 61 95566-7788', document: '111.222.333-44', travelStyle: 'Cultural', preferences: 'Interesse em museus, história e gastronomia local.' },
 ];
 
 export const mockReservations: Reservation[] = [
-    { id: '1', customerName: 'João Silva', packageId: '1', packageName: 'Resort Tropical em Cancún', travelDate: '2024-08-15', status: 'Confirmada', totalPrice: 9000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '2', customerName: 'Maria Garcia', packageId: '2', packageName: 'Aventura nos Alpes Suíços', travelDate: '2024-09-05', status: 'Pendente', totalPrice: 14400, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '3', customerName: 'Pedro Martins', packageId: '6', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '4', customerName: 'Ana Rodrigues', packageId: '4', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, travelers: 1, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '5', customerName: 'Lucas Almeida', packageId: '5', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
-    { id: '6', customerName: 'Família Oliveira', packageId: '7', packageName: 'Diversão em Família em Orlando', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, travelers: 4, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '1', customerName: 'Carla Dias', packageId: '1', packageName: 'Resort Tropical em Cancún', travelDate: '2024-08-15', status: 'Confirmada', totalPrice: 9000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '2', customerName: 'Eduarda Souza', packageId: '2', packageName: 'Aventura nos Alpes Suíços', travelDate: '2024-09-05', status: 'Pendente', totalPrice: 14400, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '3', customerName: 'Fábio Martins', packageId: '6', packageName: 'Férias em Roma e Vaticano', travelDate: '2024-10-20', status: 'Confirmada', totalPrice: 11800, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '4', customerName: 'Carla Dias', packageId: '4', packageName: 'Viagem de Negócios a Nova York', travelDate: '2024-07-30', status: 'Cancelada', totalPrice: 5300, travelers: 1, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '5', customerName: 'Eduarda Souza', packageId: '5', packageName: 'Safari na Tanzânia', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '6', customerName: 'Fábio Martins', packageId: '7', packageName: 'Diversão em Família em Orlando', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, travelers: 4, agentAvatarUrl: 'https://placehold.co/100x100' },
   ];
 
 export const mockItineraries: Itinerary[] = [
@@ -65,10 +60,10 @@ export const mockItineraries: Itinerary[] = [
   ];
 
   export const mockNegotiations: Negotiation[] = [
-    { id: '1', customerName: 'Renata Almeida', packageName: 'Aventura nos Alpes Suíços', value: 14400, agentId: '2', status: 'Lead' },
-    { id: '2', customerName: 'Fernando Costa', packageName: 'Safari na Tanzânia', value: 25000, agentId: '2', status: 'Proposta Enviada' },
-    { id: '3', customerName: 'Beatriz Santos', packageName: 'Combo Cultural: Rio e Salvador', value: 12400, agentId: '4', status: 'Em Negociação' },
-    { id: '4', customerName: 'Tiago Nunes', packageName: 'Resort Tropical em Cancún', value: 9000, agentId: '2', status: 'Ganhos' },
-    { id: '5', customerName: 'Mariana Lima', packageName: 'Férias em Roma e Vaticano', value: 5900, agentId: '2', status: 'Proposta Enviada' },
-    { id: '6', customerName: 'Família Martins', packageName: 'Diversão em Família em Orlando', value: 15000, agentId: '4', status: 'Lead' },
+    { id: '1', customerName: 'Eduarda Souza', packageName: 'Aventura nos Alpes Suíços', value: 14400, agentId: '2', status: 'Lead' },
+    { id: '2', customerName: 'Fábio Martins', packageName: 'Safari na Tanzânia', value: 25000, agentId: '2', status: 'Proposta Enviada' },
+    { id: '3', customerName: 'Carla Dias', packageName: 'Combo Cultural: Rio e Salvador', value: 12400, agentId: '4', status: 'Em Negociação' },
+    { id: '4', customerName: 'Eduarda Souza', packageName: 'Resort Tropical em Cancún', value: 9000, agentId: '2', status: 'Ganhos' },
+    { id: '5', customerName: 'Fábio Martins', packageName: 'Férias em Roma e Vaticano', value: 5900, agentId: '2', status: 'Proposta Enviada' },
+    { id: '6', customerName: 'Carla Dias', packageName: 'Diversão em Família em Orlando', value: 15000, agentId: '4', status: 'Lead' },
   ];

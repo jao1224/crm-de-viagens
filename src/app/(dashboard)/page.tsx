@@ -1,21 +1,58 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { KpiCard } from '@/components/kpi-card';
 import { SalesChart } from '@/components/sales-chart';
-import { mockTravelPackages, mockReservations, mockSalesData } from '@/lib/mock-data';
+import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
+// Helper function to generate dynamic sales data based on real reservations
+const generateDynamicSalesData = (reservations: Reservation[], packages: TravelPackage[]): { data: Booking[], config: any } => {
+    const packageTypes = [...new Set(packages.map(p => p.type))];
+    const typeCounts: { [key: string]: number } = {};
+
+    reservations
+        .filter(r => r.status === 'Confirmada')
+        .forEach(r => {
+            const pkg = packages.find(p => p.id === r.packageId);
+            if (pkg) {
+                typeCounts[pkg.type] = (typeCounts[pkg.type] || 0) + r.travelers;
+            }
+        });
+
+    const totalSales = Object.values(typeCounts).reduce((sum, count) => sum + count, 1); // Avoid division by zero
+
+    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+    const salesData: Booking[] = months.map((month, index) => {
+        const monthData: Booking = { month };
+        packageTypes.forEach(type => {
+            const baseSales = typeCounts[type] || 0;
+            // Simulate some variance and growth over time
+            const monthSales = Math.floor((baseSales / totalSales * 10) + (Math.random() * 3 * (index + 1)));
+            monthData[type.toLowerCase()] = monthSales;
+        });
+        return monthData;
+    });
+
+    const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
+    const chartConfig: any = {};
+    packageTypes.forEach((type, index) => {
+        chartConfig[type.toLowerCase()] = {
+            label: type,
+            color: chartColors[index % chartColors.length],
+        };
+    });
+    
+    return { data: salesData, config: chartConfig };
+};
+
+
 export default function DashboardPage() {
-  // Although we are using useState, for a real app, you'd use a global state manager (Zustand, Redux)
-  // or fetch this data from your backend API to ensure it's consistent across all pages.
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
-  const [salesData, setSalesData] = useState<Booking[]>(mockSalesData);
 
-  // In a real app, you would fetch updated data here or listen to a global state.
-  // For this prototype, the state is self-contained.
   const totalRevenue = reservations
     .filter(r => r.status === 'Confirmada')
     .reduce((sum, r) => sum + r.totalPrice, 0);
@@ -57,6 +94,8 @@ export default function DashboardPage() {
     },
   ];
 
+  const { data: salesData, config: salesChartConfig } = generateDynamicSalesData(reservations, packages);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -65,8 +104,7 @@ export default function DashboardPage() {
         ))}
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
-        <SalesChart data={salesData} />
-        {/* Placeholder for other dashboard components */}
+        <SalesChart data={salesData} config={salesChartConfig} />
         <div className="lg:col-span-1 bg-card rounded-lg border p-4 flex items-center justify-center">
           <p className="text-muted-foreground">Outros widgets aqui...</p>
         </div>
