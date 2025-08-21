@@ -89,7 +89,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
   }, [pkg, form, isOpen]);
   
   const handleFormSubmit = (values: PackageFormValues) => {
-    // If a new image was previewed, its data URI is in imagePreview.
+    // If a new image was selected, its data URI is in imagePreview.
     // If not, we use the existing imageUrl from the form values.
     const finalValues = {
       ...values,
@@ -120,7 +120,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
@@ -202,7 +202,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="price"
