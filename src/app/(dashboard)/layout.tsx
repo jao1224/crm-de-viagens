@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { Plane } from "lucide-react";
 import { SimpleDashboardNav } from "@/components/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarFooter, SidebarInset } from "@/components/ui/sidebar";
@@ -14,7 +14,7 @@ export default function DashboardLayout({
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Wallet className="h-6 w-6" />
+              <Plane className="h-6 w-6" />
             </div>
             <span className="font-headline font-extrabold text-2xl text-primary group-data-[collapsible=icon]:hidden">EstateFlow</span>
           </div>
