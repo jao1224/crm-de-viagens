@@ -16,22 +16,11 @@ import type { DateRange } from 'react-day-picker';
 const generateBookingPerformanceData = (
     reservations: Reservation[], 
     packages: TravelPackage[],
-    dateRange?: DateRange
 ): { data: Booking[], config: any } => {
     const chartConfig: any = {};
     const monthlyData: { [key: string]: Booking } = {};
 
     let filteredReservations = reservations.filter(r => r.status === 'Confirmada');
-
-    // Filter by date range if provided
-    if (dateRange && dateRange.from) {
-        // Set to to end of day if only from is set
-        const to = dateRange.to || dateRange.from;
-        filteredReservations = filteredReservations.filter(res => {
-            const bookingDate = new Date(res.bookingDate);
-            return isWithinInterval(bookingDate, { start: dateRange.from!, end: to });
-        });
-    }
     
     // Define colors for package types
     const packageTypes = [...new Set(packages.map(p => p.type))];
@@ -75,7 +64,7 @@ const generateBookingPerformanceData = (
 
     // Fallback in case there are no confirmed reservations in the selected range
     if (chartData.length === 0) {
-      const monthName = format(dateRange?.from || new Date(), "MMM", { locale: ptBR }).replace('.', '');
+      const monthName = format(new Date(), "MMM", { locale: ptBR }).replace('.', '');
       const fallbackEntry: Booking = { month: monthName };
       packageTypes.forEach(type => {
         fallbackEntry[type.toLowerCase()] = 0;
@@ -90,13 +79,6 @@ const generateBookingPerformanceData = (
 export default function DashboardPage() {
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
-
-  const defaultDateRange: DateRange = {
-    from: startOfMonth(subMonths(new Date(), 5)),
-    to: endOfMonth(new Date()),
-  };
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(defaultDateRange);
-
 
   const totalRevenue = reservations
     .filter(r => r.status === 'Confirmada')
@@ -143,7 +125,7 @@ export default function DashboardPage() {
     },
   ];
 
-  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages, dateRange);
+  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages);
 
   return (
     <div className="flex flex-col gap-6">
@@ -158,8 +140,6 @@ export default function DashboardPage() {
           config={bookingChartConfig}
           chartTitle="Vendas Mensais por Tipo de Pacote"
           chartDescription="Número de viajantes em reservas confirmadas por tipo de pacote, mês a mês." 
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
         />
       </div>
     </div>
