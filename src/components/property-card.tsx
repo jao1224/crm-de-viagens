@@ -26,7 +26,10 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
 
 export function PropertyCard({ property, onDetailsClick, onEditClick }: PropertyCardProps) {
   return (
-    <Card className="overflow-hidden flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <Card 
+        className="overflow-hidden flex flex-col h-full shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+        onClick={onDetailsClick}
+    >
       <CardHeader className="p-0 relative">
         <Image
           src={property.imageUrl}
@@ -58,19 +61,22 @@ export function PropertyCard({ property, onDetailsClick, onEditClick }: Property
           </div>
         </div>
       </CardContent>
-      <CardFooter className="p-4 flex justify-between items-center bg-muted/30">
+      <CardFooter 
+        className="p-4 flex justify-between items-center bg-muted/30"
+        onClick={(e) => e.stopPropagation()}
+      >
         <p className="text-xl font-bold font-headline text-primary">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(property.price)}
         </p>
         <div className="flex gap-2">
-          <Button onClick={onDetailsClick}>Detalhes</Button>
+          <Button onClick={(e) => { e.stopPropagation(); onDetailsClick(); }}>Detalhes</Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
                 <MoreVertical className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent onClick={(e) => e.stopPropagation()}>
               <DropdownMenuItem onSelect={onDetailsClick}>Ver Detalhes</DropdownMenuItem>
               <DropdownMenuItem onSelect={onEditClick}>Editar Pacote</DropdownMenuItem>
             </DropdownMenuContent>
