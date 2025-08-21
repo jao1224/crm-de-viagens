@@ -24,7 +24,9 @@ export type Kpi = {
 
 export type Booking = {
   month: string;
-  [key: string]: number | string; // Allow dynamic keys for package types
+  monthIndex?: number;
+  year?: number;
+  [key: string]: number | string | undefined; // Allow dynamic keys for package types
 };
 
 

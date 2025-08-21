@@ -7,16 +7,30 @@ import { SalesChart } from '@/components/sales-chart';
 import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
-import { format, getMonth } from 'date-fns';
+import { format, getMonth, isWithinInterval, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import type { DateRange } from 'react-day-picker';
+
 
 // Helper to generate dynamic booking data by month based on number of travelers
-const generateBookingPerformanceData = (reservations: Reservation[], packages: TravelPackage[]): { data: Booking[], config: any } => {
+const generateBookingPerformanceData = (
+    reservations: Reservation[], 
+    packages: TravelPackage[],
+    dateRange?: DateRange
+): { data: Booking[], config: any } => {
     const chartConfig: any = {};
     const monthlyData: { [key: string]: Booking } = {};
-    
-    const confirmedReservations = reservations.filter(r => r.status === 'Confirmada');
 
+    let filteredReservations = reservations.filter(r => r.status === 'Confirmada');
+
+    // Filter by date range if provided
+    if (dateRange && dateRange.from && dateRange.to) {
+        filteredReservations = filteredReservations.filter(res => {
+            const bookingDate = new Date(res.bookingDate);
+            return isWithinInterval(bookingDate, { start: dateRange.from!, end: dateRange.to! });
+        });
+    }
+    
     // Define colors for package types
     const packageTypes = [...new Set(packages.map(p => p.type))];
     const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
@@ -27,32 +41,37 @@ const generateBookingPerformanceData = (reservations: Reservation[], packages: T
         };
     });
 
-    confirmedReservations.forEach(res => {
+    filteredReservations.forEach(res => {
         const pkg = packages.find(p => p.id === res.packageId);
         if (!pkg) return;
 
         const date = new Date(res.bookingDate);
         const monthIndex = getMonth(date);
+        const monthKey = format(date, 'yyyy-MM'); // Use a key that includes the year
         const monthName = format(date, "MMM", { locale: ptBR }).replace('.', '');
 
-        if (!monthlyData[monthIndex]) {
-            monthlyData[monthIndex] = { month: monthName };
+
+        if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = { month: monthName, monthIndex: monthIndex, year: date.getFullYear() };
         }
 
         const typeKey = pkg.type.toLowerCase();
-        const currentTravelers = (monthlyData[monthIndex][typeKey] as number) || 0;
-        // Use the number of travelers as the metric
-        monthlyData[monthIndex][typeKey] = currentTravelers + res.travelers;
+        const currentTravelers = (monthlyData[monthKey][typeKey] as number) || 0;
+        monthlyData[monthKey][typeKey] = currentTravelers + res.travelers;
     });
 
-    // Sort data by month index and convert to array
-    const chartData = Object.keys(monthlyData)
-      .map(key => ({ ...monthlyData[key], monthIndex: parseInt(key) }))
-      .sort((a, b) => a.monthIndex - b.monthIndex)
-      .map(({ monthIndex, ...rest }) => rest);
+    // Sort data by year then month index and convert to array
+    const chartData = Object.values(monthlyData)
+      .sort((a, b) => {
+          const yearA = (a.year as number) || 0;
+          const yearB = (b.year as number) || 0;
+          if (yearA !== yearB) return yearA - yearB;
+          return (a.monthIndex as number) - (b.monthIndex as number)
+      })
+      .map(({ monthIndex, year, ...rest }) => rest);
 
 
-    // Fallback in case there are no confirmed reservations
+    // Fallback in case there are no confirmed reservations in the selected range
     if (chartData.length === 0) {
       const monthName = format(new Date(), "MMM", { locale: ptBR }).replace('.', '');
       const fallbackEntry: Booking = { month: monthName };
@@ -69,6 +88,13 @@ const generateBookingPerformanceData = (reservations: Reservation[], packages: T
 export default function DashboardPage() {
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
+
+  const defaultDateRange: DateRange = {
+    from: startOfMonth(subMonths(new Date(), 5)),
+    to: endOfMonth(new Date()),
+  };
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(defaultDateRange);
+
 
   const totalRevenue = reservations
     .filter(r => r.status === 'Confirmada')
@@ -111,7 +137,7 @@ export default function DashboardPage() {
     },
   ];
 
-  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages);
+  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages, dateRange);
 
   return (
     <div className="flex flex-col gap-6">
@@ -126,6 +152,8 @@ export default function DashboardPage() {
           config={bookingChartConfig}
           chartTitle="Vendas Mensais por Tipo de Pacote"
           chartDescription="Número de viajantes em reservas confirmadas por tipo de pacote, mês a mês." 
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
         />
         <div className="lg:col-span-1 bg-card rounded-lg border p-4 flex items-center justify-center">
           <p className="text-muted-foreground">Outros widgets aqui...</p>
