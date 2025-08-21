@@ -39,7 +39,7 @@ export function DashboardHeader() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">Agente de Viagens</p>
-                <p className="text-xs leading-none text-muted-foreground">agente@travelflow.com</p>
+                <p className="text-xs leading-none text-muted-foreground">agente@estateflow.com</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

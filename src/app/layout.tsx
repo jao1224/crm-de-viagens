@@ -2,13 +2,23 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
-import { Open_Sans } from 'next/font/google';
+import { Alegreya, Belleza } from 'next/font/google';
 
-const openSans = Open_Sans({ subsets: ['latin'], variable: '--font-sans' });
+const alegreya = Alegreya({ 
+  subsets: ['latin'], 
+  variable: '--font-sans',
+  display: 'swap',
+});
 
+const belleza = Belleza({
+  subsets: ['latin'],
+  variable: '--font-headline',
+  weight: '400',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: 'TravelFlow',
+  title: 'EstateFlow',
   description: 'Um sistema inteligente de gestão de viagens.',
 };
 
@@ -19,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", openSans.variable)}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", alegreya.variable, belleza.variable)}>
         {children}
         <Toaster />
       </body>
