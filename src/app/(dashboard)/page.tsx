@@ -8,31 +8,51 @@ import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
-// Helper function to generate dynamic data based on package inventory
-const generatePackageInventoryData = (packages: TravelPackage[]): { data: Booking[], config: any } => {
+// Helper function to generate dynamic data based on confirmed reservations per package type
+const generateBookingPerformanceData = (reservations: Reservation[], packages: TravelPackage[]): { data: Booking[], config: any } => {
     const packageTypes = [...new Set(packages.map(p => p.type))];
     const typeCounts: { [key: string]: number } = {};
 
-    packages.forEach(pkg => {
-        typeCounts[pkg.type] = (typeCounts[pkg.type] || 0) + 1;
+    const confirmedReservations = reservations.filter(r => r.status === 'Confirmada');
+
+    confirmedReservations.forEach(res => {
+        const pkg = packages.find(p => p.id === res.packageId);
+        if (pkg) {
+            typeCounts[pkg.type] = (typeCounts[pkg.type] || 0) + 1;
+        }
     });
 
-    const inventoryData: Booking[] = [{ month: 'Inventário' }]; // Using 'month' field for a single category
-    packageTypes.forEach(type => {
-        inventoryData[0][type.toLowerCase()] = typeCounts[type] || 0;
-    });
-
-
-    const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
+    const chartData: Booking[] = [{ month: 'Reservas' }];
     const chartConfig: any = {};
-    packageTypes.forEach((type, index) => {
-        chartConfig[type.toLowerCase()] = {
-            label: type,
-            color: chartColors[index % chartColors.length],
-        };
+    const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
+    
+    let colorIndex = 0;
+    packageTypes.forEach(type => {
+        const key = type.toLowerCase();
+        // Only add to chart if there are reservations for this type
+        if (typeCounts[type] > 0) {
+            chartData[0][key] = typeCounts[type];
+            chartConfig[key] = {
+                label: type,
+                color: chartColors[colorIndex % chartColors.length],
+            };
+            colorIndex++;
+        }
     });
     
-    return { data: inventoryData, config: chartConfig };
+    // Fallback in case there are no confirmed reservations
+    if (Object.keys(chartData[0]).length === 1) {
+        packageTypes.forEach((type, index) => {
+             const key = type.toLowerCase();
+             chartData[0][key] = 0;
+             chartConfig[key] = {
+                 label: type,
+                 color: chartColors[index % chartColors.length],
+             }
+        });
+    }
+
+    return { data: chartData, config: chartConfig };
 };
 
 
@@ -81,7 +101,7 @@ export default function DashboardPage() {
     },
   ];
 
-  const { data: inventoryData, config: inventoryChartConfig } = generatePackageInventoryData(packages);
+  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages);
 
   return (
     <div className="flex flex-col gap-6">
@@ -92,10 +112,10 @@ export default function DashboardPage() {
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <SalesChart 
-          data={inventoryData} 
-          config={inventoryChartConfig}
-          chartTitle="Inventário de Pacotes"
-          chartDescription="Quantidade de pacotes disponíveis por tipo." 
+          data={bookingData} 
+          config={bookingChartConfig}
+          chartTitle="Pacotes Mais Reservados"
+          chartDescription="Quantidade de reservas confirmadas por tipo de pacote." 
         />
         <div className="lg:col-span-1 bg-card rounded-lg border p-4 flex items-center justify-center">
           <p className="text-muted-foreground">Outros widgets aqui...</p>
