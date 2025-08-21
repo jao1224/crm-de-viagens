@@ -7,7 +7,7 @@ import { SalesChart } from '@/components/sales-chart';
 import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
-import { format, getMonth, isWithinInterval, startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import { format, getMonth, getYear, isWithinInterval, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 
@@ -16,11 +16,12 @@ import type { DateRange } from 'react-day-picker';
 const generateBookingPerformanceData = (
     reservations: Reservation[], 
     packages: TravelPackage[],
+    selectedYear: number,
 ): { data: Booking[], config: any } => {
     const chartConfig: any = {};
     const monthlyData: { [key: string]: Booking } = {};
 
-    let filteredReservations = reservations.filter(r => r.status === 'Confirmada');
+    let filteredReservations = reservations.filter(r => r.status === 'Confirmada' && getYear(new Date(r.bookingDate)) === selectedYear);
     
     // Define colors for package types
     const packageTypes = [...new Set(packages.map(p => p.type))];
@@ -80,6 +81,10 @@ export default function DashboardPage() {
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
 
+  const availableYears = Array.from(new Set(reservations.map(r => getYear(new Date(r.bookingDate))))).sort((a, b) => b - a);
+  const [selectedYear, setSelectedYear] = useState<number>(availableYears[0] || new Date().getFullYear());
+
+
   const totalRevenue = reservations
     .filter(r => r.status === 'Confirmada')
     .reduce((sum, r) => sum + r.totalPrice, 0);
@@ -125,7 +130,7 @@ export default function DashboardPage() {
     },
   ];
 
-  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages);
+  const { data: bookingData, config: bookingChartConfig } = generateBookingPerformanceData(reservations, packages, selectedYear);
 
   return (
     <div className="flex flex-col gap-6">
@@ -140,6 +145,9 @@ export default function DashboardPage() {
           config={bookingChartConfig}
           chartTitle="Vendas Mensais por Tipo de Pacote"
           chartDescription="Número de viajantes em reservas confirmadas por tipo de pacote, mês a mês." 
+          years={availableYears}
+          selectedYear={selectedYear}
+          onYearChange={(year) => setSelectedYear(parseInt(year))}
         />
       </div>
     </div>
