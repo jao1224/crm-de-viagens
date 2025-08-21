@@ -16,7 +16,7 @@ export default function DashboardLayout({
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Plane className="h-6 w-6" />
             </div>
-            <span className="font-headline text-2xl text-primary group-data-[collapsible=icon]:hidden">TravelFlow</span>
+            <span className="font-sans font-extrabold text-2xl text-primary group-data-[collapsible=icon]:hidden">TravelFlow</span>
           </div>
         </SidebarHeader>
         <SidebarContent>
