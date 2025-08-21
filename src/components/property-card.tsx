@@ -53,7 +53,7 @@ export function PropertyCard({ property, onDetailsClick, onEditClick }: Property
           </div>
            <div className="flex items-center gap-1 text-muted-foreground">
             <Users className="w-4 h-4 text-primary/70" />
-            <span>{property.travelers}</span>
+            <span>{property.travelers > 0 ? `${property.travelers} vagas` : 'Esgotado'}</span>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <Calendar className="w-4 h-4 text-primary/70" />
