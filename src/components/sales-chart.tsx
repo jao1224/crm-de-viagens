@@ -10,14 +10,16 @@ import type { ChartConfig } from '@/components/ui/chart';
 interface SalesChartProps {
   data: Booking[];
   config: ChartConfig;
+  chartTitle: string;
+  chartDescription: string;
 }
 
-export function SalesChart({ data, config }: SalesChartProps) {
+export function SalesChart({ data, config, chartTitle, chartDescription }: SalesChartProps) {
   return (
     <Card className="col-span-1 lg:col-span-2">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl text-primary">Performance de Vendas</CardTitle>
-        <CardDescription>Vendas por tipo de pacote nos últimos 6 meses.</CardDescription>
+        <CardTitle className="font-headline text-2xl text-primary">{chartTitle}</CardTitle>
+        <CardDescription>{chartDescription}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={config} className="h-[300px] w-full">
@@ -28,10 +30,12 @@ export function SalesChart({ data, config }: SalesChartProps) {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
               />
-              <YAxis />
-              <Tooltip cursor={{fill: 'hsl(var(--background))'}} content={<ChartTooltipContent />} />
+              <YAxis
+                tickFormatter={(value) => value.toString()}
+                allowDecimals={false}
+              />
+              <Tooltip cursor={{fill: 'hsl(var(--background))'}} content={<ChartTooltipContent hideLabel />} />
               <ChartLegend content={<ChartLegendContent />} />
               {Object.keys(config).map((key) => (
                  <Bar key={key} dataKey={key} fill={`var(--color-${key})`} radius={4} />
