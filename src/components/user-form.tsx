@@ -27,6 +27,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import type { User, TravelStyle } from '@/lib/types';
 import { travelStyles } from '@/lib/types';
 import { useEffect } from 'react';
+import { Textarea } from './ui/textarea';
 
 const userFormSchema = z.object({
   name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
@@ -34,6 +35,7 @@ const userFormSchema = z.object({
   phone: z.string().optional(),
   document: z.string().optional(),
   travelStyle: z.enum(travelStyles).optional(),
+  preferences: z.string().optional(),
   role: z.enum(['Administrador', 'Agente de Viagem', 'Cliente']).optional(),
   status: z.enum(['Ativo', 'Inativo']).optional(),
 });
@@ -64,6 +66,7 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
           phone: '',
           document: '',
           travelStyle: undefined,
+          preferences: '',
           role: isClientForm ? 'Cliente' : 'Agente de Viagem',
           status: 'Ativo',
         });
@@ -137,37 +140,56 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
             
             {isClientForm && (
               <>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="document"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Documento (CPF/Passaporte)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Ex: 123.456.789-00" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="travelStyle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Estilo de Viagem</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione um estilo" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {travelStyles.map(style => (
+                                <SelectItem key={style} value={style}>{style}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
-                  name="document"
+                  name="preferences"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Documento (CPF ou Passaporte)</FormLabel>
+                      <FormLabel>Preferências e Observações</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: 123.456.789-00" {...field} />
+                        <Textarea 
+                          placeholder="Ex: Prefere hotéis boutique, tem alergia a glúten, gosta de viajar em baixa temporada." 
+                          rows={3}
+                          {...field} 
+                        />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="travelStyle"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Estilo de Viagem Preferido</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione um estilo" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {travelStyles.map(style => (
-                              <SelectItem key={style} value={style}>{style}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
                       <FormMessage />
                     </FormItem>
                   )}

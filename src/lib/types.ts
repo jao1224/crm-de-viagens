@@ -56,6 +56,7 @@ export type User = {
   phone?: string;
   document?: string;
   travelStyle?: TravelStyle;
+  preferences?: string;
 };
 
 export type Reservation = {
