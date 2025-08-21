@@ -11,45 +11,57 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { UserForm } from "@/components/user-form";
-import { mockUsers } from "@/lib/mock-data";
-import type { User } from '@/lib/types';
-import { MoreHorizontal, PlusCircle, User as UserIcon, Mail, Phone, FileText, Heart, Info, X } from "lucide-react";
+import { mockUsers, mockReservations } from "@/lib/mock-data";
+import type { User, Reservation } from '@/lib/types';
+import { MoreHorizontal, PlusCircle, User as UserIcon, Mail, Phone, FileText, Heart, Info, X, Briefcase, Calendar } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 
 const ClientDetailsDialog = ({ user, isOpen, onOpenChange }: { user: User | null, isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) => {
     if (!user) return null;
+
+    const clientReservations = mockReservations.filter(reservation => reservation.customerName === user.name);
+
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 font-headline text-primary">
-                        <Avatar>
+                        <Avatar className="h-12 w-12">
                            <AvatarImage src={user.avatarUrl} alt={user.name} />
                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         {user.name}
                     </DialogTitle>
-                    <DialogDescription>Detalhes completos do cliente.</DialogDescription>
+                    <DialogDescription>Detalhes completos e histórico do cliente.</DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 py-2">
-                    <div className="flex items-center gap-3">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{user.email}</span>
+                <div className="space-y-6 py-2 max-h-[60vh] overflow-y-auto pr-4">
+                    {/* Personal Info */}
+                    <div className="space-y-4">
+                        <h4 className="font-semibold text-foreground">Informações Pessoais</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center gap-3">
+                                <Mail className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm">{user.email}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Phone className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm">{user.phone || 'Não informado'}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <FileText className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm">{user.document || 'Não informado'}</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Heart className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm">{user.travelStyle ? <Badge variant="outline">{user.travelStyle}</Badge> : 'Não informado'}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{user.phone || 'Não informado'}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{user.document || 'Não informado'}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Heart className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{user.travelStyle ? <Badge variant="outline">{user.travelStyle}</Badge> : 'Não informado'}</span>
-                    </div>
+                    
                     <Separator />
+
+                    {/* Preferences */}
                      <div className="space-y-2">
                         <h4 className="flex items-center gap-2 text-sm font-semibold">
                             <Info className="h-4 w-4 text-muted-foreground" />
@@ -59,8 +71,37 @@ const ClientDetailsDialog = ({ user, isOpen, onOpenChange }: { user: User | null
                             {user.preferences || 'Nenhuma observação registrada.'}
                         </p>
                     </div>
+
+                    <Separator />
+                    
+                    {/* Reservation History */}
+                    <div className="space-y-2">
+                         <h4 className="font-semibold text-foreground">Histórico de Viagens</h4>
+                         {clientReservations.length > 0 ? (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Pacote</TableHead>
+                                        <TableHead>Data</TableHead>
+                                        <TableHead className="text-right">Valor</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {clientReservations.map(res => (
+                                        <TableRow key={res.id}>
+                                            <TableCell className="font-medium">{res.packageName}</TableCell>
+                                            <TableCell>{new Date(res.travelDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</TableCell>
+                                            <TableCell className="text-right">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(res.totalPrice)}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                         ) : (
+                            <p className="text-sm text-muted-foreground">Nenhuma reserva encontrada para este cliente.</p>
+                         )}
+                    </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className="pt-4">
                     <DialogClose asChild>
                         <Button variant="outline">Fechar</Button>
                     </DialogClose>
@@ -115,7 +156,12 @@ export default function ClientsPage() {
     } else {
       // Add
       const newUser: User = { 
-        ...values,
+        name: values.name || '',
+        email: values.email || '',
+        phone: values.phone,
+        document: values.document,
+        travelStyle: values.travelStyle,
+        preferences: values.preferences,
         id: (users.length + 1 + Date.now()).toString(),
         avatarUrl: 'https://placehold.co/100x100',
         role: 'Cliente',
@@ -134,7 +180,7 @@ export default function ClientsPage() {
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
               <CardTitle className="font-headline text-primary">Gerenciamento de Clientes</CardTitle>
-              <CardDescription>Adicione, edite ou remova clientes da sua base.</CardDescription>
+              <CardDescription>Adicione, edite ou visualize os detalhes dos seus clientes.</CardDescription>
           </div>
           <Button onClick={handleAddUser}>
               <PlusCircle className="mr-2 h-4 w-4" />
@@ -156,7 +202,7 @@ export default function ClientsPage() {
               </TableHeader>
               <TableBody>
                   {users.map((user) => (
-                      <TableRow key={user.id} className="cursor-pointer" onClick={() => handleDetailsUser(user)}>
+                      <TableRow key={user.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleDetailsUser(user)}>
                           <TableCell>
                               <div className="flex items-center gap-3">
                                   <Avatar>
@@ -221,7 +267,12 @@ export default function ClientsPage() {
       <ClientDetailsDialog 
         user={selectedUser}
         isOpen={isDetailsOpen}
-        onOpenChange={setIsDetailsOpen}
+        onOpenChange={(isOpen) => {
+            setIsDetailsOpen(isOpen);
+            if (!isOpen) {
+                setSelectedUser(null);
+            }
+        }}
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>

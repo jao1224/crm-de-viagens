@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import type { User, TravelStyle } from '@/lib/types';
+import type { User } from '@/lib/types';
 import { travelStyles } from '@/lib/types';
 import { useEffect } from 'react';
 import { Textarea } from './ui/textarea';
@@ -45,7 +45,7 @@ type UserFormValues = z.infer<typeof userFormSchema>;
 interface UserFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSubmit: (values: UserFormValues) => void;
+  onSubmit: (values: Partial<Omit<User, 'id' | 'avatarUrl' | 'role' | 'status'>>) => void;
   user: User | null;
   isClientForm?: boolean;
 }
@@ -130,7 +130,7 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
                   <FormItem>
                     <FormLabel>Telefone</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ex: +55 11 98765-4321" {...field} />
+                      <Input placeholder="Ex: +55 11 98765-4321" {...field} value={field.value ?? ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,7 +148,7 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
                       <FormItem>
                         <FormLabel>Documento (CPF/Passaporte)</FormLabel>
                         <FormControl>
-                          <Input placeholder="Ex: 123.456.789-00" {...field} />
+                          <Input placeholder="Ex: 123.456.789-00" {...field} value={field.value ?? ''}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -188,6 +188,7 @@ export function UserForm({ isOpen, onOpenChange, onSubmit, user, isClientForm = 
                           placeholder="Ex: Prefere hotéis boutique, tem alergia a glúten, gosta de viajar em baixa temporada." 
                           rows={3}
                           {...field} 
+                          value={field.value ?? ''}
                         />
                       </FormControl>
                       <FormMessage />
