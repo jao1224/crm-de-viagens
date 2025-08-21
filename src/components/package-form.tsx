@@ -89,8 +89,6 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
   }, [pkg, form, isOpen]);
   
   const handleFormSubmit = (values: PackageFormValues) => {
-    // If a new image was selected, its data URI is in imagePreview.
-    // If not, we use the existing imageUrl from the form values.
     const finalValues = {
       ...values,
       imageUrl: imagePreview || values.imageUrl || '',
@@ -107,7 +105,7 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
       reader.onloadend = () => {
         const dataUrl = reader.result as string;
         setImagePreview(dataUrl);
-        form.setValue('imageUrl', dataUrl); // Set the value for the form
+        form.setValue('imageUrl', dataUrl);
       };
       reader.readAsDataURL(file);
     }
@@ -127,58 +125,61 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4 py-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Título do Pacote</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Férias Incríveis na Grécia" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Título do Pacote</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Férias Incríveis na Grécia" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="destination"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Destino</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Santorini, Grécia" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
              
-            <FormItem>
-              <FormLabel>Imagem do Pacote</FormLabel>
-              <FormControl>
-                <Input 
-                  type="file" 
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={handleImageChange}
-                  className="file:text-primary file:font-medium"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-
-            {imagePreview && (
-                <div className="w-full h-32 relative rounded-md overflow-hidden border">
-                    <Image 
-                        src={imagePreview}
-                        alt="Pré-visualização do pacote"
-                        fill
-                        className="object-cover"
-                    />
-                </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+              <FormItem>
+                <FormLabel>Imagem do Pacote</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="file" 
+                    accept="image/png, image/jpeg, image/jpg"
+                    onChange={handleImageChange}
+                    className="file:text-primary file:font-medium"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+              {imagePreview && (
+                  <div className="w-full h-28 relative rounded-md overflow-hidden border">
+                      <Image 
+                          src={imagePreview}
+                          alt="Pré-visualização do pacote"
+                          fill
+                          className="object-cover"
+                      />
+                  </div>
+              )}
+            </div>
 
             <FormField
-              control={form.control}
-              name="destination"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Destino</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ex: Santorini, Grécia" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-             <FormField
               control={form.control}
               name="type"
               render={({ field }) => (
