@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,11 +33,11 @@
     --input: 210 20% 91%;
     --ring: 207 72% 53%;
 
-    --chart-1: 207 72% 53%;
-    --chart-2: 98 45% 55%;
-    --chart-3: 207 60% 75%;
-    --chart-4: 98 40% 75%;
-    --chart-5: 210 20% 94%;
+    --chart-1: 207 80% 55%;
+    --chart-2: 100 60% 45%;
+    --chart-3: 207 70% 75%;
+    --chart-4: 100 50% 65%;
+    --chart-5: 215 25% 27%;
 
     --radius: 0.5rem;
 
@@ -79,11 +80,11 @@
     --input: 217 32.6% 17.5%;
     --ring: 207 72% 65%;
     
-    --chart-1: 207 72% 65%;
-    --chart-2: 98 45% 60%;
-    --chart-3: 207 60% 75%;
-    --chart-4: 98 40% 75%;
-    --chart-5: 222 47% 11%;
+    --chart-1: 207 80% 65%;
+    --chart-2: 100 50% 55%;
+    --chart-3: 207 70% 85%;
+    --chart-4: 100 40% 75%;
+    --chart-5: 210 40% 98%;
 
     --sidebar-background: 222 47% 9%;
     --sidebar-foreground: 210 40% 98%;
