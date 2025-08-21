@@ -26,7 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import type { TravelPackage } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const packageFormSchema = z.object({
   title: z.string().min(5, { message: 'O título deve ter pelo menos 5 caracteres.' }),
@@ -50,12 +51,27 @@ interface PackageFormProps {
 export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageFormProps) {
   const form = useForm<PackageFormValues>({
     resolver: zodResolver(packageFormSchema),
+    defaultValues: {
+        title: '',
+        destination: '',
+        price: 0,
+        duration: 1,
+        travelers: 1,
+        type: 'Praia',
+        imageUrl: '',
+    }
   });
+
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Watch for changes in the imageUrl field
+  const watchedImageUrl = form.watch('imageUrl');
 
   useEffect(() => {
     if (isOpen) {
       if (pkg) {
         form.reset(pkg);
+        setImagePreview(pkg.imageUrl);
       } else {
         form.reset({
           title: '',
@@ -66,9 +82,20 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
           type: 'Praia',
           imageUrl: '',
         });
+        setImagePreview(null);
       }
     }
   }, [pkg, form, isOpen]);
+  
+  useEffect(() => {
+    // Basic URL validation before setting preview
+    if (watchedImageUrl && watchedImageUrl.startsWith('http')) {
+        setImagePreview(watchedImageUrl);
+    } else {
+        setImagePreview(null);
+    }
+  }, [watchedImageUrl]);
+
 
   const handleFormSubmit = (values: PackageFormValues) => {
     onSubmit(values);
@@ -115,6 +142,18 @@ export function PackageForm({ isOpen, onOpenChange, onSubmit, pkg }: PackageForm
                 </FormItem>
               )}
             />
+
+            {imagePreview && (
+                <div className="w-full h-48 relative rounded-md overflow-hidden border">
+                    <Image 
+                        src={imagePreview}
+                        alt="Pré-visualização do pacote"
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+            )}
+
             <FormField
               control={form.control}
               name="destination"
