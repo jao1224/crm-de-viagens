@@ -10,7 +10,7 @@ import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 import { format, getMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-// Helper to generate dynamic booking data by month
+// Helper to generate dynamic booking data by month based on number of travelers
 const generateBookingPerformanceData = (reservations: Reservation[], packages: TravelPackage[]): { data: Booking[], config: any } => {
     const chartConfig: any = {};
     const monthlyData: { [key: string]: Booking } = {};
@@ -40,8 +40,9 @@ const generateBookingPerformanceData = (reservations: Reservation[], packages: T
         }
 
         const typeKey = pkg.type.toLowerCase();
-        const currentCount = (monthlyData[monthIndex][typeKey] as number) || 0;
-        monthlyData[monthIndex][typeKey] = currentCount + res.travelers;
+        const currentTravelers = (monthlyData[monthIndex][typeKey] as number) || 0;
+        // Use the number of travelers as the metric
+        monthlyData[monthIndex][typeKey] = currentTravelers + res.travelers;
     });
 
     // Sort data by month index and convert to array
