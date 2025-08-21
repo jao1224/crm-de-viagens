@@ -20,6 +20,7 @@ export type Kpi = {
   change: string;
   changeType: 'increase' | 'decrease';
   icon: LucideIcon;
+  description?: string;
 };
 
 export type Booking = {

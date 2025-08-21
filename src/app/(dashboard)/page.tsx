@@ -75,7 +75,7 @@ const generateBookingPerformanceData = (
 
     // Fallback in case there are no confirmed reservations in the selected range
     if (chartData.length === 0) {
-      const monthName = format(new Date(), "MMM", { locale: ptBR }).replace('.', '');
+      const monthName = format(dateRange?.from || new Date(), "MMM", { locale: ptBR }).replace('.', '');
       const fallbackEntry: Booking = { month: monthName };
       packageTypes.forEach(type => {
         fallbackEntry[type.toLowerCase()] = 0;
@@ -114,28 +114,32 @@ export default function DashboardPage() {
       value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(totalRevenue), 
       change: '+12.5%', // Placeholder
       changeType: 'increase', 
-      icon: DollarSign 
+      icon: DollarSign,
+      description: 'Soma total dos valores de todas as reservas com status "Confirmada".'
     },
     { 
       title: 'Pacotes Ativos', 
       value: activePackages.toString(), 
       change: '+2', // Placeholder
       changeType: 'increase', 
-      icon: Package 
+      icon: Package,
+      description: 'Número total de pacotes de viagem que estão atualmente com status "Disponível".'
     },
      { 
       title: 'Ticket Médio', 
       value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(averageTicket), 
       change: '-2.1%', // Placeholder
       changeType: 'decrease', 
-      icon: Wallet 
+      icon: Wallet,
+      description: 'Valor médio por venda. Calculado como: Faturamento Total / Reservas Confirmadas.'
     },
     { 
       title: 'Reservas Confirmadas', 
       value: confirmedReservations.toString(), 
       change: '+5', // Placeholder
       changeType: 'increase', 
-      icon: CalendarCheck 
+      icon: CalendarCheck,
+      description: 'Número total de reservas que foram confirmadas e pagas.'
     },
   ];
 
