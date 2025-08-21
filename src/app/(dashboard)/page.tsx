@@ -7,49 +7,58 @@ import { SalesChart } from '@/components/sales-chart';
 import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
+import { format, getMonth } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-// Helper function to generate dynamic data based on confirmed reservations per package type
+// Helper to generate dynamic booking data by month
 const generateBookingPerformanceData = (reservations: Reservation[], packages: TravelPackage[]): { data: Booking[], config: any } => {
-    const packageTypes = [...new Set(packages.map(p => p.type))];
-    const typeCounts: { [key: string]: number } = {};
-
+    const chartConfig: any = {};
+    const monthlyData: { [key: string]: Booking } = {};
+    
     const confirmedReservations = reservations.filter(r => r.status === 'Confirmada');
+
+    // Define colors for package types
+    const packageTypes = [...new Set(packages.map(p => p.type))];
+    const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
+    packageTypes.forEach((type, index) => {
+        chartConfig[type.toLowerCase()] = {
+            label: type,
+            color: chartColors[index % chartColors.length],
+        };
+    });
 
     confirmedReservations.forEach(res => {
         const pkg = packages.find(p => p.id === res.packageId);
-        if (pkg) {
-            typeCounts[pkg.type] = (typeCounts[pkg.type] || 0) + 1;
+        if (!pkg) return;
+
+        const date = new Date(res.travelDate);
+        const monthIndex = getMonth(date);
+        const monthName = format(date, "MMM", { locale: ptBR }).replace('.', '');
+
+        if (!monthlyData[monthIndex]) {
+            monthlyData[monthIndex] = { month: monthName };
         }
+
+        const typeKey = pkg.type.toLowerCase();
+        const currentCount = (monthlyData[monthIndex][typeKey] as number) || 0;
+        monthlyData[monthIndex][typeKey] = currentCount + res.travelers;
     });
 
-    const chartData: Booking[] = [{ month: 'Reservas' }];
-    const chartConfig: any = {};
-    const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))'];
-    
-    let colorIndex = 0;
-    packageTypes.forEach(type => {
-        const key = type.toLowerCase();
-        // Only add to chart if there are reservations for this type
-        if (typeCounts[type] > 0) {
-            chartData[0][key] = typeCounts[type];
-            chartConfig[key] = {
-                label: type,
-                color: chartColors[colorIndex % chartColors.length],
-            };
-            colorIndex++;
-        }
-    });
-    
+    // Sort data by month index and convert to array
+    const chartData = Object.keys(monthlyData)
+      .map(key => ({ ...monthlyData[key], monthIndex: parseInt(key) }))
+      .sort((a, b) => a.monthIndex - b.monthIndex)
+      .map(({ monthIndex, ...rest }) => rest);
+
+
     // Fallback in case there are no confirmed reservations
-    if (Object.keys(chartData[0]).length === 1) {
-        packageTypes.forEach((type, index) => {
-             const key = type.toLowerCase();
-             chartData[0][key] = 0;
-             chartConfig[key] = {
-                 label: type,
-                 color: chartColors[index % chartColors.length],
-             }
-        });
+    if (chartData.length === 0) {
+      const monthName = format(new Date(), "MMM", { locale: ptBR }).replace('.', '');
+      const fallbackEntry: Booking = { month: monthName };
+      packageTypes.forEach(type => {
+        fallbackEntry[type.toLowerCase()] = 0;
+      });
+      chartData.push(fallbackEntry);
     }
 
     return { data: chartData, config: chartConfig };
@@ -114,8 +123,8 @@ export default function DashboardPage() {
         <SalesChart 
           data={bookingData} 
           config={bookingChartConfig}
-          chartTitle="Pacotes Mais Reservados"
-          chartDescription="Quantidade de reservas confirmadas por tipo de pacote." 
+          chartTitle="Vendas Mensais por Tipo de Pacote"
+          chartDescription="Número de viajantes em reservas confirmadas por tipo de pacote, mês a mês." 
         />
         <div className="lg:col-span-1 bg-card rounded-lg border p-4 flex items-center justify-center">
           <p className="text-muted-foreground">Outros widgets aqui...</p>

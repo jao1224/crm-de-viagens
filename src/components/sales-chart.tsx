@@ -30,15 +30,21 @@ export function SalesChart({ data, config, chartTitle, chartDescription }: Sales
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
+                stroke="#888888"
+                fontSize={12}
               />
               <YAxis
-                tickFormatter={(value) => value.toString()}
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `${value}`}
                 allowDecimals={false}
               />
-              <Tooltip cursor={{fill: 'hsl(var(--background))'}} content={<ChartTooltipContent hideLabel />} />
+              <Tooltip cursor={{fill: 'hsl(var(--muted))'}} content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
               {Object.keys(config).map((key) => (
-                 <Bar key={key} dataKey={key} fill={`var(--color-${key})`} radius={4} />
+                 <Bar key={key} dataKey={key} fill={`var(--color-${key})`} radius={4} stackId="a" />
               ))}
             </BarChart>
         </ChartContainer>
