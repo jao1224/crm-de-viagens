@@ -108,16 +108,16 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="https://placehold.co/100x100" alt="Agente" />
-                <AvatarFallback>AV</AvatarFallback>
+                <AvatarImage src="https://placehold.co/100x100" alt="Ana Costa" />
+                <AvatarFallback>AC</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Agente de Viagens</p>
-                <p className="text-xs leading-none text-muted-foreground">agente@estateflow.com</p>
+                <p className="text-sm font-medium leading-none">Ana Costa</p>
+                <p className="text-xs leading-none text-muted-foreground">ana.costa@travelflow.com</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

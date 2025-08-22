@@ -57,9 +57,9 @@ export default function AccountPage() {
 
     // Mock user data - in a real app, this would come from an auth context
     const [user, setUser] = useState({
-        name: 'Agente de Viagens',
-        email: 'agente@estateflow.com',
-        phone: '+55 11 91234-5678',
+        name: 'Ana Costa',
+        email: 'ana.costa@travelflow.com',
+        phone: '+55 11 98765-4321',
         avatarUrl: 'https://placehold.co/100x100'
     });
 
