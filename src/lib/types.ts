@@ -90,4 +90,11 @@ export type Negotiation = {
     value: number;
     agentId: string;
     status: 'Lead' | 'Proposta Enviada' | 'Em Negociação' | 'Ganhos' | 'Perdido';
+};
+
+export interface Notification {
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
 }

@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,16 +12,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { LogOut, User, Settings, Bell, CheckCircle } from 'lucide-react';
+import { LogOut, User, Settings, Bell } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { navItems } from './dashboard-nav';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/context/notification-context';
 
 export function DashboardHeader() {
   const pathname = usePathname();
   const { toast } = useToast();
-  const [showNotificationDot, setShowNotificationDot] = useState(true);
+  const { notifications, showNotificationDot, setShowNotificationDot } = useNotifications();
   
   let pageTitle = 'Dashboard';
   if (pathname.startsWith('/account')) {
@@ -70,33 +70,23 @@ export function DashboardHeader() {
           <DropdownMenuContent className="w-80" align="end">
             <DropdownMenuLabel>Notificações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 mt-1"/>
-                <div>
-                  <p className="font-medium">Nova reserva confirmada!</p>
-                  <p className="text-xs text-muted-foreground">Cliente: Fábio Martins - Pacote: Férias em Roma.</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-                <div className="flex items-start gap-3">
-                <CheckCircle className="text-green-500 mt-1"/>
-                <div>
-                  <p className="font-medium">Pagamento recebido</p>
-                  <p className="text-xs text-muted-foreground">Reserva #12345 - R$ 9.000,00</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-             <DropdownMenuItem>
-                <div className="flex items-start gap-3">
-                <CheckCircle className="text-primary mt-1"/>
-                <div>
-                  <p className="font-medium">Novo lead de cliente</p>
-                  <p className="text-xs text-muted-foreground">Cliente: Mariana Rios - Interessada em pacotes para a Grécia.</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
+            {notifications.length === 0 ? (
+                <DropdownMenuItem disabled>
+                    <p className="text-sm text-muted-foreground">Nenhuma notificação nova.</p>
+                </DropdownMenuItem>
+            ) : (
+                notifications.map((notif) => (
+                    <DropdownMenuItem key={notif.id}>
+                        <div className="flex items-start gap-3">
+                            <notif.icon className="text-primary mt-1"/>
+                            <div>
+                            <p className="font-medium">{notif.title}</p>
+                            <p className="text-xs text-muted-foreground">{notif.description}</p>
+                            </div>
+                        </div>
+                    </DropdownMenuItem>
+                ))
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="justify-center" onSelect={handleSeeAllNotifications}>
               Ver todas as notificações

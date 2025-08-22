@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -26,7 +27,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Wand2, Copy, PlusCircle, ChevronDown, PenSquare } from 'lucide-react';
+import { Loader2, Wand2, Copy, PlusCircle, ChevronDown, PenSquare, CheckCircle } from 'lucide-react';
 import { recommendPackages, RecommendPackagesOutput } from '@/ai/flows/property-recommendation';
 import { useToast } from '@/hooks/use-toast';
 import { mockTravelPackages, mockNegotiations, mockUsers } from '@/lib/mock-data';
@@ -36,6 +37,7 @@ import type { Negotiation, TravelPackage, User } from '@/lib/types';
 import { KanbanCard } from '@/components/kanban-card';
 import { NegotiationForm } from '@/components/negotiation-form';
 import { PackageDetailsDialog } from '@/components/package-details-dialog';
+import { useNotifications } from '@/context/notification-context';
 
 const formSchema = z.object({
   clientRequest: z.string().min(10, {
@@ -53,6 +55,7 @@ export default function RecommendationsPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,6 +79,12 @@ export default function RecommendationsPage() {
         clientRequest: values.clientRequest,
       });
       setRecommendations(result);
+      addNotification({
+        id: `lead-ia-${Date.now()}`,
+        title: 'Lead Gerado por IA',
+        description: 'Um novo lead foi gerado com base na solicitação do cliente.',
+        icon: Wand2,
+      });
     } catch (error) {
       console.error('Error getting recommendations:', error);
       toast({
@@ -100,7 +109,13 @@ export default function RecommendationsPage() {
     toast({
         title: "Negociação Adicionada!",
         description: `A negociação para ${newNegotiation.customerName} foi criada.`
-    })
+    });
+    addNotification({
+        id: `lead-manual-${newNegotiation.id}`,
+        title: 'Novo Lead Criado',
+        description: `Cliente: ${newNegotiation.customerName} - Pacote: ${newNegotiation.packageName}`,
+        icon: CheckCircle,
+    });
     setIsManualFormOpen(false);
   }
 

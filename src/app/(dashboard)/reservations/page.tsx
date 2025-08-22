@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuPortal } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, CheckCircle } from "lucide-react";
 import { mockReservations, mockTravelPackages, mockUsers } from "@/lib/mock-data";
 import type { Reservation, TravelPackage, User } from "@/lib/types";
 import { ReservationForm } from '@/components/reservation-form';
@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ReservationDetailsDialog } from '@/components/reservation-details-dialog';
 import { format } from 'date-fns';
+import { useNotifications } from '@/context/notification-context';
 
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
@@ -26,6 +27,7 @@ export default function ReservationsPage() {
     const [isCancelAlertOpen, setIsCancelAlertOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
     const { toast } = useToast();
+    const { addNotification } = useNotifications();
 
 
     const getStatusVariant = (status: Reservation['status']) => {
@@ -101,6 +103,12 @@ export default function ReservationsPage() {
         // Decrease spots if changing to Confirmed
         if (newStatus === 'Confirmada' && originalReservation.status !== 'Confirmada') {
             updatePackageAvailability(originalReservation.packageId, originalReservation.travelers);
+            addNotification({
+                id: `res-confirm-${reservationId}`,
+                title: 'Reserva Confirmada!',
+                description: `Cliente: ${originalReservation.customerName} - Pacote: ${originalReservation.packageName}`,
+                icon: CheckCircle
+            });
         } 
         // Increase spots if changing from Confirmed to something else
         else if (newStatus !== 'Confirmada' && originalReservation.status === 'Confirmada') {
@@ -161,6 +169,16 @@ export default function ReservationsPage() {
             setReservations(reservations.map(r => (r.id === selectedReservation.id ? updatedReservation : r)));
             toast({ title: "Reserva Atualizada", description: `A reserva de ${updatedReservation.customerName} foi atualizada.` });
 
+            // Notify if status changed to confirmed during edit
+            if (updatedReservation.status === 'Confirmada' && originalReservation.status !== 'Confirmada') {
+                addNotification({
+                    id: `res-confirm-${updatedReservation.id}`,
+                    title: 'Reserva Confirmada!',
+                    description: `Cliente: ${updatedReservation.customerName} - Pacote: ${updatedReservation.packageName}`,
+                    icon: CheckCircle
+                });
+            }
+
         } else {
             // Add Mode
             const newReservation: Reservation = {
@@ -173,9 +191,15 @@ export default function ReservationsPage() {
                 description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
             });
             
-            // Sync package availability only if the new reservation is confirmed
+            // Sync package availability and notify only if the new reservation is confirmed
             if (newReservation.status === 'Confirmada') {
                 updatePackageAvailability(newReservation.packageId, newReservation.travelers);
+                addNotification({
+                    id: `res-confirm-${newReservation.id}`,
+                    title: 'Reserva Confirmada!',
+                    description: `Cliente: ${newReservation.customerName} - Pacote: ${newReservation.packageName}`,
+                    icon: CheckCircle
+                });
             }
         }
         setIsFormOpen(false);
