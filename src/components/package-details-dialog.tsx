@@ -114,9 +114,6 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
               <Button size="lg" disabled={pkg.status === 'Esgotado'} asChild>
                   <Link href="/reservations">Reservar Agora</Link>
               </Button>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">Fechar</Button>
-              </DialogClose>
             </div>
         </DialogFooter>
       </DialogContent>
