@@ -3,8 +3,8 @@ import type { TravelPackage, Kpi, Booking, Appointment, User, Reservation, Itine
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 
 export const mockTravelPackages: TravelPackage[] = [
-  { id: '1', title: 'Resort Tropical em Cancún', destination: 'Cancún, México', price: 4500, imageUrl: 'https://placehold.co/600x400', type: 'Praia', status: 'Disponível', duration: 7, travelers: 10, dataAiHint: 'beach resort' },
-  { id: '2', title: 'Aventura nos Alpes Suíços', destination: 'Interlaken, Suíça', price: 7200, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 10, travelers: 8, dataAiHint: 'swiss alps' },
+  { id: '1', title: 'Resort Tropical em Cancún', destination: 'Cancún, México', price: 4500, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Praia', status: 'Disponível', duration: 7, travelers: 10, dataAiHint: 'beach resort' },
+  { id: '2', title: 'Aventura nos Alpes Suíços', destination: 'Interlaken, Suíça', price: 7200, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Montanha', status: 'Disponível', duration: 10, travelers: 8, dataAiHint: 'swiss alps' },
   { id: '3', title: 'Tour Cultural em Quioto', destination: 'Quioto, Japão', price: 6800, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Esgotado', duration: 8, travelers: 0, dataAiHint: 'kyoto temple' },
   { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://placehold.co/600x400', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 20, dataAiHint: 'new york' },
   { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 4, dataAiHint: 'safari tanzania' },
