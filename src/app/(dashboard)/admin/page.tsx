@@ -1,6 +1,8 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTheme } from "next-themes"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +13,49 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { UserForm } from '@/components/user-form';
 import { mockUsers } from "@/lib/mock-data";
 import type { User } from '@/lib/types';
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Palette, Bell } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+
+
+const ThemeSwitcher = () => {
+    const { theme, setTheme } = useTheme();
+    const [isDark, setIsDark] = useState(theme === 'dark');
+
+    useEffect(() => {
+        setIsDark(theme === 'dark');
+    }, [theme]);
+
+    const handleThemeChange = (checked: boolean) => {
+        const newTheme = checked ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+    
+    // Avoid rendering on the server to prevent hydration mismatch
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => setMounted(true), [])
+
+    if (!mounted) {
+        return null
+    }
+
+    return (
+        <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+                <Label htmlFor="theme-mode" className="font-medium">Modo Escuro (Dark Mode)</Label>
+                <p className="text-xs text-muted-foreground">Alterne entre o tema claro e escuro da interface.</p>
+            </div>
+            <Switch 
+                id="theme-mode"
+                checked={isDark}
+                onCheckedChange={handleThemeChange}
+            />
+        </div>
+    );
+};
+
 
 export default function AdminPage() {
   const [users, setUsers] = useState<User[]>(mockUsers.filter(u => u.role !== 'Cliente'));
@@ -80,72 +123,114 @@ export default function AdminPage() {
 
   return (
     <>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-              <CardTitle className="font-headline text-primary">Gerenciamento de Usuários</CardTitle>
-              <CardDescription>Adicione, edite ou remova usuários do sistema.</CardDescription>
-          </div>
-          <Button onClick={handleAddUser}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Adicionar Usuário
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <Table>
-              <TableHeader>
-                  <TableRow>
-                      <TableHead>Usuário</TableHead>
-                      <TableHead>Perfil</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>
-                          <span className="sr-only">Ações</span>
-                      </TableHead>
-                  </TableRow>
-              </TableHeader>
-              <TableBody>
-                  {users.map((user) => (
-                      <TableRow key={user.id}>
-                          <TableCell>
-                              <div className="flex items-center gap-3">
-                                  <Avatar>
-                                      <AvatarImage src={user.avatarUrl} alt={user.name} />
-                                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                      <p className="font-medium">{user.name}</p>
-                                      <p className="text-sm text-muted-foreground">{user.email}</p>
-                                  </div>
-                              </div>
-                          </TableCell>
-                          <TableCell>
-                              <Badge variant={getRoleVariant(user.role)}>{user.role}</Badge>
-                          </TableCell>
-                          <TableCell>
-                              <Badge variant={getStatusVariant(user.status)}>{user.status}</Badge>
-                          </TableCell>
-                          <TableCell>
-                              <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                  <Button aria-haspopup="true" size="icon" variant="ghost">
-                                      <MoreHorizontal className="h-4 w-4" />
-                                      <span className="sr-only">Toggle menu</span>
-                                  </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                      <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                                      <DropdownMenuItem onSelect={() => handleEditUser(user)}>Editar</DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                      <DropdownMenuItem onSelect={() => handleDeleteUser(user)} className="text-destructive">Excluir</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                              </DropdownMenu>
-                          </TableCell>
-                      </TableRow>
-                  ))}
-              </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+                <CardTitle className="font-headline text-primary">Gerenciamento de Usuários</CardTitle>
+                <CardDescription>Adicione, edite ou remova usuários do sistema.</CardDescription>
+            </div>
+            <Button onClick={handleAddUser}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Adicionar Usuário
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Usuário</TableHead>
+                        <TableHead>Perfil</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>
+                            <span className="sr-only">Ações</span>
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {users.map((user) => (
+                        <TableRow key={user.id}>
+                            <TableCell>
+                                <div className="flex items-center gap-3">
+                                    <Avatar>
+                                        <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="font-medium">{user.name}</p>
+                                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                                    </div>
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <Badge variant={getRoleVariant(user.role)}>{user.role}</Badge>
+                            </TableCell>
+                            <TableCell>
+                                <Badge variant={getStatusVariant(user.status)}>{user.status}</Badge>
+                            </TableCell>
+                            <TableCell>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                        <span className="sr-only">Toggle menu</span>
+                                    </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                                        <DropdownMenuItem onSelect={() => handleEditUser(user)}>Editar</DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onSelect={() => handleDeleteUser(user)} className="text-destructive">Excluir</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-headline text-primary">Configurações do Sistema</CardTitle>
+            <CardDescription>Gerencie as preferências de aparência e notificações.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+              {/* Preferences Section */}
+              <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2"><Palette className="w-5 h-5"/> Aparência</h3>
+                  <div className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
+                      <ThemeSwitcher />
+                  </div>
+              </div>
+              
+              <Separator />
+
+              {/* Notifications Section */}
+              <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2"><Bell className="w-5 h-5"/> Notificações</h3>
+                  <div className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div>
+                              <Label htmlFor="news-emails" className="font-medium">Novos Leads</Label>
+                              <p className="text-xs text-muted-foreground">Receber um e-mail quando um novo lead for gerado.</p>
+                          </div>
+                          <Switch id="news-emails" defaultChecked/>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div>
+                              <Label htmlFor="reservations-emails" className="font-medium">Reservas Confirmadas</Label>
+                              <p className="text-xs text-muted-foreground">Receber um e-mail para cada nova reserva confirmada.</p>
+                          </div>
+                          <Switch id="reservations-emails" />
+                      </div>
+                  </div>
+              </div>
+          </CardContent>
+        </Card>
+      </div>
+
 
       <UserForm
         isOpen={isFormOpen}

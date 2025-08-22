@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { navItems } from './dashboard-nav';
 import Link from 'next/link';
@@ -51,12 +51,6 @@ export function DashboardHeader() {
               <Link href="/account">
                 <User className="mr-2 h-4 w-4" />
                 <span>Minha Conta</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/account">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Configurações</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
