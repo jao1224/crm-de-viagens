@@ -21,8 +21,8 @@ const generateBookingPerformanceData = (
     const chartConfig: any = {};
     const monthlyData: { [key: string]: Booking } = {};
 
-    // Filter by travel date year instead of booking date year
-    let filteredReservations = reservations.filter(r => r.status === 'Confirmada' && getYear(new Date(r.travelDate)) === selectedYear);
+    // Filter by booking date year
+    let filteredReservations = reservations.filter(r => r.status === 'Confirmada' && getYear(new Date(r.bookingDate)) === selectedYear);
     
     // Define colors for package types
     const packageTypes = [...new Set(packages.map(p => p.type))];
@@ -38,7 +38,7 @@ const generateBookingPerformanceData = (
         const pkg = packages.find(p => p.id === res.packageId);
         if (!pkg) return;
 
-        const date = new Date(res.travelDate); // Use travelDate for grouping by month
+        const date = new Date(res.bookingDate); // Use bookingDate for grouping by month
         const monthIndex = getMonth(date);
         const monthKey = format(date, 'yyyy-MM'); // Use a key that includes the year
         const monthName = format(date, "MMM", { locale: ptBR }).replace('.', '');
@@ -82,8 +82,8 @@ export default function DashboardPage() {
   const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
   const [packages, setPackages] = useState<TravelPackage[]>(mockTravelPackages);
 
-  // Generate available years from travelDate instead of bookingDate
-  const availableYears = Array.from(new Set(reservations.map(r => getYear(new Date(r.travelDate))))).sort((a, b) => b - a);
+  // Generate available years from bookingDate
+  const availableYears = Array.from(new Set(reservations.map(r => getYear(new Date(r.bookingDate))))).sort((a, b) => b - a);
   const [selectedYear, setSelectedYear] = useState<number>(availableYears[0] || new Date().getFullYear());
 
 
