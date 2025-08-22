@@ -12,15 +12,23 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { navItems } from './dashboard-nav';
 import Link from 'next/link';
 
 export function DashboardHeader() {
   const pathname = usePathname();
-  const currentPage = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'));
-  const pageTitle = pathname.startsWith('/account') ? 'Minha Conta' : currentPage?.label || 'Dashboard';
+  
+  let pageTitle = 'Dashboard';
+  if (pathname.startsWith('/account')) {
+    pageTitle = 'Minha Conta';
+  } else {
+    const currentPage = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'));
+    if (currentPage) {
+        pageTitle = currentPage.label;
+    }
+  }
 
 
   return (
@@ -52,6 +60,12 @@ export function DashboardHeader() {
                 <User className="mr-2 h-4 w-4" />
                 <span>Minha Conta</span>
               </Link>
+            </DropdownMenuItem>
+             <DropdownMenuItem asChild>
+               <Link href="/account">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Configurações</span>
+               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>

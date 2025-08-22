@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useTheme } from "next-themes"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from '@/hooks/use-toast';
-import { Camera, Shield, Info } from 'lucide-react';
+import { Camera, Shield, Info, Palette, Bell } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+
+
+const ThemeSwitcher = () => {
+    const { theme, setTheme } = useTheme();
+    const [isDark, setIsDark] = useState(theme === 'dark');
+
+    useEffect(() => {
+        setIsDark(theme === 'dark');
+    }, [theme]);
+
+    const handleThemeChange = (checked: boolean) => {
+        const newTheme = checked ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+    
+    // Avoid rendering on the server to prevent hydration mismatch
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => setMounted(true), [])
+
+    if (!mounted) {
+        return null
+    }
+
+    return (
+        <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+                <Label htmlFor="theme-mode" className="font-medium">Modo Escuro (Dark Mode)</Label>
+                <p className="text-xs text-muted-foreground">Alterne entre o tema claro e escuro da interface.</p>
+            </div>
+            <Switch 
+                id="theme-mode"
+                checked={isDark}
+                onCheckedChange={handleThemeChange}
+            />
+        </div>
+    );
+};
 
 
 export default function AccountPage() {
@@ -59,13 +98,13 @@ export default function AccountPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-primary">Minha Conta</CardTitle>
+          <CardTitle className="font-headline text-primary">Meu Perfil</CardTitle>
           <CardDescription>Gerencie suas informações pessoais e configurações de segurança.</CardDescription>
         </CardHeader>
         <CardContent>
             {/* Profile Section */}
             <div className="space-y-4">
-                <h3 className="text-lg font-semibold flex items-center gap-2"><Camera className="w-5 h-5"/> Perfil</h3>
+                <h3 className="text-lg font-semibold flex items-center gap-2"><Camera className="w-5 h-5"/> Informações Pessoais</h3>
                 <form onSubmit={handleProfileUpdate} className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
                     <div className="flex items-center gap-4">
                         <Avatar className="h-20 w-20">
@@ -125,6 +164,45 @@ export default function AccountPage() {
 
         </CardContent>
       </Card>
+      
+      <Card>
+          <CardHeader>
+            <CardTitle className="font-headline text-primary">Preferências</CardTitle>
+            <CardDescription>Gerencie as preferências de aparência e notificações.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+              {/* Preferences Section */}
+              <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2"><Palette className="w-5 h-5"/> Aparência</h3>
+                  <div className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
+                      <ThemeSwitcher />
+                  </div>
+              </div>
+              
+              <Separator />
+
+              {/* Notifications Section */}
+              <div className="space-y-4">
+                  <h3 className="text-lg font-semibold flex items-center gap-2"><Bell className="w-5 h-5"/> Notificações</h3>
+                  <div className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
+                      <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div>
+                              <Label htmlFor="news-emails" className="font-medium">Novos Leads</Label>
+                              <p className="text-xs text-muted-foreground">Receber um e-mail quando um novo lead for gerado.</p>
+                          </div>
+                          <Switch id="news-emails" defaultChecked/>
+                      </div>
+                      <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div>
+                              <Label htmlFor="reservations-emails" className="font-medium">Reservas Confirmadas</Label>
+                              <p className="text-xs text-muted-foreground">Receber um e-mail para cada nova reserva confirmada.</p>
+                          </div>
+                          <Switch id="reservations-emails" />
+                      </div>
+                  </div>
+              </div>
+          </CardContent>
+        </Card>
     </div>
   );
 }
