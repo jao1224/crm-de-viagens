@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -12,7 +13,7 @@ import {
   Users,
   LineChart,
   Wand2,
-  UserCog,
+  UsersCog,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -28,7 +29,7 @@ export const navItems: NavItem[] = [
   { href: '/faturamento', label: 'Faturamento', icon: DollarSign },
   { href: '/relatorios', label: 'Relatórios', icon: LineChart },
   { href: '/clientes', label: 'Clientes', icon: Users },
-  { href: '/admin', label: 'Admin', icon: UserCog },
+  { href: '/admin', label: 'Usuários', icon: UsersCog },
 ];
 
 

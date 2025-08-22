@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,10 +15,13 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { LogOut, User, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { navItems } from './dashboard-nav';
+import Link from 'next/link';
 
 export function DashboardHeader() {
   const pathname = usePathname();
-  const pageTitle = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'))?.label || 'Dashboard';
+  const currentPage = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'));
+  const pageTitle = pathname.startsWith('/account') ? 'Minha Conta' : currentPage?.label || 'Dashboard';
+
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -43,9 +47,11 @@ export function DashboardHeader() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Minha Conta</span>
+            <DropdownMenuItem asChild>
+              <Link href="/account">
+                <User className="mr-2 h-4 w-4" />
+                <span>Minha Conta</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
