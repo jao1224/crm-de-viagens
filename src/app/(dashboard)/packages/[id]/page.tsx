@@ -1,11 +1,15 @@
+
+'use client';
+
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { mockTravelPackages } from '@/lib/mock-data';
+import { mockTravelPackages, mockItineraries } from '@/lib/mock-data';
 import type { TravelPackage } from '@/lib/types';
-import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake } from 'lucide-react';
+import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake, Map } from 'lucide-react';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
     switch (type) {
@@ -20,6 +24,11 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
 
 export default function PackageDetailPage({ params }: { params: { id: string } }) {
   const property = mockTravelPackages.find((p) => p.id === params.id);
+  
+  const linkedItinerary = useMemo(() => {
+    if (!property) return null;
+    return mockItineraries.find(i => i.package === property.title);
+  }, [property]);
 
   if (!property) {
     return (
@@ -101,7 +110,15 @@ export default function PackageDetailPage({ params }: { params: { id: string } }
             </p>
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center flex justify-center gap-2">
+            {linkedItinerary && (
+              <Button size="lg" variant="outline" asChild>
+                <Link href={`/itineraries/${linkedItinerary.id}`}>
+                  <Map className="mr-2"/>
+                  Ver Itinerário
+                </Link>
+              </Button>
+            )}
             <Button size="lg" disabled={property.status === 'Esgotado'} asChild>
                 <Link href="/reservations">Reservar Agora</Link>
             </Button>

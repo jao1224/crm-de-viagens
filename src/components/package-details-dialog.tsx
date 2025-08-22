@@ -5,9 +5,11 @@ import type { TravelPackage } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from './ui/dialog';
 import { Badge } from './ui/badge';
 import Image from 'next/image';
-import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, ChevronLeft, HeartHandshake, Pencil } from 'lucide-react';
+import { Users, Calendar, MapPin, Tag, Sun, Mountain, Briefcase, HeartHandshake, Pencil, Map } from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { useMemo } from 'react';
+import { mockItineraries } from '@/lib/mock-data';
 
 interface PackageDetailsDialogProps {
   isOpen: boolean;
@@ -28,6 +30,11 @@ const TypeIcon = ({ type }: { type: TravelPackage['type']}) => {
 }
 
 export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: PackageDetailsDialogProps) {
+  const linkedItinerary = useMemo(() => {
+    if (!pkg) return null;
+    return mockItineraries.find(i => i.package === pkg.title);
+  }, [pkg]);
+
   if (!pkg) return null;
 
   return (
@@ -88,7 +95,7 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
           </div>
         </div>
 
-        <DialogFooter className="p-6 pt-0 flex sm:justify-between w-full">
+        <DialogFooter className="p-6 pt-0 flex flex-wrap justify-between w-full">
             <div className="flex gap-2">
                 <Button type="button" variant="outline" onClick={onEdit}>
                     <Pencil className="mr-2" />
@@ -98,9 +105,19 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
                     <Button type="button" variant="secondary">Fechar</Button>
                 </DialogClose>
             </div>
-            <Button size="lg" disabled={pkg.status === 'Esgotado'} asChild>
-                <Link href="/reservations">Reservar Agora</Link>
-            </Button>
+            <div className="flex gap-2 mt-2 sm:mt-0">
+              {linkedItinerary && (
+                <Button asChild variant="outline">
+                  <Link href={`/itineraries/${linkedItinerary.id}`}>
+                    <Map className="mr-2" />
+                    Ver Itinerário
+                  </Link>
+                </Button>
+              )}
+              <Button size="lg" disabled={pkg.status === 'Esgotado'} asChild>
+                  <Link href="/reservations">Reservar Agora</Link>
+              </Button>
+            </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
