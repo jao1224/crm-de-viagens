@@ -16,9 +16,11 @@ import { LogOut, User, Settings, Bell, CheckCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { navItems } from './dashboard-nav';
 import Link from 'next/link';
+import { useToast } from '@/hooks/use-toast';
 
 export function DashboardHeader() {
   const pathname = usePathname();
+  const { toast } = useToast();
   
   let pageTitle = 'Dashboard';
   if (pathname.startsWith('/account')) {
@@ -28,6 +30,13 @@ export function DashboardHeader() {
     if (currentPage) {
         pageTitle = currentPage.label;
     }
+  }
+  
+  const handleSeeAllNotifications = () => {
+    toast({
+        title: "Funcionalidade em Desenvolvimento",
+        description: "Uma página dedicada para todas as notificações estará disponível em breve.",
+    });
   }
 
 
@@ -79,7 +88,7 @@ export function DashboardHeader() {
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center">
+            <DropdownMenuItem className="justify-center" onSelect={handleSeeAllNotifications}>
               Ver todas as notificações
             </DropdownMenuItem>
           </DropdownMenuContent>
