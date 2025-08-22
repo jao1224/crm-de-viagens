@@ -16,6 +16,7 @@ import type { User, Reservation } from '@/lib/types';
 import { MoreHorizontal, PlusCircle, User as UserIcon, Mail, Phone, FileText, Heart, Info, X, Briefcase, Calendar } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import { useNotifications } from '@/context/notification-context';
 
 const ClientDetailsDialog = ({ user, isOpen, onOpenChange }: { user: User | null, isOpen: boolean, onOpenChange: (isOpen: boolean) => void }) => {
     if (!user) return null;
@@ -118,6 +119,7 @@ export default function ClientsPage() {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
 
   const handleAddUser = () => {
     setSelectedUser(null);
@@ -169,6 +171,12 @@ export default function ClientsPage() {
       };
       setUsers([newUser, ...users]);
       toast({ title: "Cliente Adicionado", description: `O cliente ${newUser.name} foi adicionado com sucesso.` });
+      addNotification({
+        id: `new-client-${newUser.id}`,
+        title: "Novo Cliente Cadastrado",
+        description: `O cliente ${newUser.name} foi adicionado ao sistema.`,
+        icon: UserIcon
+      });
     }
     setIsFormOpen(false);
     setSelectedUser(null);

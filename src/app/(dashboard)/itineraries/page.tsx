@@ -7,13 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Archive } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import type { Itinerary } from '@/lib/types';
 import { ItineraryForm } from '@/components/itinerary-form';
 import { useToast } from '@/hooks/use-toast';
 import { mockItineraries } from '@/lib/mock-data';
 import Link from 'next/link';
+import { useNotifications } from '@/context/notification-context';
 
 export default function ItinerariesPage() {
   const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
@@ -21,6 +22,7 @@ export default function ItinerariesPage() {
   const [selectedItinerary, setSelectedItinerary] = useState<Itinerary | null>(null);
   const { toast } = useToast();
   const router = useRouter();
+  const { addNotification } = useNotifications();
 
   const getStatusVariant = (status: Itinerary['status']) => {
     switch (status) {
@@ -50,6 +52,12 @@ export default function ItinerariesPage() {
     toast({
         title: "Itinerário Arquivado",
         description: `O itinerário "${itineraryToArchive.title}" foi arquivado.`
+    });
+    addNotification({
+      id: `itinerary-archived-${itineraryToArchive.id}`,
+      title: "Itinerário Arquivado",
+      description: `O roteiro "${itineraryToArchive.title}" foi movido para os arquivados.`,
+      icon: Archive
     });
   }
 

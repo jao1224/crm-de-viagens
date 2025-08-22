@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button';
 import { PropertyCard } from '@/components/property-card';
 import { mockTravelPackages } from '@/lib/mock-data';
 import type { TravelPackage } from '@/lib/types';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Package } from 'lucide-react';
 import { PackageForm } from '@/components/package-form';
 import { useToast } from '@/hooks/use-toast';
 import { PackageDetailsDialog } from '@/components/package-details-dialog';
+import { useNotifications } from '@/context/notification-context';
 
 const filterTypes: (TravelPackage['type'] | 'Todos')[] = ['Todos', 'Praia', 'Montanha', 'Cidade', 'Negócios', 'Família'];
 
@@ -20,6 +21,7 @@ export default function PackagesPage() {
   const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const [activeFilter, setActiveFilter] = useState<TravelPackage['type'] | 'Todos'>('Todos');
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
 
   const handleAddClick = () => {
     setSelectedPackage(null);
@@ -58,6 +60,12 @@ export default function PackagesPage() {
       toast({
         title: 'Pacote Adicionado!',
         description: `O pacote "${newPackage.title}" foi criado com sucesso.`
+      });
+      addNotification({
+        id: `new-package-${newPackage.id}`,
+        title: "Novo Pacote Criado",
+        description: `O pacote "${newPackage.title}" já está disponível para venda.`,
+        icon: Package
       });
     }
     setIsFormOpen(false);
