@@ -100,6 +100,7 @@ export function DashboardHeader() {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">Ana Costa</p>
                 <p className="text-xs leading-none text-muted-foreground">ana.costa@travelflow.com</p>
+                <p className="text-xs leading-none text-muted-foreground pt-1">Administradora</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
