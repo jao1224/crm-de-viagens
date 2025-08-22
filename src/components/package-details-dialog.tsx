@@ -95,7 +95,7 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
           </div>
         </div>
 
-        <DialogFooter className="p-6 pt-0 flex flex-wrap justify-between items-center w-full">
+        <DialogFooter className="p-6 pt-0 flex sm:justify-between items-center w-full">
             <div>
                  <Button type="button" variant="outline" onClick={onEdit}>
                   <Pencil className="mr-2" />
