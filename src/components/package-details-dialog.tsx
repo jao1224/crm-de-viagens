@@ -97,15 +97,15 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
 
         <DialogFooter className="p-6 pt-0 flex flex-wrap justify-between w-full">
             <div className="flex gap-2">
-                <Button type="button" variant="outline" onClick={onEdit}>
-                    <Pencil className="mr-2" />
-                    Editar
-                </Button>
                 <DialogClose asChild>
                     <Button type="button" variant="secondary">Fechar</Button>
                 </DialogClose>
             </div>
             <div className="flex gap-2 mt-2 sm:mt-0">
+              <Button type="button" variant="outline" onClick={onEdit}>
+                  <Pencil className="mr-2" />
+                  Editar
+              </Button>
               {linkedItinerary && (
                 <Button asChild variant="outline">
                   <Link href={`/itineraries/${linkedItinerary.id}`}>
