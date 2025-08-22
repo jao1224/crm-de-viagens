@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 export function DashboardHeader() {
   const pathname = usePathname();
   const { toast } = useToast();
+  const [showNotificationDot, setShowNotificationDot] = useState(true);
   
   let pageTitle = 'Dashboard';
   if (pathname.startsWith('/account')) {
@@ -39,6 +41,12 @@ export function DashboardHeader() {
     });
   }
 
+  const handleNotificationOpenChange = (open: boolean) => {
+    if (open && showNotificationDot) {
+      setShowNotificationDot(false);
+    }
+  }
+
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -47,14 +55,16 @@ export function DashboardHeader() {
         <h1 className="font-headline text-xl md:text-2xl text-primary">{pageTitle}</h1>
       </div>
       <div className="ml-auto flex items-center gap-2">
-         <DropdownMenu>
+         <DropdownMenu onOpenChange={handleNotificationOpenChange}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Bell className="h-5 w-5"/>
-              <span className="absolute top-2 right-2 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
+              {showNotificationDot && (
+                <span className="absolute top-2 right-2 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                </span>
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-80" align="end">
