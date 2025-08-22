@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import type { Itinerary } from '@/lib/types';
-import { ChevronLeft, Map, FileText, Pencil } from 'lucide-react';
+import type { Itinerary, TravelPackage } from '@/lib/types';
+import { ChevronLeft, Map, FileText, Pencil, LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
-import { mockItineraries } from '@/lib/mock-data';
+import { mockItineraries, mockTravelPackages } from '@/lib/mock-data';
 import { ItineraryForm } from '@/components/itinerary-form';
 
 
@@ -25,13 +25,18 @@ const getStatusVariant = (status: Itinerary['status']) => {
 export default function ItineraryDetailPage({ params }: { params: { id: string } }) {
   const [itineraries, setItineraries] = useState<Itinerary[]>(mockItineraries);
   const [itinerary, setItinerary] = useState<Itinerary | undefined>(undefined);
+  const [linkedPackage, setLinkedPackage] = useState<TravelPackage | undefined>(undefined);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { toast } = useToast();
   const { id } = params;
 
   useEffect(() => {
     const foundItinerary = itineraries.find((i) => i.id === id);
-    setItinerary(foundItinerary);
+    if (foundItinerary) {
+        setItinerary(foundItinerary);
+        const foundPackage = mockTravelPackages.find(p => p.title === foundItinerary.package);
+        setLinkedPackage(foundPackage);
+    }
   }, [id, itineraries]);
 
   const handleFormSubmit = (values: Omit<Itinerary, 'id' | 'status'>) => {
@@ -88,7 +93,14 @@ export default function ItineraryDetailPage({ params }: { params: { id: string }
               <div>
                   <CardTitle className="font-headline text-3xl text-primary">{itinerary.title}</CardTitle>
                   <CardDescription className="text-lg">
-                      Vinculado ao pacote: <span className="font-semibold text-primary">{itinerary.package}</span>
+                      Vinculado ao pacote: 
+                      {linkedPackage ? (
+                          <Link href={`/packages/${linkedPackage.id}`} className="font-semibold text-primary hover:underline ml-1">
+                              {itinerary.package}
+                          </Link>
+                      ) : (
+                          <span className="font-semibold text-primary ml-1">{itinerary.package}</span>
+                      )}
                   </CardDescription>
               </div>
               <Badge variant={getStatusVariant(itinerary.status)}>{itinerary.status}</Badge>
