@@ -34,12 +34,16 @@ export const mockAppointments: Appointment[] = [
 ];
 
 export const mockUsers: User[] = [
-  { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 11 98765-4321' },
+  { id: '1', name: 'Ana Costa', email: 'ana.costa@travelflow.com', role: 'Administrador', status: 'Ativo', avatarUrl: 'https://i.pinimg.com/736x/c6/33/91/c633913aa268fe47d9dede01ca38eba7.jpg', phone: '+55 11 98765-4321' },
   { id: '2', name: 'Bruno Lima', email: 'bruno.lima@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 21 91234-5678' },
   { id: '3', name: 'Carla Dias', email: 'carla.dias@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 31 99876-5432', document: '123.456.789-00', travelStyle: 'Luxo', preferences: 'Prefere hotéis com spa e boa gastronomia. Gosta de viajar na primavera.' },
   { id: '4', name: 'Daniel Alves', email: 'daniel.alves@travelflow.com', role: 'Agente de Viagem', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 41 98765-1234' },
   { id: '5', name: 'Eduarda Souza', email: 'eduarda.souza@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 51 91122-3344', document: '987.654.321-00', travelStyle: 'Aventura', preferences: 'Busca atividades ao ar livre como trekking e rafting. Orçamento flexível.' },
   { id: '6', name: 'Fábio Martins', email: 'fabio.martins@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 61 95566-7788', document: '111.222.333-44', travelStyle: 'Cultural', preferences: 'Interesse em museus, história e gastronomia local.' },
+  { id: '7', name: 'Gabriela Ferreira', email: 'gabriela.ferreira@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 71 99887-6655' },
+  { id: '8', name: 'Heitor Rocha', email: 'heitor.rocha@email.com', role: 'Cliente', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 81 97766-5544', document: '222.333.444-55', travelStyle: 'Econômica', preferences: 'Prefere hostels e transporte público. Foco em experiências autênticas e de baixo custo.'},
+  { id: '9', name: 'Isabela Santos', email: 'isabela.santos@email.com', role: 'Cliente', status: 'Inativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 91 96655-4433', document: '444.555.666-77', travelStyle: 'Luxo', preferences: 'Apenas hotéis 5 estrelas com serviço de quarto 24h.'},
+  { id: '10', name: 'João Mendes', email: 'joao.mendes@travelflow.com', role: 'Agente de Viagem', status: 'Ativo', avatarUrl: 'https://placehold.co/100x100', phone: '+55 11 95544-3322' },
 ];
 
 export const mockReservations: Reservation[] = [
@@ -56,7 +60,7 @@ export const mockReservations: Reservation[] = [
 
 export const mockItineraries: Itinerary[] = [
     { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado', description: 'Este é um espaço para a descrição completa do itinerário. Detalhe o dia a dia da viagem, incluindo atividades, passeios, dicas de restaurantes e informações sobre os locais a serem visitados.\n\n**Dia 1:** Chegada em Roma, traslado para o hotel e jantar de boas-vindas.\n**Dia 2:** Tour guiado pelo Coliseu, Fórum Romano e Monte Palatino.\n**Dia 3:** Visita ao Vaticano: Basílica de São Pedro, Museus do Vaticano e Capela Sistina.\n**Dia 4:** Dia livre para explorar a cidade ou fazer um tour gastronômico opcional.' },
-    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado', description: 'Um roteiro para amantes da natureza, com caminhadas por trilhas cênicas, passeios de barco em lagos de água cristalina e vistas deslumbrantes dos Alpes Suíços.' },
+    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado', description: 'Um roteiro para amantes da nature/za, com caminhadas por trilhas cênicas, passeios de barco em lagos de água cristalina e vistas deslumbrantes dos Alpes Suíços.' },
     { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho', description: 'Combine relaxamento nas praias de Cancún com a aventura de explorar recifes de corais e as misteriosas ruínas da civilização maia na Península de Yucatán.' },
     { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado', description: 'Otimize sua viagem de negócios com um roteiro que inclui tempo para reuniões importantes, mas também para descobrir os principais pontos turísticos, restaurantes e shows da Big Apple.' },
     { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho', description: 'Uma imersão na cultura japonesa, visitando os mais belos templos e jardins de Quioto, participando de uma cerimônia do chá e explorando o bairro das gueixas, Gion.' },
