@@ -176,6 +176,13 @@ export default function AdminPage() {
                           </div>
                           <Switch id="reservations-emails" />
                       </div>
+                      <div className="flex items-center justify-between rounded-lg border p-3">
+                          <div>
+                              <Label htmlFor="support-emails" className="font-medium">Novo Chamado</Label>
+                              <p className="text-xs text-muted-foreground">Enviar um e-mail quando um novo chamado for aberto.</p>
+                          </div>
+                          <Switch id="support-emails" />
+                      </div>
                   </div>
               </div>
           </CardContent>
