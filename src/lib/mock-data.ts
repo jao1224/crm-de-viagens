@@ -5,12 +5,12 @@ import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
 export const mockTravelPackages: TravelPackage[] = [
   { id: '1', title: 'Resort Tropical em Cancún', destination: 'Cancún, México', price: 4500, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Praia', status: 'Disponível', duration: 7, travelers: 10, dataAiHint: 'beach resort' },
   { id: '2', title: 'Aventura nos Alpes Suíços', destination: 'Interlaken, Suíça', price: 7200, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Montanha', status: 'Disponível', duration: 10, travelers: 8, dataAiHint: 'swiss alps' },
-  { id: '3', title: 'Tour Cultural em Quioto', destination: 'Quioto, Japão', price: 6800, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Esgotado', duration: 8, travelers: 0, dataAiHint: 'kyoto temple' },
-  { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://placehold.co/600x400', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 20, dataAiHint: 'new york' },
-  { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://placehold.co/600x400', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 4, dataAiHint: 'safari tanzania' },
-  { id: '6', title: 'Férias em Roma e Vaticano', destination: 'Roma, Itália', price: 5900, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 7, travelers: 15, dataAiHint: 'rome city' },
-  { id: '7', title: 'Diversão em Família em Orlando', destination: 'Orlando, EUA', price: 3750, imageUrl: 'https://placehold.co/600x400', type: 'Família', status: 'Disponível', duration: 10, travelers: 10, dataAiHint: 'amusement park' },
-  { id: '8', title: 'Combo Cultural: Rio e Salvador', destination: 'Rio de Janeiro & Salvador, Brasil', price: 6200, imageUrl: 'https://placehold.co/600x400', type: 'Cidade', status: 'Disponível', duration: 14, travelers: 6, dataAiHint: 'brazil culture' },
+  { id: '3', title: 'Tour Cultural em Quioto', destination: 'Quioto, Japão', price: 6800, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Cidade', status: 'Esgotado', duration: 8, travelers: 0, dataAiHint: 'kyoto temple' },
+  { id: '4', title: 'Viagem de Negócios a Nova York', destination: 'Nova York, EUA', price: 5300, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Negócios', status: 'Disponível', duration: 5, travelers: 20, dataAiHint: 'new york' },
+  { id: '5', title: 'Safari na Tanzânia', destination: 'Serengeti, Tanzânia', price: 12500, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Montanha', status: 'Disponível', duration: 12, travelers: 4, dataAiHint: 'safari tanzania' },
+  { id: '6', title: 'Férias em Roma e Vaticano', destination: 'Roma, Itália', price: 5900, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Cidade', status: 'Disponível', duration: 7, travelers: 15, dataAiHint: 'rome city' },
+  { id: '7', title: 'Diversão em Família em Orlando', destination: 'Orlando, EUA', price: 3750, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Família', status: 'Disponível', duration: 10, travelers: 10, dataAiHint: 'amusement park' },
+  { id: '8', title: 'Combo Cultural: Rio e Salvador', destination: 'Rio de Janeiro & Salvador, Brasil', price: 6200, imageUrl: 'https://i.pinimg.com/1200x/f7/a7/51/f7a75151a8c9ced57ce7777bc1ccf03a.jpg', type: 'Cidade', status: 'Disponível', duration: 14, travelers: 6, dataAiHint: 'brazil culture' },
 ];
 
 export const mockKpis: Kpi[] = [
@@ -56,7 +56,7 @@ export const mockReservations: Reservation[] = [
 
 export const mockItineraries: Itinerary[] = [
     { id: '1', title: 'Roteiro Gastronômico na Toscana', package: 'Férias em Roma e Vaticano', status: 'Publicado', description: 'Este é um espaço para a descrição completa do itinerário. Detalhe o dia a dia da viagem, incluindo atividades, passeios, dicas de restaurantes e informações sobre os locais a serem visitados.\n\n**Dia 1:** Chegada em Roma, traslado para o hotel e jantar de boas-vindas.\n**Dia 2:** Tour guiado pelo Coliseu, Fórum Romano e Monte Palatino.\n**Dia 3:** Visita ao Vaticano: Basílica de São Pedro, Museus do Vaticano e Capela Sistina.\n**Dia 4:** Dia livre para explorar a cidade ou fazer um tour gastronômico opcional.' },
-    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado', description: 'Um roteiro para amantes da nature/za, com caminhadas por trilhas cênicas, passeios de barco em lagos de água cristalina e vistas deslumbrantes dos Alpes Suíços.' },
+    { id: '2', title: 'Trilhas e Lagos Alpinos', package: 'Aventura nos Alpes Suíços', status: 'Publicado', description: 'Um roteiro para amantes da natureza, com caminhadas por trilhas cênicas, passeios de barco em lagos de água cristalina e vistas deslumbrantes dos Alpes Suíços.' },
     { id: '3', title: 'Mergulho e Ruínas Maias', package: 'Resort Tropical em Cancún', status: 'Em rascunho', description: 'Combine relaxamento nas praias de Cancún com a aventura de explorar recifes de corais e as misteriosas ruínas da civilização maia na Península de Yucatán.' },
     { id: '4', title: 'Itinerário de Negócios e Lazer', package: 'Viagem de Negócios a Nova York', status: 'Arquivado', description: 'Otimize sua viagem de negócios com um roteiro que inclui tempo para reuniões importantes, mas também para descobrir os principais pontos turísticos, restaurantes e shows da Big Apple.' },
     { id: '5', title: 'Descobrindo Templos Antigos', package: 'Tour Cultural em Quioto', status: 'Em rascunho', description: 'Uma imersão na cultura japonesa, visitando os mais belos templos e jardins de Quioto, participando de uma cerimônia do chá e explorando o bairro das gueixas, Gion.' },
@@ -70,5 +70,7 @@ export const mockItineraries: Itinerary[] = [
     { id: '5', customerName: 'Fábio Martins', packageName: 'Férias em Roma e Vaticano', value: 5900, agentId: '2', status: 'Proposta Enviada' },
     { id: '6', customerName: 'Carla Dias', packageName: 'Diversão em Família em Orlando', value: 15000, agentId: '4', status: 'Lead' },
   ];
+
+    
 
     
