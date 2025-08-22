@@ -1,16 +1,35 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { KpiCard } from '@/components/kpi-card';
 import { SalesChart } from '@/components/sales-chart';
 import { mockTravelPackages, mockReservations } from '@/lib/mock-data';
 import type { Kpi, Reservation, TravelPackage, Booking } from '@/lib/types';
 import { DollarSign, Package, Wallet, CalendarCheck } from 'lucide-react';
-import { format, getMonth, getYear, isWithinInterval, startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import { format, getMonth, getYear } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DateRange } from 'react-day-picker';
 
+// Helper to calculate KPIs for a given set of reservations
+const calculateKpis = (reservations: Reservation[]) => {
+  const confirmed = reservations.filter(r => r.status === 'Confirmada');
+  const totalRevenue = confirmed.reduce((sum, r) => sum + r.totalPrice, 0);
+  const confirmedReservations = confirmed.length;
+  const averageTicket = confirmedReservations > 0 ? totalRevenue / confirmedReservations : 0;
+
+  return { totalRevenue, confirmedReservations, averageTicket };
+};
+
+// Helper to format percentage change
+const formatPercentageChange = (current: number, previous: number) => {
+    if (previous === 0) {
+        return current > 0 ? '+100%' : '0%';
+    }
+    if (current === previous) {
+        return '0%';
+    }
+    const change = ((current - previous) / previous) * 100;
+    return `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+};
 
 // Helper to generate dynamic booking data by month based on number of travelers
 const generateBookingPerformanceData = (
@@ -86,49 +105,58 @@ export default function DashboardPage() {
   const availableYears = Array.from(new Set(reservations.map(r => getYear(new Date(r.bookingDate))))).sort((a, b) => b - a);
   const [selectedYear, setSelectedYear] = useState<number>(availableYears[0] || new Date().getFullYear());
 
+  const { filteredReservations, previousYearReservations } = useMemo(() => {
+    const filtered = reservations.filter(r => getYear(new Date(r.bookingDate)) === selectedYear);
+    const previous = reservations.filter(r => getYear(new Date(r.bookingDate)) === selectedYear - 1);
+    return { filteredReservations: filtered, previousYearReservations: previous };
+  }, [reservations, selectedYear]);
 
-  const totalRevenue = reservations
-    .filter(r => r.status === 'Confirmada')
-    .reduce((sum, r) => sum + r.totalPrice, 0);
+  const { 
+    totalRevenue, 
+    confirmedReservations, 
+    averageTicket 
+  } = calculateKpis(filteredReservations);
 
+  const { 
+    totalRevenue: prevTotalRevenue, 
+    confirmedReservations: prevConfirmedReservations, 
+    averageTicket: prevAverageTicket 
+  } = calculateKpis(previousYearReservations);
+  
   const activePackages = packages.filter(p => p.status === 'Disponível').length;
   
-  const confirmedReservations = reservations.filter(r => r.status === 'Confirmada').length;
-  
-  const averageTicket = confirmedReservations > 0 ? totalRevenue / confirmedReservations : 0;
-
   const dynamicKpis: Kpi[] = [
     { 
       title: 'Faturamento Total', 
       value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(totalRevenue), 
-      change: '+12.5%', // Placeholder
-      changeType: 'increase', 
+      change: formatPercentageChange(totalRevenue, prevTotalRevenue), 
+      changeType: totalRevenue >= prevTotalRevenue ? 'increase' : 'decrease',
       icon: DollarSign,
-      description: 'Soma total dos valores de todas as reservas com status "Confirmada".'
+      description: `Faturamento total de reservas confirmadas em ${selectedYear}.`
     },
     { 
       title: 'Pacotes Ativos', 
       value: activePackages.toString(), 
-      change: '+2', // Placeholder
+      change: '',
       changeType: 'increase', 
       icon: Package,
-      description: 'Número total de pacotes de viagem que estão atualmente com status "Disponível".'
+      description: 'Número total de pacotes de viagem que estão atualmente com status "Disponível". Este valor não é afetado pelo filtro de ano.'
     },
      { 
       title: 'Ticket Médio', 
       value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }).format(averageTicket), 
-      change: '-2.1%', // Placeholder
-      changeType: 'decrease', 
+      change: formatPercentageChange(averageTicket, prevAverageTicket),
+      changeType: averageTicket >= prevAverageTicket ? 'increase' : 'decrease',
       icon: Wallet,
-      description: 'Valor médio por venda. Calculado como: Faturamento Total / Reservas Confirmadas.'
+      description: `Valor médio por reserva confirmada em ${selectedYear}.`
     },
     { 
       title: 'Reservas Confirmadas', 
       value: confirmedReservations.toString(), 
-      change: '+5', // Placeholder
-      changeType: 'increase', 
+      change: formatPercentageChange(confirmedReservations, prevConfirmedReservations),
+      changeType: confirmedReservations >= prevConfirmedReservations ? 'increase' : 'decrease',
       icon: CalendarCheck,
-      description: 'Número total de reservas que foram confirmadas e pagas.'
+      description: `Número total de reservas confirmadas em ${selectedYear}.`
     },
   ];
 
@@ -146,7 +174,7 @@ export default function DashboardPage() {
           data={bookingData} 
           config={bookingChartConfig}
           chartTitle="Vendas Mensais por Tipo de Pacote"
-          chartDescription="Número de viajantes em reservas confirmadas por tipo de pacote, mês a mês." 
+          chartDescription={`Número de viajantes em reservas confirmadas por tipo de pacote em ${selectedYear}.`}
           years={availableYears}
           selectedYear={selectedYear}
           onYearChange={(year) => setSelectedYear(parseInt(year))}

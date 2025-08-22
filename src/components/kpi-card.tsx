@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Kpi } from '@/lib/types';
-import { TrendingUp, TrendingDown, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, Info, Minus, DollarSign } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type KpiCardProps = {
@@ -11,6 +11,7 @@ type KpiCardProps = {
 export function KpiCard({ kpi }: KpiCardProps) {
   const TrendIcon = kpi.changeType === 'increase' ? TrendingUp : TrendingDown;
   const trendColor = kpi.changeType === 'increase' ? 'text-green-500' : 'text-red-500';
+  const Icon = kpi.icon || DollarSign;
 
   return (
     <Card>
@@ -30,14 +31,21 @@ export function KpiCard({ kpi }: KpiCardProps) {
             </TooltipProvider>
           )}
         </div>
-        <kpi.icon className="h-5 w-5 text-muted-foreground" />
+        <Icon className="h-5 w-5 text-muted-foreground" />
       </CardHeader>
       <CardContent>
         <div className="text-3xl font-bold font-headline text-primary">{kpi.value}</div>
-        <p className={`text-xs ${trendColor} flex items-center`}>
-          <TrendIcon className="h-4 w-4 mr-1" />
-          {kpi.change} vs. mês anterior
-        </p>
+        {kpi.change ? (
+             <p className={`text-xs ${trendColor} flex items-center`}>
+                <TrendIcon className="h-4 w-4 mr-1" />
+                {kpi.change} vs. ano anterior
+            </p>
+        ): (
+            <p className="text-xs text-muted-foreground flex items-center">
+                <Minus className="h-4 w-4 mr-1" />
+                Sem dados para comparação
+            </p>
+        )}
       </CardContent>
     </Card>
   );
