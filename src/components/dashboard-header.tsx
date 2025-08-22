@@ -25,22 +25,14 @@ export function DashboardHeader() {
   const { notifications, showNotificationDot, setShowNotificationDot } = useNotifications();
   
   let pageTitle = 'Dashboard';
+  const currentPage = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'));
+
   if (pathname.startsWith('/account')) {
     pageTitle = 'Minha Conta';
-  } else {
-    const currentPage = navItems.find((item) => pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/'));
-    if (currentPage) {
-        pageTitle = currentPage.label;
-    }
+  } else if (currentPage) {
+    pageTitle = currentPage.label;
   }
   
-  const handleSeeAllNotifications = () => {
-    toast({
-        title: "Funcionalidade em Desenvolvimento",
-        description: "Uma página dedicada para todas as notificações estará disponível em breve.",
-    });
-  }
-
   const handleNotificationOpenChange = (open: boolean) => {
     if (open && showNotificationDot) {
       setShowNotificationDot(false);
@@ -68,14 +60,14 @@ export function DashboardHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-80" align="end">
-            <DropdownMenuLabel>Notificações</DropdownMenuLabel>
+            <DropdownMenuLabel>Notificações Recentes</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {notifications.length === 0 ? (
                 <DropdownMenuItem disabled>
-                    <p className="text-sm text-muted-foreground">Nenhuma notificação nova.</p>
+                    <p className="text-sm text-muted-foreground p-4 text-center w-full">Nenhuma notificação nova.</p>
                 </DropdownMenuItem>
             ) : (
-                notifications.map((notif) => (
+                notifications.slice(0, 5).map((notif) => (
                     <DropdownMenuItem key={notif.id}>
                         <div className="flex items-start gap-3">
                             <notif.icon className="text-primary mt-1"/>
@@ -88,8 +80,8 @@ export function DashboardHeader() {
                 ))
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center" onSelect={handleSeeAllNotifications}>
-              Ver todas as notificações
+            <DropdownMenuItem className="justify-center" asChild>
+              <Link href="/notifications">Ver todas as notificações</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -98,7 +90,7 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="https://placehold.co/100x100" alt="Ana Costa" />
+                <AvatarImage src="https://i.pinimg.com/736x/c6/33/91/c633913aa268fe47d9dede01ca38eba7.jpg" alt="Ana Costa" />
                 <AvatarFallback>AC</AvatarFallback>
               </Avatar>
             </Button>
@@ -118,7 +110,7 @@ export function DashboardHeader() {
               </Link>
             </DropdownMenuItem>
              <DropdownMenuItem asChild>
-               <Link href="/account">
+               <Link href="/admin">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Configurações</span>
                </Link>

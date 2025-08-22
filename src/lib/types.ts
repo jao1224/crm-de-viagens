@@ -97,4 +97,6 @@ export interface Notification {
   title: string;
   description: string;
   icon: LucideIcon;
+  read?: boolean;
+  createdAt: Date;
 }

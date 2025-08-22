@@ -2,18 +2,13 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import type { LucideIcon } from 'lucide-react';
-
-export interface Notification {
-  id: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-}
+import type { Notification } from '@/lib/types';
 
 interface NotificationContextType {
   notifications: Notification[];
-  addNotification: (notification: Notification) => void;
+  addNotification: (notification: Omit<Notification, 'id' | 'createdAt' | 'read'>) => void;
+  markAllAsRead: () => void;
+  clearNotifications: () => void;
   showNotificationDot: boolean;
   setShowNotificationDot: (show: boolean) => void;
 }
@@ -24,13 +19,29 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotificationDot, setShowNotificationDot] = useState(false);
 
-  const addNotification = (notification: Notification) => {
-    setNotifications(prev => [notification, ...prev].slice(0, 5)); // Keep last 5 notifications
+  const addNotification = (notification: Omit<Notification, 'id' | 'createdAt' | 'read'>) => {
+    const newNotification: Notification = {
+      ...notification,
+      id: `notif-${Date.now()}-${Math.random()}`,
+      createdAt: new Date(),
+      read: false,
+    }
+    setNotifications(prev => [newNotification, ...prev].slice(0, 50)); // Keep last 50 notifications
     setShowNotificationDot(true);
   };
+  
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setShowNotificationDot(false);
+  }
+
+  const clearNotifications = () => {
+    setNotifications([]);
+    setShowNotificationDot(false);
+  }
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, showNotificationDot, setShowNotificationDot }}>
+    <NotificationContext.Provider value={{ notifications, addNotification, showNotificationDot, setShowNotificationDot, markAllAsRead, clearNotifications }}>
       {children}
     </NotificationContext.Provider>
   );

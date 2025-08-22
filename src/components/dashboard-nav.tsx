@@ -14,6 +14,7 @@ import {
   LineChart,
   Wand2,
   UserCog,
+  Bell,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -30,6 +31,7 @@ export const navItems: NavItem[] = [
   { href: '/relatorios', label: 'Relatórios', icon: LineChart },
   { href: '/clientes', label: 'Clientes', icon: Users },
   { href: '/admin', label: 'Admin', icon: UserCog },
+  { href: '/notifications', label: 'Notificações', icon: Bell },
 ];
 
 
