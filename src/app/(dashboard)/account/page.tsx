@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTheme } from "next-themes"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,43 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from '@/hooks/use-toast';
 import { Camera, Shield, Bell, Palette } from 'lucide-react';
+
+const ThemeSwitcher = () => {
+    const { theme, setTheme } = useTheme();
+    const [isDark, setIsDark] = useState(theme === 'dark');
+
+    useEffect(() => {
+        setIsDark(theme === 'dark');
+    }, [theme]);
+
+    const handleThemeChange = (checked: boolean) => {
+        const newTheme = checked ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+    
+    // Avoid rendering on the server to prevent hydration mismatch
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => setMounted(true), [])
+
+    if (!mounted) {
+        return null
+    }
+
+    return (
+        <div className="flex items-center justify-between rounded-lg border p-3">
+            <div>
+                <Label htmlFor="theme-mode" className="font-medium">Modo Escuro (Dark Mode)</Label>
+                <p className="text-xs text-muted-foreground">Alterne entre o tema claro e escuro da interface.</p>
+            </div>
+            <Switch 
+                id="theme-mode"
+                checked={isDark}
+                onCheckedChange={handleThemeChange}
+            />
+        </div>
+    );
+};
+
 
 export default function AccountPage() {
     const { toast } = useToast();
@@ -101,13 +139,7 @@ export default function AccountPage() {
             <div className="space-y-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2"><Palette className="w-5 h-5"/> Preferências</h3>
                  <div className="space-y-4 pl-6 border-l-2 border-primary/20 ml-3">
-                    <div className="flex items-center justify-between rounded-lg border p-3">
-                        <div>
-                            <Label htmlFor="theme-mode" className="font-medium">Modo Escuro (Dark Mode)</Label>
-                            <p className="text-xs text-muted-foreground">Alterne entre o tema claro e escuro da interface.</p>
-                        </div>
-                        <Switch id="theme-mode" />
-                    </div>
+                    <ThemeSwitcher />
                  </div>
             </div>
             
