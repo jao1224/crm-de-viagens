@@ -19,7 +19,8 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 
 export default function AdminPage() {
-  const [users, setUsers] = useState<User[]>(mockUsers.filter(u => u.role !== 'Cliente'));
+  // We filter out the current admin (id: '1') and clients from this management view
+  const [users, setUsers] = useState<User[]>(mockUsers.filter(u => u.id !== '1' && u.role !== 'Cliente'));
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
