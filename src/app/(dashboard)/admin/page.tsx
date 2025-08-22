@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -12,8 +12,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { UserForm } from '@/components/user-form';
 import { mockUsers } from "@/lib/mock-data";
 import type { User } from '@/lib/types';
-import { MoreHorizontal, PlusCircle, Bell, Info } from "lucide-react";
+import { MoreHorizontal, PlusCircle, UserCog, CheckCircle } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/context/notification-context';
 
 export default function AdminPage() {
   // We filter out the current admin (id: '1') and clients from this management view
@@ -60,23 +61,30 @@ export default function AdminPage() {
     setSelectedUser(null);
   };
   
-  const handleFormSubmit = (values: Omit<User, 'id' | 'avatarUrl' | 'role' | 'status'>) => {
+  const handleFormSubmit = (values: Partial<Omit<User, 'id' | 'avatarUrl'>>) => {
     if (selectedUser) {
       // Edit
-      const updatedUser = { ...selectedUser, ...values };
+      const updatedUser = { ...selectedUser, ...values } as User;
       setUsers(users.map((user) => (user.id === selectedUser.id ? updatedUser : user)));
       toast({ title: "Usuário Atualizado", description: `Os dados de ${updatedUser.name} foram atualizados.` });
     } else {
       // Add
       const newUser: User = { 
-        ...values, 
+        name: values.name || '',
+        email: values.email || '',
+        role: values.role || 'Agente de Viagem',
+        status: values.status || 'Ativo',
         id: (users.length + 1 + Date.now()).toString(),
         avatarUrl: 'https://placehold.co/100x100',
-        role: 'Agente de Viagem', // Default role for new users
-        status: 'Ativo'
       };
       setUsers([newUser, ...users]);
       toast({ title: "Usuário Adicionado", description: `O usuário ${newUser.name} foi adicionado com sucesso.` });
+      addNotification({
+        id: `new-user-${newUser.id}`,
+        title: "Novo Usuário Criado",
+        description: `O usuário ${newUser.name} foi adicionado como ${newUser.role}.`,
+        icon: UserCog
+      });
     }
     setIsFormOpen(false);
     setSelectedUser(null);
@@ -152,24 +160,6 @@ export default function AdminPage() {
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-headline text-primary">Configurações de Notificação</CardTitle>
-            <CardDescription>Gerencie as notificações do sistema.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-              {/* Notifications Section */}
-              <div className="space-y-4">
-                  <h3 className="text-lg font-semibold flex items-center gap-2"><Bell className="w-5 h-5"/> Notificações por E-mail</h3>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground p-4 bg-muted/50 rounded-lg">
-                    <Info className="w-5 h-5" />
-                    <span>
-                        A configuração para envio de e-mails (novos leads, reservas, etc.) estará disponível em uma futura atualização do sistema.
-                    </span>
-                  </div>
-              </div>
-          </CardContent>
-        </Card>
       </div>
 
 
@@ -198,5 +188,3 @@ export default function AdminPage() {
     </>
   );
 }
-
-    
