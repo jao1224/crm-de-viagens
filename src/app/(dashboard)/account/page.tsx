@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from '@/hooks/use-toast';
-import { Camera, Shield } from 'lucide-react';
+import { Camera, Shield, Info } from 'lucide-react';
 
 
 export default function AccountPage() {
@@ -84,16 +84,20 @@ export default function AccountPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
                             <Label htmlFor="name">Nome</Label>
-                            <Input id="name" defaultValue={user.name} />
+                            <Input id="name" defaultValue={user.name} readOnly />
                         </div>
                         <div className="space-y-1">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" defaultValue={user.email} />
+                            <Input id="email" type="email" defaultValue={user.email} readOnly />
                         </div>
                          <div className="space-y-1">
                             <Label htmlFor="phone">Telefone</Label>
                             <Input id="phone" type="tel" defaultValue={user.phone} />
                         </div>
+                    </div>
+                    <div className="text-xs text-muted-foreground flex items-center gap-1.5 p-2 bg-muted/50 rounded-md">
+                        <Info className="w-4 h-4" />
+                        <span>Para alterar seu nome ou e-mail, entre em contato com um administrador.</span>
                     </div>
                      <Button type="submit">Salvar Alterações</Button>
                 </form>
