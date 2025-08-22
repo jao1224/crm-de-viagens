@@ -95,18 +95,15 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
           </div>
         </div>
 
-        <DialogFooter className="p-6 pt-0 flex flex-wrap justify-between w-full">
-            <div className="flex gap-2">
-                <DialogClose asChild>
-                    <Button type="button" variant="secondary">Fechar</Button>
-                </DialogClose>
-            </div>
-            <div className="flex gap-2 mt-2 sm:mt-0">
-              <Button type="button" variant="outline" onClick={onEdit}>
+        <DialogFooter className="p-6 pt-0 flex flex-wrap justify-between items-center w-full">
+            <div>
+                 <Button type="button" variant="outline" onClick={onEdit}>
                   <Pencil className="mr-2" />
                   Editar
               </Button>
-              {linkedItinerary && (
+            </div>
+            <div className="flex gap-2 items-center mt-2 sm:mt-0">
+               {linkedItinerary && (
                 <Button asChild variant="outline">
                   <Link href={`/itineraries/${linkedItinerary.id}`}>
                     <Map className="mr-2" />
@@ -117,6 +114,9 @@ export function PackageDetailsDialog({ isOpen, onOpenChange, pkg, onEdit }: Pack
               <Button size="lg" disabled={pkg.status === 'Esgotado'} asChild>
                   <Link href="/reservations">Reservar Agora</Link>
               </Button>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">Fechar</Button>
+              </DialogClose>
             </div>
         </DialogFooter>
       </DialogContent>
