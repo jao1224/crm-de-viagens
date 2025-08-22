@@ -60,7 +60,7 @@ export default function AccountPage() {
         name: 'Ana Costa',
         email: 'ana.costa@travelflow.com',
         phone: '+55 11 98765-4321',
-        avatarUrl: 'https://placehold.co/100x100'
+        avatarUrl: 'https://i.pinimg.com/736x/c6/33/91/c633913aa268fe47d9dede01ca38eba7.jpg'
     });
 
     const handleProfileUpdate = (e: React.FormEvent) => {
@@ -183,3 +183,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+    

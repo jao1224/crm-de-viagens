@@ -14,9 +14,6 @@ import { mockUsers } from "@/lib/mock-data";
 import type { User } from '@/lib/types';
 import { MoreHorizontal, PlusCircle, Bell, Info } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 
 export default function AdminPage() {
   // We filter out the current admin (id: '1') and clients from this management view
@@ -25,6 +22,8 @@ export default function AdminPage() {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
+
 
   const getRoleVariant = (role: string) => {
     switch (role) {
@@ -199,3 +198,5 @@ export default function AdminPage() {
     </>
   );
 }
+
+    
