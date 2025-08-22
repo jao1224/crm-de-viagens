@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTheme } from "next-themes"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -52,6 +52,8 @@ const ThemeSwitcher = () => {
 
 export default function AccountPage() {
     const { toast } = useToast();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     // Mock user data - in a real app, this would come from an auth context
     const [user, setUser] = useState({
         name: 'Agente de Viagens',
@@ -76,6 +78,21 @@ export default function AccountPage() {
         });
     }
 
+    const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setUser(prevUser => ({ ...prevUser, avatarUrl: reader.result as string }));
+                toast({
+                  title: 'Foto alterada!',
+                  description: 'Sua nova foto de perfil está pronta. Clique em "Salvar Alterações" para mantê-la.',
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <Card>
@@ -93,7 +110,14 @@ export default function AccountPage() {
                             <AvatarImage src={user.avatarUrl} alt={user.name} />
                             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <Button type="button" variant="outline">Alterar Foto</Button>
+                        <input 
+                            type="file" 
+                            ref={fileInputRef} 
+                            onChange={handleAvatarChange}
+                            className="hidden"
+                            accept="image/png, image/jpeg, image/jpg"
+                        />
+                        <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>Alterar Foto</Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
