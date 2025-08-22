@@ -50,6 +50,8 @@ export const mockReservations: Reservation[] = [
     { id: '5', customerName: 'Eduarda Souza', packageId: '5', packageName: 'Safari na Tanzânia', bookingDate: '2024-08-20', travelDate: '2024-11-10', status: 'Confirmada', totalPrice: 25000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '6', customerName: 'Fábio Martins', packageId: '7', packageName: 'Diversão em Família em Orlando', bookingDate: '2024-11-25', travelDate: '2024-12-15', status: 'Confirmada', totalPrice: 15000, travelers: 4, agentAvatarUrl: 'https://placehold.co/100x100' },
     { id: '7', customerName: 'Carla Dias', packageId: '8', packageName: 'Combo Cultural: Rio e Salvador', bookingDate: '2024-11-10', travelDate: '2025-01-20', status: 'Confirmada', totalPrice: 12400, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '8', customerName: 'Carla Dias', packageId: '2', packageName: 'Aventura nos Alpes Suíços', bookingDate: '2025-01-20', travelDate: '2025-03-10', status: 'Confirmada', totalPrice: 7200, travelers: 1, agentAvatarUrl: 'https://placehold.co/100x100' },
+    { id: '9', customerName: 'Fábio Martins', packageId: '1', packageName: 'Resort Tropical em Cancún', bookingDate: '2025-02-15', travelDate: '2025-04-05', status: 'Pendente', totalPrice: 9000, travelers: 2, agentAvatarUrl: 'https://placehold.co/100x100' },
 ];
 
 export const mockItineraries: Itinerary[] = [
