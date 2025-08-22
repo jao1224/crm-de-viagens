@@ -61,7 +61,7 @@ export default function ReservationsPage() {
     const updatePackageAvailability = (packageId: string, travelerChange: number) => {
         setPackages(prevPackages => {
             const pkgToUpdate = prevPackages.find(p => p.id === packageId);
-            if (!pkgToUpdate) return prevPackages;
+            if (!pkgToUpdate || travelerChange === 0) return prevPackages;
 
             const newAvailability = pkgToUpdate.travelers - travelerChange;
             const newStatus = newAvailability <= 0 ? 'Esgotado' : 'Disponível';
@@ -98,11 +98,14 @@ export default function ReservationsPage() {
         const originalReservation = reservations.find(r => r.id === reservationId);
         if (!originalReservation || originalReservation.status === newStatus) return;
 
-        const travelerChange = 
-            (originalReservation.status === 'Confirmada' ? originalReservation.travelers : 0) - 
-            (newStatus === 'Confirmada' ? originalReservation.travelers : 0);
-
-        updatePackageAvailability(originalReservation.packageId, -travelerChange);
+        // Decrease spots if changing to Confirmed
+        if (newStatus === 'Confirmada' && originalReservation.status !== 'Confirmada') {
+            updatePackageAvailability(originalReservation.packageId, originalReservation.travelers);
+        } 
+        // Increase spots if changing from Confirmed to something else
+        else if (newStatus !== 'Confirmada' && originalReservation.status === 'Confirmada') {
+            updatePackageAvailability(originalReservation.packageId, -originalReservation.travelers);
+        }
         
         const updatedReservations = reservations.map(r => 
             r.id === reservationId ? { ...r, status: newStatus } : r
@@ -129,21 +132,37 @@ export default function ReservationsPage() {
         };
 
         if (selectedReservation) {
-            // Edit
+            // Edit Mode
             const originalReservation = reservations.find(r => r.id === selectedReservation.id);
             if (!originalReservation) return;
 
             const updatedReservation = { ...selectedReservation, ...newReservationData };
+
+            // Calculate the difference in travelers to adjust package availability
+            let travelerChange = 0;
+
+            // If the package changed
+            if (originalReservation.packageId !== updatedReservation.packageId) {
+                // Add travelers back to the old package if it was confirmed
+                if (originalReservation.status === 'Confirmada') {
+                    updatePackageAvailability(originalReservation.packageId, -originalReservation.travelers);
+                }
+                // Remove travelers from the new package if it is confirmed
+                if (updatedReservation.status === 'Confirmada') {
+                    updatePackageAvailability(updatedReservation.packageId, updatedReservation.travelers);
+                }
+            } else { // If the package is the same, calculate the diff
+                 const oldTravelers = originalReservation.status === 'Confirmada' ? originalReservation.travelers : 0;
+                 const newTravelers = updatedReservation.status === 'Confirmada' ? updatedReservation.travelers : 0;
+                 travelerChange = newTravelers - oldTravelers;
+                 updatePackageAvailability(updatedReservation.packageId, travelerChange);
+            }
+            
             setReservations(reservations.map(r => (r.id === selectedReservation.id ? updatedReservation : r)));
             toast({ title: "Reserva Atualizada", description: `A reserva de ${updatedReservation.customerName} foi atualizada.` });
 
-            // Handle availability changes on edit
-            const travelerChange = (originalReservation.status === 'Confirmada' ? originalReservation.travelers : 0) - (updatedReservation.status === 'Confirmada' ? updatedReservation.travelers : 0);
-            updatePackageAvailability(updatedReservation.packageId, -travelerChange);
-
-
         } else {
-            // Add
+            // Add Mode
             const newReservation: Reservation = {
                 ...newReservationData,
                 id: (reservations.length + 1 + Date.now()).toString(),
@@ -154,7 +173,7 @@ export default function ReservationsPage() {
                 description: `A reserva para ${newReservation.customerName} foi adicionada com sucesso.`
             });
             
-             // Sync package availability only if confirmed
+            // Sync package availability only if the new reservation is confirmed
             if (newReservation.status === 'Confirmada') {
                 updatePackageAvailability(newReservation.packageId, newReservation.travelers);
             }
@@ -289,5 +308,7 @@ export default function ReservationsPage() {
       </>
   );
 }
+
+    
 
     
