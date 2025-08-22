@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
   { href: '/faturamento', label: 'Faturamento', icon: DollarSign },
   { href: '/relatorios', label: 'Relatórios', icon: LineChart },
   { href: '/clientes', label: 'Clientes', icon: Users },
-  { href: '/admin', label: 'Usuários', icon: UserCog },
+  { href: '/admin', label: 'Admin', icon: UserCog },
 ];
 
 
