@@ -9,7 +9,7 @@ import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calen
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { add, format, startOfMonth, eachDayOfInterval, getDay, isToday, isSameMonth, isSameDay, endOfMonth, parseISO } from 'date-fns';
+import { add, format, startOfMonth, eachDayOfInterval, getDay, isToday, isSameMonth, isSameDay, endOfMonth, parseISO, differenceInMinutes } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 
 
 const eventIcons: Record<Appointment['type'], React.ElementType> = {
@@ -271,7 +272,7 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                                     {fileName ?? 'Nenhum arquivo escolhido'}
                                 </span>
                             </div>
-                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de até 5MB</p>
                         </div>
                     </div>
                     <DialogFooter>
@@ -432,9 +433,48 @@ export default function AgendaPage() {
     const [currentDate, setCurrentDate] = React.useState(new Date());
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>(['meeting', 'task', 'birthday', 'flight', 'hotel', 'transport', 'tour', 'cruise', 'departure', 'payment', 'reminder']);
+    const [notifiedAppointments, setNotifiedAppointments] = React.useState<Set<string>>(new Set());
+    const { toast } = useToast();
+
+    React.useEffect(() => {
+        const checkAppointments = () => {
+            const now = new Date();
+            appointments.forEach(app => {
+                const appointmentDate = parseISO(app.date);
+                const diffMins = differenceInMinutes(appointmentDate, now);
+                
+                // Notification for 1 day before
+                const dayBeforeId = `${app.id}-day-before`;
+                if (diffMins > 1439 && diffMins <= 1440 && !notifiedAppointments.has(dayBeforeId)) {
+                    toast({
+                        title: "Lembrete de Compromisso",
+                        description: `Amanhã: ${app.title} às ${format(appointmentDate, 'HH:mm')}.`,
+                        variant: 'default',
+                    });
+                    setNotifiedAppointments(prev => new Set(prev).add(dayBeforeId));
+                }
+
+                // Notification for the exact time
+                const nowId = `${app.id}-now`;
+                if (diffMins >= 0 && diffMins < 1 && !notifiedAppointments.has(nowId)) {
+                     toast({
+                        title: "Compromisso Agora!",
+                        description: `${app.title} está começando.`,
+                        variant: 'default',
+                    });
+                    setNotifiedAppointments(prev => new Set(prev).add(nowId));
+                }
+            });
+        };
+
+        const intervalId = setInterval(checkAppointments, 60000); // Check every minute
+
+        return () => clearInterval(intervalId); // Cleanup on component unmount
+    }, [appointments, toast, notifiedAppointments]);
+
 
     const handleAddTask = (newTask: Appointment) => {
-        setAppointments(prev => [newTask, ...prev]);
+        setAppointments(prev => [newTask, ...prev].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
     };
 
     const toggleFilter = (filter: Appointment['type']) => {
@@ -528,3 +568,5 @@ export default function AgendaPage() {
     </div>
   );
 }
+
+    
