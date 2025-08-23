@@ -144,7 +144,16 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
 };
 
 const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const [date, setDate] = React.useState<Date | undefined>(new Date(2025, 7, 23));
+    const [date, setDate] = React.useState<Date | undefined>(new Date());
+    const [fileName, setFileName] = React.useState<string | null>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
     
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -225,11 +234,13 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                     <div className="space-y-2">
                         <Label htmlFor="attachment">Anexo</Label>
                          <div className="flex items-center gap-2">
-                            <Input id="attachment" type="file" className="hidden" />
+                            <Input id="attachment" type="file" className="hidden" onChange={handleFileChange} />
                             <Button asChild variant="outline">
                                 <label htmlFor="attachment" className="cursor-pointer">Escolher Arquivo</label>
                             </Button>
-                            <span className="text-sm text-muted-foreground">Nenhum arquivo escolhido</span>
+                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                {fileName ?? 'Nenhum arquivo escolhido'}
+                            </span>
                         </div>
                         <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
                     </div>
