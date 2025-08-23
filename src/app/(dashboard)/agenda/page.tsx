@@ -313,6 +313,7 @@ const DailyAgendaCard = ({ selectedDate, appointments, onNewTaskClick }: any) =>
 }
 
 const filterOptions: { type: Appointment['type']; label: string; icon: React.ElementType }[] = [
+    { type: 'meeting', label: 'Reuniões', icon: Users },
     { type: 'task', label: 'Tarefas', icon: ListTodo },
     { type: 'birthday', label: 'Aniversários', icon: Cake },
     { type: 'flight', label: 'Voos', icon: Plane },
