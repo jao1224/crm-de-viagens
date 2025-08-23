@@ -1,12 +1,12 @@
 
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,10 +19,10 @@ import { ChatWidget } from "@/components/chat-widget";
 const budgetChartData = {
     budget: [
         { name: 'Aprovado', value: 75, total: 100, color: 'hsl(var(--chart-1))' },
-        { name: 'Aguardando', value: 25, total: 100, color: '#6b7280' },
+        { name: 'Aguardando', value: 25, total: 100, color: 'hsl(var(--chart-2))' },
     ],
     approval: [
-        { name: 'Aprovado', value: 100, total: 100, color: '#10b981' },
+        { name: 'Aprovado', value: 100, total: 100, color: 'hsl(var(--chart-3))' },
     ],
     salesChannels: [
         { name: 'Agência', value: 60, color: 'hsl(var(--chart-1))' },
@@ -30,35 +30,35 @@ const budgetChartData = {
         { name: 'Indicação', value: 10, color: 'hsl(var(--chart-3))' },
     ],
     productsServices: [
-        { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
-        { name: 'passagem', value: 26.5, color: 'hsl(var(--chart-2))' },
-        { name: 'VISTO PROC. TRABALHO', value: 0.8, color: 'hsl(var(--chart-3))' },
+        { name: 'Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
+        { name: 'Hospedagem', value: 26.5, color: 'hsl(var(--chart-2))' },
+        { name: 'Visto', value: 0.8, color: 'hsl(var(--chart-3))' },
     ],
 };
 
-const flightCodes = ['7xie9', 't196w', 'sn5ey'];
+const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
 
 const top10Data = {
   'Clientes': [
-      { name: 'Analine de Albuquerque Linhares', sales: 1, value: '23.766,18' },
-      { name: 'JULIO VENANCIO MENEZES', sales: 1, value: '18.540,00' },
-      { name: 'Lidiane da Silva Seidenfuhss', sales: 1, value: '11.400,00' },
-      { name: 'Davi William da Silveira de Campos', sales: 1, value: '8.700,00' },
-      { name: 'Maria Brandão Silva Gaspar', sales: 1, value: '4.800,00' },
+      { name: 'Analine de Albuquerque Linhares', sales: 1, value: 'R$ 23.766,18' },
+      { name: 'JULIO VENANCIO MENEZES', sales: 1, value: 'R$ 18.540,00' },
+      { name: 'Lidiane da Silva Seidenfuhss', sales: 1, value: 'R$ 11.400,00' },
+      { name: 'Davi William da Silveira de Campos', sales: 1, value: 'R$ 8.700,00' },
+      { name: 'Maria Brandão Silva Gaspar', sales: 1, value: 'R$ 4.800,00' },
   ],
   'Fornecedores': [
-      { name: 'Companhia Aérea X', sales: 15, value: '150.000,00' },
-      { name: 'Rede Hotel Y', sales: 25, value: '120.000,00' },
-      { name: 'Operadora de Turismo Z', sales: 10, value: '95.000,00' },
-      { name: 'Empresa de Transfer W', sales: 30, value: '45.000,00' },
-      { name: 'Seguradora V', sales: 50, value: '30.000,00' },
+      { name: 'Companhia Aérea X', sales: 15, value: 'R$ 150.000,00' },
+      { name: 'Rede Hotel Y', sales: 25, value: 'R$ 120.000,00' },
+      { name: 'Operadora de Turismo Z', sales: 10, value: 'R$ 95.000,00' },
+      { name: 'Empresa de Transfer W', sales: 30, value: 'R$ 45.000,00' },
+      { name: 'Seguradora V', sales: 50, value: 'R$ 30.000,00' },
   ],
   'Afiliados': [
-      { name: 'Blog de Viagens A', sales: 5, value: '12.500,00' },
-      { name: 'Influenciador B', sales: 8, value: '11.200,00' },
-      { name: 'Agência Parceira C', sales: 3, value: '9.800,00' },
-      { name: 'Website de Ofertas D', sales: 12, value: '8.100,00' },
-      { name: 'Canal do Youtube E', sales: 4, value: '7.600,00' },
+      { name: 'Blog de Viagens A', sales: 5, value: 'R$ 12.500,00' },
+      { name: 'Influenciador B', sales: 8, value: 'R$ 11.200,00' },
+      { name: 'Agência Parceira C', sales: 3, value: 'R$ 9.800,00' },
+      { name: 'Website de Ofertas D', sales: 12, value: 'R$ 8.100,00' },
+      { name: 'Canal do Youtube E', sales: 4, value: 'R$ 7.600,00' },
   ]
 };
 
@@ -66,15 +66,13 @@ const accompanimentData = [
   { icon: Plane, label: 'Voos', value: 4 },
   { icon: Hotel, label: 'Hospedagem', value: 0 },
   { icon: Luggage, label: 'Cruzeiro', value: 0 },
-  { icon: Camera, label: 'Experiências Turísticas', value: 0 },
+  { icon: Camera, label: 'Experiências', value: 0 },
   { icon: TrainFront, label: 'Transporte', value: 0 },
   { icon: HeartPulse, label: 'Seguro', value: 0 },
   { icon: Map, label: 'Roteiro', value: 0 },
 ];
 
-
 type Top10EntityType = keyof typeof top10Data;
-
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -82,9 +80,9 @@ const CustomTooltip = ({ active, payload }: any) => {
     const value = payload[0].value;
     
     return (
-      <div className="bg-white/90 p-2 border border-gray-200 rounded-md shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:border-gray-700">
-        <p className="font-semibold">{data.name}</p>
-        <p className="font-bold text-lg">{`${value}%`}</p>
+      <div className="bg-background/80 p-2.5 border border-border rounded-lg shadow-lg backdrop-blur-sm">
+        <p className="font-headline text-foreground">{data.name}</p>
+        <p className="font-bold text-lg text-primary">{`${value}%`}</p>
       </div>
     );
   }
@@ -113,197 +111,79 @@ export default function DashboardPage() {
             case 'budget': return 'Orçamentos';
             case 'approval': return 'Índice de Aprovação';
             case 'salesChannels': return 'Canais de Venda';
-            case 'productsServices': return 'Produtos/Serviços';
-            case 'accompaniment': return 'Acompanhamento';
+            case 'productsServices': return 'Produtos e Serviços';
+            case 'accompaniment': return 'Acompanhamentos';
             default: return 'Orçamentos';
         }
     };
     
   return (
-    <div className="relative p-4 sm:p-6 space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <ListTodo className="w-12 h-12 mb-4" />
-                <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">4 atrasada(s)</Badge>
-                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                    <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+    <div className="space-y-6">
+      <header>
+          <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
+          <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
+      </header>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 flex flex-col">
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div >
+                    <CardTitle className="font-headline text-primary">{getChartTitle()}</CardTitle>
+                    <CardDescription>Análise visual dos seus dados chave.</CardDescription>
                 </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Próximos voos</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
-                    <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
-                        <div className="text-right">
-                            <p className="text-sm text-muted-foreground">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
-                            <p className="text-sm font-semibold text-foreground">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
-                        </div>
-                        <div>
-                            <p className="font-semibold text-sm text-foreground">{flight.customer}</p>
-                            <p className="text-xs text-muted-foreground font-semibold">{flight.package}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Plane className="w-4 h-4 text-primary" />
-                            <Badge variant="outline" className="text-primary border-primary bg-primary/10">{flightCodes[index % flightCodes.length]}</Badge>
-                        </div>
-                    </div>
-                ))}
-                <div className="flex gap-2">
-                    <Badge variant="destructive">2 em período de check-in</Badge>
-                    <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
-                </div>
-            </CardContent>
-        </Card>
-        
-        <Card className="h-fit flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="text-lg text-foreground font-semibold">Top 10 {top10EntityType}</CardTitle>
-                <div className="flex items-center border border-primary rounded-md p-0.5 bg-muted/50">
-                      <Button 
-                          size="sm"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                          onClick={() => setTopClientsFilter('Faturamento')}
-                      >
-                          Faturamento
-                      </Button>
-                      <Button 
-                          size="sm"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                          onClick={() => setTopClientsFilter('Lucro')}
-                      >
-                          Lucro
-                      </Button>
-                </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-                <div className="space-y-3 text-sm">
-                    {currentTop10Data.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center py-1">
-                          <span className="font-medium text-foreground">{index + 1}) {item.name}</span> 
-                          <span className="font-semibold text-right">
-                              {item.sales} venda(s) <span className="ml-4 text-primary">{item.value}</span>
-                          </span>
-                      </div>
-                    ))}
-                </div>
-            </CardContent>
-             <div className="flex justify-center items-center gap-2 mt-auto p-4">
-                {top10Entities.map((entity) => (
-                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-muted data-[active=true]:bg-primary/80" data-active={top10EntityType === entity}></button>
-                ))}
-            </div>
-        </Card>
-        
-        <Card className="h-fit flex flex-col">
-            <CardHeader className="p-6 space-y-4">
-                <CardTitle className="text-lg text-foreground font-semibold">
-                     {getChartTitle()}
-                </CardTitle>
                  <div className="flex flex-wrap gap-1">
-                    {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                    {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
                         <Button 
                             key={filter} 
-                            variant={activeFilter === filter ? 'default' : 'outline'}
+                            variant={activeFilter === filter ? 'default' : 'ghost'}
                             size="sm"
-                            className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
+                            className="text-xs h-8 px-3"
                             onClick={() => setActiveFilter(filter)}
                         >
                             {filter}
                         </Button>
                     ))}
+                    <Popover>
+                        <PopoverTrigger asChild>
+                             <Button 
+                                variant={activeFilter === 'Personalizado' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="text-xs h-8 px-3"
+                                onClick={() => setActiveFilter('Personalizado')}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                Personalizado
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="end">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={setDateRange}
+                                numberOfMonths={2}
+                                locale={ptBR}
+                            />
+                        </PopoverContent>
+                    </Popover>
                 </div>
-                {activeFilter === 'Personalizado' && (
-                    <div className="flex items-center justify-center pt-2">
-                        <div className="flex items-center border rounded-md p-1 bg-background">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        className={cn(
-                                            "justify-start text-left font-normal h-7 px-2",
-                                            !dateRange?.from && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {dateRange?.from ? format(dateRange.from, "dd/MM/y", { locale: ptBR }) : <span>Data inicial</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        initialFocus
-                                        mode="single"
-                                        selected={dateRange?.from}
-                                        onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
-                                        locale={ptBR}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <span className="text-muted-foreground mx-2 text-sm">até</span>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        className={cn(
-                                            "justify-start text-left font-normal h-7 px-2",
-                                            !dateRange?.to && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {dateRange?.to ? format(dateRange.to, "dd/MM/y", { locale: ptBR }) : <span>Data final</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        initialFocus
-                                        mode="single"
-                                        selected={dateRange?.to}
-                                        onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
-                                        locale={ptBR}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                    </div>
-                )}
             </CardHeader>
             <CardContent className="p-6 pt-0 flex-grow">
                 {activeBudgetKey === 'accompaniment' ? (
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4 pt-4">
-                    <div className="space-y-4">
-                      {accompanimentData.slice(0, 4).map(item => (
-                        <div key={item.label} className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <item.icon className="w-4 h-4" />
-                            <span>{item.label}</span>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-6 pt-4 h-full content-center">
+                      {accompanimentData.map(item => (
+                        <div key={item.label} className="flex items-center justify-between text-base">
+                          <div className="flex items-center gap-3 text-muted-foreground">
+                            <item.icon className="w-5 h-5 text-primary" />
+                            <span className="font-medium">{item.label}</span>
                           </div>
-                          <Badge className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
+                          <Badge className="bg-primary/10 text-primary font-bold text-sm rounded-full w-8 h-8 flex items-center justify-center">{item.value}</Badge>
                         </div>
                       ))}
-                    </div>
-                    <div className="space-y-4">
-                      {accompanimentData.slice(4).map(item => (
-                        <div key={item.label} className="flex items-center justify-between text-sm">
-                           <div className="flex items-center gap-2 text-muted-foreground">
-                            <item.icon className="w-4 h-4" />
-                            <span>{item.label}</span>
-                          </div>
-                          <Badge className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 ) : (
-                <div className="w-full h-[200px] flex items-center justify-center gap-12">
+                <div className="w-full h-[250px] flex items-center justify-center gap-12">
                     <div className="flex-1 h-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -313,199 +193,151 @@ export default function DashboardPage() {
                                     nameKey="name" 
                                     cx="50%" 
                                     cy="50%" 
-                                    outerRadius={80} 
+                                    outerRadius={100}
+                                    innerRadius={60}
+                                    paddingAngle={5}
                                     fill="hsl(var(--primary))"
                                     labelLine={false}
                                 >
                                     {chartData.map((entry) => (
-                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} stroke={entry.color} strokeWidth={2}/>
                                     ))}
                                 </Pie>
-                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'hsl(var(--accent))'}} />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="w-48 space-y-3 pl-4">
+                    <div className="w-48 space-y-4">
                         {chartData.map((entry) => (
-                            <div key={entry.name} className="flex items-center gap-2">
+                            <div key={entry.name} className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
-                                <span className="text-sm font-medium text-foreground">{entry.name}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-medium text-foreground">{entry.name}</span>
+                                    <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
+                                </div>
                             </div>
                         ))}
                     </div>
                 </div>
                 )}
             </CardContent>
-            <div className="flex justify-center items-center gap-2 mt-auto p-4">
+            <div className="flex justify-center items-center gap-2 mt-auto p-4 border-t">
                 {budgetChartKeys.map((key, index) => (
-                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-8 h-1.5 rounded-full bg-muted data-[active=true]:bg-primary/80" data-active={activeBudgetChartIndex === index}></button>
+                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-2.5 h-2.5 rounded-full bg-muted transition-all hover:bg-primary/50 data-[active=true]:bg-primary data-[active=true]:w-6" data-active={activeBudgetChartIndex === index}></button>
                 ))}
             </div>
         </Card>
-
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Casal em Coimbra</h3>
-                            <p className="text-sm text-green-600 font-medium">100,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">4 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 48.666,18</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">4 aprovados</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 48.666,18</p>
-                    </div>
+        
+        <Card className="h-fit flex flex-col">
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardTitle className="font-headline text-primary">Top 10 {top10EntityType}</CardTitle>
+                <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
+                      <Button 
+                          size="sm"
+                          variant="ghost"
+                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
+                          onClick={() => setTopClientsFilter('Faturamento')}
+                      >
+                          Faturamento
+                      </Button>
+                      <Button 
+                          size="sm"
+                          variant="ghost"
+                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
+                          onClick={() => setTopClientsFilter('Lucro')}
+                      >
+                          Lucro
+                      </Button>
+                </div>
+            </CardHeader>
+            <CardContent className="flex-grow">
+                <div className="space-y-1 text-sm">
+                    {currentTop10Data.map((item, index) => (
+                      <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
+                          <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
+                          <div className="text-right">
+                            <span className="font-semibold text-primary">{item.value}</span>
+                            <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
+                          </div>
+                      </div>
+                    ))}
                 </div>
             </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Conexões</h3>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">0 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">0 aprovados</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">É o Nosso Quintal</h3>
-                            <p className="text-sm text-green-600 font-medium">100,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">1 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 18.450,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 18.450,00</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-muted-foreground rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            M
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Maxshuell</h3>
-                            <p className="text-sm text-yellow-600 font-medium">50,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">2 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
-                    </div>
-                </div>
-            </CardContent>
+             <div className="flex justify-center items-center gap-3 mt-auto p-4 border-t">
+                {top10Entities.map((entity) => (
+                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary data-[active=true]:text-primary" data-active={top10EntityType === entity}>{entity}</button>
+                ))}
+            </div>
         </Card>
       </div>
 
-       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        <Card className="h-fit">
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
             <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
+                <CardTitle className="font-headline text-primary">Tarefas para Hoje</CardTitle>
+                <CardDescription>Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-16 h-16 mb-4" />
-                <p>Nenhuma receita para o dia de hoje.</p>
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
+                <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
+                <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
+                <p className="text-sm">Aproveite para planejar sua semana!</p>
                 <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">23 atrasada(s)</Badge>
-                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                    <Badge variant="destructive">4 atrasada(s)</Badge>
+                    <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
                 </div>
             </CardContent>
         </Card>
 
-        <Card className="h-fit">
+        <Card>
             <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
+                <CardTitle className="font-headline text-primary">Próximos Voos</CardTitle>
+                <CardDescription>Fique de olho nos embarques que se aproximam.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-16 h-16 mb-4" />
-                <p>Nenhuma despesa para o dia de hoje.</p>
-                <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">157 atrasada(s)</Badge>
-                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                </div>
+            <CardContent className="space-y-4">
+                {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
+                    <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
+                        <div className="text-center">
+                            <p className="font-bold text-lg text-primary">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit'})}</p>
+                            <p className="text-xs text-muted-foreground -mt-1">{new Date(flight.date).toLocaleDateString('pt-BR', {month: 'short'})}</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold text-foreground">{flight.customer}</p>
+                            <p className="text-sm text-muted-foreground font-medium">{flight.package}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Plane className="w-5 h-5 text-primary" />
+                            <Badge variant="outline" className="font-mono text-primary border-primary/20">{flightCodes[index % flightCodes.length]}</Badge>
+                        </div>
+                    </div>
+                ))}
             </CardContent>
         </Card>
       </div>
       
-       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-muted-foreground mb-2">Recebido (R$)</h3>
-                <p className="text-2xl font-bold text-primary">67.206,18</p>
-                <div className="w-full h-1 bg-primary mt-2"></div>
-            </CardContent>
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <Card className="text-center p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
+            <p className="text-2xl font-bold text-primary">R$ 67k</p>
         </Card>
 
-        <Card className="h-fit">
-            <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-muted-foreground mb-2">Pago (R$)</h3>
-                <p className="text-2xl font-bold text-destructive">60.582,30</p>
-                <div className="w-full h-1 bg-destructive mt-2"></div>
-            </CardContent>
+        <Card className="text-center p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
+            <p className="text-2xl font-bold text-destructive">R$ 60k</p>
         </Card>
 
-        <Card className="h-fit">
-            <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-muted-foreground mb-2">Faturamento (R$)</h3>
-                <p className="text-2xl font-bold text-green-600">67.206,18</p>
-                <div className="w-full h-1 bg-green-600 mt-2"></div>
-            </CardContent>
+        <Card className="text-center p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
+            <p className="text-2xl font-bold text-green-600">R$ 67k</p>
+        </Card>
+        
+        <Card className="text-center p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
+            <p className="text-2xl font-bold text-green-600">R$ 6.6k</p>
         </Card>
 
-        <Card className="h-fit">
-            <CardContent className="p-4 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                    <h3 className="text-sm text-muted-foreground">Lucro (R$)</h3>
-                    <Info className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <p className="text-2xl font-bold text-green-600">6.623,88</p>
-                <div className="w-full h-1 bg-green-600 mt-2"></div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-muted-foreground mb-2">Ticket Médio (R$)</h3>
-                <p className="text-2xl font-bold text-primary">11.186,03</p>
-                <div className="w-full h-1 bg-primary mt-2"></div>
-            </CardContent>
+        <Card className="text-center p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
+            <p className="text-2xl font-bold text-primary">R$ 11.1k</p>
         </Card>
       </div>
 
@@ -513,7 +345,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
-
-    
