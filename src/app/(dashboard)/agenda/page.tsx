@@ -51,8 +51,9 @@ const eventTypeMapping: Record<Appointment['type'], { colorClass: string; border
     },
 }
 
-const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
+const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appointment, showDate?: boolean }) => {
     const eventDetails = eventTypeMapping[appointment.type];
+    const appointmentDate = new Date(appointment.date);
 
     return (
         <div className={`flex items-start gap-4 p-4 hover:bg-muted/50 rounded-lg transition-colors border-l-4 ${eventDetails.borderColorClass}`}>
@@ -62,7 +63,12 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
                   <p className="text-lg font-semibold">{appointment.title}</p>
-                  <span className="text-sm text-muted-foreground">{new Date(appointment.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})}</span>
+                   <span className="text-sm text-muted-foreground font-medium">
+                        {showDate && (
+                            <span className="capitalize">{format(appointmentDate, "dd 'de' MMM", { locale: ptBR })} - </span>
+                        )}
+                        {format(appointmentDate, 'HH:mm')}
+                    </span>
               </div>
               <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
@@ -366,7 +372,7 @@ export default function AgendaPage() {
             <CardContent className="max-h-[500px] overflow-y-auto pr-2">
                 <div className="space-y-4">
                     {upcomingAppointments.length > 0 ? (
-                        upcomingAppointments.map(app => <AppointmentItem key={app.id} appointment={app} />)
+                        upcomingAppointments.map(app => <AppointmentItem key={app.id} appointment={app} showDate={true} />)
                     ) : (
                         <div className="flex flex-col items-center justify-center text-center p-8 text-muted-foreground h-full">
                             <Info className="w-10 h-10 mb-4" />
@@ -381,3 +387,4 @@ export default function AgendaPage() {
     </div>
   );
 }
+
