@@ -152,6 +152,10 @@ const ProjectCard = ({ project }: { project: Project }) => (
 export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeBudgetFilter, setActiveBudgetFilter] = React.useState('Mês');
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+        from: new Date(2025, 7, 1),
+        to: new Date(2025, 7, 31),
+    });
     
     return (
         <div className="space-y-6">
@@ -169,22 +173,58 @@ export default function DashboardPage() {
                             <CardDescription className="text-base">Análise visual dos seus dados chave.</CardDescription>
                         </div>
                         
-                        {/* Filtros de Período */}
-                        <div className="flex flex-wrap gap-1">
-                            {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                                <Button 
-                                    key={filter} 
-                                    variant={activeBudgetFilter === filter ? 'default' : 'outline'}
-                                    size="sm"
-                                    className={`text-xs h-8 px-3`}
-                                    onClick={() => setActiveBudgetFilter(filter)}
-                                >
-                                    {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1" />}
-                                    {filter}
-                                </Button>
-                            ))}
+                        <div className="flex items-center gap-2 flex-wrap">
+                            {/* Filtros de Período */}
+                            <div className="flex flex-wrap gap-1">
+                                {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
+                                    <Button 
+                                        key={filter} 
+                                        variant={activeBudgetFilter === filter ? 'default' : 'outline'}
+                                        size="sm"
+                                        className={`text-xs h-8 px-3`}
+                                        onClick={() => setActiveBudgetFilter(filter)}
+                                    >
+                                        {filter}
+                                    </Button>
+                                ))}
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                         <Button 
+                                            variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
+                                            size="sm"
+                                            className={`text-xs h-8 px-3`}
+                                            onClick={() => setActiveBudgetFilter('Personalizado')}
+                                        >
+                                            <CalendarIcon className="w-3 h-3 mr-1" />
+                                            Personalizado
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="end">
+                                        <Calendar
+                                            initialFocus
+                                            mode="range"
+                                            defaultMonth={dateRange?.from}
+                                            selected={dateRange}
+                                            onSelect={setDateRange}
+                                            numberOfMonths={2}
+                                            locale={ptBR}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
                         </div>
                     </div>
+                     {activeBudgetFilter === 'Personalizado' && (
+                        <div className="flex items-center gap-2 pt-4">
+                            <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
+                                {dateRange?.from ? format(dateRange.from, "dd/MM/yyyy") : "Data de Início"}
+                            </div>
+                             <span className="text-muted-foreground">até</span>
+                             <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
+                                {dateRange?.to ? format(dateRange.to, "dd/MM/yyyy") : "Data Final"}
+                            </div>
+                        </div>
+                    )}
                 </CardHeader>
                 <CardContent>
                     <div className="w-full h-[300px] flex items-center justify-center gap-8">
@@ -395,3 +435,4 @@ export default function DashboardPage() {
     
 
     
+
