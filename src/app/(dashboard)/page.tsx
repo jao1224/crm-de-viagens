@@ -57,6 +57,7 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        {/* Coluna Esquerda */}
         <div className="space-y-6 flex flex-col">
             <Card className="h-fit">
                 <CardHeader>
@@ -136,57 +137,56 @@ export default function DashboardPage() {
             </Card>
         </div>
 
+        {/* Coluna Direita */}
         <div className="space-y-6 flex flex-col">
-          <Card className="h-fit">
-              <CardHeader>
-                  <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                  {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
-                      <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
-                          <div className="text-right">
-                              <p className="text-sm text-gray-600">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
-                              <p className="text-sm font-semibold text-gray-800">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
-                          </div>
-                          <div>
-                              <p className="font-semibold text-sm text-gray-800">{flight.customer}</p>
-                              <p className="text-xs text-gray-600 font-semibold">{flight.package}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                              <Plane className="w-4 h-4 text-blue-600" />
-                              <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">{flightCodes[index % flightCodes.length]}</Badge>
-                          </div>
-                      </div>
-                  ))}
-                  <div className="flex gap-2">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
-                  </div>
-              </CardContent>
-          </Card>
-          
-          <div className="space-y-6">
-            <div className="flex flex-wrap gap-1">
-                {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                    <Button 
-                        key={filter} 
-                        variant={activeFilter === filter ? 'default' : 'outline'}
-                        size="sm"
-                        className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                        onClick={() => setActiveFilter(filter)}
-                    >
-                        {filter}
-                    </Button>
-                ))}
-            </div>
-            
             <Card className="h-fit">
                 <CardHeader>
-                    <CardTitle className="text-lg text-gray-800 font-semibold">
-                        {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                    <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
+                        <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
+                            <div className="text-right">
+                                <p className="text-sm text-gray-600">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
+                                <p className="text-sm font-semibold text-gray-800">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
+                            </div>
+                            <div>
+                                <p className="font-semibold text-sm text-gray-800">{flight.customer}</p>
+                                <p className="text-xs text-gray-600 font-semibold">{flight.package}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Plane className="w-4 h-4 text-blue-600" />
+                                <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">{flightCodes[index % flightCodes.length]}</Badge>
+                            </div>
+                        </div>
+                    ))}
+                    <div className="flex gap-2">
+                        <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
+                        <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
+                    </div>
+                </CardContent>
+            </Card>
+          
+            <Card className="h-fit">
+                <CardHeader className="p-6 space-y-4">
+                     <div className="flex flex-wrap gap-1">
+                        {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                            <Button 
+                                key={filter} 
+                                variant={activeFilter === filter ? 'default' : 'outline'}
+                                size="sm"
+                                className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                onClick={() => setActiveFilter(filter)}
+                            >
+                                {filter}
+                            </Button>
+                        ))}
+                    </div>
+                    <CardTitle className="text-lg text-gray-800 font-semibold pt-2">
+                         {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-6 pt-0">
                     <div className="w-full h-[200px] flex items-center justify-center gap-12">
                         <div className="flex-1 h-full flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
@@ -228,7 +228,6 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-          </div>
         </div>
       </div>
       
@@ -576,5 +575,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
