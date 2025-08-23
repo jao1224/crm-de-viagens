@@ -344,7 +344,7 @@ const filterOptions: { type: Appointment['type']; label: string; icon: React.Ele
 
 const filterStyles: Record<Appointment['type'], { active: string; inactive: string }> = {
   meeting: { active: 'bg-blue-100 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700', inactive: 'hover:bg-blue-50 dark:hover:bg-blue-900/50' },
-  task: { active: 'bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600', inactive: 'hover:bg-gray-50 dark:hover:bg-gray-800/50' },
+  task: { active: 'bg-gray-200 dark:bg-gray-800/50 text-gray-800 dark:text-gray-300 border-gray-400 dark:border-gray-600', inactive: 'hover:bg-gray-100 dark:hover:bg-gray-800/50' },
   birthday: { active: 'bg-pink-100 dark:bg-pink-800/50 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-700', inactive: 'hover:bg-pink-50 dark:hover:bg-pink-900/50' },
   flight: { active: 'bg-cyan-100 dark:bg-cyan-800/50 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700', inactive: 'hover:bg-cyan-50 dark:hover:bg-cyan-900/50' },
   hotel: { active: 'bg-amber-100 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700', inactive: 'hover:bg-amber-50 dark:hover:bg-amber-900/50' },
