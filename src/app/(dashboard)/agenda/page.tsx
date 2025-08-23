@@ -21,74 +21,85 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 
 
-const eventIcons: Record<Appointment['type'], React.ReactNode> = {
-  meeting: <Users className="h-5 w-5" />,
-  departure: <Plane className="h-5 w-5" />,
-  payment: <DollarSign className="h-5 w-5" />,
-  reminder: <Bell className="h-5 w-5" />,
-  task: <ListTodo className="h-5 w-5" />,
-  birthday: <Cake className="h-5 w-5" />,
-  flight: <Plane className="h-5 w-5" />,
-  hotel: <Hotel className="h-5 w-5" />,
-  transport: <TrainFront className="h-5 w-5" />,
-  tour: <Camera className="h-5 w-5" />,
-  cruise: <Ship className="h-5 w-5" />,
+const eventIcons: Record<Appointment['type'], React.ElementType> = {
+  meeting: Users,
+  departure: Plane,
+  payment: DollarSign,
+  reminder: Bell,
+  task: ListTodo,
+  birthday: Cake,
+  flight: Plane,
+  hotel: Hotel,
+  transport: TrainFront,
+  tour: Camera,
+  cruise: Ship,
 };
 
-const eventTypeMapping: Record<Appointment['type'], { colorClass: string; borderColorClass: string; label: string }> = {
+const eventTypeMapping: Record<Appointment['type'], { bgClass: string; textColorClass: string; borderColorClass: string; label: string }> = {
     meeting: { 
         label: 'Reunião',
-        colorClass: 'text-blue-700 bg-blue-500/10 dark:text-blue-400 dark:bg-blue-500/20',
+        bgClass: 'bg-blue-500/10',
+        textColorClass: 'text-blue-700 dark:text-blue-400',
         borderColorClass: 'border-blue-500',
     },
     departure: { 
         label: 'Embarque',
-        colorClass: 'text-green-700 bg-green-500/10 dark:text-green-400 dark:bg-green-500/20',
+        bgClass: 'bg-green-500/10',
+        textColorClass: 'text-green-700 dark:text-green-400',
         borderColorClass: 'border-green-500',
     },
     payment: {
         label: 'Pagamento',
-        colorClass: 'text-yellow-700 bg-yellow-500/10 dark:text-yellow-400 dark:bg-yellow-500/20',
+        bgClass: 'bg-yellow-500/10',
+        textColorClass: 'text-yellow-700 dark:text-yellow-400',
         borderColorClass: 'border-yellow-500',
     },
     reminder: {
         label: 'Lembrete',
-        colorClass: 'text-purple-700 bg-purple-500/10 dark:text-purple-400 dark:bg-purple-500/20',
+        bgClass: 'bg-purple-500/10',
+        textColorClass: 'text-purple-700 dark:text-purple-400',
         borderColorClass: 'border-purple-500',
     },
     task: {
         label: 'Tarefa',
-        colorClass: 'text-gray-700 bg-gray-500/10 dark:text-gray-400 dark:bg-gray-500/20',
+        bgClass: 'bg-gray-500/10',
+        textColorClass: 'text-gray-700 dark:text-gray-400',
         borderColorClass: 'border-gray-500',
     },
     birthday: {
         label: 'Aniversário',
-        colorClass: 'text-pink-700 bg-pink-500/10 dark:text-pink-400 dark:bg-pink-500/20',
+        bgClass: 'bg-pink-500/10',
+        textColorClass: 'text-pink-700 dark:text-pink-400',
         borderColorClass: 'border-pink-500',
     },
     flight: {
         label: 'Voo',
-        colorClass: 'text-cyan-700 bg-cyan-500/10 dark:text-cyan-400 dark:bg-cyan-500/20',
+        bgClass: 'bg-cyan-500/10',
+        textColorClass: 'text-cyan-700 dark:text-cyan-400',
         borderColorClass: 'border-cyan-500',
     },
     hotel: {
         label: 'Hospedagem',
-        colorClass: 'text-amber-700 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/20',
+        bgClass: 'bg-amber-500/10',
+        textColorClass: 'text-amber-700 dark:text-amber-400',
         borderColorClass: 'border-amber-500',
     },
     transport: {
         label: 'Transporte',
-        colorClass: 'text-orange-700 bg-orange-500/10 dark:text-orange-400 dark:bg-orange-500/20',
+        bgClass: 'bg-orange-500/10',
+        textColorClass: 'text-orange-700 dark:text-orange-400',
         borderColorClass: 'border-orange-500',
     },
     tour: {
         label: 'Passeio',
-        colorClass: 'text-teal-700 bg-teal-500/10 dark:text-teal-400 dark:bg-teal-500/20',
+        bgClass: 'bg-teal-500/10',
+        textColorClass: 'text-teal-700 dark:text-teal-400',
         borderColorClass: 'border-teal-500',
     },
     cruise: {
         label: 'Cruzeiro',
-        colorClass: 'text-indigo-700 bg-indigo-500/10 dark:text-indigo-400 dark:bg-indigo-500/20',
+        bgClass: 'bg-indigo-500/10',
+        textColorClass: 'text-indigo-700 dark:text-indigo-400',
         borderColorClass: 'border-indigo-500',
     },
 }
@@ -96,6 +107,7 @@ const eventTypeMapping: Record<Appointment['type'], { colorClass: string; border
 const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appointment, showDate?: boolean }) => {
     const eventDetails = eventTypeMapping[appointment.type];
     const appointmentDate = new Date(appointment.date);
+    const Icon = eventIcons[appointment.type];
 
     return (
         <div className={cn(
@@ -104,13 +116,14 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
         )}>
             <div className={cn(
                 "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
-                eventDetails.colorClass
+                eventDetails.bgClass,
+                eventDetails.textColorClass
             )}>
-                {eventIcons[appointment.type]}
+                <Icon className="h-5 w-5" />
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
-                  <p className="text-lg font-semibold">{appointment.title}</p>
+                  <p className={cn("text-lg font-semibold", eventDetails.textColorClass)}>{appointment.title}</p>
                    <span className="text-sm text-muted-foreground font-medium">
                         {showDate && (
                             <span className="capitalize">{format(appointmentDate, "dd 'de' MMM", { locale: ptBR })} - </span>
@@ -448,5 +461,3 @@ export default function AgendaPage() {
     </div>
   );
 }
-
-    
