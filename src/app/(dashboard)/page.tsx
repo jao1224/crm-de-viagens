@@ -98,7 +98,7 @@ export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
-    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
+    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(0);
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
         from: new Date(2025, 7, 1),
         to: new Date(2025, 7, 31),
@@ -548,7 +548,7 @@ export default function DashboardPage() {
                                </Avatar>
                            )}
                            <div className={cn(
-                               "rounded-lg px-4 py-2 text-sm", 
+                               "rounded-lg px-4 py-2 text-sm max-w-[75%]", 
                                msg.from === 'user' 
                                 ? 'bg-primary text-primary-foreground' 
                                 : 'bg-muted'
