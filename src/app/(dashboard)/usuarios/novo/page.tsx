@@ -2,12 +2,18 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { UserSearch } from "lucide-react";
+
+const funcionalidades = [
+    'Dashboard', 'Orçamentos', 'Comprovante de Pagamento', 'Voos', 'Financeiro', 'Agência', 'Pessoas', 'Cartão de Crédito', 'Programas', 'Tipos de Receita/Despesa', 'Conta Bancária', 'Mensagem', 'Faturas', 'Canal de Venda', 'Comunicação por E-mail', 'Contrato', 'Avaliação de Clientes', 'Motivo de Reprovação', 'Configurar Painel de Cotações', 'Calendário', 'Etiquetas', 'Automação de Tarefas', 'Link de Cotação', 'Link de Pessoa', 'Produto/Serviço', 'Galeria de Imagens', 'Comunicação por Whatsapp', 'Forma de Pagamento'
+];
 
 export default function NovoUsuarioPage() {
   return (
@@ -91,12 +97,44 @@ export default function NovoUsuarioPage() {
             <Label htmlFor="observacao">Observação</Label>
             <Textarea id="observacao" />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline">Cancelar</Button>
-            <Button>Salvar</Button>
-          </div>
         </CardContent>
       </Card>
+      
+      <Card>
+        <CardHeader>
+            <CardTitle>Permissões</CardTitle>
+            <CardDescription>Defina o que este usuário pode consultar e editar no sistema.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[40%]">Funcionalidade</TableHead>
+                        <TableHead className="text-center">Consulta</TableHead>
+                        <TableHead className="text-center">Edição</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {funcionalidades.map((func) => (
+                        <TableRow key={func}>
+                            <TableCell className="font-medium">{func}</TableCell>
+                            <TableCell className="text-center">
+                                <Switch defaultChecked />
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <Switch defaultChecked />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end gap-2">
+        <Button variant="outline">Cancelar</Button>
+        <Button>Salvar</Button>
+      </div>
     </div>
   );
 }
