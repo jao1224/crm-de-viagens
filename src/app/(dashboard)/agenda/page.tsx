@@ -39,67 +39,67 @@ const eventTypeMapping: Record<Appointment['type'], { bgClass: string; textColor
     meeting: { 
         label: 'Reunião',
         bgClass: 'bg-blue-500/10',
-        textColorClass: 'text-blue-700 dark:text-blue-400',
+        textColorClass: 'text-blue-500',
         borderColorClass: 'border-blue-500',
     },
     departure: { 
         label: 'Embarque',
         bgClass: 'bg-green-500/10',
-        textColorClass: 'text-green-700 dark:text-green-400',
+        textColorClass: 'text-green-500',
         borderColorClass: 'border-green-500',
     },
     payment: {
         label: 'Pagamento',
         bgClass: 'bg-yellow-500/10',
-        textColorClass: 'text-yellow-700 dark:text-yellow-400',
+        textColorClass: 'text-yellow-500',
         borderColorClass: 'border-yellow-500',
     },
     reminder: {
         label: 'Lembrete',
         bgClass: 'bg-purple-500/10',
-        textColorClass: 'text-purple-700 dark:text-purple-400',
+        textColorClass: 'text-purple-500',
         borderColorClass: 'border-purple-500',
     },
     task: {
         label: 'Tarefa',
-        bgClass: 'bg-gray-600/10',
-        textColorClass: 'text-gray-700 dark:text-gray-400',
-        borderColorClass: 'border-gray-600',
+        bgClass: 'bg-gray-700/10',
+        textColorClass: 'text-gray-700',
+        borderColorClass: 'border-gray-700',
     },
     birthday: {
         label: 'Aniversário',
         bgClass: 'bg-pink-500/10',
-        textColorClass: 'text-pink-700 dark:text-pink-400',
+        textColorClass: 'text-pink-500',
         borderColorClass: 'border-pink-500',
     },
     flight: {
         label: 'Voo',
         bgClass: 'bg-cyan-500/10',
-        textColorClass: 'text-cyan-700 dark:text-cyan-400',
+        textColorClass: 'text-cyan-500',
         borderColorClass: 'border-cyan-500',
     },
     hotel: {
         label: 'Hospedagem',
         bgClass: 'bg-amber-500/10',
-        textColorClass: 'text-amber-700 dark:text-amber-400',
+        textColorClass: 'text-amber-500',
         borderColorClass: 'border-amber-500',
     },
     transport: {
         label: 'Transporte',
         bgClass: 'bg-orange-500/10',
-        textColorClass: 'text-orange-700 dark:text-orange-400',
+        textColorClass: 'text-orange-500',
         borderColorClass: 'border-orange-500',
     },
     tour: {
         label: 'Passeio',
         bgClass: 'bg-teal-500/10',
-        textColorClass: 'text-teal-700 dark:text-teal-400',
+        textColorClass: 'text-teal-500',
         borderColorClass: 'border-teal-500',
     },
     cruise: {
         label: 'Cruzeiro',
         bgClass: 'bg-indigo-500/10',
-        textColorClass: 'text-indigo-700 dark:text-indigo-400',
+        textColorClass: 'text-indigo-500',
         borderColorClass: 'border-indigo-500',
     },
 }
@@ -116,10 +116,9 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
         )}>
             <div className={cn(
                 "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
-                eventDetails.bgClass,
-                eventDetails.textColorClass
+                eventDetails.bgClass
             )}>
-                <Icon className="h-5 w-5" />
+                <Icon className={cn("h-5 w-5", eventDetails.textColorClass)} />
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
@@ -333,6 +332,7 @@ const DailyAgendaCard = ({ selectedDate, appointments, onNewTaskClick }: any) =>
 
 const filterOptions: { type: Appointment['type']; label: string; icon: React.ElementType }[] = [
     { type: 'meeting', label: 'Reuniões', icon: Users },
+    { type: 'departure', label: 'Embarques', icon: Plane },
     { type: 'task', label: 'Tarefas', icon: ListTodo },
     { type: 'birthday', label: 'Aniversários', icon: Cake },
     { type: 'flight', label: 'Voos', icon: Plane },
@@ -400,8 +400,8 @@ export default function AgendaPage() {
     };
 
     const filteredAppointments = React.useMemo(() => {
-        if (activeFilters.length === 0) {
-            return [];
+        if (activeFilters.length === filterOptions.map(f => f.type).length) {
+            return mockAppointments;
         }
         return mockAppointments.filter(app => activeFilters.includes(app.type));
     }, [activeFilters]);
@@ -478,6 +478,3 @@ export default function AgendaPage() {
     </div>
   );
 }
-
-
-    
