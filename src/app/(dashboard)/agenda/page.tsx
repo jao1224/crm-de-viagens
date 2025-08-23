@@ -5,12 +5,21 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, Plane, DollarSign, Bell, BadgeInfo, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, Plane, DollarSign, Bell, BadgeInfo, ChevronLeft, ChevronRight, X, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { add, format, getDaysInMonth, startOfMonth, eachDayOfInterval, getDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+
 
 const eventIcons: Record<Appointment['type'], React.ReactNode> = {
   meeting: <Users className="h-5 w-5" />,
@@ -68,10 +77,111 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
     );
 };
 
+const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [date, setDate] = React.useState<Date | undefined>(new Date(2025, 7, 23));
+    
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[650px]">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">Tarefa</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-6 py-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="task-type">Tipo de tarefa</Label>
+                            <Select defaultValue="tarefa">
+                                <SelectTrigger id="task-type">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="tarefa">Tarefa</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
+                            <Select defaultValue="maxshuell">
+                                <SelectTrigger id="assignee">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="maxshuell">Maxshuell</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="date">Data <span className="text-destructive">*</span></Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                    "w-full justify-start text-left font-normal",
+                                    !date && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
+                                </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    initialFocus
+                                    locale={ptBR}
+                                />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
+                             <div className="relative">
+                                <Input id="time" type="time" defaultValue="12:00" className="pr-8"/>
+                                <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
+                        <Input id="subject" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="description">Descrição</Label>
+                        <Textarea id="description" rows={4} />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch id="recorrente" />
+                        <Label htmlFor="recorrente">Tarefa recorrente</Label>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="attachment">Anexo</Label>
+                         <div className="flex items-center gap-2">
+                            <Input id="attachment" type="file" className="hidden" />
+                            <Button asChild variant="outline">
+                                <label htmlFor="attachment" className="cursor-pointer">Escolher Arquivo</label>
+                            </Button>
+                            <span className="text-sm text-muted-foreground">Nenhum arquivo escolhido</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button type="submit">Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+
 const calendarFilters = ["Tarefas", "Aniversários", "Voos", "Hospedagens", "Transportes", "Experiências Turísticas", "Cruzeiros"];
 const viewFilters = ["Mês", "Semana", "Dia", "Lista"];
 
-const FullCalendar = () => {
+const FullCalendar = ({ onNewTaskClick }: { onNewTaskClick: () => void }) => {
     const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1)); // Agosto de 2025
     const [activeView, setActiveView] = React.useState('Mês');
 
@@ -110,7 +220,7 @@ const FullCalendar = () => {
                                 {filter}
                             </Button>
                         ))}
-                         <Button variant="default" size="sm">Nova Tarefa</Button>
+                         <Button variant="default" size="sm" onClick={onNewTaskClick}>Nova Tarefa</Button>
                     </div>
                 </div>
             </CardHeader>
@@ -190,12 +300,13 @@ const FullCalendar = () => {
 }
 
 export default function AgendaPage() {
+    const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
     const sortedAppointments = [...mockAppointments].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const upcomingAppointments = sortedAppointments.filter(a => new Date(a.date) >= new Date());
 
   return (
     <div className="space-y-6">
-        <FullCalendar />
+        <FullCalendar onNewTaskClick={() => setIsNewTaskDialogOpen(true)} />
 
         <Card>
             <CardHeader>
@@ -215,6 +326,10 @@ export default function AgendaPage() {
                 </div>
             </CardContent>
         </Card>
+
+        <NewTaskDialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen} />
     </div>
   );
 }
+
+    
