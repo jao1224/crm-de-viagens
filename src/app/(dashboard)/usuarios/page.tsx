@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2 } from 'lucide-react';
 import { mockUsers } from '@/lib/mock-data';
 import type { User } from '@/lib/types';
+import Link from 'next/link';
 
 const UserCard = ({ user }: { user: User }) => {
   return (
@@ -46,7 +47,9 @@ export default function UsuariosPage() {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-primary">Usuários</h1>
-        <Button>Novo</Button>
+        <Button asChild>
+          <Link href="/usuarios/novo">Novo</Link>
+        </Button>
       </header>
 
       <Card>
