@@ -33,6 +33,7 @@ import type { NavItem } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
 
 
 export const navItems: NavItem[] = [
@@ -87,13 +88,11 @@ export function SimpleDashboardNav() {
   return (
     <SidebarMenu>
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className="w-full">
-                 <SidebarMenuButton className="w-full justify-between">
-                    <span className="text-sm font-semibold text-muted-foreground">
-                        Principal
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                 </SidebarMenuButton>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-semibold text-muted-foreground">
+                    Principal
+                </span>
+                <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {navItems.map((item) => (
@@ -115,13 +114,11 @@ export function SimpleDashboardNav() {
 
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className="w-full">
-                 <SidebarMenuButton className="w-full justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
-                        Acompanhamento
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                 </SidebarMenuButton>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-medium text-muted-foreground">
+                    Acompanhamento
+                </span>
+                <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {accompanimentItems.map((item) => (
@@ -141,13 +138,11 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className="w-full">
-                 <SidebarMenuButton className="w-full justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
-                        Financeiro
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                 </SidebarMenuButton>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                 <span className="text-sm font-medium text-muted-foreground">
+                    Financeiro
+                </span>
+                <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {financialItems.map((item) => (
@@ -167,13 +162,11 @@ export function SimpleDashboardNav() {
         </Collapsible>
         
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className="w-full">
-                 <SidebarMenuButton className="w-full justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
-                        Documentos
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                 </SidebarMenuButton>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-medium text-muted-foreground">
+                    Documentos
+                </span>
+                <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {documentItems.map((item) => (
@@ -193,13 +186,11 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className="w-full">
-                 <SidebarMenuButton className="w-full justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">
-                        Cadastros
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                 </SidebarMenuButton>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-medium text-muted-foreground">
+                    Cadastros
+                </span>
+                <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
             <CollapsibleContent className="pl-8 space-y-1 py-1">
                  {registrationItems.map((item) => (
