@@ -4,9 +4,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { mockAppointments } from "@/lib/mock-data";
+import { mockAppointments, mockProjects } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -15,6 +15,9 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { ChatWidget } from "@/components/chat-widget";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
+import type { Project } from "@/lib/types";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
@@ -113,6 +116,33 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
         </Card>
     )
 }
+
+const ProjectCard = ({ project }: { project: Project }) => (
+    <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-4">
+            <h3 className="font-bold text-lg text-primary">{project.title}</h3>
+            <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex -space-x-2">
+                    {project.members.map((member, index) => (
+                        <Avatar key={index} className="h-8 w-8 border-2 border-background">
+                            <AvatarImage src={member.avatarUrl} alt={member.name} />
+                            <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                    ))}
+                </div>
+                <span className="text-xs font-semibold text-muted-foreground">{project.members.length} membro(s)</span>
+            </div>
+            <div>
+                <div className="flex justify-between items-center mb-1">
+                    <span className="text-xs font-medium text-muted-foreground">Progresso</span>
+                    <span className="text-xs font-bold text-primary">{project.progress}%</span>
+                </div>
+                <Progress value={project.progress} className="h-2" />
+            </div>
+        </CardContent>
+    </Card>
+);
 
 export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
@@ -225,6 +255,20 @@ export default function DashboardPage() {
         </Card>
       </div>
       
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-primary">Acompanhe seus projetos</CardTitle>
+                <CardDescription>Visão geral do andamento dos seus grupos e viagens.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {mockProjects.map(project => (
+                        <ProjectCard key={project.id} project={project} />
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <PieChartCard title="Receitas por Categoria" data={revenueChartData} />
             <PieChartCard title="Despesas por Categoria" data={expensesChartData} />

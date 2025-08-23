@@ -1,5 +1,5 @@
 
-import type { Appointment, Quote } from './types';
+import type { Appointment, Quote, Project } from './types';
 
 export const mockAppointments: Appointment[] = [
   { id: '1', title: 'Reunião de Planejamento', customer: 'Kelly Freires Diogo Tossi', package: 'São Paulo (VCP) > Lisboa (LIS)', date: '2025-08-23T17:15:00Z', type: 'departure' },
@@ -20,3 +20,38 @@ export const mockQuotes: Quote[] = [
   { id: '8a4wl', date: '05/08', client: { name: 'Lidiane da Silva Seidenfuhss', avatarUrl: 'https://placehold.co/32x32.png' }, value: 11400, status: 'aprovado' },
   { id: '9p8o7', date: '19/08', client: { name: 'Carlos Souza', avatarUrl: 'https://placehold.co/32x32.png' }, value: 5000, status: 'reprovado' },
 ];
+
+
+export const mockProjects: Project[] = [
+    {
+        id: 'proj1',
+        title: 'Casal em Coimbra',
+        description: 'Roteiro Portugal',
+        members: [
+            { avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg', name: 'User 1' },
+            { avatarUrl: 'https://placehold.co/32x32.png', name: 'User 2' },
+        ],
+        progress: 75,
+    },
+    {
+        id: 'proj2',
+        title: 'Conexões',
+        description: 'Grupo Canada',
+        members: [
+            { avatarUrl: 'https://placehold.co/32x32.png', name: 'User 3' },
+            { avatarUrl: 'https://placehold.co/32x32.png', name: 'User 4' },
+            { avatarUrl: 'https://placehold.co/32x32.png', name: 'User 5' },
+        ],
+        progress: 40,
+    },
+    {
+        id: 'proj3',
+        title: 'Aventura na Patagônia',
+        description: 'Expedição Chile/Argentina',
+        members: [
+            { avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg', name: 'User 1' },
+        ],
+        progress: 90,
+    },
+];
+

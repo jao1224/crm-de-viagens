@@ -41,3 +41,14 @@ export type Quote = {
   value: number;
   status: 'aguardando' | 'em-cotacao' | 'aguardando-cliente' | 'aprovado' | 'reprovado';
 };
+
+export type Project = {
+  id: string;
+  title: string;
+  description: string;
+  members: {
+    avatarUrl: string;
+    name: string;
+  }[];
+  progress: number;
+};
