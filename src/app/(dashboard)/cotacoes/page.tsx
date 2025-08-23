@@ -164,7 +164,6 @@ export default function CotacoesPage() {
                 <LinkIcon className="mr-2 h-4 w-4" />
                 Links
             </Button>
-            <Button size="sm">Nova Cotação</Button>
         </div>
       </header>
 

@@ -39,7 +39,6 @@ export function DashboardHeader() {
       </nav>
 
       <div className="ml-auto flex items-center gap-4">
-         <Button size="sm">Nova Cotação</Button>
          <div className="flex items-center gap-2">
             <Avatar className="h-9 w-9 border-2 border-primary/50">
               <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Maxshuell" />
