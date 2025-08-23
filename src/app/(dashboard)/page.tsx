@@ -423,27 +423,27 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <Card className="text-center p-4">
                     <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
-                    <p className="text-3xl font-bold text-primary">R$ 67k</p>
+                    <p className="text-4xl font-bold text-primary">R$ 67k</p>
                 </Card>
 
                 <Card className="text-center p-4">
                     <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
-                    <p className="text-3xl font-bold text-destructive">R$ 60k</p>
+                    <p className="text-4xl font-bold text-destructive">R$ 60k</p>
                 </Card>
 
                 <Card className="text-center p-4">
                     <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
-                    <p className="text-3xl font-bold text-green-600">R$ 67k</p>
+                    <p className="text-4xl font-bold text-green-600">R$ 67k</p>
                 </Card>
                 
                 <Card className="text-center p-4">
                     <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
-                    <p className="text-3xl font-bold text-green-600">R$ 6.6k</p>
+                    <p className="text-4xl font-bold text-green-600">R$ 6.6k</p>
                 </Card>
 
                 <Card className="text-center p-4">
                     <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
-                    <p className="text-3xl font-bold text-primary">R$ 11.1k</p>
+                    <p className="text-4xl font-bold text-primary">R$ 11.1k</p>
                 </Card>
             </div>
 
@@ -462,6 +462,8 @@ export default function DashboardPage() {
 
 
 
+
+    
 
     
 
