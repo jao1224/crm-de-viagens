@@ -1,4 +1,3 @@
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -12,7 +11,8 @@ import {
   LineChart,
   Users,
   Settings,
-  HelpCircle
+  HelpCircle,
+  Gauge,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -22,8 +22,8 @@ import { cn } from '@/lib/utils';
 
 
 export const navItems: NavItem[] = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/cotações', label: 'Cotações', icon: LayoutDashboard, badge: 1 }, // Ícone precisa ser trocado
+  { href: '/', label: 'Dashboard', icon: Gauge },
+  { href: '/cotações', label: 'Cotações', icon: FileText, badge: 1 }, 
   { href: '/agenda', label: 'Calendário', icon: Calendar },
   { href: '/tarefas', label: 'Tarefas', icon: ClipboardList },
 ];
@@ -53,7 +53,7 @@ export function SimpleDashboardNav() {
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
-                    <span className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                    <span className="text-sm font-semibold text-muted-foreground">
                         Principal
                     </span>
                     <ChevronDown className="h-4 w-4" />
@@ -81,8 +81,7 @@ export function SimpleDashboardNav() {
         <Collapsible className="w-full">
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
-                    <span className="flex items-center gap-2">
-                        <LineChart/>
+                    <span className="text-sm font-medium text-muted-foreground">
                         Acompanhamento
                     </span>
                     <ChevronDown className="h-4 w-4" />
@@ -90,7 +89,7 @@ export function SimpleDashboardNav() {
             </CollapsibleTrigger>
             <CollapsibleContent className="pl-8 space-y-1 py-1">
                  {accompanimentItems.map((item) => (
-                    <Link key={item.href} href={item.href} className={cn("text-sm text-muted-foreground hover:text-foreground flex items-center", pathname === item.href && "text-primary font-semibold")}>
+                    <Link key={item.href} href={item.href} className={cn("block text-sm text-muted-foreground hover:text-foreground", pathname === item.href && "text-primary font-semibold")}>
                         {item.label}
                     </Link>
                 ))}
@@ -99,8 +98,7 @@ export function SimpleDashboardNav() {
         <Collapsible className="w-full">
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
-                    <span className="flex items-center gap-2">
-                        <Users/>
+                    <span className="text-sm font-medium text-muted-foreground">
                         Cadastros
                     </span>
                     <ChevronDown className="h-4 w-4" />
@@ -108,7 +106,7 @@ export function SimpleDashboardNav() {
             </CollapsibleTrigger>
             <CollapsibleContent className="pl-8 space-y-1 py-1">
                  {registrationItems.map((item) => (
-                    <Link key={item.href} href={item.href} className={cn("text-sm text-muted-foreground hover:text-foreground flex items-center", pathname === item.href && "text-primary font-semibold")}>
+                    <Link key={item.href} href={item.href} className={cn("block text-sm text-muted-foreground hover:text-foreground", pathname === item.href && "text-primary font-semibold")}>
                         {item.label}
                     </Link>
                 ))}
@@ -119,7 +117,7 @@ export function SimpleDashboardNav() {
             <SidebarMenuItem key={item.href}>
                 <Link href={item.href}>
                 <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label, side: "right", align: "center" }}
                 >
                     <item.icon />
@@ -132,7 +130,7 @@ export function SimpleDashboardNav() {
             <SidebarMenuItem key={item.href}>
                 <Link href={item.href}>
                 <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
+                    isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label, side: "right", align: "center" }}
                 >
                     <item.icon />
