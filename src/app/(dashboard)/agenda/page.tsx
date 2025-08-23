@@ -26,6 +26,13 @@ const eventIcons: Record<Appointment['type'], React.ReactNode> = {
   departure: <Plane className="h-5 w-5" />,
   payment: <DollarSign className="h-5 w-5" />,
   reminder: <Bell className="h-5 w-5" />,
+  task: <ListTodo className="h-5 w-5" />,
+  birthday: <Cake className="h-5 w-5" />,
+  flight: <Plane className="h-5 w-5" />,
+  hotel: <Hotel className="h-5 w-5" />,
+  transport: <TrainFront className="h-5 w-5" />,
+  tour: <Camera className="h-5 w-5" />,
+  cruise: <Ship className="h-5 w-5" />,
 };
 
 const eventTypeMapping: Record<Appointment['type'], { colorClass: string; borderColorClass: string; label: string }> = {
@@ -48,6 +55,41 @@ const eventTypeMapping: Record<Appointment['type'], { colorClass: string; border
         label: 'Lembrete',
         colorClass: 'text-purple-700 bg-purple-500/10 dark:text-purple-400 dark:bg-purple-500/20',
         borderColorClass: 'border-purple-500',
+    },
+    task: {
+        label: 'Tarefa',
+        colorClass: 'text-gray-700 bg-gray-500/10 dark:text-gray-400 dark:bg-gray-500/20',
+        borderColorClass: 'border-gray-500',
+    },
+    birthday: {
+        label: 'Aniversário',
+        colorClass: 'text-pink-700 bg-pink-500/10 dark:text-pink-400 dark:bg-pink-500/20',
+        borderColorClass: 'border-pink-500',
+    },
+    flight: {
+        label: 'Voo',
+        colorClass: 'text-cyan-700 bg-cyan-500/10 dark:text-cyan-400 dark:bg-cyan-500/20',
+        borderColorClass: 'border-cyan-500',
+    },
+    hotel: {
+        label: 'Hospedagem',
+        colorClass: 'text-amber-700 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/20',
+        borderColorClass: 'border-amber-500',
+    },
+    transport: {
+        label: 'Transporte',
+        colorClass: 'text-orange-700 bg-orange-500/10 dark:text-orange-400 dark:bg-orange-500/20',
+        borderColorClass: 'border-orange-500',
+    },
+    tour: {
+        label: 'Passeio',
+        colorClass: 'text-teal-700 bg-teal-500/10 dark:text-teal-400 dark:bg-teal-500/20',
+        borderColorClass: 'border-teal-500',
+    },
+    cruise: {
+        label: 'Cruzeiro',
+        colorClass: 'text-indigo-700 bg-indigo-500/10 dark:text-indigo-400 dark:bg-indigo-500/20',
+        borderColorClass: 'border-indigo-500',
     },
 }
 
@@ -312,8 +354,8 @@ const FilterToolbar = () => (
 
 export default function AgendaPage() {
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
-    const [currentDate, setCurrentDate] = React.useState(new Date());
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1));
+    const [selectedDate, setSelectedDate] = React.useState(new Date(2025, 7, 1));
 
     const appointmentsByDate = React.useMemo(() => {
         const grouped: { [key: string]: Appointment[] } = {};
@@ -387,4 +429,3 @@ export default function AgendaPage() {
     </div>
   );
 }
-

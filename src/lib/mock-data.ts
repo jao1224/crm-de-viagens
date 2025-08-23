@@ -9,7 +9,14 @@ export const mockAppointments: Appointment[] = [
   { id: '5', title: 'Reunião de Follow-up', customer: 'Mariana Costa', package: 'Viagem a Nova York', date: '2025-08-20T11:00:00Z', type: 'meeting' },
   { id: '6', title: 'Pagamento Final Cruzeiro', customer: 'Carlos Andrade', package: 'Cruzeiro Caribe', date: '2025-08-20T15:30:00Z', type: 'payment' },
   { id: '7', title: 'Embarque Voo SN5EY', customer: 'Vitória Da Conquista (VDC)', package: 'Lisboa (LIS)', date: '2025-09-26T09:50:00Z', type: 'departure' },
-  { id: '8', title: 'Futuro Evento de Teste', customer: 'Cliente Teste', package: 'Pacote Futuro', date: '2025-10-05T18:00:00Z', type: 'meeting' },
+  { id: '8', title: 'Tarefa: Ligar para fornecedor', customer: 'Interno', package: 'N/A', date: '2025-08-01T09:00:00Z', type: 'task' },
+  { id: '9', title: 'Aniversário de João Silva', customer: 'João Silva', package: 'N/A', date: '2025-08-05T00:00:00Z', type: 'birthday' },
+  { id: '10', title: 'Voo de Ida - Paris', customer: 'Ana Clara', package: 'Lua de Mel em Paris', date: '2025-08-12T08:00:00Z', type: 'flight' },
+  { id: '11', title: 'Check-in Hotel Le Meurice', customer: 'Ana Clara', package: 'Lua de Mel em Paris', date: '2025-08-12T15:00:00Z', type: 'hotel' },
+  { id: '12', title: 'Transfer Aeroporto > Hotel', customer: 'Ana Clara', package: 'Lua de Mel em Paris', date: '2025-08-12T13:30:00Z', type: 'transport' },
+  { id: '13', title: 'Tour Torre Eiffel', customer: 'Ana Clara', package: 'Lua de Mel em Paris', date: '2025-08-13T10:00:00Z', type: 'tour' },
+  { id: '14', title: 'Embarque Cruzeiro no Mediterrâneo', customer: 'Família Andrade', package: 'Cruzeiro Grécia e Itália', date: '2025-09-05T16:00:00Z', type: 'cruise' },
+  { id: '15', title: 'Futuro Evento de Teste', customer: 'Cliente Teste', package: 'Pacote Futuro', date: '2025-10-05T18:00:00Z', type: 'meeting' },
 ];
 
 export const mockQuotes: Quote[] = [

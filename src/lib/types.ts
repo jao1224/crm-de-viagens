@@ -18,7 +18,7 @@ export type Appointment = {
   id: string;
   title: string;
   date: string;
-  type: 'meeting' | 'departure' | 'payment' | 'reminder';
+  type: 'meeting' | 'departure' | 'payment' | 'reminder' | 'task' | 'birthday' | 'flight' | 'hotel' | 'transport' | 'tour' | 'cruise';
   customer: string;
   package: string;
 };
