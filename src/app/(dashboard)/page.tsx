@@ -59,7 +59,7 @@ export default function DashboardPage() {
       
       {/* Seção 4: Dashboard Original */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        {/* Coluna da Esquerda (Invertida) */}
+        {/* Coluna da Esquerda */}
         <div className="space-y-6 flex flex-col">
             {/* Card: Tarefas para hoje */}
             <Card className="h-fit">
@@ -142,7 +142,7 @@ export default function DashboardPage() {
             </Card>
         </div>
 
-        {/* Coluna da Direita (Invertida) */}
+        {/* Coluna da Direita */}
         <div className="space-y-6">
           {/* Card: Próximos voos */}
           <Card className="h-fit">
