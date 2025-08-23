@@ -45,13 +45,14 @@ export default function DashboardPage() {
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
 
     const chartData = budgetChartData[activeChart];
+    const chartTitle = activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação';
     
   return (
     <div className="relative p-4 sm:p-6">
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         
         {/* Coluna Esquerda */}
-        <div className="col-span-1 flex flex-col gap-6">
+        <div className="xl:col-span-1 flex flex-col gap-6">
           {/* Próximos voos */}
           <Card>
               <CardHeader>
@@ -98,7 +99,7 @@ export default function DashboardPage() {
           {/* Orçamentos e Índice de Aprovação Combinados */}
           <Card>
               <CardHeader>
-                  <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
+                  <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
               </CardHeader>
               <CardContent>
                   <div className="w-full h-[200px] flex items-center justify-between">
@@ -126,7 +127,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => { setActiveChart('budget');}}
+                              onClick={() => setActiveChart('budget')}
                           >
                               Orçamentos
                           </button>
@@ -135,7 +136,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => { setActiveChart('approval');}}
+                              onClick={() => setActiveChart('approval')}
                           >
                               Índice de Aprovação
                           </button>
@@ -145,12 +146,9 @@ export default function DashboardPage() {
           </Card>
         </div>
         
-        {/* Coluna Direita */}
-        <div className="col-span-1 xl:col-span-2 flex flex-col gap-6">
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Tarefas */}
-            <Card>
+        {/* Coluna Central */}
+        <div className="xl:col-span-1 flex flex-col gap-6">
+           <Card>
                  <CardHeader>
                     <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
                 </CardHeader>
@@ -164,9 +162,11 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
+        </div>
 
-            {/* Top 10 Clientes - Movido para a direita para alinhar com Tarefas */}
-            <Card>
+        {/* Coluna Direita */}
+        <div className="xl:col-span-1 flex flex-col gap-6">
+             <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
                      <div className="flex items-center border border-primary rounded-md p-0.5">
@@ -201,7 +201,6 @@ export default function DashboardPage() {
                      </div>
                 </CardContent>
             </Card>
-          </div>
         </div>
       </div>
       <Button
