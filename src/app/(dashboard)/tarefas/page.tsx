@@ -46,6 +46,18 @@ export default function TarefasPage() {
         to: new Date(2025, 8, 22),
     });
     const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>('overdue');
+    const [situation, setSituation] = React.useState('aguardando');
+
+    React.useEffect(() => {
+        const savedSituation = localStorage.getItem('taskSituationFilter');
+        if (savedSituation) {
+            setSituation(savedSituation);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        localStorage.setItem('taskSituationFilter', situation);
+    }, [situation]);
 
     return (
         <div className="space-y-6">
@@ -115,9 +127,9 @@ export default function TarefasPage() {
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-muted-foreground px-1">Situação</label>
-                            <Select defaultValue="aguardando">
+                            <Select value={situation} onValueChange={setSituation}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Aguardando" />
+                                    <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todos">Todos</SelectItem>
