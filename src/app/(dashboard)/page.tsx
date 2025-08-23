@@ -120,7 +120,7 @@ export default function DashboardPage() {
                       <div className="w-48 space-y-2">
                           <button
                               className={cn(
-                                  "w-full text-left p-2 rounded-md transition-colors",
+                                  "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
                               onClick={() => setActiveChart('budget')}
@@ -129,7 +129,7 @@ export default function DashboardPage() {
                           </button>
                           <button
                               className={cn(
-                                  "w-full text-left p-2 rounded-md transition-colors",
+                                  "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
                               onClick={() => setActiveChart('approval')}
