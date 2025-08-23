@@ -117,10 +117,12 @@ export default function TarefasPage() {
                             <label className="text-sm font-medium text-muted-foreground px-1">Situação</label>
                             <Select defaultValue="aguardando">
                                 <SelectTrigger>
-                                    <SelectValue />
+                                    <SelectValue placeholder="Aguardando" />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem value="todos">Todos</SelectItem>
                                     <SelectItem value="aguardando">Aguardando</SelectItem>
+                                    <SelectItem value="concluida">Concluída</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -217,5 +219,3 @@ export default function TarefasPage() {
         </div>
     );
 }
-
-    
