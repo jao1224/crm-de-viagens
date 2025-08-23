@@ -208,7 +208,20 @@ export default function DashboardPage() {
                 <CardTitle className="text-lg text-gray-800 font-semibold">
                      {getChartTitle()}
                 </CardTitle>
-                {activeFilter === 'Personalizado' ? (
+                <div className="flex flex-wrap gap-1">
+                    {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                        <Button 
+                            key={filter} 
+                            variant={activeFilter === filter ? 'default' : 'outline'}
+                            size="sm"
+                            className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            onClick={() => setActiveFilter(filter)}
+                        >
+                            {filter}
+                        </Button>
+                    ))}
+                </div>
+                {activeFilter === 'Personalizado' && (
                     <div className="flex items-center justify-center">
                         <div className="flex items-center border rounded-md p-1">
                             <Popover>
@@ -257,20 +270,6 @@ export default function DashboardPage() {
                                 </PopoverContent>
                             </Popover>
                         </div>
-                    </div>
-                ) : (
-                    <div className="flex flex-wrap gap-1">
-                        {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                            <Button 
-                                key={filter} 
-                                variant={activeFilter === filter ? 'default' : 'outline'}
-                                size="sm"
-                                className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                                onClick={() => setActiveFilter(filter)}
-                            >
-                                {filter}
-                            </Button>
-                        ))}
                     </div>
                 )}
             </CardHeader>
