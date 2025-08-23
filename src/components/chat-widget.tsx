@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageSquare, X, Send } from 'lucide-react';
@@ -17,6 +17,15 @@ export function ChatWidget() {
     { autor: "bot", texto: "Olá! Sou seu assistente virtual. Como posso ajudar?" },
   ]);
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [mensagens]);
 
   function enviarMensagem() {
     if (!input.trim()) return;
@@ -81,6 +90,7 @@ export function ChatWidget() {
                 {msg.texto}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
