@@ -71,9 +71,11 @@ export function DashboardHeader() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Perfil</span>
+                <DropdownMenuItem asChild>
+                    <Link href="/perfil">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Perfil</span>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                     <Building className="mr-2 h-4 w-4" />
@@ -87,9 +89,11 @@ export function DashboardHeader() {
                     <Bell className="mr-2 h-4 w-4" />
                     <span>Notificações</span>
                 </DropdownMenuItem>
-                 <DropdownMenuItem>
-                    <Users className="mr-2 h-4 w-4" />
-                    <span>Usuários</span>
+                 <DropdownMenuItem asChild>
+                    <Link href="/usuarios">
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>Usuários</span>
+                    </Link>
                 </DropdownMenuItem>
                  <DropdownMenuItem>
                     <Goal className="mr-2 h-4 w-4" />

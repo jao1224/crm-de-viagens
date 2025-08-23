@@ -1,5 +1,5 @@
 
-import type { Appointment, Quote, Project } from './types';
+import type { Appointment, Quote, Project, User } from './types';
 
 export const mockAppointments: Appointment[] = [
   { id: '1', title: 'Reunião de Planejamento', customer: 'Kelly Freires Diogo Tossi', package: 'São Paulo (VCP) > Lisboa (LIS)', date: '2025-08-23T17:15:00Z', type: 'departure' },
@@ -55,3 +55,29 @@ export const mockProjects: Project[] = [
     },
 ];
 
+export const mockUsers: User[] = [
+    {
+        id: '1',
+        name: 'Casal em Coimbra Franquia',
+        email: 'casalemcoimbra@nomeiodomundoviagens.com',
+        avatarUrl: '/logo.png',
+        status: 'active',
+        permission: 'Acessa somente suas cotações',
+    },
+    {
+        id: '2',
+        name: 'Conexões Franquia',
+        email: 'conexoes@nomeiodomundoviagens.com',
+        avatarUrl: '/logo.png',
+        status: 'active',
+        permission: 'Acessa somente suas cotações',
+    },
+    {
+        id: '3',
+        name: 'É o Nosso Quintal Franquia',
+        email: 'eonossoquintal@nomeiodomundoviagens.com',
+        avatarUrl: '/logo.png',
+        status: 'active',
+        permission: 'Acessa somente suas cotações',
+    }
+]
