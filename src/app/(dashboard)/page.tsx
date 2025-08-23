@@ -16,25 +16,15 @@ import { ptBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
 import { ChatWidget } from "@/components/chat-widget";
 
-const budgetChartData = {
-    budget: [
-        { name: 'Aprovado', value: 75, total: 100, color: 'hsl(var(--chart-1))' },
-        { name: 'Aguardando', value: 25, total: 100, color: 'hsl(var(--chart-2))' },
-    ],
-    approval: [
-        { name: 'Aprovado', value: 100, total: 100, color: 'hsl(var(--chart-3))' },
-    ],
-    salesChannels: [
-        { name: 'Agência', value: 60, color: 'hsl(var(--chart-1))' },
-        { name: 'Website', value: 30, color: 'hsl(var(--chart-2))' },
-        { name: 'Indicação', value: 10, color: 'hsl(var(--chart-3))' },
-    ],
-    productsServices: [
-        { name: 'Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
-        { name: 'Hospedagem', value: 26.5, color: 'hsl(var(--chart-2))' },
-        { name: 'Visto', value: 0.8, color: 'hsl(var(--chart-3))' },
-    ],
-};
+const revenueChartData = [
+    { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
+    { name: 'passagem', value: 26.5, color: 'hsl(var(--chart-2))' },
+    { name: 'VISTO PROC. TRABALHO', value: 0.8, color: 'hsl(var(--chart-3))' },
+];
+
+const expensesChartData = [
+    { name: 'Pagamento Fornecedor', value: 100, color: 'hsl(var(--chart-1))' },
+]
 
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
 
@@ -62,18 +52,6 @@ const top10Data = {
   ]
 };
 
-const accompanimentData = [
-  { icon: Plane, label: 'Voos', value: 4 },
-  { icon: Hotel, label: 'Hospedagem', value: 0 },
-  { icon: Luggage, label: 'Cruzeiro', value: 0 },
-  { icon: Camera, label: 'Experiências', value: 0 },
-  { icon: TrainFront, label: 'Transporte', value: 0 },
-  { icon: HeartPulse, label: 'Seguro', value: 0 },
-  { icon: Map, label: 'Roteiro', value: 0 },
-];
-
-type Top10EntityType = keyof typeof top10Data;
-
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -89,117 +67,30 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-export default function DashboardPage() {
-    const [activeFilter, setActiveFilter] = React.useState('Mês');
-    const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
-    const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
-    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(0);
-    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-        from: new Date(2025, 7, 1),
-        to: new Date(2025, 7, 31),
-    });
-
-    const budgetChartKeys: (keyof typeof budgetChartData | 'accompaniment')[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'accompaniment'];
-    const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
-    const chartData = activeBudgetKey !== 'accompaniment' ? budgetChartData[activeBudgetKey as keyof typeof budgetChartData] : [];
-
-    const top10Entities: Top10EntityType[] = ['Clientes', 'Fornecedores', 'Afiliados'];
-    const currentTop10Data = top10Data[top10EntityType];
-    
-    const getChartTitle = () => {
-        switch(activeBudgetKey) {
-            case 'budget': return 'Orçamentos';
-            case 'approval': return 'Índice de Aprovação';
-            case 'salesChannels': return 'Canais de Venda';
-            case 'productsServices': return 'Produtos e Serviços';
-            case 'accompaniment': return 'Acompanhamentos';
-            default: return 'Orçamentos';
-        }
-    };
-    
-  return (
-    <div className="space-y-6">
-      <header>
-          <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
-          <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
-      </header>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div >
-                    <CardTitle className="font-headline text-primary">{getChartTitle()}</CardTitle>
-                    <CardDescription>Análise visual dos seus dados chave.</CardDescription>
-                </div>
-                 <div className="flex flex-wrap gap-1">
-                    {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
-                        <Button 
-                            key={filter} 
-                            variant={activeFilter === filter ? 'default' : 'ghost'}
-                            size="sm"
-                            className="text-xs h-8 px-3"
-                            onClick={() => setActiveFilter(filter)}
-                        >
-                            {filter}
-                        </Button>
-                    ))}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                             <Button 
-                                variant={activeFilter === 'Personalizado' ? 'default' : 'ghost'}
-                                size="sm"
-                                className="text-xs h-8 px-3"
-                                onClick={() => setActiveFilter('Personalizado')}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                Personalizado
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="end">
-                            <Calendar
-                                initialFocus
-                                mode="range"
-                                defaultMonth={dateRange?.from}
-                                selected={dateRange}
-                                onSelect={setDateRange}
-                                numberOfMonths={2}
-                                locale={ptBR}
-                            />
-                        </PopoverContent>
-                    </Popover>
-                </div>
+const PieChartCard = ({ title, data }: { title: string, data: {name: string, value: number, color: string}[] }) => {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-primary text-xl">{title}</CardTitle>
             </CardHeader>
-            <CardContent className="p-6 pt-0 flex-grow">
-                {activeBudgetKey === 'accompaniment' ? (
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-6 pt-4 h-full content-center">
-                      {accompanimentData.map(item => (
-                        <div key={item.label} className="flex items-center justify-between text-base">
-                          <div className="flex items-center gap-3 text-muted-foreground">
-                            <item.icon className="w-5 h-5 text-primary" />
-                            <span className="font-medium">{item.label}</span>
-                          </div>
-                          <Badge className="bg-primary/10 text-primary font-bold text-sm rounded-full w-8 h-8 flex items-center justify-center">{item.value}</Badge>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
+            <CardContent>
                 <div className="w-full h-[250px] flex items-center justify-center gap-12">
                     <div className="flex-1 h-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie 
-                                    data={chartData}
+                                    data={data}
                                     dataKey="value" 
                                     nameKey="name" 
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={100}
-                                    innerRadius={60}
-                                    paddingAngle={5}
+                                    innerRadius={70}
+                                    paddingAngle={data.length > 1 ? 2 : 0}
                                     fill="hsl(var(--primary))"
                                     labelLine={false}
                                 >
-                                    {chartData.map((entry) => (
+                                    {data.map((entry) => (
                                         <Cell key={`cell-${entry.name}`} fill={entry.color} stroke={entry.color} strokeWidth={2}/>
                                     ))}
                                 </Pie>
@@ -208,29 +99,35 @@ export default function DashboardPage() {
                         </ResponsiveContainer>
                     </div>
                     <div className="w-48 space-y-4">
-                        {chartData.map((entry) => (
+                        {data.map((entry) => (
                             <div key={entry.name} className="flex items-center gap-3">
                                 <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium text-foreground">{entry.name}</span>
-                                    <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-                )}
             </CardContent>
-            <div className="flex justify-center items-center gap-2 mt-auto p-4 border-t">
-                {budgetChartKeys.map((key, index) => (
-                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-2.5 h-2.5 rounded-full bg-muted transition-all hover:bg-primary/50 data-[active=true]:bg-primary data-[active=true]:w-6" data-active={activeBudgetChartIndex === index}></button>
-                ))}
-            </div>
         </Card>
-        
-        <Card className="h-fit flex flex-col">
+    )
+}
+
+export default function DashboardPage() {
+    const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
+    
+  return (
+    <div className="space-y-6">
+      <header>
+          <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
+          <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
+      </header>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="font-headline text-primary">Top 10 {top10EntityType}</CardTitle>
+                <CardTitle className="font-headline text-primary">Top 10 Clientes</CardTitle>
                 <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
                       <Button 
                           size="sm"
@@ -250,9 +147,9 @@ export default function DashboardPage() {
                       </Button>
                 </div>
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent>
                 <div className="space-y-1 text-sm">
-                    {currentTop10Data.map((item, index) => (
+                    {top10Data.Clientes.map((item, index) => (
                       <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
                           <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
                           <div className="text-right">
@@ -263,11 +160,25 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </CardContent>
-             <div className="flex justify-center items-center gap-3 mt-auto p-4 border-t">
-                {top10Entities.map((entity) => (
-                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary data-[active=true]:text-primary" data-active={top10EntityType === entity}>{entity}</button>
-                ))}
-            </div>
+        </Card>
+        
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
+                <CardTitle className="font-headline text-primary">Top 10 Fornecedores</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-1 text-sm">
+                    {top10Data.Fornecedores.map((item, index) => (
+                      <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
+                          <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
+                          <div className="text-right">
+                            <span className="font-semibold text-primary">{item.value}</span>
+                            <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
+                          </div>
+                      </div>
+                    ))}
+                </div>
+            </CardContent>
         </Card>
       </div>
 
@@ -314,6 +225,11 @@ export default function DashboardPage() {
         </Card>
       </div>
       
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <PieChartCard title="Receitas por Categoria" data={revenueChartData} />
+            <PieChartCard title="Despesas por Categoria" data={expensesChartData} />
+       </div>
+
        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card className="text-center p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
@@ -344,4 +260,5 @@ export default function DashboardPage() {
        <ChatWidget />
     </div>
   );
-}
+
+    
