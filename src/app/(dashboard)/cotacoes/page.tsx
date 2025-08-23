@@ -113,6 +113,8 @@ const QuoteColumn = ({
 };
 
 const LinkDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const quoteLink = typeof window !== 'undefined' ? `${window.location.origin}/solicitacao-orcamento` : '';
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-3xl">
@@ -126,13 +128,13 @@ const LinkDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open
                 <div className="space-y-6 pt-4">
                     <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
                         <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Link principal da Agência</h3>
-                        <p className="text-blue-600 dark:text-blue-400 mt-1 mb-4">https://agencia.iddas.com.br/so/onrwpt6h</p>
+                        <p className="text-blue-600 dark:text-blue-400 mt-1 mb-4">{quoteLink}</p>
                         <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => navigator.clipboard.writeText('https://agencia.iddas.com.br/so/onrwpt6h')}>
+                            <Button variant="outline" onClick={() => navigator.clipboard.writeText(quoteLink)}>
                                 <Copy className="mr-2 h-4 w-4" />
                                 Copiar link
                             </Button>
-                            <a href="https://agencia.iddas.com.br/so/onrwpt6h" target="_blank" rel="noopener noreferrer">
+                            <a href={quoteLink} target="_blank" rel="noopener noreferrer">
                                 <Button variant="outline">
                                     <ExternalLink className="mr-2 h-4 w-4" />
                                     Abrir em nova aba
