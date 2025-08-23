@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon } from 'lucide-react';
+import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon, Send } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,6 +14,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const budgetChartData = {
     budget: [
@@ -24,14 +28,14 @@ const budgetChartData = {
         { name: 'Aprovado', value: 100, total: 100, color: '#10b981' },
     ],
     salesChannels: [
-        { name: 'Agência', value: 60, color: '#3b82f6' },
-        { name: 'Website', value: 30, color: '#10b981' },
-        { name: 'Indicação', value: 10, color: '#f97316' },
+        { name: 'Agência', value: 60, color: 'hsl(var(--chart-1))' },
+        { name: 'Website', value: 30, color: 'hsl(var(--chart-2))' },
+        { name: 'Indicação', value: 10, color: 'hsl(var(--chart-3))' },
     ],
     productsServices: [
-        { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
-        { name: 'passagem', value: 26.5, color: '#f97316' },
-        { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
+        { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
+        { name: 'passagem', value: 26.5, color: 'hsl(var(--chart-2))' },
+        { name: 'VISTO PROC. TRABALHO', value: 0.8, color: 'hsl(var(--chart-3))' },
     ],
 };
 
@@ -99,6 +103,17 @@ export default function DashboardPage() {
         from: new Date(2025, 7, 1),
         to: new Date(2025, 7, 31),
     });
+    const [chatMessages, setChatMessages] = React.useState([
+        { from: 'assistant', text: 'Olá! Como posso te ajudar a encontrar o pacote de viagem perfeito hoje?' }
+    ]);
+    const [chatInput, setChatInput] = React.useState('');
+
+    const handleSendMessage = () => {
+        if (chatInput.trim() === '') return;
+        setChatMessages(prev => [...prev, { from: 'user', text: chatInput.trim() }]);
+        setChatInput('');
+        // TODO: Add logic to get assistant response
+    }
 
     const budgetChartKeys: (keyof typeof budgetChartData | 'accompaniment')[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'accompaniment'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
@@ -123,13 +138,13 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+                <CardTitle className="text-lg text-foreground font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
-                <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                <ListTodo className="w-12 h-12 mb-4" />
                 <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
                 <div className="flex gap-2 mt-6">
-                    <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                    <Badge variant="destructive">4 atrasada(s)</Badge>
                     <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
                     <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
                 </div>
@@ -138,27 +153,27 @@ export default function DashboardPage() {
 
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
+                <CardTitle className="text-lg text-foreground font-semibold">Próximos voos</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
                 {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
                     <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
                         <div className="text-right">
-                            <p className="text-sm text-gray-600">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
-                            <p className="text-sm font-semibold text-gray-800">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
+                            <p className="text-sm text-muted-foreground">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
+                            <p className="text-sm font-semibold text-foreground">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-gray-800">{flight.customer}</p>
-                            <p className="text-xs text-gray-600 font-semibold">{flight.package}</p>
+                            <p className="font-semibold text-sm text-foreground">{flight.customer}</p>
+                            <p className="text-xs text-muted-foreground font-semibold">{flight.package}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Plane className="w-4 h-4 text-blue-600" />
-                            <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">{flightCodes[index % flightCodes.length]}</Badge>
+                            <Plane className="w-4 h-4 text-primary" />
+                            <Badge variant="outline" className="text-primary border-primary bg-primary/10">{flightCodes[index % flightCodes.length]}</Badge>
                         </div>
                     </div>
                 ))}
                 <div className="flex gap-2">
-                    <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
+                    <Badge variant="destructive">2 em período de check-in</Badge>
                     <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
                 </div>
             </CardContent>
@@ -166,18 +181,18 @@ export default function DashboardPage() {
         
         <Card className="h-fit flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 {top10EntityType}</CardTitle>
-                <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
+                <CardTitle className="text-lg text-foreground font-semibold">Top 10 {top10EntityType}</CardTitle>
+                <div className="flex items-center border border-primary rounded-md p-0.5 bg-muted/50">
                       <Button 
                           size="sm"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
                           onClick={() => setTopClientsFilter('Faturamento')}
                       >
                           Faturamento
                       </Button>
                       <Button 
                           size="sm"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
                           onClick={() => setTopClientsFilter('Lucro')}
                       >
                           Lucro
@@ -188,9 +203,9 @@ export default function DashboardPage() {
                 <div className="space-y-3 text-sm">
                     {currentTop10Data.map((item, index) => (
                       <div key={index} className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">{index + 1}) {item.name}</span> 
+                          <span className="font-medium text-foreground">{index + 1}) {item.name}</span> 
                           <span className="font-semibold text-right">
-                              {item.sales} venda(s) <span className="ml-4 text-blue-600">{item.value}</span>
+                              {item.sales} venda(s) <span className="ml-4 text-primary">{item.value}</span>
                           </span>
                       </div>
                     ))}
@@ -198,14 +213,14 @@ export default function DashboardPage() {
             </CardContent>
              <div className="flex justify-center items-center gap-2 mt-auto p-4">
                 {top10Entities.map((entity) => (
-                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={top10EntityType === entity}></button>
+                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-muted data-[active=true]:bg-primary/80" data-active={top10EntityType === entity}></button>
                 ))}
             </div>
         </Card>
         
         <Card className="h-fit flex flex-col">
             <CardHeader className="p-6 space-y-4">
-                <CardTitle className="text-lg text-gray-800 font-semibold">
+                <CardTitle className="text-lg text-foreground font-semibold">
                      {getChartTitle()}
                 </CardTitle>
                 <div className="flex flex-wrap gap-1">
@@ -214,7 +229,7 @@ export default function DashboardPage() {
                             key={filter} 
                             variant={activeFilter === filter ? 'default' : 'outline'}
                             size="sm"
-                            className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-muted/80'}`}
                             onClick={() => setActiveFilter(filter)}
                         >
                             {filter}
@@ -222,8 +237,8 @@ export default function DashboardPage() {
                     ))}
                 </div>
                 {activeFilter === 'Personalizado' && (
-                    <div className="flex items-center justify-center">
-                        <div className="flex items-center border rounded-md p-1">
+                    <div className="flex items-center justify-center pt-2">
+                        <div className="flex items-center border rounded-md p-1 bg-background">
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -234,7 +249,7 @@ export default function DashboardPage() {
                                         )}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {dateRange?.from ? format(dateRange.from, "dd/MM/y") : <span>Data inicial</span>}
+                                        {dateRange?.from ? format(dateRange.from, "dd/MM/y", { locale: ptBR }) : <span>Data inicial</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0" align="start">
@@ -243,6 +258,7 @@ export default function DashboardPage() {
                                         mode="single"
                                         selected={dateRange?.from}
                                         onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
+                                        locale={ptBR}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -257,7 +273,7 @@ export default function DashboardPage() {
                                         )}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {dateRange?.to ? format(dateRange.to, "dd/MM/y") : <span>Data final</span>}
+                                        {dateRange?.to ? format(dateRange.to, "dd/MM/y", { locale: ptBR }) : <span>Data final</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0" align="start">
@@ -266,6 +282,7 @@ export default function DashboardPage() {
                                         mode="single"
                                         selected={dateRange?.to}
                                         onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
+                                        locale={ptBR}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -279,22 +296,22 @@ export default function DashboardPage() {
                     <div className="space-y-4">
                       {accompanimentData.slice(0, 4).map(item => (
                         <div key={item.label} className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-2 text-gray-600">
+                          <div className="flex items-center gap-2 text-muted-foreground">
                             <item.icon className="w-4 h-4" />
                             <span>{item.label}</span>
                           </div>
-                          <Badge className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
+                          <Badge className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
                         </div>
                       ))}
                     </div>
                     <div className="space-y-4">
                       {accompanimentData.slice(4).map(item => (
                         <div key={item.label} className="flex items-center justify-between text-sm">
-                           <div className="flex items-center gap-2 text-gray-600">
+                           <div className="flex items-center gap-2 text-muted-foreground">
                             <item.icon className="w-4 h-4" />
                             <span>{item.label}</span>
                           </div>
-                          <Badge className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
+                          <Badge className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
                         </div>
                       ))}
                     </div>
@@ -311,7 +328,7 @@ export default function DashboardPage() {
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={80} 
-                                    fill="#10b981"
+                                    fill="hsl(var(--primary))"
                                     labelLine={false}
                                 >
                                     {chartData.map((entry) => (
@@ -326,7 +343,7 @@ export default function DashboardPage() {
                         {chartData.map((entry) => (
                             <div key={entry.name} className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
-                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                                <span className="text-sm font-medium text-foreground">{entry.name}</span>
                             </div>
                         ))}
                     </div>
@@ -335,7 +352,7 @@ export default function DashboardPage() {
             </CardContent>
             <div className="flex justify-center items-center gap-2 mt-auto p-4">
                 {budgetChartKeys.map((key, index) => (
-                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={activeBudgetChartIndex === index}></button>
+                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-8 h-1.5 rounded-full bg-muted data-[active=true]:bg-primary/80" data-active={activeBudgetChartIndex === index}></button>
                 ))}
             </div>
         </Card>
@@ -347,19 +364,19 @@ export default function DashboardPage() {
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                             MM
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-800">Casal em Coimbra</h3>
+                            <h3 className="font-semibold text-foreground">Casal em Coimbra</h3>
                             <p className="text-sm text-green-600 font-medium">100,00%</p>
                         </div>
                     </div>
                     <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">4 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">4 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-foreground">R$ 48.666,18</p>
                         <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">4 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                        <p className="text-sm font-semibold text-foreground">R$ 48.666,18</p>
                     </div>
                 </div>
             </CardContent>
@@ -369,18 +386,18 @@ export default function DashboardPage() {
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                             MM
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-800">Conexões</h3>
+                            <h3 className="font-semibold text-foreground">Conexões</h3>
                         </div>
                     </div>
                     <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">0 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">0 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
                         <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">0 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
                     </div>
                 </div>
             </CardContent>
@@ -390,19 +407,19 @@ export default function DashboardPage() {
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm">
                             MM
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-800">É o Nosso Quintal</h3>
+                            <h3 className="font-semibold text-foreground">É o Nosso Quintal</h3>
                             <p className="text-sm text-green-600 font-medium">100,00%</p>
                         </div>
                     </div>
                     <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">1 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">1 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-foreground">R$ 18.450,00</p>
                         <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                        <p className="text-sm font-semibold text-foreground">R$ 18.450,00</p>
                     </div>
                 </div>
             </CardContent>
@@ -412,19 +429,19 @@ export default function DashboardPage() {
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-12 h-12 bg-muted-foreground rounded-full flex items-center justify-center text-white font-bold text-sm">
                             M
                         </div>
                         <div>
-                            <h3 className="font-semibold text-gray-800">Maxshuell</h3>
+                            <h3 className="font-semibold text-foreground">Maxshuell</h3>
                             <p className="text-sm text-yellow-600 font-medium">50,00%</p>
                         </div>
                     </div>
                     <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">2 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-primary/10 text-primary border-primary/20 mb-1">2 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
                         <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <p className="text-sm font-semibold text-foreground">R$ 0,00</p>
                     </div>
                 </div>
             </CardContent>
@@ -434,23 +451,23 @@ export default function DashboardPage() {
        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-gray-600 mb-2">Recebido (R$)</h3>
-                <p className="text-2xl font-bold text-blue-600">67.206,18</p>
-                <div className="w-full h-1 bg-blue-600 mt-2"></div>
+                <h3 className="text-sm text-muted-foreground mb-2">Recebido (R$)</h3>
+                <p className="text-2xl font-bold text-primary">67.206,18</p>
+                <div className="w-full h-1 bg-primary mt-2"></div>
             </CardContent>
         </Card>
 
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-gray-600 mb-2">Pago (R$)</h3>
-                <p className="text-2xl font-bold text-red-600">60.582,30</p>
-                <div className="w-full h-1 bg-red-600 mt-2"></div>
+                <h3 className="text-sm text-muted-foreground mb-2">Pago (R$)</h3>
+                <p className="text-2xl font-bold text-destructive">60.582,30</p>
+                <div className="w-full h-1 bg-destructive mt-2"></div>
             </CardContent>
         </Card>
 
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-gray-600 mb-2">Faturamento (R$)</h3>
+                <h3 className="text-sm text-muted-foreground mb-2">Faturamento (R$)</h3>
                 <p className="text-2xl font-bold text-green-600">67.206,18</p>
                 <div className="w-full h-1 bg-green-600 mt-2"></div>
             </CardContent>
@@ -459,8 +476,8 @@ export default function DashboardPage() {
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">
-                    <h3 className="text-sm text-gray-600">Lucro (R$)</h3>
-                    <Info className="w-4 h-4 text-gray-400" />
+                    <h3 className="text-sm text-muted-foreground">Lucro (R$)</h3>
+                    <Info className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <p className="text-2xl font-bold text-green-600">6.623,88</p>
                 <div className="w-full h-1 bg-green-600 mt-2"></div>
@@ -469,9 +486,9 @@ export default function DashboardPage() {
 
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
-                <h3 className="text-sm text-gray-600 mb-2">Ticket Médio (R$)</h3>
-                <p className="text-2xl font-bold text-blue-600">11.186,03</p>
-                <div className="w-full h-1 bg-blue-600 mt-2"></div>
+                <h3 className="text-sm text-muted-foreground mb-2">Ticket Médio (R$)</h3>
+                <p className="text-2xl font-bold text-primary">11.186,03</p>
+                <div className="w-full h-1 bg-primary mt-2"></div>
             </CardContent>
         </Card>
       </div>
@@ -479,13 +496,13 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
+                <CardTitle className="text-lg text-foreground font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
-                <DollarSign className="w-16 h-16 mb-4 text-gray-400" />
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                <DollarSign className="w-16 h-16 mb-4" />
                 <p>Nenhuma receita para o dia de hoje.</p>
                 <div className="flex gap-2 mt-6">
-                    <Badge className="bg-red-500 text-white hover:bg-red-600">23 atrasada(s)</Badge>
+                    <Badge variant="destructive">23 atrasada(s)</Badge>
                     <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
                 </div>
             </CardContent>
@@ -493,26 +510,75 @@ export default function DashboardPage() {
 
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
+                <CardTitle className="text-lg text-foreground font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
-                <DollarSign className="w-16 h-16 mb-4 text-gray-400" />
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                <DollarSign className="w-16 h-16 mb-4" />
                 <p>Nenhuma despesa para o dia de hoje.</p>
                 <div className="flex gap-2 mt-6">
-                    <Badge className="bg-red-500 text-white hover:bg-red-600">157 atrasada(s)</Badge>
+                    <Badge variant="destructive">157 atrasada(s)</Badge>
                     <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
                 </div>
             </CardContent>
         </Card>
       </div>
       
-      <Button
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-green-500 text-white shadow-lg hover:bg-green-600"
-        size="icon"
-      >
-        <MessageSquare className="h-7 w-7" />
-        <span className="sr-only">Chat</span>
-      </Button>
+       <Sheet>
+        <SheetTrigger asChild>
+            <Button
+                className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+                size="icon"
+            >
+                <MessageSquare className="h-7 w-7" />
+                <span className="sr-only">Chat</span>
+            </Button>
+        </SheetTrigger>
+        <SheetContent side="bottom" className="flex flex-col h-[80vh]">
+            <SheetHeader className="p-4 border-b">
+                <SheetTitle>Assistente Virtual</SheetTitle>
+            </SheetHeader>
+            <ScrollArea className="flex-1 p-4">
+                <div className="space-y-4">
+                    {chatMessages.map((msg, index) => (
+                        <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : 'justify-start')}>
+                           {msg.from === 'assistant' && (
+                               <Avatar className="h-8 w-8">
+                                   <AvatarImage src="https://i.pinimg.com/736x/05/2d/19/052d19b3a3721345f2a1b92e59530b13.jpg" alt="Assistente" />
+                                   <AvatarFallback>A</AvatarFallback>
+                               </Avatar>
+                           )}
+                           <div className={cn(
+                               "max-w-[75%] rounded-lg px-4 py-2 text-sm", 
+                               msg.from === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                           )}>
+                               <p>{msg.text}</p>
+                           </div>
+                        </div>
+                    ))}
+                </div>
+            </ScrollArea>
+            <div className="p-4 border-t">
+                <div className="relative">
+                    <Textarea 
+                        placeholder="Digite sua mensagem..." 
+                        className="pr-16"
+                        value={chatInput}
+                        onChange={e => setChatInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }}}
+                    />
+                    <Button 
+                        size="icon" 
+                        className="absolute top-1/2 right-3 -translate-y-1/2"
+                        onClick={handleSendMessage}
+                        disabled={!chatInput.trim()}
+                    >
+                        <Send className="h-5 w-5" />
+                        <span className="sr-only">Enviar</span>
+                    </Button>
+                </div>
+            </div>
+        </SheetContent>
+    </Sheet>
     </div>
   );
 }
