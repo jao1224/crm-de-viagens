@@ -21,7 +21,7 @@ const budgetChartData = {
     expense: [
         { name: 'Pagamento Fornecedor', value: 100, color: '#3b82f6' },
     ],
-    revenue: [
+    productsServices: [
         { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
         { name: 'passagem', value: 26.5, color: '#f97316' },
         { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
@@ -87,7 +87,7 @@ export default function DashboardPage() {
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
     const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
 
-    const budgetChartKeys: (keyof typeof budgetChartData)[] = ['budget', 'approval', 'salesChannels', 'expense', 'revenue', 'other'];
+    const budgetChartKeys: (keyof typeof budgetChartData)[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'expense', 'other'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
     const chartData = budgetChartData[activeBudgetKey];
 
@@ -99,7 +99,7 @@ export default function DashboardPage() {
             case 'budget': return 'Orçamentos';
             case 'approval': return 'Índice de Aprovação';
             case 'expense': return 'Despesas por Categoria';
-            case 'revenue': return 'Receitas por Categoria';
+            case 'productsServices': return 'Produtos/Serviços';
             case 'salesChannels': return 'Canais de Venda';
             case 'other': return 'Outro Indicador';
             default: return 'Orçamentos';
@@ -151,7 +151,7 @@ export default function DashboardPage() {
                 </div>
             </CardContent>
         </Card>
-
+        
         <Card className="h-fit flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 {top10EntityType}</CardTitle>
