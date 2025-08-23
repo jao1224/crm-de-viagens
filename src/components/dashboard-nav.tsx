@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -27,6 +28,21 @@ import {
   BadgePercent,
   LineChart,
   Gem,
+  Building2,
+  Link2,
+  Landmark,
+  CreditCard,
+  Banknote,
+  User,
+  Trash2,
+  ShoppingCart,
+  Receipt,
+  MessageSquare,
+  Volume2,
+  PenSquare,
+  XCircle,
+  Tag,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -72,9 +88,24 @@ export const documentItems: NavItem[] = [
 ];
 
 export const registrationItems: NavItem[] = [
-    { href: '/clientes', label: 'Clientes', icon: Users },
-    { href: '/fornecedores', label: 'Fornecedores', icon: Users },
+    { href: '/agencia', label: 'Agência', icon: Building2 },
+    { href: '/link-cotacao', label: 'Link Cotação', icon: Link2 },
+    { href: '/link-pessoa', label: 'Link Pessoa', icon: Link2 },
+    { href: '/conta-bancaria', label: 'Conta Bancária', icon: Landmark },
+    { href: '/cartao', label: 'Cartão', icon: CreditCard },
+    { href: '/forma-pagamento', label: 'Forma de Pagamento', icon: Banknote },
+    { href: '/pessoa', label: 'Pessoa', icon: User },
+    { href: '/programa', label: 'Programa', icon: Trash2 },
+    { href: '/produto-servico', label: 'Produto/Serviço', icon: ShoppingCart },
+    { href: '/receita-despesa-cadastro', label: 'Receita/Despesa', icon: Receipt },
+    { href: '/mensagem', label: 'Mensagem', icon: MessageSquare },
+    { href: '/canal-venda', label: 'Canal de Venda', icon: Volume2 },
+    { href: '/contrato', label: 'Contrato', icon: PenSquare },
+    { href: '/motivo-reprovacao', label: 'Motivo Reprovação', icon: XCircle },
+    { href: '/etiqueta', label: 'Etiqueta', icon: Tag },
+    { href: '/imagens', label: 'Imagens', icon: ImageIcon },
 ];
+
 export const automationItems: NavItem[] = [
     { href: '/automacao', label: 'Automação', icon: Settings },
 ];
@@ -192,11 +223,19 @@ export function SimpleDashboardNav() {
                 </span>
                 <ChevronDown className="h-4 w-4" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="pl-8 space-y-1 py-1">
+            <CollapsibleContent className="space-y-1 py-1">
                  {registrationItems.map((item) => (
-                    <Link key={item.href} href={item.href} className={cn("block text-sm text-muted-foreground hover:text-foreground", pathname === item.href && "text-primary font-semibold")}>
-                        {item.label}
-                    </Link>
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
                 ))}
             </CollapsibleContent>
         </Collapsible>
@@ -231,3 +270,4 @@ export function SimpleDashboardNav() {
     </SidebarMenu>
   );
 }
+
