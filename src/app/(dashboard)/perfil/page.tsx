@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Camera, Shield, FileSignature, Trash2 } from 'lucide-react';
+import { User, Shield, FileSignature, Trash2 } from 'lucide-react';
 
 const ProfileForm = () => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
