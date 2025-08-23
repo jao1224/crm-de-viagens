@@ -80,8 +80,10 @@ export function DashboardHeader() {
                     ))}
                 </DropdownMenuGroup>
                  <DropdownMenuSeparator />
-                 <DropdownMenuItem className="justify-center text-sm text-primary hover:!text-primary font-semibold">
-                    Ver todas as notificações
+                 <DropdownMenuItem asChild className="justify-center text-sm text-primary hover:!text-primary font-semibold">
+                    <Link href="/notificacoes">
+                        Ver todas as notificações
+                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
