@@ -26,6 +26,11 @@ const budgetChartData = {
         { name: 'passagem', value: 26.5, color: '#f97316' },
         { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
     ],
+    salesChannels: [
+        { name: 'Agência', value: 60, color: '#3b82f6' },
+        { name: 'Website', value: 30, color: '#10b981' },
+        { name: 'Indicação', value: 10, color: '#f97316' },
+    ],
     other: [
         { name: 'Outro', value: 50, total: 100, color: '#3b82f6' },
         { name: 'Pendente', value: 50, total: 100, color: '#f97316' },
@@ -82,7 +87,7 @@ export default function DashboardPage() {
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
     const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
 
-    const budgetChartKeys: ('budget' | 'approval' | 'expense' | 'revenue' | 'other')[] = ['budget', 'approval', 'expense', 'revenue', 'other'];
+    const budgetChartKeys: (keyof typeof budgetChartData)[] = ['budget', 'approval', 'salesChannels', 'expense', 'revenue', 'other'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
     const chartData = budgetChartData[activeBudgetKey];
 
@@ -95,6 +100,7 @@ export default function DashboardPage() {
             case 'approval': return 'Índice de Aprovação';
             case 'expense': return 'Despesas por Categoria';
             case 'revenue': return 'Receitas por Categoria';
+            case 'salesChannels': return 'Canais de Venda';
             case 'other': return 'Outro Indicador';
             default: return 'Orçamentos';
         }
@@ -420,3 +426,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
