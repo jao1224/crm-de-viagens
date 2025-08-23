@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -17,6 +18,15 @@ import {
   Camera,
   Luggage,
   HeartPulse,
+  Wallet,
+  WalletCards,
+  Plus,
+  Minus,
+  ArrowRightLeft,
+  CheckCheck,
+  BadgePercent,
+  LineChart,
+  Gem,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -39,6 +49,18 @@ export const accompanimentItems: NavItem[] = [
     { href: '/experiencias', label: 'Experiências Turísticas', icon: Camera },
     { href: '/cruzeiros', label: 'Cruzeiros', icon: Luggage },
     { href: '/seguros', label: 'Seguros', icon: HeartPulse },
+];
+
+export const financialItems: NavItem[] = [
+    { href: '/vendas', label: 'Vendas', icon: Wallet },
+    { href: '/fluxo-caixa', label: 'Fluxo de Caixa', icon: WalletCards },
+    { href: '/receitas', label: 'Receitas', icon: Plus },
+    { href: '/despesas', label: 'Despesas', icon: Minus },
+    { href: '/transferencia', label: 'Transferência', icon: ArrowRightLeft },
+    { href: '/conciliacao', label: 'Conciliação', icon: CheckCheck },
+    { href: '/resumo-mensal', label: 'Resumo Mensal', icon: BadgePercent },
+    { href: '/receita-despesa', label: 'Receita/Despesa', icon: LineChart },
+    { href: '/milhas', label: 'Milhas', icon: Gem },
 ];
 
 export const registrationItems: NavItem[] = [
@@ -110,6 +132,33 @@ export function SimpleDashboardNav() {
                 ))}
             </CollapsibleContent>
         </Collapsible>
+
+        <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className="w-full">
+                 <SidebarMenuButton className="w-full justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                        Financeiro
+                    </span>
+                    <ChevronDown className="h-4 w-4" />
+                 </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 py-1">
+                {financialItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+            </CollapsibleContent>
+        </Collapsible>
+
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
