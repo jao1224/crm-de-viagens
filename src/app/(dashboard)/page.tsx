@@ -10,33 +10,29 @@ import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 const COLORS = ['hsl(var(--chart-1))', '#6b7280']; // Verde e Cinza Escuro
-const COLORS_REVENUE = ['hsl(var(--chart-1))', 'hsl(var(--chart-4))', 'hsl(var(--chart-2))'];
 
-const approvalData = [
-    { name: 'Aprovado', value: 100 },
-];
-
-const budgetData = [
-    { name: 'Aprovado', value: 75 },
-    { name: 'Aguardando', value: 25 },
-];
-
-const revenueByCategoryData = [
-    { name: 'Venda de Passagem', value: 72.7 },
-    { name: 'VISTO PROC. TRABALHO', value: 26.0 },
-    { name: 'passaporte', value: 1.3 },
-];
-const expensesByCategoryData = [
-    { name: 'Pagamento Fornecedor', value: 100 },
-];
+const budgetChartData = {
+    budget: [
+        { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-1))' },
+        { name: 'Aguardando', value: 25, color: '#6b7280' },
+    ],
+    approval: [
+        { name: 'Aprovado', value: 100, color: 'hsl(var(--chart-1))' },
+    ],
+};
 
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
 
 export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
+    const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
+
+    const chartData = budgetChartData[activeChart];
+    const totalValue = chartData.reduce((acc, entry) => acc + entry.value, 0);
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
         return (
@@ -45,45 +41,6 @@ export default function DashboardPage() {
             </text>
         );
     };
-    
-    const renderBudgetLabel = (props: any) => {
-        const { cx, cy, percent, payload } = props;
-        const RADIAN = Math.PI / 180;
-        const radius = props.outerRadius + 20;
-        const x = cx + radius * Math.cos(-props.midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-props.midAngle * RADIAN);
-
-        return (
-            <g>
-                <foreignObject x={x - 45} y={y - 20} width={90} height={40}>
-                    <div xmlns="http://www.w3.org/1999/xhtml" className="text-center">
-                        <div className="bg-white rounded-md px-2 py-0.5 shadow-md border border-gray-200">
-                             <div className="text-xs font-semibold text-gray-800">{payload.name}</div>
-                             <div className="text-sm font-bold text-gray-900">{(percent * 100).toFixed(0)}%</div>
-                        </div>
-                    </div>
-                </foreignObject>
-            </g>
-        );
-    };
-
-    const renderLegend = (props: any) => {
-        const { payload } = props;
-        if (!payload) return null;
-        return (
-            <ul className="flex flex-col space-y-2">
-                {
-                    payload.map((entry: any, index: number) => (
-                        <li key={`item-${index}`} className="flex items-center space-x-2">
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
-                            <span className="text-sm text-gray-600">{entry.value}</span>
-                        </li>
-                    ))
-                }
-            </ul>
-        );
-    }
-
 
   return (
     <div className="relative p-4 sm:p-6">
@@ -134,73 +91,55 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Orçamentos */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="w-full h-[200px] flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={budgetData} 
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={60} 
-                                    innerRadius={40}
-                                    labelLine={false}
-                                    label={renderBudgetLabel}
-                                >
-                                    {budgetData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Índice de Aprovação */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-base text-primary font-semibold">Índice de Aprovação</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="w-full h-[200px] flex items-center justify-between">
-                        <ResponsiveContainer width="50%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={approvalData} 
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={80} 
-                                    labelLine={false}
-                                    label={renderCustomizedLabel}
-                                >
-                                    {approvalData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                        <ResponsiveContainer width="40%" height="100%">
-                           <Legend content={renderLegend} verticalAlign="middle" />
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="flex justify-center gap-2 mt-4">
-                        <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                    </div>
-                </CardContent>
-            </Card>
+          {/* Orçamentos e Índice de Aprovação Combinados */}
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <div className="w-full h-[200px] flex items-center justify-between">
+                      <ResponsiveContainer width="50%" height="100%">
+                          <PieChart>
+                              <Pie 
+                                  data={chartData}
+                                  dataKey="value" 
+                                  nameKey="name" 
+                                  cx="50%" 
+                                  cy="50%" 
+                                  outerRadius={80} 
+                                  innerRadius={60}
+                                  labelLine={false}
+                                  label={renderCustomizedLabel}
+                              >
+                                  {chartData.map((entry, index) => (
+                                      <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                                  ))}
+                              </Pie>
+                          </PieChart>
+                      </ResponsiveContainer>
+                      <div className="w-48 space-y-2">
+                          <button
+                              className={cn(
+                                  "w-full text-left p-2 rounded-md transition-colors",
+                                  activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
+                              )}
+                              onClick={() => setActiveChart('budget')}
+                          >
+                              Orçamentos
+                          </button>
+                          <button
+                              className={cn(
+                                  "w-full text-left p-2 rounded-md transition-colors",
+                                  activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
+                              )}
+                              onClick={() => setActiveChart('approval')}
+                          >
+                              Índice de Aprovação
+                          </button>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
         </div>
         
         {/* Coluna Direita */}
