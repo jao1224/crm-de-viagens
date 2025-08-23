@@ -47,7 +47,7 @@ export default function DashboardPage() {
     
   return (
     <div className="relative p-4 sm:p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
         
         {/* Coluna Esquerda */}
         <div className="xl:col-span-1 flex flex-col gap-6">
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
               </CardHeader>
               <CardContent>
-                  <div className="w-full h-[200px] flex items-center justify-center">
+                  <div className="w-full h-[200px] flex items-center justify-center gap-4">
                       <div className="flex-1 h-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
           </Card>
         </div>
         
-        {/* Coluna Central */}
+        {/* Coluna Direita (antes central) */}
         <div className="xl:col-span-1 flex flex-col gap-6">
            <Card>
                  <CardHeader>
@@ -162,10 +162,7 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-        </div>
-
-        {/* Coluna Direita */}
-        <div className="xl:col-span-1 flex flex-col gap-6">
+            
              <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
