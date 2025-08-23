@@ -99,7 +99,7 @@ export const registrationItems: NavItem[] = [
     { href: '/link-pessoa', label: 'Link Pessoa', icon: Link2 },
     { href: '/conta-bancaria', label: 'Conta Bancária', icon: Landmark },
     { href: '/cartao', label: 'Cartão', icon: CreditCard },
-    { href: '/forma-pagamento', label: 'Forma de Pagamento', icon: Banknote },
+    { href: '/forma-pagamento', 'label': 'Forma de Pagamento', icon: Banknote },
     { href: '/pessoa', label: 'Pessoa', icon: User },
     { href: '/programa', label: 'Programa', icon: Trash2 },
     { href: '/produto-servico', label: 'Produto/Serviço', icon: ShoppingCart },
