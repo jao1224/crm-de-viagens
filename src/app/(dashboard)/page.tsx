@@ -314,7 +314,7 @@ export default function DashboardPage() {
         </Card>
       </div>
       
-       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card className="text-center p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
             <p className="text-2xl font-bold text-primary">R$ 67k</p>
