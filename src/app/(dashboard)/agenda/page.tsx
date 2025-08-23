@@ -344,16 +344,16 @@ const filterOptions: { type: Appointment['type']; label: string; icon: React.Ele
 
 const filterStyles: Record<Appointment['type'], { active: string; inactive: string }> = {
   meeting: { active: 'bg-blue-500 text-white hover:bg-blue-600', inactive: 'bg-card text-foreground hover:bg-muted' },
-  task: { active: 'bg-gray-600 text-white hover:bg-gray-700', inactive: 'bg-card text-foreground hover:bg-muted' },
+  task: { active: 'bg-gray-700 text-white hover:bg-gray-800', inactive: 'bg-card text-foreground hover:bg-muted' },
   birthday: { active: 'bg-pink-500 text-white hover:bg-pink-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   flight: { active: 'bg-cyan-500 text-white hover:bg-cyan-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   hotel: { active: 'bg-amber-500 text-white hover:bg-amber-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   transport: { active: 'bg-orange-500 text-white hover:bg-orange-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   tour: { active: 'bg-teal-500 text-white hover:bg-teal-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   cruise: { active: 'bg-indigo-500 text-white hover:bg-indigo-600', inactive: 'bg-card text-foreground hover:bg-muted' },
-  departure: { active: '', inactive: '' }, // not a filter
-  payment: { active: '', inactive: '' }, // not a filter
-  reminder: { active: '', inactive: '' }, // not a filter
+  departure: { active: 'bg-green-500 text-white hover:bg-green-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  payment: { active: 'bg-yellow-500 text-white hover:bg-yellow-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  reminder: { active: 'bg-purple-500 text-white hover:bg-purple-600', inactive: 'bg-card text-foreground hover:bg-muted' },
 };
 
 
@@ -389,7 +389,7 @@ export default function AgendaPage() {
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
     const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1));
     const [selectedDate, setSelectedDate] = React.useState(new Date(2025, 7, 1));
-    const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>([]);
+    const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>(['meeting', 'task', 'birthday', 'flight', 'hotel', 'transport', 'tour', 'cruise', 'departure', 'payment', 'reminder']);
 
     const toggleFilter = (filter: Appointment['type']) => {
         setActiveFilters(prev =>
@@ -401,7 +401,7 @@ export default function AgendaPage() {
 
     const filteredAppointments = React.useMemo(() => {
         if (activeFilters.length === 0) {
-            return mockAppointments;
+            return [];
         }
         return mockAppointments.filter(app => activeFilters.includes(app.type));
     }, [activeFilters]);
@@ -478,3 +478,6 @@ export default function AgendaPage() {
     </div>
   );
 }
+
+
+    
