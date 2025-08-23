@@ -29,6 +29,11 @@ const expensesChartData = [
     { name: 'Pagamento Fornecedor', value: 100, color: 'hsl(var(--chart-1))' },
 ]
 
+const budgetChartData = [
+    { name: 'Aprovado', value: 75, color: '#8b5cf6' },
+    { name: 'Aguardando', value: 25, color: '#f59e0b' },
+];
+
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
 
 const top10Data = {
@@ -146,164 +151,242 @@ const ProjectCard = ({ project }: { project: Project }) => (
 
 export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
+    const [activeBudgetFilter, setActiveBudgetFilter] = React.useState('Mês');
     
-  return (
-    <div className="space-y-6">
-      <header>
-          <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
-          <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
-      </header>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="font-headline text-primary">Top 10 Clientes</CardTitle>
-                <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
-                      <Button 
-                          size="sm"
-                          variant="ghost"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
-                          onClick={() => setTopClientsFilter('Faturamento')}
-                      >
-                          Faturamento
-                      </Button>
-                      <Button 
-                          size="sm"
-                          variant="ghost"
-                          className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
-                          onClick={() => setTopClientsFilter('Lucro')}
-                      >
-                          Lucro
-                      </Button>
-                </div>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-1 text-sm">
-                    {top10Data.Clientes.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
-                          <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
-                          <div className="text-right">
-                            <span className="font-semibold text-primary">{item.value}</span>
-                            <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
-                          </div>
-                      </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
-        
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="font-headline text-primary">Top 10 Fornecedores</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-1 text-sm">
-                    {top10Data.Fornecedores.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
-                          <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
-                          <div className="text-right">
-                            <span className="font-semibold text-primary">{item.value}</span>
-                            <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
-                          </div>
-                      </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
-      </div>
+    return (
+        <div className="space-y-6">
+            <header>
+                <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
+                <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
+            </header>
 
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-primary">Tarefas para Hoje</CardTitle>
-                <CardDescription>Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
-                <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
-                <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
-                <p className="text-sm">Aproveite para planejar sua semana!</p>
-                <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">4 atrasada(s)</Badge>
-                    <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-primary">Próximos Voos</CardTitle>
-                <CardDescription>Fique de olho nos embarques que se aproximam.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
-                    <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
-                        <div className="text-center">
-                            <p className="font-bold text-lg text-primary">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit'})}</p>
-                            <p className="text-xs text-muted-foreground -mt-1">{new Date(flight.date).toLocaleDateString('pt-BR', {month: 'short'})}</p>
-                        </div>
+            {/* Seção de Orçamentos */}
+            <Card>
+                <CardHeader>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <p className="font-semibold text-foreground">{flight.customer}</p>
-                            <p className="text-sm text-muted-foreground font-medium">{flight.package}</p>
+                            <CardTitle className="font-headline text-[#8b5cf6] text-2xl">Orçamentos</CardTitle>
+                            <CardDescription className="text-base">Análise visual dos seus dados chave.</CardDescription>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Plane className="w-5 h-5 text-primary" />
-                            <Badge variant="outline" className="font-mono text-primary border-primary/20">{flightCodes[index % flightCodes.length]}</Badge>
+                        
+                        {/* Filtros de Período */}
+                        <div className="flex flex-wrap gap-1">
+                            {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                                <Button 
+                                    key={filter} 
+                                    variant={activeBudgetFilter === filter ? 'default' : 'outline'}
+                                    size="sm"
+                                    className={`text-xs h-8 px-3 ${activeBudgetFilter === filter ? 'bg-[#8b5cf6] text-white border-[#8b5cf6]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200'}`}
+                                    onClick={() => setActiveBudgetFilter(filter)}
+                                >
+                                    {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1" />}
+                                    {filter}
+                                </Button>
+                            ))}
                         </div>
                     </div>
-                ))}
-            </CardContent>
-        </Card>
-      </div>
-      
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-primary">Acompanhe seus projetos</CardTitle>
-                <CardDescription>Visão geral do andamento dos seus grupos e viagens.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {mockProjects.map(project => (
-                        <ProjectCard key={project.id} project={project} />
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                </CardHeader>
+                <CardContent>
+                    <div className="w-full h-[300px] flex items-center justify-center gap-8">
+                        <div className="flex-1 h-full flex items-center justify-center">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie 
+                                        data={budgetChartData}
+                                        dataKey="value" 
+                                        nameKey="name" 
+                                        cx="50%" 
+                                        cy="50%" 
+                                        outerRadius={100} 
+                                        innerRadius={60}
+                                        fill="#8b5cf6"
+                                        labelLine={false}
+                                    >
+                                        {budgetChartData.map((entry) => (
+                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        
+                        {/* Legenda */}
+                        <div className="w-48 space-y-4">
+                            {budgetChartData.map((entry) => (
+                                <div key={entry.name} className="flex items-center gap-3">
+                                    <div className="w-4 h-4 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-semibold text-foreground">{entry.name}</span>
+                                        <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    {/* Indicadores de paginação */}
+                    <div className="flex justify-center gap-2 mt-6">
+                        <div className="w-3 h-3 bg-[#8b5cf6] rounded-full"></div>
+                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
 
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <PieChartCard title="Receitas por Categoria" data={revenueChartData} />
-            <PieChartCard title="Despesas por Categoria" data={expensesChartData} />
-       </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-4">
+                        <CardTitle className="font-headline text-primary">Top 10 Clientes</CardTitle>
+                        <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
+                              <Button 
+                                  size="sm"
+                                  variant="ghost"
+                                  className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
+                                  onClick={() => setTopClientsFilter('Faturamento')}
+                              >
+                                  Faturamento
+                              </Button>
+                              <Button 
+                                  size="sm"
+                                  variant="ghost"
+                                  className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-background shadow-sm text-primary' : 'bg-transparent text-muted-foreground'}`}
+                                  onClick={() => setTopClientsFilter('Lucro')}
+                              >
+                                  Lucro
+                              </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-1 text-sm">
+                            {top10Data.Clientes.map((item, index) => (
+                              <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
+                                  <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
+                                  <div className="text-right">
+                                    <span className="font-semibold text-primary">{item.value}</span>
+                                    <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
+                                  </div>
+                              </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+                
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between pb-4">
+                        <CardTitle className="font-headline text-primary">Top 10 Fornecedores</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-1 text-sm">
+                            {top10Data.Fornecedores.map((item, index) => (
+                              <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
+                                  <span className="font-medium text-foreground max-w-[150px] truncate" title={item.name}>{index + 1}. {item.name}</span> 
+                                  <div className="text-right">
+                                    <span className="font-semibold text-primary">{item.value}</span>
+                                    <p className="text-xs text-muted-foreground">{item.sales} venda(s)</p>
+                                  </div>
+                              </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="text-center p-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
-            <p className="text-2xl font-bold text-primary">R$ 67k</p>
-        </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-primary">Tarefas para Hoje</CardTitle>
+                        <CardDescription>Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
+                        <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
+                        <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
+                        <p className="text-sm">Aproveite para planejar sua semana!</p>
+                        <div className="flex gap-2 mt-6">
+                            <Badge variant="destructive">4 atrasada(s)</Badge>
+                            <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
+                        </div>
+                    </CardContent>
+                </Card>
 
-        <Card className="text-center p-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
-            <p className="text-2xl font-bold text-destructive">R$ 60k</p>
-        </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-primary">Próximos Voos</CardTitle>
+                        <CardDescription>Fique de olho nos embarques que se aproximam.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
+                            <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
+                                <div className="text-center">
+                                    <p className="font-bold text-lg text-primary">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit'})}</p>
+                                    <p className="text-xs text-muted-foreground -mt-1">{new Date(flight.date).toLocaleDateString('pt-BR', {month: 'short'})}</p>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-foreground">{flight.customer}</p>
+                                    <p className="text-sm text-muted-foreground font-medium">{flight.package}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Plane className="w-5 h-5 text-primary" />
+                                    <Badge variant="outline" className="font-mono text-primary border-primary/20">{flightCodes[index % flightCodes.length]}</Badge>
+                                </div>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </div>
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline text-primary">Acompanhe seus projetos</CardTitle>
+                    <CardDescription>Visão geral do andamento dos seus grupos e viagens.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {mockProjects.map(project => (
+                            <ProjectCard key={project.id} project={project} />
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
 
-        <Card className="text-center p-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
-            <p className="text-2xl font-bold text-green-600">R$ 67k</p>
-        </Card>
-        
-        <Card className="text-center p-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
-            <p className="text-2xl font-bold text-green-600">R$ 6.6k</p>
-        </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <PieChartCard title="Receitas por Categoria" data={revenueChartData} />
+                <PieChartCard title="Despesas por Categoria" data={expensesChartData} />
+            </div>
 
-        <Card className="text-center p-4">
-            <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
-            <p className="text-2xl font-bold text-primary">R$ 11.1k</p>
-        </Card>
-      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <Card className="text-center p-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
+                    <p className="text-2xl font-bold text-primary">R$ 67k</p>
+                </Card>
 
-       <ChatWidget />
-    </div>
-  );
+                <Card className="text-center p-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
+                    <p className="text-2xl font-bold text-destructive">R$ 60k</p>
+                </Card>
+
+                <Card className="text-center p-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
+                    <p className="text-2xl font-bold text-green-600">R$ 67k</p>
+                </Card>
+                
+                <Card className="text-center p-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
+                    <p className="text-2xl font-bold text-green-600">R$ 6.6k</p>
+                </Card>
+
+                <Card className="text-center p-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
+                    <p className="text-2xl font-bold text-primary">R$ 11.1k</p>
+                </Card>
+            </div>
+
+            <ChatWidget />
+        </div>
+    );
+}
 
     
 
