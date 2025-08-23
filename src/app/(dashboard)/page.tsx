@@ -18,6 +18,10 @@ const budgetChartData = {
     approval: [
         { name: 'Aprovado', value: 100, total: 100, color: '#10b981' },
     ],
+    other: [
+        { name: 'Outro', value: 50, total: 100, color: '#3b82f6' },
+        { name: 'Pendente', value: 50, total: 100, color: '#f97316' },
+    ]
 };
 
 const revenueChartData = [
@@ -31,6 +35,33 @@ const expenseChartData = [
 ];
 
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
+
+const top10Data = {
+  'Clientes': [
+      { name: 'Analine de Albuquerque Linhares', sales: 1, value: '23.766,18' },
+      { name: 'JULIO VENANCIO MENEZES', sales: 1, value: '18.540,00' },
+      { name: 'Lidiane da Silva Seidenfuhss', sales: 1, value: '11.400,00' },
+      { name: 'Davi William da Silveira de Campos', sales: 1, value: '8.700,00' },
+      { name: 'Maria Brandão Silva Gaspar', sales: 1, value: '4.800,00' },
+  ],
+  'Fornecedores': [
+      { name: 'Companhia Aérea X', sales: 15, value: '150.000,00' },
+      { name: 'Rede Hotel Y', sales: 25, value: '120.000,00' },
+      { name: 'Operadora de Turismo Z', sales: 10, value: '95.000,00' },
+      { name: 'Empresa de Transfer W', sales: 30, value: '45.000,00' },
+      { name: 'Seguradora V', sales: 50, value: '30.000,00' },
+  ],
+  'Afiliados': [
+      { name: 'Blog de Viagens A', sales: 5, value: '12.500,00' },
+      { name: 'Influenciador B', sales: 8, value: '11.200,00' },
+      { name: 'Agência Parceira C', sales: 3, value: '9.800,00' },
+      { name: 'Website de Ofertas D', sales: 12, value: '8.100,00' },
+      { name: 'Canal do Youtube E', sales: 4, value: '7.600,00' },
+  ]
+};
+
+type Top10EntityType = keyof typeof top10Data;
+
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -51,8 +82,15 @@ export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('approval');
-    
-    const chartData = budgetChartData[activeChart];
+    const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
+    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(0);
+
+    const budgetChartKeys: ('budget' | 'approval' | 'other')[] = ['budget', 'approval', 'other'];
+    const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
+    const chartData = budgetChartData[activeBudgetKey];
+
+    const top10Entities: Top10EntityType[] = ['Clientes', 'Fornecedores', 'Afiliados'];
+    const currentTop10Data = top10Data[top10EntityType];
     
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
@@ -104,9 +142,9 @@ export default function DashboardPage() {
         </Card>
 
         {/* Card de Top 10 Clientes */}
-        <Card className="h-fit">
+        <Card className="h-fit flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 {top10EntityType}</CardTitle>
                 <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
                       <Button 
                           size="sm"
@@ -124,54 +162,31 @@ export default function DashboardPage() {
                       </Button>
                 </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
                 <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center py-1">
-                        <span className="font-medium text-gray-800">1) Analine de Albuquerque Linhares</span> 
-                        <span className="font-semibold text-right">
-                            1 venda(s) <span className="ml-4 text-blue-600">23.766,18</span>
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center py-1">
-                        <span className="font-medium text-gray-800">2) JULIO VENANCIO MENEZES</span> 
-                        <span className="font-semibold text-right">
-                            1 venda(s) <span className="ml-4 text-blue-600">18.540,00</span>
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center py-1">
-                        <span className="font-medium text-gray-800">3) Lidiane da Silva Seidenfuhss</span> 
-                        <span className="font-semibold text-right">
-                            1 venda(s) <span className="ml-4 text-blue-600">11.400,00</span>
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center py-1">
-                        <span className="font-medium text-gray-800">4) Davi William da Silveira de Campos</span> 
-                        <span className="font-semibold text-right">
-                            1 venda(s) <span className="ml-4 text-blue-600">8.700,00</span>
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center py-1">
-                        <span className="font-medium text-gray-800">5) Maria Brandão Silva Gaspar</span> 
-                        <span className="font-semibold text-right">
-                            1 venda(s) <span className="ml-4 text-blue-600">4.800,00</span>
-                        </span>
-                    </div>
-                </div>
-                
-                {/* Indicadores de paginação */}
-                <div className="flex justify-center gap-2 mt-6">
-                    <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
-                    <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
-                    <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                    {currentTop10Data.map((item, index) => (
+                      <div key={index} className="flex justify-between items-center py-1">
+                          <span className="font-medium text-gray-800">{index + 1}) {item.name}</span> 
+                          <span className="font-semibold text-right">
+                              {item.sales} venda(s) <span className="ml-4 text-blue-600">{item.value}</span>
+                          </span>
+                      </div>
+                    ))}
                 </div>
             </CardContent>
+             {/* Indicadores de paginação */}
+             <div className="flex justify-center items-center gap-2 mt-auto p-4">
+                {top10Entities.map((entity, index) => (
+                  <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={top10EntityType === entity}></button>
+                ))}
+            </div>
         </Card>
         
         {/* Card de Orçamentos/Aprovação */}
-        <Card className="h-fit">
+        <Card className="h-fit flex flex-col">
             <CardHeader className="p-6 space-y-4">
                 <CardTitle className="text-lg text-gray-800 font-semibold">
-                     {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                     {activeBudgetKey === 'budget' ? 'Orçamentos' : activeBudgetKey === 'approval' ? 'Índice de Aprovação' : 'Outro Indicador'}
                 </CardTitle>
                 <div className="flex flex-wrap gap-1">
                     {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
@@ -187,7 +202,7 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </CardHeader>
-            <CardContent className="p-6 pt-0">
+            <CardContent className="p-6 pt-0 flex-grow">
                 <div className="w-full h-[200px] flex items-center justify-center gap-12">
                     <div className="flex-1 h-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
@@ -212,22 +227,28 @@ export default function DashboardPage() {
                     </div>
                     <div className="w-40 space-y-3">
                         <Button 
-                            variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
+                            variant={activeBudgetKey === 'budget' ? 'secondary' : 'ghost'}
                             className="w-full justify-start text-left"
-                            onClick={() => setActiveChart('budget')}
+                            onClick={() => setActiveBudgetChartIndex(0)}
                         >
                             Orçamentos
                         </Button>
                         <Button 
-                            variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
+                             variant={activeBudgetKey === 'approval' ? 'secondary' : 'ghost'}
                             className="w-full justify-start text-left"
-                            onClick={() => setActiveChart('approval')}
+                            onClick={() => setActiveBudgetChartIndex(1)}
                         >
                             Índice de Aprovação
                         </Button>
                     </div>
                 </div>
             </CardContent>
+            {/* Indicadores de paginação para o gráfico */}
+            <div className="flex justify-center items-center gap-2 mt-auto p-4">
+                {budgetChartKeys.map((key, index) => (
+                  <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={activeBudgetChartIndex === index}></button>
+                ))}
+            </div>
         </Card>
 
       </div>
