@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
-import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown } from 'lucide-react';
+import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import React from "react";
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--muted))'];
 const COLORS_REVENUE = ['hsl(var(--chart-1))', 'hsl(var(--chart-4))', 'hsl(var(--chart-2))'];
@@ -26,288 +27,163 @@ const expensesByCategoryData = [
     { name: 'Pagamento Fornecedor', value: 100 },
 ];
 
+const flightCodes = ['7xie9', 't196w', 'sn5ey'];
 
 export default function DashboardPage() {
+    const [activeFilter, setActiveFilter] = React.useState('Mês');
+    const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
 
   return (
-    <div className="p-4 sm:p-6 grid grid-cols-1 xl:grid-cols-3 gap-6">
-      
-      {/* Coluna Esquerda */}
-      <div className="col-span-1 flex flex-col gap-6">
-        {/* Próximos voos */}
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-base">Próximos voos</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {mockAppointments.filter(a => a.type === 'departure').map(flight => (
-                    <div key={flight.id} className="grid grid-cols-[auto,1fr] items-center gap-4">
-                        <span className="text-sm font-semibold">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</span>
-                        <div>
-                            <p className="font-semibold text-sm">{flight.customer}</p>
-                            <p className="text-xs text-muted-foreground">{flight.package}</p>
-                        </div>
-                    </div>
-                ))}
-                <div className="flex gap-2">
-                    <Badge variant="destructive">2 em período de check-in</Badge>
-                    <Badge variant="secondary">46 voos pendentes</Badge>
-                </div>
-            </CardContent>
-        </Card>
+    <div className="relative p-4 sm:p-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         
-        {/* Orçamentos */}
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-base">Orçamentos</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div style={{ width: '100%', height: 200 }}>
-                    <ResponsiveContainer>
-                        <PieChart>
-                            <Pie data={budgetData} dataKey="value" cx="50%" cy="50%" outerRadius={80} strokeWidth={0}>
-                                {budgetData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Legend formatter={(value, entry) => <span className="text-foreground text-sm">{value}</span>} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-            </CardContent>
-        </Card>
+        {/* Coluna Esquerda */}
+        <div className="col-span-1 flex flex-col gap-6">
+          {/* Próximos voos */}
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-base text-gray-800 font-semibold">Próximos voos</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  {mockAppointments.filter(a => a.type === 'departure').map((flight, index) => (
+                      <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
+                          <div className="text-right">
+                              <p className="text-sm text-muted-foreground">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
+                              <p className="text-sm font-semibold">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
+                          </div>
+                          <div>
+                              <p className="font-semibold text-sm">{flight.customer}</p>
+                              <p className="text-xs text-muted-foreground font-semibold">{flight.package}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                              <Plane className="w-4 h-4 text-primary" />
+                              <Badge variant="outline" className="text-primary border-primary">{flightCodes[index % flightCodes.length]}</Badge>
+                          </div>
+                      </div>
+                  ))}
+                  <div className="flex gap-2">
+                      <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
+                      <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
+                  </div>
+              </CardContent>
+          </Card>
+          
+          <div className="flex flex-wrap gap-1">
+            {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                <Button 
+                    key={filter} 
+                    variant={activeFilter === filter ? 'default' : 'outline'}
+                    size="sm"
+                    className={`text-xs h-8 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-white text-gray-700'}`}
+                    onClick={() => setActiveFilter(filter)}
+                >
+                    {filter}
+                </Button>
+            ))}
+          </div>
 
-        {/* Vendas Agentes */}
-        <Card>
-             <CardContent className="pt-6 space-y-4">
-                 <div className="flex items-center justify-between">
-                     <div className="flex items-center gap-2">
-                         <Avatar className="w-10 h-10">
-                            <AvatarImage src="https://i.pinimg.com/736x/c6/33/91/c633913aa268fe47d9dede01ca38eba7.jpg" />
-                            <AvatarFallback>CC</AvatarFallback>
-                         </Avatar>
-                         <div>
-                            <p className="text-sm font-semibold">Casal em Coimbra</p>
-                            <p className="text-xs font-semibold text-green-500">100.00 %</p>
-                         </div>
-                     </div>
-                     <div className="text-right">
-                         <Badge variant="default" className="bg-blue-100 text-blue-600">4 orçamentos</Badge>
-                         <p className="text-sm font-bold mt-1">R$ 48.666,18</p>
-                         <Badge variant="default" className="bg-green-100 text-green-600 mt-1">4 aprovados</Badge>
-                         <p className="text-sm font-bold mt-1">R$ 48.666,18</p>
-                     </div>
-                 </div>
-                 <div className="flex items-center justify-between">
-                     <div className="flex items-center gap-2">
-                         <Avatar className="w-10 h-10">
-                            <AvatarImage src="https://i.pinimg.com/736x/c6/33/91/c633913aa268fe47d9dede01ca38eba7.jpg" />
-                            <AvatarFallback>CD</AvatarFallback>
-                         </Avatar>
-                         <div>
-                            <p className="text-sm font-semibold">Comissões</p>
-                         </div>
-                     </div>
-                     <div className="text-right">
-                         <Badge variant="default" className="bg-blue-100 text-blue-600">0 orçamentos</Badge>
-                         <p className="text-sm font-bold mt-1">R$ 0,00</p>
-                         <Badge variant="default" className="bg-green-100 text-green-600 mt-1">0 aprovados</Badge>
-                         <p className="text-sm font-bold mt-1">R$ 0,00</p>
-                     </div>
-                 </div>
-            </CardContent>
-        </Card>
-        
-        {/* Receitas por Categoria */}
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-base">Receitas por Categoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div style={{ width: '100%', height: 200 }}>
-                    <ResponsiveContainer>
-                        <PieChart>
-                            <Pie data={revenueByCategoryData} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} strokeWidth={0} paddingAngle={5}>
-                                {revenueByCategoryData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS_REVENUE[index % COLORS_REVENUE.length]} />
-                                ))}
-                            </Pie>
-                            <Legend formatter={(value, entry) => <span className="text-foreground text-sm">{value}</span>} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-            </CardContent>
-        </Card>
-
-        {/* Receitas para hoje */}
-        <Card>
-             <CardHeader>
-                <CardTitle className="text-base">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-             <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-8 h-8 mb-2" />
-                <p>Nenhuma receita para o dia de hoje.</p>
-            </CardContent>
-        </Card>
-
-      </div>
-      
-      {/* Coluna Direita */}
-      <div className="col-span-1 xl:col-span-2 flex flex-col gap-6">
-        
-        {/* Tarefas */}
-        <Card>
-             <CardHeader>
-                <CardTitle className="text-base">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-             <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <ListTodo className="w-8 h-8 mb-2" />
-                <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-            </CardContent>
-        </Card>
-
-        {/* Top 10 Clientes */}
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-base">Top 10 Clientes</CardTitle>
-                <Button size="sm">Faturamento</Button>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.570,00</span></span></div>
-                    <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">13.440,00</span></span></div>
-                    <div className="flex justify-between"><span>3) Lidiane da Silva Seidentules</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
-                    <div className="flex justify-between"><span>4) Gerson Wilson de Siqueira Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
-                    <div className="flex justify-between"><span>5) Marla Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Vendas por agente */}
-            <Card>
-                 <CardContent className="pt-6 space-y-4">
-                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                             <Avatar className="w-10 h-10">
-                                <AvatarImage src="https://placehold.co/100x100" />
-                                <AvatarFallback>E</AvatarFallback>
-                             </Avatar>
-                             <div>
-                                <p className="text-sm font-semibold">É o Nosso Quintal</p>
-                                <p className="text-xs font-semibold text-green-500">100.00 %</p>
-                             </div>
-                         </div>
-                         <div className="text-right">
-                             <Badge variant="default" className="bg-blue-100 text-blue-600">1 orçamentos</Badge>
-                             <p className="text-sm font-bold mt-1">R$ 18.450,00</p>
-                             <Badge variant="default" className="bg-green-100 text-green-600 mt-1">1 aprovados</Badge>
-                             <p className="text-sm font-bold mt-1">R$ 18.450,00</p>
-                         </div>
-                     </div>
-                </CardContent>
-            </Card>
-             <Card>
-                 <CardContent className="pt-6 space-y-4">
-                     <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                             <Avatar className="w-10 h-10">
-                                <AvatarImage src="https://placehold.co/100x100" />
-                                <AvatarFallback>M</AvatarFallback>
-                             </Avatar>
-                             <div>
-                                <p className="text-sm font-semibold">Maxshuel</p>
-                                <p className="text-xs font-semibold text-green-500">50.00 %</p>
-                             </div>
-                         </div>
-                         <div className="text-right">
-                             <Badge variant="default" className="bg-blue-100 text-blue-600">2 orçamentos</Badge>
-                             <p className="text-sm font-bold mt-1">R$ 0,00</p>
-                             <Badge variant="default" className="bg-green-100 text-green-600 mt-1">1 aprovados</Badge>
-                             <p className="text-sm font-bold mt-1">R$ 0,00</p>
-                         </div>
-                     </div>
-                </CardContent>
-            </Card>
-        </div>
-
-        {/* Métricas Financeiras */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="col-span-1 md:col-span-2">
-                <CardHeader>
-                    <CardTitle className="text-base text-muted-foreground">Recebido (R$)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-3xl font-bold">67.206,18</p>
-                </CardContent>
-            </Card>
-            <Card className="col-span-1 md:col-span-2">
-                <CardHeader>
-                    <CardTitle className="text-base text-muted-foreground">Pago (R$)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-3xl font-bold">60.582,30</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle className="text-base text-muted-foreground">Faturamento (R$)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-2xl font-bold">67.206,18</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle className="text-base text-muted-foreground">Lucro (R$)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-2xl font-bold">6.623,88</p>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle className="text-base text-muted-foreground">Ticket Médio (R$)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-2xl font-bold">11.186,03</p>
-                </CardContent>
-            </Card>
+          {/* Orçamentos */}
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-base text-gray-800 font-semibold">Orçamentos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <div style={{ width: '100%', height: 200 }}>
+                      <ResponsiveContainer>
+                          <PieChart>
+                              <Pie data={budgetData} dataKey="value" cx="50%" cy="50%" outerRadius={80} innerRadius={60} labelLine={false} label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+                                const RADIAN = Math.PI / 180;
+                                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                return (
+                                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-xs font-bold">
+                                    {`${(percent * 100).toFixed(1)}%`}
+                                </text>
+                                );
+                            }}>
+                                  {budgetData.map((entry, index) => (
+                                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                  ))}
+                              </Pie>
+                              <Legend formatter={(value, entry) => <span className="text-foreground text-sm">{value}</span>} />
+                          </PieChart>
+                      </ResponsiveContainer>
+                  </div>
+                   <div className="flex justify-center gap-2 mt-2">
+                        <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
+                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                   </div>
+              </CardContent>
+          </Card>
         </div>
         
-        {/* Despesas por categoria */}
-         <Card>
-            <CardHeader>
-                <CardTitle className="text-base">Despesas por Categoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div style={{ width: '100%', height: 200 }}>
-                    <ResponsiveContainer>
-                        <PieChart>
-                            <Pie data={expensesByCategoryData} dataKey="value" cx="50%" cy="50%" innerRadius={50} outerRadius={80} strokeWidth={0}>
-                                <Cell fill={'hsl(var(--chart-1))'} />
-                            </Pie>
-                             <Legend formatter={(value, entry) => <span className="text-foreground text-sm">{value}</span>} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-            </CardContent>
-        </Card>
-        
-        {/* Despesas para hoje */}
-         <Card>
-             <CardHeader>
-                <CardTitle className="text-base">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-             <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-8 h-8 mb-2" />
-                <p>Nenhuma despesa para o dia de hoje.</p>
-            </CardContent>
-        </Card>
+        {/* Coluna Direita */}
+        <div className="col-span-1 xl:col-span-2 flex flex-col gap-6">
+          
+          {/* Tarefas */}
+          <Card>
+               <CardHeader>
+                  <CardTitle className="text-base text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+              </CardHeader>
+               <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                  <div className="flex gap-2 mt-6">
+                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                  </div>
+              </CardContent>
+          </Card>
 
+          {/* Top 10 Clientes */}
+          <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                  <CardTitle className="text-base text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
+                   <div className="flex items-center border border-primary rounded-md p-0.5">
+                        <Button 
+                            size="sm"
+                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                            onClick={() => setTopClientsFilter('Faturamento')}
+                        >
+                            Faturamento
+                        </Button>
+                        <Button 
+                            size="sm"
+                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                            onClick={() => setTopClientsFilter('Lucro')}
+                        >
+                            Lucro
+                        </Button>
+                   </div>
+              </CardHeader>
+              <CardContent>
+                  <div className="space-y-2 text-sm">
+                      <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
+                      <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
+                      <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
+                      <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
+                      <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
+                  </div>
+                    <div className="flex justify-center gap-2 mt-4">
+                        <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
+                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                   </div>
+              </CardContent>
+          </Card>
+        </div>
       </div>
+      <Button
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+        size="icon"
+      >
+        <MessageSquare className="h-7 w-7" />
+        <span className="sr-only">Chat</span>
+      </Button>
     </div>
   );
 }
-
-    
