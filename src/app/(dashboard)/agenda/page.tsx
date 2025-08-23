@@ -387,8 +387,8 @@ const FilterToolbar = ({ activeFilters, onFilterToggle }: { activeFilters: Appoi
 
 export default function AgendaPage() {
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
-    const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1));
-    const [selectedDate, setSelectedDate] = React.useState(new Date(2025, 7, 1));
+    const [currentDate, setCurrentDate] = React.useState(new Date());
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>(['meeting', 'task', 'birthday', 'flight', 'hotel', 'transport', 'tour', 'cruise', 'departure', 'payment', 'reminder']);
 
     const toggleFilter = (filter: Appointment['type']) => {
