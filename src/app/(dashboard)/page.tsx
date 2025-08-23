@@ -48,6 +48,7 @@ export default function DashboardPage() {
 
     const renderLegend = (props: any) => {
         const { payload } = props;
+        if (!payload) return null;
         return (
             <ul className="flex flex-col space-y-2">
                 {
@@ -220,5 +221,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
