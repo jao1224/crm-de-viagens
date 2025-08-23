@@ -50,21 +50,33 @@ export function SimpleDashboardNav() {
   const pathname = usePathname();
   return (
     <SidebarMenu>
-        <p className="text-xs font-semibold text-muted-foreground px-4 py-2">Principal</p>
-        {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
-                <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
-                    tooltip={{ children: item.label, side: "right", align: "center" }}
-                >
-                    <item.icon />
-                    <span className="flex-1">{item.label}</span>
-                    {item.badge && <Badge className="bg-red-500 text-white">{item.badge}</Badge>}
-                </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-        ))}
+        <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className="w-full">
+                 <SidebarMenuButton className="w-full justify-between">
+                    <span className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                        Principal
+                    </span>
+                    <ChevronDown className="h-4 w-4" />
+                 </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 py-1">
+                {navItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                            {item.badge && <Badge className="bg-red-500 text-white">{item.badge}</Badge>}
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+            </CollapsibleContent>
+        </Collapsible>
+
 
         <Collapsible className="w-full">
             <CollapsibleTrigger className="w-full">
