@@ -5,36 +5,58 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import { mockAppointments } from '@/lib/mock-data';
+import type { Appointment } from '@/lib/types';
 
-const mockNotifications = [
-    { date: '23/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Roseane Gomes Marques' },
-    { date: '21/08/2025', time: '14:30', message: 'Realizar o check-in da viagem t196w do(a) Horlange Carvalho Azevedo' },
-    { date: '21/08/2025', time: '11:00', message: 'Realizar o check-in da viagem 7xie9 do(a) Kelly Freitas Biagi Tassi' },
-    { date: '20/08/2025', time: '18:00', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
-    { date: '20/08/2025', time: '17:45', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
-    { date: '20/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Pedro Gabriel Damásio do Nascimento' },
-    { date: '18/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Suellen Henrique de Moura' },
-    { date: '18/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Gabriela do Nascimento Oliveira Sales Silva' },
-    { date: '16/08/2025', time: '10:15', message: 'Realizar o check-in da viagem 73gde do(a) Anderson' },
-    { date: '16/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Liliane Feliciano Rocha' },
-    { date: '16/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Laudenir de Carvalho Fonte' },
-    { date: '15/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) ANA PRISCILA PEREIRA CARVALHO' },
-    { date: '13/08/2025', time: '16:00', message: 'Realizar o check-in da viagem 1luie do(a) Emanuel José Carvalho Fortes' },
-    { date: '13/08/2025', time: '16:00', message: 'Realizar o check-in da viagem 1cb0t do(a) Pedro Vieira Lopes' },
-];
+
+const generateNotificationMessage = (appointment: Appointment): string => {
+    switch (appointment.type) {
+        case 'birthday':
+            return `Hoje é aniversário de ${appointment.customer}.`;
+        case 'departure':
+        case 'flight':
+            return `Lembrete de embarque/voo: ${appointment.title} para ${appointment.customer}.`;
+        case 'payment':
+            return `Vencimento de pagamento: ${appointment.title} de ${appointment.customer}.`;
+        case 'meeting':
+            return `Reunião agendada: ${appointment.title} com ${appointment.customer}.`;
+        case 'task':
+             return `Tarefa pendente: ${appointment.title}.`;
+        default:
+            return `Lembrete: ${appointment.title} para ${appointment.customer}.`;
+    }
+};
+
+const notifications = mockAppointments
+    .map(app => ({
+        date: parseISO(app.date),
+        message: generateNotificationMessage(app),
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
 export default function NotificacoesPage() {
     const [startDate, setStartDate] = React.useState<Date | undefined>(new Date(2025, 4, 23));
-    const [endDate, setEndDate] = React.useState<Date | undefined>(new Date(2025, 7, 23));
+    const [endDate, setEndDate] = React.useState<Date | undefined>(new Date(2025, 10, 23));
     
+    const filteredNotifications = notifications.filter(notification => {
+        const notificationDate = notification.date;
+        const start = startDate ? new Date(startDate.setHours(0,0,0,0)) : null;
+        const end = endDate ? new Date(endDate.setHours(23,59,59,999)) : null;
+
+        if (start && notificationDate < start) return false;
+        if (end && notificationDate > end) return false;
+        return true;
+    })
+
+
     return (
         <div className="space-y-6">
             <header>
@@ -65,6 +87,7 @@ export default function NotificacoesPage() {
                                         selected={startDate}
                                         onSelect={setStartDate}
                                         initialFocus
+                                        locale={ptBR}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -90,6 +113,7 @@ export default function NotificacoesPage() {
                                         selected={endDate}
                                         onSelect={setEndDate}
                                         initialFocus
+                                        locale={ptBR}
                                     />
                                 </PopoverContent>
                             </Popover>
@@ -133,9 +157,9 @@ export default function NotificacoesPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {mockNotifications.map((notification, index) => (
+                            {filteredNotifications.map((notification, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="font-medium">{notification.date} às {notification.time}</TableCell>
+                                    <TableCell className="font-medium">{format(notification.date, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}</TableCell>
                                     <TableCell>{notification.message}</TableCell>
                                 </TableRow>
                             ))}
