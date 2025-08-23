@@ -2,25 +2,17 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
-import { Alegreya, Belleza } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 
-const alegreya = Alegreya({ 
+const inter = Inter({ 
   subsets: ['latin'], 
   variable: '--font-sans',
-  display: 'swap',
-});
-
-const belleza = Belleza({
-  subsets: ['latin'],
-  variable: '--font-headline',
-  weight: '400',
-  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'EstateFlow',
-  description: 'Um sistema inteligente de gestão de viagens.',
+  title: 'iddas agência',
+  description: 'Sistema de gestão para agências de viagem.',
 };
 
 export default function RootLayout({
@@ -30,11 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", alegreya.variable, belleza.variable)}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
         <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="light"
+            enableSystem={false}
             disableTransitionOnChange
         >
           {children}
