@@ -94,7 +94,6 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        
         <Card className="h-fit">
             <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
@@ -221,14 +220,14 @@ export default function DashboardPage() {
                     </div>
                     <div className="w-40 space-y-3">
                         <Button 
-                            variant={activeBudgetKey === 'budget' ? 'secondary' : 'ghost'}
+                            variant={activeBudgetChartIndex === 0 ? 'secondary' : 'ghost'}
                             className="w-full justify-start text-left"
                             onClick={() => setActiveBudgetChartIndex(0)}
                         >
                             Orçamentos
                         </Button>
                         <Button 
-                             variant={activeBudgetKey === 'approval' ? 'secondary' : 'ghost'}
+                             variant={activeBudgetChartIndex === 1 ? 'secondary' : 'ghost'}
                             className="w-full justify-start text-left"
                             onClick={() => setActiveBudgetChartIndex(1)}
                         >
@@ -397,7 +396,6 @@ export default function DashboardPage() {
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={80} 
-                                    innerRadius={40}
                                     fill="#8884d8"
                                     labelLine={false}
                                 >
@@ -436,7 +434,6 @@ export default function DashboardPage() {
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={80} 
-                                    innerRadius={40}
                                     fill="#8884d8"
                                     labelLine={false}
                                 >
