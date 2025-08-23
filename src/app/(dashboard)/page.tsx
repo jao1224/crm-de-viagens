@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     const percentage = data.total ? ((value / data.total) * 100).toFixed(0) : value;
     
     return (
-      <div className="bg-white/90 p-2 border border-gray-200 rounded-md shadow-lg backdrop-blur-sm">
+      <div className="bg-white/90 p-2 border border-gray-200 rounded-md shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:border-gray-700">
         <p className="font-semibold">{data.name}</p>
         <p className="font-bold text-lg">{`${value} (${percentage}%)`}</p>
       </div>
@@ -37,6 +37,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   }
   return null;
 };
+
 
 export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
@@ -48,6 +49,22 @@ export default function DashboardPage() {
     
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
+      
+      {/* Filtros de Período */}
+      <div className="flex flex-wrap gap-1">
+        {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+            <Button 
+                key={filter} 
+                variant={activeFilter === filter ? 'default' : 'outline'}
+                size="sm"
+                className={`text-xs h-8 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-white text-gray-700'}`}
+                onClick={() => setActiveFilter(filter)}
+            >
+                {filter}
+            </Button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Coluna da Esquerda */}
@@ -81,76 +98,6 @@ export default function DashboardPage() {
           </Card>
           
           <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                    <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
-                    <div className="flex items-center border border-primary rounded-md p-0.5">
-                          <Button 
-                              size="sm"
-                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                              onClick={() => setTopClientsFilter('Faturamento')}
-                          >
-                              Faturamento
-                          </Button>
-                          <Button 
-                              size="sm"
-                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                              onClick={() => setTopClientsFilter('Lucro')}
-                          >
-                              Lucro
-                          </Button>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
-                        <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
-                        <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
-                        <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
-                        <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
-                    </div>
-                      <div className="flex justify-center gap-2 mt-4">
-                          <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
-                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                    </div>
-                </CardContent>
-            </Card>
-
-        </div>
-
-        {/* Coluna da Direita */}
-        <div className="flex flex-col gap-6">
-          <Card>
-              <CardHeader>
-                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
-                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                  <div className="flex gap-2 mt-6">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
-                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
-                  </div>
-              </CardContent>
-          </Card>
-          
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap gap-1">
-              {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                  <Button 
-                      key={filter} 
-                      variant={activeFilter === filter ? 'default' : 'outline'}
-                      size="sm"
-                      className={`text-xs h-8 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-white text-gray-700'}`}
-                      onClick={() => setActiveFilter(filter)}
-                  >
-                      {filter}
-                  </Button>
-              ))}
-            </div>
-
-            <Card>
                 <CardHeader>
                     <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
                 </CardHeader>
@@ -200,7 +147,61 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-          </div>
+
+        </div>
+
+        {/* Coluna da Direita */}
+        <div className="flex flex-col gap-6">
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                  <div className="flex gap-2 mt-6">
+                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                  </div>
+              </CardContent>
+          </Card>
+          
+          <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
+                    <div className="flex items-center border border-primary rounded-md p-0.5">
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Faturamento')}
+                          >
+                              Faturamento
+                          </Button>
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Lucro')}
+                          >
+                              Lucro
+                          </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2 text-sm">
+                        <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
+                        <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
+                        <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
+                        <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
+                        <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
+                    </div>
+                      <div className="flex justify-center gap-2 mt-4">
+                          <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
       </div>
       
