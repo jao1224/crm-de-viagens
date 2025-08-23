@@ -22,17 +22,22 @@ export function ChatWidget() {
     if (!input.trim()) return;
 
     const novaMsg: Mensagem = { autor: "user", texto: input };
-    setMensagens([...mensagens, novaMsg]);
-
-    // simulação de resposta automática
-    setTimeout(() => {
-      setMensagens((prev) => [
-        ...prev,
-        { autor: "bot", texto: "Entendi sua dúvida, logo retorno com mais detalhes!" },
-      ]);
-    }, 1000);
-
+    setMensagens((prev) => [...prev, novaMsg]);
     setInput("");
+
+    // Responder apenas às mensagens do usuário para evitar loops
+    setTimeout(() => {
+        setMensagens((prev) => {
+            const ultima = prev[prev.length - 1];
+            if (ultima && ultima.autor === 'user') {
+                return [
+                    ...prev,
+                    { autor: "bot", texto: "Entendi sua dúvida, logo retorno com mais detalhes!" },
+                ];
+            }
+            return prev;
+        });
+    }, 1000);
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
