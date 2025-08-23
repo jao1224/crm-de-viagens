@@ -171,7 +171,7 @@ export default function CotacoesPage() {
       <Card>
         <CardContent className="p-3">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground px-1">Cliente</label>
               <Select>
                 <SelectTrigger className="h-9">
@@ -182,12 +182,12 @@ export default function CotacoesPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground px-1">Tag/Identificador</label>
               <Input placeholder="Tag ou Identificador" className="h-9" />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground px-1">Período</label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-muted-foreground px-1">Período da Cotação</label>
                {isClient && <div className="flex items-center gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -223,7 +223,7 @@ export default function CotacoesPage() {
                 </Popover>
               </div>}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground px-1">Usuário</label>
               <Select>
                 <SelectTrigger className="h-9">
@@ -259,5 +259,3 @@ export default function CotacoesPage() {
     </div>
   );
 }
-
-    
