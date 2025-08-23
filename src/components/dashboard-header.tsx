@@ -22,7 +22,7 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-primary px-4 md:px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
-        <h1 className="font-bold text-xl text-primary-foreground">No Meio do Mundo</h1>
+        <h1 className="font-bold text-xl text-primary-foreground">NoMeioDoMundo</h1>
       </div>
       
       {/* Navegação Principal do Header (visível em telas maiores) */}
