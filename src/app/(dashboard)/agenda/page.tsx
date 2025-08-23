@@ -62,9 +62,9 @@ const eventTypeMapping: Record<Appointment['type'], { bgClass: string; textColor
     },
     task: {
         label: 'Tarefa',
-        bgClass: 'bg-gray-500/10',
+        bgClass: 'bg-gray-600/10',
         textColorClass: 'text-gray-700 dark:text-gray-400',
-        borderColorClass: 'border-gray-500',
+        borderColorClass: 'border-gray-600',
     },
     birthday: {
         label: 'Aniversário',
@@ -343,14 +343,14 @@ const filterOptions: { type: Appointment['type']; label: string; icon: React.Ele
 ];
 
 const filterStyles: Record<Appointment['type'], { active: string; inactive: string }> = {
-  meeting: { active: 'bg-blue-100 dark:bg-blue-800/50 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700', inactive: 'hover:bg-blue-50 dark:hover:bg-blue-900/50' },
-  task: { active: 'bg-gray-200 dark:bg-gray-800/50 text-gray-800 dark:text-gray-300 border-gray-400 dark:border-gray-600', inactive: 'hover:bg-gray-100 dark:hover:bg-gray-800/50' },
-  birthday: { active: 'bg-pink-100 dark:bg-pink-800/50 text-pink-700 dark:text-pink-300 border-pink-300 dark:border-pink-700', inactive: 'hover:bg-pink-50 dark:hover:bg-pink-900/50' },
-  flight: { active: 'bg-cyan-100 dark:bg-cyan-800/50 text-cyan-700 dark:text-cyan-300 border-cyan-300 dark:border-cyan-700', inactive: 'hover:bg-cyan-50 dark:hover:bg-cyan-900/50' },
-  hotel: { active: 'bg-amber-100 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700', inactive: 'hover:bg-amber-50 dark:hover:bg-amber-900/50' },
-  transport: { active: 'bg-orange-100 dark:bg-orange-800/50 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700', inactive: 'hover:bg-orange-50 dark:hover:bg-orange-900/50' },
-  tour: { active: 'bg-teal-100 dark:bg-teal-800/50 text-teal-700 dark:text-teal-300 border-teal-300 dark:border-teal-700', inactive: 'hover:bg-teal-50 dark:hover:bg-teal-900/50' },
-  cruise: { active: 'bg-indigo-100 dark:bg-indigo-800/50 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700', inactive: 'hover:bg-indigo-50 dark:hover:bg-indigo-900/50' },
+  meeting: { active: 'bg-blue-500 text-white hover:bg-blue-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  task: { active: 'bg-gray-600 text-white hover:bg-gray-700', inactive: 'bg-card text-foreground hover:bg-muted' },
+  birthday: { active: 'bg-pink-500 text-white hover:bg-pink-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  flight: { active: 'bg-cyan-500 text-white hover:bg-cyan-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  hotel: { active: 'bg-amber-500 text-white hover:bg-amber-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  transport: { active: 'bg-orange-500 text-white hover:bg-orange-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  tour: { active: 'bg-teal-500 text-white hover:bg-teal-600', inactive: 'bg-card text-foreground hover:bg-muted' },
+  cruise: { active: 'bg-indigo-500 text-white hover:bg-indigo-600', inactive: 'bg-card text-foreground hover:bg-muted' },
   departure: { active: '', inactive: '' }, // not a filter
   payment: { active: '', inactive: '' }, // not a filter
   reminder: { active: '', inactive: '' }, // not a filter
@@ -367,7 +367,7 @@ const FilterToolbar = ({ activeFilters, onFilterToggle }: { activeFilters: Appoi
                         variant="outline"
                         size="sm"
                         className={cn(
-                          "shadow-sm transition-colors",
+                          "shadow-sm transition-colors border",
                           activeFilters.includes(type) ? filterStyles[type].active : filterStyles[type].inactive
                         )}
                         onClick={() => onFilterToggle(type)}
