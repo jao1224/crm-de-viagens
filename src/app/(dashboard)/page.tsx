@@ -533,7 +533,7 @@ export default function DashboardPage() {
                 <span className="sr-only">Chat</span>
             </Button>
         </SheetTrigger>
-        <SheetContent side="bottom" className="flex flex-col h-[80vh]">
+        <SheetContent side="right" className="flex flex-col h-full w-[400px]">
             <SheetHeader className="p-4 border-b">
                 <SheetTitle>Assistente Virtual</SheetTitle>
             </SheetHeader>
