@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, MoreHorizontal, Link as LinkIcon, Filter, Eye, Paperclip, Pencil, CheckCircle2 } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreHorizontal, Link as LinkIcon, Filter, Eye, Paperclip, Pencil, CheckCircle2, Copy, ExternalLink, X } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,6 +15,7 @@ import type { Quote } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 const statusConfig: { [key in Quote['status']]: { title: string; borderColor: string; bgColor: string; textColor: string; } } = {
   aguardando: { title: 'AGUARDANDO', borderColor: 'border-gray-500', bgColor: 'bg-gray-100 dark:bg-gray-800/50', textColor: 'text-gray-600 dark:text-gray-400' },
@@ -111,10 +112,61 @@ const QuoteColumn = ({
   );
 };
 
+const LinkDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-3xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Link para Solicitação de Cotação</DialogTitle>
+                     <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Fechar</span>
+                    </DialogClose>
+                </DialogHeader>
+                <div className="space-y-6 pt-4">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Link principal da Agência</h3>
+                        <p className="text-blue-600 dark:text-blue-400 mt-1 mb-4">https://agencia.iddas.com.br/so/onrwpt6h</p>
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={() => navigator.clipboard.writeText('https://agencia.iddas.com.br/so/onrwpt6h')}>
+                                <Copy className="mr-2 h-4 w-4" />
+                                Copiar link
+                            </Button>
+                            <a href="https://agencia.iddas.com.br/so/onrwpt6h" target="_blank" rel="noopener noreferrer">
+                                <Button variant="outline">
+                                    <ExternalLink className="mr-2 h-4 w-4" />
+                                    Abrir em nova aba
+                                </Button>
+                            </a>
+                        </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 className="font-semibold text-foreground">Crie novos links vinculados a afiliados e/ou canais de vendas.</h4>
+                            <Button className="mt-2">Criar novos Links</Button>
+                        </div>
+                         <div>
+                            <h4 className="font-semibold text-foreground">Personalize o formulário de solicitação e adicione novas informações.</h4>
+                            <Button className="mt-2">Personalizar o Formulário</Button>
+                        </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                        Os links são fixos, utilize-os em suas redes sociais, em campanhas de marketing, enviando diretamente ao cliente e também enviando pelo seu site através de POST ou iFrame. Se desejar, utilize um encurtador de URL para obter dados estatísticos.
+                    </p>
+                </div>
+                 <DialogFooter className="mt-4">
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 
 export default function CotacoesPage() {
   const [date, setDate] = React.useState<{ from: Date | undefined; to: Date | undefined } | undefined>();
-  const [isClient, setIsClient] = React.useState(false)
+  const [isClient, setIsClient] = React.useState(false);
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = React.useState(false);
   
   useEffect(() => {
     setDate({
@@ -160,7 +212,7 @@ export default function CotacoesPage() {
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-primary">Cotações</h1>
         <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => setIsLinkDialogOpen(true)}>
                 <LinkIcon className="mr-2 h-4 w-4" />
                 Links
             </Button>
@@ -255,6 +307,7 @@ export default function CotacoesPage() {
             />
         ))}
       </div>
+      <LinkDialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen} />
     </div>
   );
 }
