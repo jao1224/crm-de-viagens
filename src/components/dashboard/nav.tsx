@@ -69,5 +69,3 @@ export function SimpleDashboardNav() {
     </SidebarMenu>
   );
 }
-
-    

@@ -10,10 +10,13 @@ export const mockAppointments: Appointment[] = [
 ];
 
 export const mockQuotes: Quote[] = [
-  { id: '3sah1', date: '22/08', client: { name: 'Cliente não informado', avatarUrl: 'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg' }, value: 0, status: 'aguardando' },
-  { id: '5chjn', date: '22/08', client: { name: 'ADEILSON', avatarUrl: 'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg' }, value: 0, status: 'aprovado' },
-  { id: 'bdchj', date: '22/08', client: { name: 'JULIO VENANCIO MENEZES', avatarUrl: 'https://i.pinimg.com/564x/3b/b8/b3/3bb8b3b7e3f8b8e0a3a6a1b248f2a5e8.jpg' }, value: 18540, status: 'aprovado' },
-  { id: 'cfgq3', date: '05/08', client: { name: 'Analine de Albuquerque Linhares', avatarUrl: 'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg' }, value: 23766.18, status: 'aprovado' },
-  { id: '07e6b', date: '05/08', client: { name: 'Maria Brandão Silva Gaspar', avatarUrl: 'https://i.pinimg.com/564x/d9/56/9b/d9569bbed4393e2ceb1af7ba64fdf86a.jpg' }, value: 4800, status: 'aprovado' },
-  { id: '8a4wl', date: '05/08', client: { name: 'Lidiane da Silva Seidenfuhss', avatarUrl: 'https://i.pinimg.com/564x/3b/b8/b3/3bb8b3b7e3f8b8e0a3a6a1b248f2a5e8.jpg' }, value: 11400, status: 'aprovado' },
+  { id: '3sah1', date: '22/08', client: { name: 'Cliente não informado', avatarUrl: 'https://placehold.co/32x32.png' }, value: 0, status: 'aguardando' },
+  { id: '1b2j3', date: '22/08', client: { name: 'João Silva', avatarUrl: 'https://placehold.co/32x32.png' }, value: 1500, status: 'em-cotacao' },
+  { id: '4k5l6', date: '21/08', client: { name: 'Maria Pereira', avatarUrl: 'https://placehold.co/32x32.png' }, value: 3200, status: 'aguardando-cliente' },
+  { id: '5chjn', date: '22/08', client: { name: 'ADEILSON', avatarUrl: 'https://placehold.co/32x32.png' }, value: 0, status: 'aprovado' },
+  { id: 'bdchj', date: '22/08', client: { name: 'JULIO VENANCIO MENEZES', avatarUrl: 'https://placehold.co/32x32.png' }, value: 18540, status: 'aprovado' },
+  { id: 'cfgq3', date: '05/08', client: { name: 'Analine de Albuquerque Linhares', avatarUrl: 'https://placehold.co/32x32.png' }, value: 23766.18, status: 'aprovado' },
+  { id: '07e6b', date: '05/08', client: { name: 'Maria Brandão Silva Gaspar', avatarUrl: 'https://placehold.co/32x32.png' }, value: 4800, status: 'aprovado' },
+  { id: '8a4wl', date: '05/08', client: { name: 'Lidiane da Silva Seidenfuhss', avatarUrl: 'https://placehold.co/32x32.png' }, value: 11400, status: 'aprovado' },
+  { id: '9p8o7', date: '19/08', client: { name: 'Carlos Souza', avatarUrl: 'https://placehold.co/32x32.png' }, value: 5000, status: 'reprovado' },
 ];
