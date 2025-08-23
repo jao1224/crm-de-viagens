@@ -81,9 +81,8 @@ const CustomTooltip = ({ active, payload }: any) => {
 export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
-    const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('approval');
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
-    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(0);
+    const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
 
     const budgetChartKeys: ('budget' | 'approval' | 'other')[] = ['budget', 'approval', 'other'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
@@ -96,7 +95,6 @@ export default function DashboardPage() {
     <div className="relative p-4 sm:p-6 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
         
-        {/* Card de Tarefas */}
         <Card className="h-fit">
             <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
@@ -112,7 +110,6 @@ export default function DashboardPage() {
             </CardContent>
         </Card>
 
-        {/* Card de Próximos Voos */}
         <Card className="h-fit">
             <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
@@ -141,7 +138,6 @@ export default function DashboardPage() {
             </CardContent>
         </Card>
 
-        {/* Card de Top 10 Clientes */}
         <Card className="h-fit flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
                 <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 {top10EntityType}</CardTitle>
@@ -174,7 +170,6 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </CardContent>
-             {/* Indicadores de paginação */}
              <div className="flex justify-center items-center gap-2 mt-auto p-4">
                 {top10Entities.map((entity, index) => (
                   <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={top10EntityType === entity}></button>
@@ -182,7 +177,6 @@ export default function DashboardPage() {
             </div>
         </Card>
         
-        {/* Card de Orçamentos/Aprovação */}
         <Card className="h-fit flex flex-col">
             <CardHeader className="p-6 space-y-4">
                 <CardTitle className="text-lg text-gray-800 font-semibold">
@@ -243,7 +237,6 @@ export default function DashboardPage() {
                     </div>
                 </div>
             </CardContent>
-            {/* Indicadores de paginação para o gráfico */}
             <div className="flex justify-center items-center gap-2 mt-auto p-4">
                 {budgetChartKeys.map((key, index) => (
                   <button key={key} onClick={() => setActiveBudgetChartIndex(index)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={activeBudgetChartIndex === index}></button>
