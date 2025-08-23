@@ -243,7 +243,7 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                             <div className="space-y-2">
                                 <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
                                  <div className="relative">
-                                    <Input id="time" name="time" type="time" defaultValue="12:00" className="pr-8"/>
+                                    <Input id="time" name="time" type="time" defaultValue={format(new Date(), 'HH:mm')} className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
