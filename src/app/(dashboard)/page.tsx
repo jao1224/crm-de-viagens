@@ -49,10 +49,10 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         {/* Coluna da Esquerda */}
-        <div className="flex flex-col gap-6 md:w-1/2">
+        <div className="flex flex-col gap-6">
           {/* Próximos voos */}
           <Card>
               <CardHeader>
@@ -150,7 +150,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Coluna da Direita */}
-        <div className="flex flex-col gap-6 md:w-1/2">
+        <div className="flex flex-col gap-6">
           {/* Tarefas para hoje */}
           <Card>
               <CardHeader>
