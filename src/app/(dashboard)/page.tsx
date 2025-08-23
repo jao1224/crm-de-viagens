@@ -14,9 +14,8 @@ import React from "react";
 const COLORS = ['hsl(var(--chart-1))', '#6b7280']; // Verde e Cinza Escuro
 const COLORS_REVENUE = ['hsl(var(--chart-1))', 'hsl(var(--chart-4))', 'hsl(var(--chart-2))'];
 
-const budgetData = [
-    { name: 'Aprovado', value: 85.7 },
-    { name: 'Aguardando', value: 14.3 }
+const approvalData = [
+    { name: 'Aprovado', value: 100 },
 ];
 const revenueByCategoryData = [
     { name: 'Venda de Passagem', value: 72.7 },
@@ -34,14 +33,9 @@ export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
-        const RADIAN = Math.PI / 180;
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
         return (
-            <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
-                {`${(percent * 100).toFixed(1)}%`}
+            <text x={cx} y={cy} fill="white" textAnchor="middle" dominantBaseline="central" className="text-lg font-bold">
+                {`${(percent * 100).toFixed(0)}%`}
             </text>
         );
     };
@@ -113,33 +107,31 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Orçamentos */}
+          {/* Índice de Aprovação */}
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
+                    <CardTitle className="text-base text-primary font-semibold">Índice de Aprovação</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="w-full h-[200px] flex items-center">
-                        <ResponsiveContainer width="60%" height="100%">
+                    <div className="w-full h-[200px] flex items-center justify-between">
+                        <ResponsiveContainer width="50%" height="100%">
                             <PieChart>
                                 <Pie 
-                                    data={budgetData} 
+                                    data={approvalData} 
                                     dataKey="value" 
                                     nameKey="name" 
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={80} 
-                                    innerRadius={40}
                                     labelLine={false}
                                     label={renderCustomizedLabel}
                                 >
-                                    {budgetData.map((entry, index) => (
+                                    {approvalData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
                                     ))}
                                 </Pie>
                             </PieChart>
                         </ResponsiveContainer>
-                        <div className="w-px bg-gray-200 h-20 mx-4"></div>
                         <ResponsiveContainer width="40%" height="100%">
                            <Legend content={renderLegend} verticalAlign="middle" />
                         </ResponsiveContainer>
@@ -221,6 +213,8 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
 
