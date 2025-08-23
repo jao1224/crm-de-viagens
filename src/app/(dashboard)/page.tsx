@@ -42,8 +42,7 @@ export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
-    const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-
+    
     const chartData = budgetChartData[activeChart];
     const chartTitle = activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação';
     
@@ -81,91 +80,7 @@ export default function DashboardPage() {
               </CardContent>
           </Card>
           
-          <div className="flex flex-wrap gap-1">
-            {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                <Button 
-                    key={filter} 
-                    variant={activeFilter === filter ? 'default' : 'outline'}
-                    size="sm"
-                    className={`text-xs h-8 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-white text-gray-700'}`}
-                    onClick={() => setActiveFilter(filter)}
-                >
-                    {filter}
-                </Button>
-            ))}
-          </div>
-          
           <Card>
-              <CardHeader>
-                  <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div className="w-full h-[200px] flex items-center justify-center gap-4">
-                      <div className="flex-1 h-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={chartData}
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={80} 
-                                    fill="#8884d8"
-                                    labelLine={false}
-                                >
-                                    {chartData.map((entry) => (
-                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                      <div className="w-48 space-y-2 pl-4">
-                          <button
-                              className={cn(
-                                  "w-full text-left p-2 rounded-md transition-colors text-sm",
-                                  activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
-                              )}
-                              onClick={() => setActiveChart('budget')}
-                          >
-                              Orçamentos
-                          </button>
-                          <button
-                              className={cn(
-                                  "w-full text-left p-2 rounded-md transition-colors text-sm",
-                                  activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
-                              )}
-                              onClick={() => setActiveChart('approval')}
-                          >
-                              Índice de Aprovação
-                          </button>
-                      </div>
-                  </div>
-              </CardContent>
-          </Card>
-        </div>
-
-        {/* Coluna da Direita */}
-        <div className="flex flex-col gap-6">
-          <Card>
-              <CardHeader>
-                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
-                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                  <div className="flex gap-2 mt-6">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
-                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
-                  </div>
-              </CardContent>
-          </Card>
-
-          <div className="relative -mt-[10.5rem]">
-            <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
                     <div className="flex items-center border border-primary rounded-md p-0.5">
@@ -197,6 +112,91 @@ export default function DashboardPage() {
                           <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
                           <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
                           <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
+
+        </div>
+
+        {/* Coluna da Direita */}
+        <div className="flex flex-col gap-6">
+          <Card>
+              <CardHeader>
+                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                  <div className="flex gap-2 mt-6">
+                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                  </div>
+              </CardContent>
+          </Card>
+          
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap gap-1">
+              {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                  <Button 
+                      key={filter} 
+                      variant={activeFilter === filter ? 'default' : 'outline'}
+                      size="sm"
+                      className={`text-xs h-8 ${activeFilter === filter ? 'bg-primary text-primary-foreground' : 'bg-white text-gray-700'}`}
+                      onClick={() => setActiveFilter(filter)}
+                  >
+                      {filter}
+                  </Button>
+              ))}
+            </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="w-full h-[200px] flex items-center justify-center gap-4">
+                        <div className="flex-1 h-full">
+                          <ResponsiveContainer width="100%" height="100%">
+                              <PieChart>
+                                  <Pie 
+                                      data={chartData}
+                                      dataKey="value" 
+                                      nameKey="name" 
+                                      cx="50%" 
+                                      cy="50%" 
+                                      outerRadius={80} 
+                                      fill="#8884d8"
+                                      labelLine={false}
+                                  >
+                                      {chartData.map((entry) => (
+                                          <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                      ))}
+                                  </Pie>
+                                  <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                              </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="w-48 space-y-2 pl-4">
+                            <button
+                                className={cn(
+                                    "w-full text-left p-2 rounded-md transition-colors text-sm",
+                                    activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
+                                )}
+                                onClick={() => setActiveChart('budget')}
+                            >
+                                Orçamentos
+                            </button>
+                            <button
+                                className={cn(
+                                    "w-full text-left p-2 rounded-md transition-colors text-sm",
+                                    activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
+                                )}
+                                onClick={() => setActiveChart('approval')}
+                            >
+                                Índice de Aprovação
+                            </button>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
