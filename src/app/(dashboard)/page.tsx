@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
-import { ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -32,7 +32,6 @@ export default function DashboardPage() {
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
 
     const chartData = budgetChartData[activeChart];
-    const totalValue = chartData.reduce((acc, entry) => acc + entry.value, 0);
 
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
         return (
@@ -107,7 +106,6 @@ export default function DashboardPage() {
                                   cx="50%" 
                                   cy="50%" 
                                   outerRadius={80} 
-                                  innerRadius={60}
                                   labelLine={false}
                                   label={renderCustomizedLabel}
                               >
