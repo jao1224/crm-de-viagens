@@ -49,6 +49,10 @@ export function DashboardHeader() {
       </nav>
 
       <div className="ml-auto flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="text-muted-foreground">
+          <Bell className="h-5 w-5" />
+          <span className="sr-only">Notificações</span>
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
              <div className="flex items-center gap-2 cursor-pointer">
