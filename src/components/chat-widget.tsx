@@ -68,7 +68,7 @@ export function ChatWidget() {
           </div>
 
           {/* Mensagens */}
-          <div className="flex-1 p-3 overflow-y-auto h-80 space-y-3">
+          <div className="flex-1 p-3 overflow-y-auto max-h-80 space-y-3">
             {mensagens.map((msg, i) => (
               <div
                 key={i}
