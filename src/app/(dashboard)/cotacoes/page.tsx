@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -113,11 +113,15 @@ const QuoteColumn = ({
 
 
 export default function CotacoesPage() {
-  const [date, setDate] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
-    from: new Date(2025, 5, 24),
-    to: new Date(2025, 7, 23),
-  });
+  const [date, setDate] = React.useState<{ from: Date | undefined; to: Date | undefined } | undefined>();
   
+  useEffect(() => {
+    setDate({
+      from: new Date(2025, 5, 24),
+      to: new Date(2025, 7, 23),
+    });
+  }, []);
+
   const [quotes, setQuotes] = React.useState<Quote[]>(mockQuotes);
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>, quoteId: string) => {
@@ -188,14 +192,14 @@ export default function CotacoesPage() {
                   <PopoverTrigger asChild>
                     <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date.from ? format(date.from, 'dd/MM/yy') : <span>Início</span>}
+                      {date?.from ? format(date.from, 'dd/MM/yy') : <span>Início</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={date.from}
-                      onSelect={(day) => setDate(prev => ({...prev, from: day}))}
+                      selected={date?.from}
+                      onSelect={(day) => setDate(prev => prev ? {...prev, from: day} : {from: day, to: undefined})}
                       locale={ptBR}
                     />
                   </PopoverContent>
@@ -204,14 +208,14 @@ export default function CotacoesPage() {
                   <PopoverTrigger asChild>
                     <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date.to ? format(date.to, 'dd/MM/yy') : <span>Fim</span>}
+                      {date?.to ? format(date.to, 'dd/MM/yy') : <span>Fim</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
-                      selected={date.to}
-                      onSelect={(day) => setDate(prev => ({...prev, to: day}))}
+                      selected={date?.to}
+                      onSelect={(day) => setDate(prev => prev ? {...prev, to: day} : {from: undefined, to: day})}
                       locale={ptBR}
                     />
                   </PopoverContent>
