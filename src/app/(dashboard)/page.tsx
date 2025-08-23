@@ -209,52 +209,54 @@ export default function DashboardPage() {
                      {getChartTitle()}
                 </CardTitle>
                 {activeFilter === 'Personalizado' ? (
-                    <div className="flex items-center justify-center border rounded-md">
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className={cn(
-                                        "justify-start text-left font-normal w-full h-9",
-                                        !dateRange?.from && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {dateRange?.from ? format(dateRange.from, "dd/MM/y") : <span>Data inicial</span>}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    initialFocus
-                                    mode="single"
-                                    selected={dateRange?.from}
-                                    onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                        <span className="text-muted-foreground mx-2">até</span>
-                         <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className={cn(
-                                        "justify-start text-left font-normal w-full h-9",
-                                        !dateRange?.to && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {dateRange?.to ? format(dateRange.to, "dd/MM/y") : <span>Data final</span>}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    initialFocus
-                                    mode="single"
-                                    selected={dateRange?.to}
-                                    onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
-                                />
-                            </PopoverContent>
-                        </Popover>
+                    <div className="flex items-center justify-center">
+                        <div className="flex items-center border rounded-md p-1">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className={cn(
+                                            "justify-start text-left font-normal h-7 px-2",
+                                            !dateRange?.from && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {dateRange?.from ? format(dateRange.from, "dd/MM/y") : <span>Data inicial</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="single"
+                                        selected={dateRange?.from}
+                                        onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            <span className="text-muted-foreground mx-2 text-sm">até</span>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className={cn(
+                                            "justify-start text-left font-normal h-7 px-2",
+                                            !dateRange?.to && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {dateRange?.to ? format(dateRange.to, "dd/MM/y") : <span>Data final</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="single"
+                                        selected={dateRange?.to}
+                                        onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                     </div>
                 ) : (
                     <div className="flex flex-wrap gap-1">
