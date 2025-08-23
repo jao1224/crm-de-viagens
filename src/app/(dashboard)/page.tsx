@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     return (
       <div className="bg-white p-2 border border-gray-200 rounded-md shadow-lg">
         <p className="font-semibold">{data.name}</p>
-        <p className="font-bold text-lg">{`${data.value} (${percentage}%)`}</p>
+        <p className="font-bold text-lg">{`${payload[0].value} (${percentage}%)`}</p>
       </div>
     );
   }
@@ -47,10 +47,10 @@ export default function DashboardPage() {
     
   return (
     <div className="relative p-4 sm:p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Coluna Esquerda */}
-        <div className="xl:col-span-1 flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {/* Próximos voos */}
           <Card>
               <CardHeader>
@@ -111,6 +111,7 @@ export default function DashboardPage() {
                                     cx="50%" 
                                     cy="50%" 
                                     outerRadius={80} 
+                                    fill="#8884d8"
                                     labelLine={false}
                                 >
                                     {chartData.map((entry) => (
@@ -146,8 +147,8 @@ export default function DashboardPage() {
           </Card>
         </div>
         
-        {/* Coluna Direita (antes central) */}
-        <div className="xl:col-span-1 flex flex-col gap-6">
+        {/* Coluna Direita */}
+        <div className="flex flex-col gap-6">
            <Card>
                  <CardHeader>
                     <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
