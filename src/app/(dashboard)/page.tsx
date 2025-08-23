@@ -5,73 +5,46 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
-import { ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-const COLORS = ['hsl(var(--chart-1))', '#6b7280']; // Verde e Cinza Escuro
-
 const budgetChartData = {
     budget: [
-        { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-1))' },
-        { name: 'Aguardando', value: 25, color: '#6b7280' },
+        { name: 'Aprovado', value: 75, total: 100, color: 'hsl(var(--chart-1))' },
+        { name: 'Aguardando', value: 25, total: 100, color: '#6b7280' },
     ],
     approval: [
-        { name: 'Aprovado', value: 100, color: 'hsl(var(--chart-1))' },
+        { name: 'Aprovado', value: 100, total: 100, color: 'hsl(var(--chart-1))' },
     ],
 };
 
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
 
-const renderActiveShape = (props: any) => {
-    const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? 'start' : 'end';
-
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const percentage = ((payload[0].value / data.total) * 100).toFixed(0);
     return (
-        <g>
-            <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} className="text-lg font-bold">
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-            <Sector
-                cx={cx}
-                cy={cy}
-                innerRadius={innerRadius}
-                outerRadius={outerRadius + 5} // Expande a fatia
-                startAngle={startAngle}
-                endAngle={endAngle}
-                fill={fill}
-            />
-        </g>
+      <div className="bg-white p-2 border border-gray-200 rounded-md shadow-lg">
+        <p className="font-semibold">{data.name}</p>
+        <p className="font-bold text-lg">{`${data.value} (${percentage}%)`}</p>
+      </div>
     );
+  }
+  return null;
 };
+
 
 export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
-    const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
     const chartData = budgetChartData[activeChart];
-
-    const onPieEnter = (_: any, index: number) => {
-        setActiveIndex(index);
-    };
-
-    const onPieLeave = () => {
-        setActiveIndex(null);
-    };
     
   return (
     <div className="relative p-4 sm:p-6">
@@ -130,24 +103,21 @@ export default function DashboardPage() {
               <CardContent>
                   <div className="w-full h-[200px] flex items-center justify-between">
                       <ResponsiveContainer width="50%" height="100%">
-                          <PieChart>
+                           <PieChart>
                               <Pie 
-                                  activeIndex={activeIndex !== null ? activeIndex : undefined}
-                                  activeShape={renderActiveShape}
                                   data={chartData}
                                   dataKey="value" 
                                   nameKey="name" 
                                   cx="50%" 
                                   cy="50%" 
-                                  outerRadius={60} 
+                                  outerRadius={80} 
                                   labelLine={false}
-                                  onMouseEnter={onPieEnter}
-                                  onMouseLeave={onPieLeave}
                               >
-                                  {chartData.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                                  {chartData.map((entry) => (
+                                      <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
                                   ))}
                               </Pie>
+                              <Tooltip content={<CustomTooltip />} />
                           </PieChart>
                       </ResponsiveContainer>
                       <div className="w-48 space-y-2">
@@ -156,7 +126,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => { setActiveChart('budget'); setActiveIndex(null); }}
+                              onClick={() => { setActiveChart('budget');}}
                           >
                               Orçamentos
                           </button>
@@ -165,7 +135,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => { setActiveChart('approval'); setActiveIndex(null); }}
+                              onClick={() => { setActiveChart('approval');}}
                           >
                               Índice de Aprovação
                           </button>
@@ -178,58 +148,60 @@ export default function DashboardPage() {
         {/* Coluna Direita */}
         <div className="col-span-1 xl:col-span-2 flex flex-col gap-6">
           
-          {/* Tarefas */}
-          <Card>
-               <CardHeader>
-                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-              </CardHeader>
-               <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
-                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                  <div className="flex gap-2 mt-6">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
-                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
-                  </div>
-              </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Tarefas */}
+            <Card>
+                 <CardHeader>
+                    <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+                </CardHeader>
+                 <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                    <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                    <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                    <div className="flex gap-2 mt-6">
+                        <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                        <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                        <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                    </div>
+                </CardContent>
+            </Card>
 
-          {/* Top 10 Clientes */}
-          <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
-                   <div className="flex items-center border border-primary rounded-md p-0.5">
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                            onClick={() => setTopClientsFilter('Faturamento')}
-                        >
-                            Faturamento
-                        </Button>
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                            onClick={() => setTopClientsFilter('Lucro')}
-                        >
-                            Lucro
-                        </Button>
-                   </div>
-              </CardHeader>
-              <CardContent>
-                  <div className="space-y-2 text-sm">
-                      <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
-                      <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
-                      <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
-                      <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
-                      <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
-                  </div>
-                    <div className="flex justify-center gap-2 mt-4">
-                        <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                   </div>
-              </CardContent>
-          </Card>
+            {/* Top 10 Clientes - Movido para a direita para alinhar com Tarefas */}
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
+                     <div className="flex items-center border border-primary rounded-md p-0.5">
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Faturamento')}
+                          >
+                              Faturamento
+                          </Button>
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Lucro')}
+                          >
+                              Lucro
+                          </Button>
+                     </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2 text-sm">
+                        <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
+                        <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
+                        <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
+                        <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
+                        <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
+                    </div>
+                      <div className="flex justify-center gap-2 mt-4">
+                          <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                     </div>
+                </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
       <Button
