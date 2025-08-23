@@ -30,6 +30,8 @@ const generateNotificationMessage = (appointment: Appointment): string => {
             return `Reunião agendada: ${appointment.title} com ${appointment.customer}.`;
         case 'task':
              return `Tarefa pendente: ${appointment.title}.`;
+        case 'hotel':
+             return `Lembrete de check-in: ${appointment.title} para ${appointment.customer}.`;
         default:
             return `Lembrete: ${appointment.title} para ${appointment.customer}.`;
     }
@@ -37,14 +39,29 @@ const generateNotificationMessage = (appointment: Appointment): string => {
 
 const notifications = mockAppointments
     .map(app => ({
+        ...app,
         date: parseISO(app.date),
         message: generateNotificationMessage(app),
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
+    
+const notificationTypes = [
+    { value: 'all', label: 'Todos' },
+    ...Object.entries(
+        mockAppointments.reduce((acc, curr) => {
+            if (!acc[curr.type]) {
+                acc[curr.type] = curr.type.charAt(0).toUpperCase() + curr.type.slice(1);
+            }
+            return acc;
+        }, {} as Record<string, string>)
+    ).map(([value, label]) => ({ value, label })),
+];
+
 
 export default function NotificacoesPage() {
     const [startDate, setStartDate] = React.useState<Date | undefined>(new Date(2025, 4, 23));
     const [endDate, setEndDate] = React.useState<Date | undefined>(new Date(2025, 10, 23));
+    const [selectedType, setSelectedType] = React.useState('todos');
     
     const filteredNotifications = notifications.filter(notification => {
         const notificationDate = notification.date;
@@ -53,6 +70,11 @@ export default function NotificacoesPage() {
 
         if (start && notificationDate < start) return false;
         if (end && notificationDate > end) return false;
+        
+        if (selectedType !== 'todos' && notification.type !== selectedType) {
+            return false;
+        }
+
         return true;
     })
 
@@ -120,18 +142,23 @@ export default function NotificacoesPage() {
                         </div>
                         <div className="space-y-1.5">
                             <Label>Tipo</Label>
-                            <Select defaultValue="todos">
+                            <Select value={selectedType} onValueChange={setSelectedType}>
                                 <SelectTrigger>
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todos">Todos</SelectItem>
-                                    <SelectItem value="solicitacao-orcamento">Solicitação Orçamento</SelectItem>
-                                    <SelectItem value="check-in">Check-in</SelectItem>
-                                    <SelectItem value="aniversarios">Aniversários</SelectItem>
-                                    <SelectItem value="tarefas">Tarefas</SelectItem>
-                                    <SelectItem value="cadastro-pessoa">Cadastro de Pessoa</SelectItem>
-                                    <SelectItem value="nova-avaliacao">Nova Avaliação</SelectItem>
+                                    <SelectItem value="birthday">Aniversários</SelectItem>
+                                    <SelectItem value="departure">Embarque</SelectItem>
+                                    <SelectItem value="flight">Voo</SelectItem>
+                                    <SelectItem value="hotel">Hospedagem</SelectItem>
+                                    <SelectItem value="meeting">Reunião</SelectItem>
+                                    <SelectItem value="payment">Pagamento</SelectItem>
+                                    <SelectItem value="reminder">Lembrete</SelectItem>
+                                    <SelectItem value="task">Tarefas</SelectItem>
+                                    <SelectItem value="tour">Passeio</SelectItem>
+                                    <SelectItem value="transport">Transporte</SelectItem>
+                                    <SelectItem value="cruise">Cruzeiro</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
