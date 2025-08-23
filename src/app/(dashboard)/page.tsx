@@ -81,7 +81,7 @@ export default function DashboardPage() {
                   </div>
               </CardContent>
           </Card>
-
+          
           <div className="flex flex-wrap gap-1">
             {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                 <Button 
