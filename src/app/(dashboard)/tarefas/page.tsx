@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -47,17 +47,22 @@ export default function TarefasPage() {
     });
     const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>('overdue');
     const [situation, setSituation] = React.useState('aguardando');
+    const [isClient, setIsClient] = useState(false);
 
-    React.useEffect(() => {
+
+    useEffect(() => {
+        setIsClient(true);
         const savedSituation = localStorage.getItem('taskSituationFilter');
         if (savedSituation) {
             setSituation(savedSituation);
         }
     }, []);
 
-    React.useEffect(() => {
-        localStorage.setItem('taskSituationFilter', situation);
-    }, [situation]);
+    useEffect(() => {
+        if (isClient) {
+            localStorage.setItem('taskSituationFilter', situation);
+        }
+    }, [situation, isClient]);
 
     return (
         <div className="space-y-6">
@@ -127,16 +132,20 @@ export default function TarefasPage() {
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-muted-foreground px-1">Situação</label>
-                            <Select value={situation} onValueChange={setSituation}>
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="todos">Todos</SelectItem>
-                                    <SelectItem value="aguardando">Aguardando</SelectItem>
-                                    <SelectItem value="concluida">Concluída</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            {isClient ? (
+                                <Select value={situation} onValueChange={setSituation}>
+                                    <SelectTrigger>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="todos">Todos</SelectItem>
+                                        <SelectItem value="aguardando">Aguardando</SelectItem>
+                                        <SelectItem value="concluida">Concluída</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            ) : (
+                                <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 animate-pulse"></div>
+                            )}
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-muted-foreground px-1">Tarefa</label>
