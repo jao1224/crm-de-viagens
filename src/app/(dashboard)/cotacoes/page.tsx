@@ -156,7 +156,7 @@ export default function CotacoesPage() {
   }, [quotes]);
 
   return (
-    <div className="flex flex-col h-full gap-4">
+    <div className="flex flex-col h-full gap-4 overflow-hidden">
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-primary">Cotações</h1>
         <div className="flex items-center gap-2">
