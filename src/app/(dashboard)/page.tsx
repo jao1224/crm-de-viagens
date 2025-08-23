@@ -166,68 +166,68 @@ export default function DashboardPage() {
           </Card>
           
           <div className="space-y-6">
-              <div className="flex flex-wrap gap-1">
-                  {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                      <Button 
-                          key={filter} 
-                          variant={activeFilter === filter ? 'default' : 'outline'}
-                          size="sm"
-                          className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                          onClick={() => setActiveFilter(filter)}
-                      >
-                          {filter}
-                      </Button>
-                  ))}
-              </div>
-              
-              <Card className="h-fit">
-                  <CardHeader>
-                      <CardTitle className="text-lg text-gray-800 font-semibold">
-                         {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
-                      </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="w-full h-[200px] flex items-center justify-center gap-12">
-                          <div className="flex-1 h-full flex items-center justify-center">
-                              <ResponsiveContainer width="100%" height="100%">
-                                  <PieChart>
-                                      <Pie 
-                                          data={chartData}
-                                          dataKey="value" 
-                                          nameKey="name" 
-                                          cx="50%" 
-                                          cy="50%" 
-                                          outerRadius={80} 
-                                          fill="#10b981"
-                                          labelLine={false}
-                                      >
-                                          {chartData.map((entry) => (
-                                              <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                          ))}
-                                      </Pie>
-                                      <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                                  </PieChart>
-                              </ResponsiveContainer>
-                          </div>
-                          <div className="w-32 space-y-3 pl-4">
-                              <Button 
-                                  variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
-                                  className="w-full justify-start text-left"
-                                  onClick={() => setActiveChart('budget')}
-                              >
-                                  Orçamentos
-                              </Button>
-                              <Button 
-                                  variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
-                                  className="w-full justify-start text-left"
-                                  onClick={() => setActiveChart('approval')}
-                              >
-                                  Índice de Aprovação
-                              </Button>
-                          </div>
-                      </div>
-                  </CardContent>
-              </Card>
+            <div className="flex flex-wrap gap-1">
+                {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                    <Button 
+                        key={filter} 
+                        variant={activeFilter === filter ? 'default' : 'outline'}
+                        size="sm"
+                        className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        onClick={() => setActiveFilter(filter)}
+                    >
+                        {filter}
+                    </Button>
+                ))}
+            </div>
+            
+            <Card className="h-fit">
+                <CardHeader>
+                    <CardTitle className="text-lg text-gray-800 font-semibold">
+                        {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="w-full h-[200px] flex items-center justify-center gap-12">
+                        <div className="flex-1 h-full flex items-center justify-center">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie 
+                                        data={chartData}
+                                        dataKey="value" 
+                                        nameKey="name" 
+                                        cx="50%" 
+                                        cy="50%" 
+                                        outerRadius={80} 
+                                        fill="#10b981"
+                                        labelLine={false}
+                                    >
+                                        {chartData.map((entry) => (
+                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="w-40 space-y-3">
+                            <Button 
+                                variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
+                                className="w-full justify-start text-left"
+                                onClick={() => setActiveChart('budget')}
+                            >
+                                Orçamentos
+                            </Button>
+                            <Button 
+                                variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
+                                className="w-full justify-start text-left"
+                                onClick={() => setActiveChart('approval')}
+                            >
+                                Índice de Aprovação
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
           </div>
         </div>
       </div>
