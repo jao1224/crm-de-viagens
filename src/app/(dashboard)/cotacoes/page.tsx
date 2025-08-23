@@ -160,12 +160,12 @@ export default function CotacoesPage() {
       </header>
 
       <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+        <CardContent className="p-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Cliente</label>
+              <label className="text-xs font-medium">Cliente</label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="h-9">
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,17 +174,17 @@ export default function CotacoesPage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Tag/Identificador</label>
-              <Input placeholder="Tag ou Identificador" />
+              <label className="text-xs font-medium">Tag/Identificador</label>
+              <Input placeholder="Tag ou Identificador" className="h-9" />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Período da Cotação</label>
+              <label className="text-xs font-medium">Período</label>
               <div className="flex items-center gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={'outline'} className="w-full justify-start text-left font-normal">
+                    <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date.from ? format(date.from, 'dd/MM/yyyy') : <span>Início</span>}
+                      {date.from ? format(date.from, 'dd/MM/yy') : <span>Início</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -196,12 +196,11 @@ export default function CotacoesPage() {
                     />
                   </PopoverContent>
                 </Popover>
-                <span className="text-muted-foreground">até</span>
                  <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant={'outline'} className="w-full justify-start text-left font-normal">
+                    <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date.to ? format(date.to, 'dd/MM/yyyy') : <span>Fim</span>}
+                      {date.to ? format(date.to, 'dd/MM/yy') : <span>Fim</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -216,9 +215,9 @@ export default function CotacoesPage() {
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Usuário</label>
+              <label className="text-xs font-medium">Usuário</label>
               <Select>
-                <SelectTrigger>
+                <SelectTrigger className="h-9">
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -227,10 +226,10 @@ export default function CotacoesPage() {
               </Select>
             </div>
             <div className="flex gap-2">
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="h-9">
                     <Filter className="h-4 w-4" />
                 </Button>
-                <Button className="flex-1">Pesquisar</Button>
+                <Button className="flex-1 h-9">Pesquisar</Button>
             </div>
           </div>
         </CardContent>
@@ -250,6 +249,3 @@ export default function CotacoesPage() {
     </div>
   );
 }
-
-
-    
