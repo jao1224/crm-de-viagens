@@ -4,7 +4,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ChevronDown, ExternalLink, User, Settings, Bell, Users, Goal, Webhook, LifeBuoy, Ticket, LogOut, PlusCircle, Building } from 'lucide-react';
+import { ChevronDown, ExternalLink, User, Settings, Bell, Users, Goal, Webhook, LifeBuoy, Ticket, LogOut, PlusCircle, Building, CheckCircle, AlertCircle, Plane } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from '@/components/ui/badge';
 
 const headerNavLinks = [
     { href: '#', label: 'Home'},
@@ -25,6 +26,13 @@ const headerNavLinks = [
     { href: '#', label: 'Suporte'},
     { href: '#', label: 'Contato'},
 ]
+
+const notifications = [
+    { icon: CheckCircle, text: "Pagamento de R$1.854,00 recebido de Julio Venancio.", time: "agora", color: "text-green-500" },
+    { icon: AlertCircle, text: "Tarefa 'Volta combinada' está atrasada há 2 dias.", time: "2d atrás", color: "text-red-500" },
+    { icon: Plane, text: "Lembrete: Voo 7XIE9 para Lisboa (LIS) em 3 horas.", time: "às 17:15", color: "text-blue-500" },
+];
+
 
 export function DashboardHeader() {
   return (
@@ -49,10 +57,35 @@ export function DashboardHeader() {
       </nav>
 
       <div className="ml-auto flex items-center gap-4">
-        <Button variant="ghost" size="icon" className="text-muted-foreground">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Notificações</span>
-        </Button>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                 <Button variant="ghost" size="icon" className="text-muted-foreground relative">
+                    <Bell className="h-5 w-5" />
+                    <span className="absolute top-2 right-2.5 block h-2 w-2 rounded-full bg-destructive" />
+                    <span className="sr-only">Notificações</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-80" align="end">
+                <DropdownMenuLabel>Notificações</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                    {notifications.map((item, index) => (
+                        <DropdownMenuItem key={index} className="flex items-start gap-3">
+                           <item.icon className={`h-4 w-4 mt-1 ${item.color}`} />
+                           <div className="flex flex-col">
+                                <p className="text-xs text-wrap font-medium">{item.text}</p>
+                                <span className="text-xs text-muted-foreground">{item.time}</span>
+                           </div>
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuGroup>
+                 <DropdownMenuSeparator />
+                 <DropdownMenuItem className="justify-center text-sm text-primary hover:!text-primary font-semibold">
+                    Ver todas as notificações
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
              <div className="flex items-center gap-2 cursor-pointer">
