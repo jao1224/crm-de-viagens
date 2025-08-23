@@ -45,7 +45,7 @@ const statusFilters: { label: string; value: TaskStatus, color: string }[] = [
     { label: 'Concluídas', value: 'completed', color: 'bg-green-600 hover:bg-green-700' },
 ]
 
-const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpenChange: (open: boolean) => void, onAddTask: (task: any) => void }) => {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
     const [fileName, setFileName] = React.useState<string | null>(null);
 
@@ -59,9 +59,28 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
     
     const handleSaveTask = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Here you would typically handle form data submission
-        console.log("Saving task...");
-        // For demonstration, we'll just close the dialog
+        const formData = new FormData(event.currentTarget);
+        const subject = formData.get('subject') as string;
+        const description = formData.get('description') as string;
+        const time = formData.get('time') as string;
+        
+        const [hours, minutes] = time.split(':').map(Number);
+        const finalDate = new Date(date || new Date());
+        finalDate.setHours(hours);
+        finalDate.setMinutes(minutes);
+
+        const newTask = {
+            id: Date.now().toString(),
+            date: finalDate,
+            assignee: { name: 'Maxshuell', avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
+            quoteId: 'new_t',
+            type: 'Tarefa',
+            description: subject || 'Nova tarefa',
+            status: 'aguardando',
+            priority: 'today'
+        };
+
+        onAddTask(newTask);
         onOpenChange(false);
     };
 
@@ -76,7 +95,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="task-type">Tipo de tarefa</Label>
-                                <Select defaultValue="tarefa">
+                                <Select defaultValue="tarefa" name="task-type">
                                     <SelectTrigger id="task-type">
                                         <SelectValue />
                                     </SelectTrigger>
@@ -87,7 +106,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                                <Select defaultValue="maxshuell">
+                                <Select defaultValue="maxshuell" name="assignee">
                                     <SelectTrigger id="assignee">
                                         <SelectValue />
                                     </SelectTrigger>
@@ -125,18 +144,18 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                             <div className="space-y-2">
                                 <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
                                  <div className="relative">
-                                    <Input id="time" type="time" defaultValue="12:00" className="pr-8"/>
+                                    <Input id="time" name="time" type="time" defaultValue="12:00" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
-                            <Input id="subject" />
+                            <Input id="subject" name="subject" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="description">Descrição</Label>
-                            <Textarea id="description" rows={4} />
+                            <Textarea id="description" name="description" rows={4} />
                         </div>
                         <div className="flex items-center space-x-2">
                             <Switch id="recorrente" />
@@ -167,6 +186,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
 }
 
 export default function TarefasPage() {
+    const [tasks, setTasks] = useState(mockTasks);
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
         from: new Date(2025, 7, 8),
         to: new Date(2025, 8, 22),
@@ -190,6 +210,10 @@ export default function TarefasPage() {
             localStorage.setItem('taskSituationFilter', situation);
         }
     }, [situation, isClient]);
+
+    const handleAddTask = (newTask: any) => {
+        setTasks(prevTasks => [newTask, ...prevTasks]);
+    };
 
     return (
         <div className="space-y-6">
@@ -323,7 +347,7 @@ export default function TarefasPage() {
             </div>
 
             <div className="space-y-3">
-                {mockTasks.map(task => (
+                {tasks.map(task => (
                     <Card key={task.id}>
                         <CardContent className="p-4 grid grid-cols-[auto,1fr,auto] items-center gap-4">
                             <div className="flex items-center gap-3">
@@ -364,8 +388,9 @@ export default function TarefasPage() {
                 <Button size="icon">1</Button>
             </div>
             
-            <NewTaskDialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen} />
+            <NewTaskDialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen} onAddTask={handleAddTask} />
 
         </div>
     );
-}
+
+    
