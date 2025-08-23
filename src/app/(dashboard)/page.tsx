@@ -169,6 +169,9 @@ export default function DashboardPage() {
           
             <Card className="h-fit">
                 <CardHeader className="p-6 space-y-4">
+                    <CardTitle className="text-lg text-gray-800 font-semibold">
+                         {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                    </CardTitle>
                      <div className="flex flex-wrap gap-1">
                         {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                             <Button 
@@ -182,9 +185,6 @@ export default function DashboardPage() {
                             </Button>
                         ))}
                     </div>
-                    <CardTitle className="text-lg text-gray-800 font-semibold pt-2">
-                         {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
-                    </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
                     <div className="w-full h-[200px] flex items-center justify-center gap-12">
