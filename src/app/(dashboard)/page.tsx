@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon, Send } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,10 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ChatWidget } from "@/components/chat-widget";
 
 const budgetChartData = {
     budget: [
@@ -103,17 +100,6 @@ export default function DashboardPage() {
         from: new Date(2025, 7, 1),
         to: new Date(2025, 7, 31),
     });
-    const [chatMessages, setChatMessages] = React.useState([
-        { from: 'assistant', text: 'Olá! Como posso te ajudar a encontrar o pacote de viagem perfeito hoje?' }
-    ]);
-    const [chatInput, setChatInput] = React.useState('');
-
-    const handleSendMessage = () => {
-        if (chatInput.trim() === '') return;
-        setChatMessages(prev => [...prev, { from: 'user', text: chatInput.trim() }]);
-        setChatInput('');
-        // TODO: Add logic to get assistant response
-    }
 
     const budgetChartKeys: (keyof typeof budgetChartData | 'accompaniment')[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'accompaniment'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
@@ -223,7 +209,7 @@ export default function DashboardPage() {
                 <CardTitle className="text-lg text-foreground font-semibold">
                      {getChartTitle()}
                 </CardTitle>
-                <div className="flex flex-wrap gap-1">
+                 <div className="flex flex-wrap gap-1">
                     {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                         <Button 
                             key={filter} 
@@ -523,72 +509,11 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-       <Sheet>
-        <SheetTrigger asChild>
-            <Button
-                className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
-                size="icon"
-            >
-                <MessageSquare className="h-7 w-7" />
-                <span className="sr-only">Chat</span>
-            </Button>
-        </SheetTrigger>
-        <SheetContent side="right" className="flex flex-col h-full w-[350px] p-0">
-            <SheetHeader className="p-4 border-b">
-                <SheetTitle>Assistente Virtual</SheetTitle>
-            </SheetHeader>
-            <ScrollArea className="flex-1 p-4">
-                <div className="space-y-6">
-                    {chatMessages.map((msg, index) => (
-                        <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : '')}>
-                           {msg.from === 'assistant' && (
-                               <Avatar className="h-8 w-8 shrink-0">
-                                   <AvatarImage src="" alt="Assistente" />
-                                   <AvatarFallback>A</AvatarFallback>
-                               </Avatar>
-                           )}
-                           <div className={cn(
-                               "rounded-lg px-4 py-2 text-sm max-w-[75%]", 
-                               msg.from === 'user' 
-                                ? 'bg-primary text-primary-foreground' 
-                                : 'bg-muted'
-                           )}>
-                               <p>{msg.text}</p>
-                           </div>
-                           {msg.from === 'user' && (
-                                <Avatar className="h-8 w-8 shrink-0">
-                                   <AvatarImage src="https://placehold.co/100x100" alt="Usuário" />
-                                   <AvatarFallback>U</AvatarFallback>
-                               </Avatar>
-                           )}
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
-            <div className="p-4 border-t bg-background">
-                <div className="relative">
-                    <Textarea 
-                        placeholder="Digite sua mensagem..." 
-                        className="pr-16"
-                        value={chatInput}
-                        onChange={e => setChatInput(e.target.value)}
-                        onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); }}}
-                    />
-                    <Button 
-                        size="icon" 
-                        className="absolute top-1/2 right-3 -translate-y-1/2"
-                        onClick={handleSendMessage}
-                        disabled={!chatInput.trim()}
-                    >
-                        <Send className="h-5 w-5" />
-                        <span className="sr-only">Enviar</span>
-                    </Button>
-                </div>
-            </div>
-        </SheetContent>
-    </Sheet>
+       <ChatWidget />
     </div>
   );
 }
+
+    
 
     
