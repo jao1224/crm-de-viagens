@@ -1,13 +1,16 @@
 
 'use client';
 
-import { Calendar } from "@/components/ui/calendar";
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, Plane, DollarSign, Bell, BadgeInfo } from 'lucide-react';
+import { Users, Plane, DollarSign, Bell, BadgeInfo, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
-import React from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { add, format, getDaysInMonth, startOfMonth, eachDayOfInterval, getDay, isToday } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const eventIcons: Record<Appointment['type'], React.ReactNode> = {
   meeting: <Users className="h-5 w-5" />,
@@ -50,7 +53,7 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
                   <p className="text-lg font-semibold">{appointment.title}</p>
-                  <span className="text-sm text-muted-foreground">{appointment.date}</span>
+                  <span className="text-sm text-muted-foreground">{new Date(appointment.date).toLocaleDateString('pt-BR')}</span>
               </div>
               <div className="space-y-1 text-sm">
                 <p className="text-muted-foreground">
@@ -65,52 +68,153 @@ const AppointmentItem = ({ appointment }: { appointment: Appointment }) => {
     );
 };
 
+const calendarFilters = ["Tarefas", "Aniversários", "Voos", "Hospedagens", "Transportes", "Experiências Turísticas", "Cruzeiros"];
+const viewFilters = ["Mês", "Semana", "Dia", "Lista"];
 
-export default function AgendaPage() {
-    const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
-    
-    // Simple filter logic for demo purposes
-    const filteredAppointments = mockAppointments.filter(app => {
-        // Here you would parse app.date and compare with selectedDate
-        // For this demo, we'll just show all appointments regardless of selected date
-        return true;
+const FullCalendar = () => {
+    const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1)); // Agosto de 2025
+    const [activeView, setActiveView] = React.useState('Mês');
+
+    const firstDayOfMonth = startOfMonth(currentDate);
+    const daysInMonth = eachDayOfInterval({
+        start: firstDayOfMonth,
+        end: new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0)
     });
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-      <div className="lg:col-span-1">
-        <Card>
-          <CardContent className="p-0 flex justify-center">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="w-auto"
-            />
-          </CardContent>
-        </Card>
-      </div>
+    const startingDayIndex = getDay(firstDayOfMonth);
 
-      <div className="lg:col-span-1">
-        <Card className="h-full">
+    const appointmentsByDate = React.useMemo(() => {
+        const grouped: { [key: string]: Appointment[] } = {};
+        mockAppointments.forEach(app => {
+            const dateKey = format(new Date(app.date), 'yyyy-MM-dd');
+            if (!grouped[dateKey]) {
+                grouped[dateKey] = [];
+            }
+            grouped[dateKey].push(app);
+        });
+        return grouped;
+    }, []);
+
+    const changeMonth = (amount: number) => {
+        setCurrentDate(prev => add(prev, { months: amount }));
+    };
+
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <CardTitle className="font-headline text-primary">Calendário</CardTitle>
+                    <div className="flex flex-wrap items-center gap-2">
+                        {calendarFilters.map(filter => (
+                            <Button key={filter} variant={filter === 'Voos' ? 'default' : 'outline'} size="sm">
+                                {filter}
+                            </Button>
+                        ))}
+                         <Button variant="default" size="sm">Nova Tarefa</Button>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" size="icon" onClick={() => changeMonth(-1)}>
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button variant="outline" onClick={() => setCurrentDate(new Date())}>Hoje</Button>
+                        <Button variant="outline" size="icon" onClick={() => changeMonth(1)}>
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                        <h2 className="text-xl font-semibold text-foreground capitalize">
+                            {format(currentDate, 'MMMM \'de\' yyyy', { locale: ptBR })}
+                        </h2>
+                    </div>
+                    <div className="flex items-center gap-1 p-1 bg-muted rounded-lg">
+                         {viewFilters.map(filter => (
+                            <Button 
+                                key={filter} 
+                                variant={activeView === filter ? 'default' : 'ghost'} 
+                                size="sm" 
+                                className="h-8 px-3"
+                                onClick={() => setActiveView(filter)}
+                            >
+                                {filter}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7 border-t border-l border-border">
+                    {['dom.', 'seg.', 'ter.', 'qua.', 'qui.', 'sex.', 'sáb.'].map(day => (
+                        <div key={day} className="p-2 text-center font-medium text-muted-foreground text-sm border-r border-b border-border">
+                            {day}
+                        </div>
+                    ))}
+                    
+                    {Array.from({ length: startingDayIndex }).map((_, i) => (
+                        <div key={`empty-${i}`} className="h-32 border-r border-b border-border bg-muted/30"></div>
+                    ))}
+
+                    {daysInMonth.map(day => {
+                        const dateKey = format(day, 'yyyy-MM-dd');
+                        const dayAppointments = appointmentsByDate[dateKey] || [];
+
+                        return (
+                            <div key={day.toString()} className="h-32 p-1.5 border-r border-b border-border relative flex flex-col gap-1 overflow-hidden">
+                                <span className={cn(
+                                    "font-semibold text-sm",
+                                    isToday(day) ? "bg-primary text-primary-foreground rounded-full h-6 w-6 flex items-center justify-center" : "text-foreground"
+                                )}>
+                                    {format(day, 'd')}
+                                </span>
+                                <div className="space-y-1 overflow-y-auto">
+                                    {dayAppointments.map(app => {
+                                        const eventDetails = eventTypeMapping[app.type];
+                                        return (
+                                            <div key={app.id} className={cn(
+                                                "text-xs p-1 rounded-md text-white overflow-hidden text-ellipsis whitespace-nowrap",
+                                                eventDetails.borderColorClass.replace('border-', 'bg-') // Simplified color
+                                            )}>
+                                                <span className="font-bold">{new Date(app.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span> {app.title}
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
+export default function AgendaPage() {
+    const sortedAppointments = [...mockAppointments].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const upcomingAppointments = sortedAppointments.filter(a => new Date(a.date) >= new Date());
+
+  return (
+    <div className="space-y-6">
+        <FullCalendar />
+
+        <Card>
             <CardHeader>
                 <CardTitle className="font-headline text-primary">Próximos Eventos</CardTitle>
                 <CardDescription>Seus compromissos e lembretes importantes.</CardDescription>
             </CardHeader>
             <CardContent className="max-h-[500px] overflow-y-auto pr-2">
                 <div className="space-y-4">
-                    {filteredAppointments.length > 0 ? (
-                        filteredAppointments.map(app => <AppointmentItem key={app.id} appointment={app} />)
+                    {upcomingAppointments.length > 0 ? (
+                        upcomingAppointments.map(app => <AppointmentItem key={app.id} appointment={app} />)
                     ) : (
                         <div className="flex flex-col items-center justify-center text-center p-8 text-muted-foreground h-full">
                             <BadgeInfo className="w-10 h-10 mb-4" />
-                            <p>Nenhum compromisso agendado para esta data.</p>
+                            <p>Nenhum compromisso futuro agendado.</p>
                         </div>
                     )}
                 </div>
             </CardContent>
         </Card>
-      </div>
     </div>
   );
 }
