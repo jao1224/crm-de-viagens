@@ -57,11 +57,9 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       
-      {/* Seção 4: Dashboard Original */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
         {/* Coluna da Esquerda */}
         <div className="space-y-6 flex flex-col">
-            {/* Card: Tarefas para hoje */}
             <Card className="h-fit">
                 <CardHeader>
                     <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
@@ -77,7 +75,6 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
 
-            {/* Card: Top 10 Clientes */}
             <Card className="h-fit">
                 <CardHeader className="flex flex-row items-center justify-between pb-4">
                     <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
@@ -144,7 +141,6 @@ export default function DashboardPage() {
 
         {/* Coluna da Direita */}
         <div className="space-y-6">
-          {/* Card: Próximos voos */}
           <Card className="h-fit">
               <CardHeader>
                   <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
@@ -174,7 +170,6 @@ export default function DashboardPage() {
           </Card>
           
           <div className="space-y-6">
-            {/* Filtros de Período */}
             <div className="flex flex-wrap gap-1">
                 {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                     <Button 
@@ -189,11 +184,10 @@ export default function DashboardPage() {
                 ))}
             </div>
             
-            {/* Card: Orçamentos / Índice de Aprovação */}
             <Card className="h-fit">
                 <CardHeader>
                     <CardTitle className="text-lg text-gray-800 font-semibold">
-                        {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                        {activeChart === 'budget' ? 'Orçamentos' : 'Orçamento'}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -242,7 +236,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-       {/* Seção 1: Cards de Clientes/Projetos */}
        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4">
@@ -332,7 +325,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Seção 2: Cards Financeiros */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
@@ -378,47 +370,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Seção 3: Gráficos de Categorias */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Despesas por Categoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="w-full h-[250px] flex items-center justify-center gap-6">
-                    <div className="flex-1 h-full flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={expenseChartData}
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={80} 
-                                    innerRadius={40}
-                                    fill="#8884d8"
-                                    labelLine={false}
-                                >
-                                    {expenseChartData.map((entry) => (
-                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="w-48 space-y-3 pl-4">
-                        {expenseChartData.map((entry) => (
-                            <div key={entry.name} className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
-                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
         <Card className="h-fit">
             <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
@@ -458,9 +410,47 @@ export default function DashboardPage() {
                 </div>
             </CardContent>
         </Card>
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Despesas por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[250px] flex items-center justify-center gap-6">
+                    <div className="flex-1 h-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={expenseChartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    fill="#8884d8"
+                                    labelLine={false}
+                                >
+                                    {expenseChartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-48 space-y-3 pl-4">
+                        {expenseChartData.map((entry) => (
+                            <div key={entry.name} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
       </div>
 
-      {/* Seção 5: Resumos Diários */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
@@ -501,3 +491,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
