@@ -56,90 +56,87 @@ export default function DashboardPage() {
     
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
-      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        {/* Coluna da Esquerda */}
         <div className="space-y-6 flex flex-col">
-          <Card className="h-fit">
-              <CardHeader>
-                  <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
-                  <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
-                  <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                  <div className="flex gap-2 mt-6">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
-                      <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
-                  </div>
-              </CardContent>
-          </Card>
-          <Card className="h-fit">
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
-                  <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
-                  <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
-                            onClick={() => setTopClientsFilter('Faturamento')}
-                        >
-                            Faturamento
-                        </Button>
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
-                            onClick={() => setTopClientsFilter('Lucro')}
-                        >
-                            Lucro
-                        </Button>
-                  </div>
-              </CardHeader>
-              <CardContent>
-                  <div className="space-y-3 text-sm">
-                      <div className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">1) Analine de Albuquerque Linhares</span> 
-                          <span className="font-semibold text-right">
-                              1 venda(s) <span className="ml-4 text-blue-600">23.766,18</span>
-                          </span>
-                      </div>
-                      <div className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">2) JULIO VENANCIO MENEZES</span> 
-                          <span className="font-semibold text-right">
-                              1 venda(s) <span className="ml-4 text-blue-600">18.540,00</span>
-                          </span>
-                      </div>
-                      <div className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">3) Lidiane da Silva Seidenfuhss</span> 
-                          <span className="font-semibold text-right">
-                              1 venda(s) <span className="ml-4 text-blue-600">11.400,00</span>
-                          </span>
-                      </div>
-                      <div className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">4) Davi William da Silveira de Campos</span> 
-                          <span className="font-semibold text-right">
-                              1 venda(s) <span className="ml-4 text-blue-600">8.700,00</span>
-                          </span>
-                      </div>
-                      <div className="flex justify-between items-center py-1">
-                          <span className="font-medium text-gray-800">5) Maria Brandão Silva Gaspar</span> 
-                          <span className="font-semibold text-right">
-                              1 venda(s) <span className="ml-4 text-blue-600">4.800,00</span>
-                          </span>
-                      </div>
-                  </div>
-                  
-                  {/* Indicadores de paginação */}
-                  <div className="flex justify-center gap-2 mt-6">
-                      <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
-                      <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
-                      <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
-                  </div>
-              </CardContent>
-          </Card>
+            <Card className="h-fit">
+                <CardHeader>
+                    <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
+                    <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                    <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                    <div className="flex gap-2 mt-6">
+                        <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                        <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                        <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card className="h-fit">
+                <CardHeader className="flex flex-row items-center justify-between pb-4">
+                    <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
+                    <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                              onClick={() => setTopClientsFilter('Faturamento')}
+                          >
+                              Faturamento
+                          </Button>
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                              onClick={() => setTopClientsFilter('Lucro')}
+                          >
+                              Lucro
+                          </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-3 text-sm">
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">1) Analine de Albuquerque Linhares</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">23.766,18</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">2) JULIO VENANCIO MENEZES</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">18.540,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">3) Lidiane da Silva Seidenfuhss</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">11.400,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">4) Davi William da Silveira de Campos</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">8.700,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">5) Maria Brandão Silva Gaspar</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">4.800,00</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    {/* Indicadores de paginação */}
+                    <div className="flex justify-center gap-2 mt-6">
+                        <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
+                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
 
-        {/* Coluna da Direita */}
-        <div className="space-y-6">
+        <div className="space-y-6 flex flex-col">
           <Card className="h-fit">
               <CardHeader>
                   <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
@@ -169,73 +166,73 @@ export default function DashboardPage() {
           </Card>
           
           <div className="space-y-6">
-            <div className="flex flex-wrap gap-1">
-                {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                    <Button 
-                        key={filter} 
-                        variant={activeFilter === filter ? 'default' : 'outline'}
-                        size="sm"
-                        className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                        onClick={() => setActiveFilter(filter)}
-                    >
-                        {filter}
-                    </Button>
-                ))}
-            </div>
-            
-            <Card className="h-fit">
-                <CardHeader>
-                    <CardTitle className="text-lg text-gray-800 font-semibold">
-                       {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="w-full h-[200px] flex items-center justify-center gap-6">
-                        <div className="flex-1 h-full flex items-center justify-center">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie 
-                                        data={chartData}
-                                        dataKey="value" 
-                                        nameKey="name" 
-                                        cx="50%" 
-                                        cy="50%" 
-                                        outerRadius={80} 
-                                        fill="#10b981"
-                                        labelLine={false}
-                                    >
-                                        {chartData.map((entry) => (
-                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="w-32 space-y-3 pl-4">
-                            <Button 
-                                variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
-                                className="w-full justify-start text-left"
-                                onClick={() => setActiveChart('budget')}
-                            >
-                                Orçamentos
-                            </Button>
-                            <Button 
-                                variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
-                                className="w-full justify-start text-left"
-                                onClick={() => setActiveChart('approval')}
-                            >
-                                Índice de Aprovação
-                            </Button>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+              <div className="flex flex-wrap gap-1">
+                  {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                      <Button 
+                          key={filter} 
+                          variant={activeFilter === filter ? 'default' : 'outline'}
+                          size="sm"
+                          className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                          onClick={() => setActiveFilter(filter)}
+                      >
+                          {filter}
+                      </Button>
+                  ))}
+              </div>
+              
+              <Card className="h-fit">
+                  <CardHeader>
+                      <CardTitle className="text-lg text-gray-800 font-semibold">
+                         {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                      </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                      <div className="w-full h-[200px] flex items-center justify-center gap-12">
+                          <div className="flex-1 h-full flex items-center justify-center">
+                              <ResponsiveContainer width="100%" height="100%">
+                                  <PieChart>
+                                      <Pie 
+                                          data={chartData}
+                                          dataKey="value" 
+                                          nameKey="name" 
+                                          cx="50%" 
+                                          cy="50%" 
+                                          outerRadius={80} 
+                                          fill="#10b981"
+                                          labelLine={false}
+                                      >
+                                          {chartData.map((entry) => (
+                                              <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                          ))}
+                                      </Pie>
+                                      <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                  </PieChart>
+                              </ResponsiveContainer>
+                          </div>
+                          <div className="w-32 space-y-3 pl-4">
+                              <Button 
+                                  variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
+                                  className="w-full justify-start text-left"
+                                  onClick={() => setActiveChart('budget')}
+                              >
+                                  Orçamentos
+                              </Button>
+                              <Button 
+                                  variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
+                                  className="w-full justify-start text-left"
+                                  onClick={() => setActiveChart('approval')}
+                              >
+                                  Índice de Aprovação
+                              </Button>
+                          </div>
+                      </div>
+                  </CardContent>
+              </Card>
           </div>
         </div>
       </div>
-
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
@@ -324,7 +321,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
+       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
                 <h3 className="text-sm text-gray-600 mb-2">Recebido (R$)</h3>
@@ -372,45 +369,6 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="w-full h-[250px] flex items-center justify-center gap-6">
-                    <div className="flex-1 h-full flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={revenueChartData}
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={80} 
-                                    innerRadius={40}
-                                    fill="#8884d8"
-                                    labelLine={false}
-                                >
-                                    {revenueChartData.map((entry) => (
-                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="w-48 space-y-3 pl-4">
-                        {revenueChartData.map((entry) => (
-                            <div key={entry.name} className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
-                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-        <Card className="h-fit">
-            <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Despesas por Categoria</CardTitle>
             </CardHeader>
             <CardContent>
@@ -439,6 +397,45 @@ export default function DashboardPage() {
                     </div>
                     <div className="w-48 space-y-3 pl-4">
                         {expenseChartData.map((entry) => (
+                            <div key={entry.name} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[250px] flex items-center justify-center gap-6">
+                    <div className="flex-1 h-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={revenueChartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    fill="#8884d8"
+                                    labelLine={false}
+                                >
+                                    {revenueChartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-48 space-y-3 pl-4">
+                        {revenueChartData.map((entry) => (
                             <div key={entry.name} className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
                                 <span className="text-sm font-medium text-gray-700">{entry.name}</span>
