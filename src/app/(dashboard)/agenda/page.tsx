@@ -98,9 +98,15 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
     const appointmentDate = new Date(appointment.date);
 
     return (
-        <div className={`flex items-start gap-4 p-4 hover:bg-muted/50 rounded-lg transition-colors border-l-4 ${eventDetails.borderColorClass}`}>
-            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${eventDetails.colorClass}`}>
-            {eventIcons[appointment.type]}
+        <div className={cn(
+            "flex items-start gap-4 p-4 hover:bg-muted/50 rounded-lg transition-colors border-l-4",
+            eventDetails.borderColorClass
+        )}>
+            <div className={cn(
+                "flex h-12 w-12 shrink-0 items-center justify-center rounded-full",
+                eventDetails.colorClass
+            )}>
+                {eventIcons[appointment.type]}
             </div>
             <div className="flex-1 space-y-2">
               <div className="flex items-center justify-between">
@@ -442,3 +448,5 @@ export default function AgendaPage() {
     </div>
   );
 }
+
+    
