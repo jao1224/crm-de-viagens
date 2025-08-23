@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info, ListFilter, LayoutGrid, List, ListTodo, Cake, Hotel, TrainFront, Camera, Ship } from 'lucide-react';
+import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info, LayoutGrid, List, ListTodo, Cake, Hotel, TrainFront, Camera, Ship } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -312,54 +312,66 @@ const DailyAgendaCard = ({ selectedDate, appointments, onNewTaskClick }: any) =>
     )
 }
 
-const FilterToolbar = () => (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-center gap-2 flex-wrap">
-             <Button variant="outline" size="sm" className="bg-background text-foreground shadow-sm">
-                <ListTodo className="mr-2 h-4 w-4" />
-                Tarefas
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Cake className="mr-2 h-4 w-4" />
-                Aniversários
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Plane className="mr-2 h-4 w-4" />
-                Voos
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Hotel className="mr-2 h-4 w-4" />
-                Hospedagens
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <TrainFront className="mr-2 h-4 w-4" />
-                Transportes
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Camera className="mr-2 h-4 w-4" />
-                Experiências Turísticas
-            </Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-                <Ship className="mr-2 h-4 w-4" />
-                Cruzeiros
-            </Button>
+const filterOptions: { type: Appointment['type']; label: string; icon: React.ElementType }[] = [
+    { type: 'task', label: 'Tarefas', icon: ListTodo },
+    { type: 'birthday', label: 'Aniversários', icon: Cake },
+    { type: 'flight', label: 'Voos', icon: Plane },
+    { type: 'hotel', label: 'Hospedagens', icon: Hotel },
+    { type: 'transport', label: 'Transportes', icon: TrainFront },
+    { type: 'tour', label: 'Experiências', icon: Camera },
+    { type: 'cruise', label: 'Cruzeiros', icon: Ship },
+];
+
+const FilterToolbar = ({ activeFilters, onFilterToggle }: { activeFilters: Appointment['type'][]; onFilterToggle: (filter: Appointment['type']) => void; }) => {
+    return (
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-2 flex-wrap">
+                {filterOptions.map(({ type, label, icon: Icon }) => (
+                    <Button
+                        key={type}
+                        variant={activeFilters.includes(type) ? "default" : "outline"}
+                        size="sm"
+                        className="shadow-sm"
+                        onClick={() => onFilterToggle(type)}
+                    >
+                        <Icon className="mr-2 h-4 w-4" />
+                        {label}
+                    </Button>
+                ))}
+            </div>
+            <div className="flex items-center gap-1 border border-border rounded-md p-1 bg-muted">
+                <Button variant="ghost" size="sm" className="h-7 bg-background shadow-sm text-primary"><LayoutGrid className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="sm" className="h-7"><List className="h-4 w-4" /></Button>
+            </div>
         </div>
-        <div className="flex items-center gap-1 border border-border rounded-md p-1 bg-muted">
-            <Button variant="ghost" size="sm" className="h-7 bg-background shadow-sm text-primary"><LayoutGrid className="h-4 w-4" /></Button>
-            <Button variant="ghost" size="sm" className="h-7"><List className="h-4 w-4" /></Button>
-        </div>
-    </div>
-);
+    );
+};
 
 
 export default function AgendaPage() {
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
     const [currentDate, setCurrentDate] = React.useState(new Date(2025, 7, 1));
     const [selectedDate, setSelectedDate] = React.useState(new Date(2025, 7, 1));
+    const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>([]);
+
+    const toggleFilter = (filter: Appointment['type']) => {
+        setActiveFilters(prev =>
+            prev.includes(filter)
+                ? prev.filter(f => f !== filter)
+                : [...prev, filter]
+        );
+    };
+
+    const filteredAppointments = React.useMemo(() => {
+        if (activeFilters.length === 0) {
+            return mockAppointments;
+        }
+        return mockAppointments.filter(app => activeFilters.includes(app.type));
+    }, [activeFilters]);
 
     const appointmentsByDate = React.useMemo(() => {
         const grouped: { [key: string]: Appointment[] } = {};
-        mockAppointments.forEach(app => {
+        filteredAppointments.forEach(app => {
             const dateKey = format(parseISO(app.date), 'yyyy-MM-dd');
             if (!grouped[dateKey]) {
                 grouped[dateKey] = [];
@@ -367,14 +379,14 @@ export default function AgendaPage() {
             grouped[dateKey].push(app);
         });
         return grouped;
-    }, []);
+    }, [filteredAppointments]);
 
     const selectedDayAppointments = React.useMemo(() => {
         const dateKey = format(selectedDate, 'yyyy-MM-dd');
         return (appointmentsByDate[dateKey] || []).sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }, [selectedDate, appointmentsByDate]);
 
-    const upcomingAppointments = [...mockAppointments]
+    const upcomingAppointments = [...filteredAppointments]
         .filter(a => new Date(a.date) >= new Date())
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -385,7 +397,7 @@ export default function AgendaPage() {
             <Button onClick={() => setIsNewTaskDialogOpen(true)}>Nova Tarefa</Button>
         </header>
 
-        <FilterToolbar />
+        <FilterToolbar activeFilters={activeFilters} onFilterToggle={toggleFilter} />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1">
