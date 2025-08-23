@@ -3,16 +3,20 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import {
-  LayoutDashboard,
   Calendar,
   ClipboardList,
   ChevronDown,
   FileText,
-  LineChart,
   Users,
   Settings,
   HelpCircle,
   Gauge,
+  Plane,
+  Hotel,
+  TrainFront,
+  Camera,
+  Luggage,
+  HeartPulse,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -29,9 +33,12 @@ export const navItems: NavItem[] = [
 ];
 
 export const accompanimentItems: NavItem[] = [
-    { href: '/financeiro', label: 'Financeiro', icon: LineChart },
-    { href: '/documentos', label: 'Documentos', icon: FileText },
-    { href: '/relatorios', label: 'Relatórios', icon: LineChart },
+    { href: '/voos', label: 'Voos', icon: Plane },
+    { href: '/hospedagens', label: 'Hospedagens', icon: Hotel },
+    { href: '/transportes', label: 'Transportes', icon: TrainFront },
+    { href: '/experiencias', label: 'Experiências Turísticas', icon: Camera },
+    { href: '/cruzeiros', label: 'Cruzeiros', icon: Luggage },
+    { href: '/seguros', label: 'Seguros', icon: HeartPulse },
 ];
 
 export const registrationItems: NavItem[] = [
@@ -78,7 +85,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
 
-        <Collapsible className="w-full">
+        <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
                     <span className="text-sm font-medium text-muted-foreground">
@@ -87,15 +94,23 @@ export function SimpleDashboardNav() {
                     <ChevronDown className="h-4 w-4" />
                  </SidebarMenuButton>
             </CollapsibleTrigger>
-            <CollapsibleContent className="pl-8 space-y-1 py-1">
-                 {accompanimentItems.map((item) => (
-                    <Link key={item.href} href={item.href} className={cn("block text-sm text-muted-foreground hover:text-foreground", pathname === item.href && "text-primary font-semibold")}>
-                        {item.label}
-                    </Link>
+            <CollapsibleContent className="space-y-1 py-1">
+                {accompanimentItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
                 ))}
             </CollapsibleContent>
         </Collapsible>
-        <Collapsible className="w-full">
+        <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className="w-full">
                  <SidebarMenuButton className="w-full justify-between">
                     <span className="text-sm font-medium text-muted-foreground">
