@@ -63,6 +63,13 @@ export const financialItems: NavItem[] = [
     { href: '/milhas', label: 'Milhas', icon: Gem },
 ];
 
+export const documentItems: NavItem[] = [
+    { href: '/faturas', label: 'Faturas', icon: FileText },
+    { href: '/pagamentos', label: 'Pagamentos', icon: FileText },
+    { href: '/contratos', label: 'Contratos', icon: FileText },
+    { href: '/nota-fiscal', label: 'Nota Fiscal', icon: FileText },
+];
+
 export const registrationItems: NavItem[] = [
     { href: '/clientes', label: 'Clientes', icon: Users },
     { href: '/fornecedores', label: 'Fornecedores', icon: Users },
@@ -144,6 +151,32 @@ export function SimpleDashboardNav() {
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {financialItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+            </CollapsibleContent>
+        </Collapsible>
+        
+        <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className="w-full">
+                 <SidebarMenuButton className="w-full justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                        Documentos
+                    </span>
+                    <ChevronDown className="h-4 w-4" />
+                 </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 py-1">
+                {documentItems.map((item) => (
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
