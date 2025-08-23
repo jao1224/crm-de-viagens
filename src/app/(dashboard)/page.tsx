@@ -533,11 +533,11 @@ export default function DashboardPage() {
                 <span className="sr-only">Chat</span>
             </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex flex-col h-full w-[400px]">
-            <SheetHeader className="p-4 border-b">
+        <SheetContent side="right" className="flex flex-col h-full w-[350px]">
+            <SheetHeader className="p-4 border-b bg-primary text-primary-foreground">
                 <SheetTitle>Assistente Virtual</SheetTitle>
             </SheetHeader>
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea className="flex-1 p-4 bg-background">
                 <div className="space-y-4">
                     {chatMessages.map((msg, index) => (
                         <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : 'justify-start')}>
@@ -557,7 +557,7 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </ScrollArea>
-            <div className="p-4 border-t">
+            <div className="p-4 border-t bg-background">
                 <div className="relative">
                     <Textarea 
                         placeholder="Digite sua mensagem..." 
