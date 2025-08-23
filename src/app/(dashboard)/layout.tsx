@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
       <SidebarProvider>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen w-full">
               <Sidebar variant="sidebar" collapsible="icon" className="border-r">
                   <SidebarContent className="p-0">
                       <SimpleDashboardNav />
