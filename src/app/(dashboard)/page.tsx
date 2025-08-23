@@ -57,8 +57,193 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       
-      {/* Seção 1: Cards de Clientes/Projetos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+      {/* Seção 4: Dashboard Original */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        {/* Coluna da Esquerda (Invertida) */}
+        <div className="space-y-6 flex flex-col">
+            {/* Card: Tarefas para hoje */}
+            <Card className="h-fit">
+                <CardHeader>
+                    <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
+                    <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
+                    <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
+                    <div className="flex gap-2 mt-6">
+                        <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
+                        <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                        <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Card: Top 10 Clientes */}
+            <Card className="h-fit">
+                <CardHeader className="flex flex-row items-center justify-between pb-4">
+                    <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
+                    <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                              onClick={() => setTopClientsFilter('Faturamento')}
+                          >
+                              Faturamento
+                          </Button>
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
+                              onClick={() => setTopClientsFilter('Lucro')}
+                          >
+                              Lucro
+                          </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-3 text-sm">
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">1) Analine de Albuquerque Linhares</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">23.766,18</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">2) JULIO VENANCIO MENEZES</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">18.540,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">3) Lidiane da Silva Seidenfuhss</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">11.400,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">4) Davi William da Silveira de Campos</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">8.700,00</span>
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-1">
+                            <span className="font-medium text-gray-800">5) Maria Brandão Silva Gaspar</span> 
+                            <span className="font-semibold text-right">
+                                1 venda(s) <span className="ml-4 text-blue-600">4.800,00</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    {/* Indicadores de paginação */}
+                    <div className="flex justify-center gap-2 mt-6">
+                        <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
+                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+
+        {/* Coluna da Direita (Invertida) */}
+        <div className="space-y-6">
+          {/* Card: Próximos voos */}
+          <Card className="h-fit">
+              <CardHeader>
+                  <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
+                      <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
+                          <div className="text-right">
+                              <p className="text-sm text-gray-600">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
+                              <p className="text-sm font-semibold text-gray-800">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
+                          </div>
+                          <div>
+                              <p className="font-semibold text-sm text-gray-800">{flight.customer}</p>
+                              <p className="text-xs text-gray-600 font-semibold">{flight.package}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                              <Plane className="w-4 h-4 text-blue-600" />
+                              <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">{flightCodes[index % flightCodes.length]}</Badge>
+                          </div>
+                      </div>
+                  ))}
+                  <div className="flex gap-2">
+                      <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
+                      <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
+                  </div>
+              </CardContent>
+          </Card>
+          
+          <div className="space-y-6">
+            {/* Filtros de Período */}
+            <div className="flex flex-wrap gap-1">
+                {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                    <Button 
+                        key={filter} 
+                        variant={activeFilter === filter ? 'default' : 'outline'}
+                        size="sm"
+                        className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        onClick={() => setActiveFilter(filter)}
+                    >
+                        {filter}
+                    </Button>
+                ))}
+            </div>
+            
+            {/* Card: Orçamentos / Índice de Aprovação */}
+            <Card className="h-fit">
+                <CardHeader>
+                    <CardTitle className="text-lg text-gray-800 font-semibold">
+                        {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="w-full h-[200px] flex items-center justify-center gap-6">
+                        <div className="flex-1 h-full flex items-center justify-center">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie 
+                                        data={chartData}
+                                        dataKey="value" 
+                                        nameKey="name" 
+                                        cx="50%" 
+                                        cy="50%" 
+                                        outerRadius={80} 
+                                        fill="#10b981"
+                                        labelLine={false}
+                                    >
+                                        {chartData.map((entry) => (
+                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="w-32 space-y-3 pl-4">
+                            <Button 
+                                variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
+                                className="w-full justify-start text-left"
+                                onClick={() => setActiveChart('budget')}
+                            >
+                                Orçamentos
+                            </Button>
+                            <Button 
+                                variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
+                                className="w-full justify-start text-left"
+                                onClick={() => setActiveChart('approval')}
+                            >
+                                Índice de Aprovação
+                            </Button>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+       {/* Seção 1: Cards de Clientes/Projetos */}
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
@@ -273,189 +458,6 @@ export default function DashboardPage() {
                 </div>
             </CardContent>
         </Card>
-      </div>
-
-      {/* Seção 4: Dashboard Original */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        {/* Coluna da Esquerda (Agora Direita) */}
-        <div className="space-y-6">
-            {/* Card: Tarefas para hoje */}
-            <Card className="h-fit">
-                <CardHeader>
-                    <CardTitle className="text-lg text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
-                    <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
-                    <p>Você não possui nenhuma tarefa para o dia de hoje.</p>
-                    <div className="flex gap-2 mt-6">
-                        <Badge className="bg-red-500 text-white hover:bg-red-600">4 atrasada(s)</Badge>
-                        <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                        <Badge className="bg-green-500 text-white hover:bg-green-600">0 no prazo</Badge>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Card: Top 10 Clientes */}
-            <Card className="h-fit">
-                <CardHeader className="flex flex-row items-center justify-between pb-4">
-                    <CardTitle className="text-lg text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
-                    <div className="flex items-center border border-blue-600 rounded-md p-0.5 bg-gray-50">
-                          <Button 
-                              size="sm"
-                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
-                              onClick={() => setTopClientsFilter('Faturamento')}
-                          >
-                              Faturamento
-                          </Button>
-                          <Button 
-                              size="sm"
-                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-blue-600 text-white' : 'bg-transparent text-blue-600 hover:bg-blue-50'}`}
-                              onClick={() => setTopClientsFilter('Lucro')}
-                          >
-                              Lucro
-                          </Button>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-3 text-sm">
-                        <div className="flex justify-between items-center py-1">
-                            <span className="font-medium text-gray-800">1) Analine de Albuquerque Linhares</span> 
-                            <span className="font-semibold text-right">
-                                1 venda(s) <span className="ml-4 text-blue-600">23.766,18</span>
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-1">
-                            <span className="font-medium text-gray-800">2) JULIO VENANCIO MENEZES</span> 
-                            <span className="font-semibold text-right">
-                                1 venda(s) <span className="ml-4 text-blue-600">18.540,00</span>
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-1">
-                            <span className="font-medium text-gray-800">3) Lidiane da Silva Seidenfuhss</span> 
-                            <span className="font-semibold text-right">
-                                1 venda(s) <span className="ml-4 text-blue-600">11.400,00</span>
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-1">
-                            <span className="font-medium text-gray-800">4) Davi William da Silveira de Campos</span> 
-                            <span className="font-semibold text-right">
-                                1 venda(s) <span className="ml-4 text-blue-600">8.700,00</span>
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center py-1">
-                            <span className="font-medium text-gray-800">5) Maria Brandão Silva Gaspar</span> 
-                            <span className="font-semibold text-right">
-                                1 venda(s) <span className="ml-4 text-blue-600">4.800,00</span>
-                            </span>
-                        </div>
-                    </div>
-                    
-                    {/* Indicadores de paginação */}
-                    <div className="flex justify-center gap-2 mt-6">
-                        <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
-                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
-                        <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-
-        {/* Coluna da Direita (Agora Esquerda) */}
-        <div className="space-y-6">
-          {/* Card: Próximos voos */}
-          <Card className="h-fit">
-              <CardHeader>
-                  <CardTitle className="text-lg text-gray-800 font-semibold">Próximos voos</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                  {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
-                      <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
-                          <div className="text-right">
-                              <p className="text-sm text-gray-600">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
-                              <p className="text-sm font-semibold text-gray-800">{new Date(flight.date).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'})}</p>
-                          </div>
-                          <div>
-                              <p className="font-semibold text-sm text-gray-800">{flight.customer}</p>
-                              <p className="text-xs text-gray-600 font-semibold">{flight.package}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                              <Plane className="w-4 h-4 text-blue-600" />
-                              <Badge variant="outline" className="text-blue-600 border-blue-600 bg-blue-50">{flightCodes[index % flightCodes.length]}</Badge>
-                          </div>
-                      </div>
-                  ))}
-                  <div className="flex gap-2">
-                      <Badge className="bg-red-500 text-white hover:bg-red-600">2 em período de check-in</Badge>
-                      <Badge className="bg-green-500 text-white hover:bg-green-600">46 voo(s) pendente(s)</Badge>
-                  </div>
-              </CardContent>
-          </Card>
-
-          {/* Filtros de Período */}
-          <div className="flex flex-wrap gap-1">
-              {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                  <Button 
-                      key={filter} 
-                      variant={activeFilter === filter ? 'default' : 'outline'}
-                      size="sm"
-                      className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                      onClick={() => setActiveFilter(filter)}
-                  >
-                      {filter}
-                  </Button>
-              ))}
-          </div>
-          
-          {/* Card: Orçamentos / Índice de Aprovação */}
-          <Card className="h-fit">
-              <CardHeader>
-                  <CardTitle className="text-lg text-gray-800 font-semibold">
-                      {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
-                  </CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div className="w-full h-[200px] flex items-center justify-center gap-6">
-                      <div className="flex-1 h-full flex items-center justify-center">
-                          <ResponsiveContainer width="100%" height="100%">
-                              <PieChart>
-                                  <Pie 
-                                      data={chartData}
-                                      dataKey="value" 
-                                      nameKey="name" 
-                                      cx="50%" 
-                                      cy="50%" 
-                                      outerRadius={80} 
-                                      fill="#10b981"
-                                      labelLine={false}
-                                  >
-                                      {chartData.map((entry) => (
-                                          <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                      ))}
-                                  </Pie>
-                                  <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                              </PieChart>
-                          </ResponsiveContainer>
-                      </div>
-                      <div className="w-32 space-y-3 pl-4">
-                          <Button 
-                              variant={activeChart === 'budget' ? 'secondary' : 'ghost'}
-                              className="w-full justify-start text-left"
-                              onClick={() => setActiveChart('budget')}
-                          >
-                              Orçamentos
-                          </Button>
-                          <Button 
-                              variant={activeChart === 'approval' ? 'secondary' : 'ghost'}
-                              className="w-full justify-start text-left"
-                              onClick={() => setActiveChart('approval')}
-                          >
-                              Índice de Aprovação
-                          </Button>
-                      </div>
-                  </div>
-              </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Seção 5: Resumos Diários */}
