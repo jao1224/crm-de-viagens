@@ -448,6 +448,36 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-foreground font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                <DollarSign className="w-16 h-16 mb-4" />
+                <p>Nenhuma receita para o dia de hoje.</p>
+                <div className="flex gap-2 mt-6">
+                    <Badge variant="destructive">23 atrasada(s)</Badge>
+                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-foreground font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
+                <DollarSign className="w-16 h-16 mb-4" />
+                <p>Nenhuma despesa para o dia de hoje.</p>
+                <div className="flex gap-2 mt-6">
+                    <Badge variant="destructive">157 atrasada(s)</Badge>
+                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+      
        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardContent className="p-4 text-center">
@@ -493,36 +523,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-16 h-16 mb-4" />
-                <p>Nenhuma receita para o dia de hoje.</p>
-                <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">23 atrasada(s)</Badge>
-                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardHeader>
-                <CardTitle className="text-lg text-foreground font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
-                <DollarSign className="w-16 h-16 mb-4" />
-                <p>Nenhuma despesa para o dia de hoje.</p>
-                <div className="flex gap-2 mt-6">
-                    <Badge variant="destructive">157 atrasada(s)</Badge>
-                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
-                </div>
-            </CardContent>
-        </Card>
-      </div>
-      
        <Sheet>
         <SheetTrigger asChild>
             <Button
@@ -533,26 +533,34 @@ export default function DashboardPage() {
                 <span className="sr-only">Chat</span>
             </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex flex-col h-full w-[350px] p-0">
-            <SheetHeader className="p-4 border-b bg-primary text-primary-foreground">
+        <SheetContent side="right" className="flex flex-col h-full w-[350px] sm:w-[400px] p-0">
+            <SheetHeader className="p-4 border-b">
                 <SheetTitle>Assistente Virtual</SheetTitle>
             </SheetHeader>
-            <ScrollArea className="flex-1 p-4 bg-background">
-                <div className="space-y-4">
+            <ScrollArea className="flex-1 p-4">
+                <div className="space-y-6">
                     {chatMessages.map((msg, index) => (
-                        <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : 'justify-start')}>
+                        <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : '')}>
                            {msg.from === 'assistant' && (
-                               <Avatar className="h-8 w-8">
+                               <Avatar className="h-8 w-8 shrink-0">
                                    <AvatarImage src="" alt="Assistente" />
                                    <AvatarFallback>A</AvatarFallback>
                                </Avatar>
                            )}
                            <div className={cn(
-                               "max-w-[75%] rounded-lg px-4 py-2 text-sm", 
-                               msg.from === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                               "rounded-lg px-4 py-2 text-sm", 
+                               msg.from === 'user' 
+                                ? 'bg-primary text-primary-foreground' 
+                                : 'bg-muted'
                            )}>
                                <p>{msg.text}</p>
                            </div>
+                           {msg.from === 'user' && (
+                                <Avatar className="h-8 w-8 shrink-0">
+                                   <AvatarImage src="https://placehold.co/100x100" alt="Usuário" />
+                                   <AvatarFallback>U</AvatarFallback>
+                               </Avatar>
+                           )}
                         </div>
                     ))}
                 </div>
