@@ -15,20 +15,20 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 
 const mockNotifications = [
-    { date: '23/08/2025', message: 'Hoje é aniversário do(a) Roseane Gomes Marques' },
-    { date: '21/08/2025', message: 'Realizar o check-in da viagem t196w do(a) Horlange Carvalho Azevedo' },
-    { date: '21/08/2025', message: 'Realizar o check-in da viagem 7xie9 do(a) Kelly Freitas Biagi Tassi' },
-    { date: '20/08/2025', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
-    { date: '20/08/2025', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
-    { date: '20/08/2025', message: 'Hoje é aniversário do(a) Pedro Gabriel Damásio do Nascimento' },
-    { date: '18/08/2025', message: 'Hoje é aniversário do(a) Suellen Henrique de Moura' },
-    { date: '18/08/2025', message: 'Hoje é aniversário do(a) Gabriela do Nascimento Oliveira Sales Silva' },
-    { date: '16/08/2025', message: 'Realizar o check-in da viagem 73gde do(a) Anderson' },
-    { date: '16/08/2025', message: 'Hoje é aniversário do(a) Liliane Feliciano Rocha' },
-    { date: '16/08/2025', message: 'Hoje é aniversário do(a) Laudenir de Carvalho Fonte' },
-    { date: '15/08/2025', message: 'Hoje é aniversário do(a) ANA PRISCILA PEREIRA CARVALHO' },
-    { date: '13/08/2025', message: 'Realizar o check-in da viagem 1luie do(a) Emanuel José Carvalho Fortes' },
-    { date: '13/08/2025', message: 'Realizar o check-in da viagem 1cb0t do(a) Pedro Vieira Lopes' },
+    { date: '23/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Roseane Gomes Marques' },
+    { date: '21/08/2025', time: '14:30', message: 'Realizar o check-in da viagem t196w do(a) Horlange Carvalho Azevedo' },
+    { date: '21/08/2025', time: '11:00', message: 'Realizar o check-in da viagem 7xie9 do(a) Kelly Freitas Biagi Tassi' },
+    { date: '20/08/2025', time: '18:00', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
+    { date: '20/08/2025', time: '17:45', message: 'Realizar o check-in da viagem rpkvs do(a) Ana Beatriz Peres de Lima' },
+    { date: '20/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Pedro Gabriel Damásio do Nascimento' },
+    { date: '18/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Suellen Henrique de Moura' },
+    { date: '18/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Gabriela do Nascimento Oliveira Sales Silva' },
+    { date: '16/08/2025', time: '10:15', message: 'Realizar o check-in da viagem 73gde do(a) Anderson' },
+    { date: '16/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Liliane Feliciano Rocha' },
+    { date: '16/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) Laudenir de Carvalho Fonte' },
+    { date: '15/08/2025', time: '09:00', message: 'Hoje é aniversário do(a) ANA PRISCILA PEREIRA CARVALHO' },
+    { date: '13/08/2025', time: '16:00', message: 'Realizar o check-in da viagem 1luie do(a) Emanuel José Carvalho Fortes' },
+    { date: '13/08/2025', time: '16:00', message: 'Realizar o check-in da viagem 1cb0t do(a) Pedro Vieira Lopes' },
 ];
 
 export default function NotificacoesPage() {
@@ -128,14 +128,14 @@ export default function NotificacoesPage() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[150px]">Data</TableHead>
+                                <TableHead className="w-[200px]">Data e Hora</TableHead>
                                 <TableHead>Notificação</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {mockNotifications.map((notification, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="font-medium">{notification.date}</TableCell>
+                                    <TableCell className="font-medium">{notification.date} às {notification.time}</TableCell>
                                     <TableCell>{notification.message}</TableCell>
                                 </TableRow>
                             ))}
