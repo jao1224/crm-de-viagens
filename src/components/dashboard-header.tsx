@@ -124,9 +124,11 @@ export function DashboardHeader() {
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Configurações</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Bell className="mr-2 h-4 w-4" />
-                    <span>Notificações</span>
+                <DropdownMenuItem asChild>
+                    <Link href="/notificacoes">
+                        <Bell className="mr-2 h-4 w-4" />
+                        <span>Notificações</span>
+                    </Link>
                 </DropdownMenuItem>
                  <DropdownMenuItem asChild>
                     <Link href="/usuarios">

@@ -64,7 +64,6 @@ export const navItems: NavItem[] = [
   { href: '/cotacoes', label: 'Cotações', icon: FileText }, 
   { href: '/agenda', label: 'Calendário', icon: Calendar },
   { href: '/tarefas', label: 'Tarefas', icon: ClipboardList },
-  { href: '/notificacoes', label: 'Notificações', icon: Bell },
 ];
 
 export const accompanimentItems: NavItem[] = [
