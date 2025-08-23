@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
-import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
 import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -26,21 +26,53 @@ const budgetChartData = {
 
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
 
+const renderActiveShape = (props: any) => {
+    const RADIAN = Math.PI / 180;
+    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? 'start' : 'end';
+
+    return (
+        <g>
+            <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill} className="text-lg font-bold">
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+            <Sector
+                cx={cx}
+                cy={cy}
+                innerRadius={innerRadius}
+                outerRadius={outerRadius + 5} // Expande a fatia
+                startAngle={startAngle}
+                endAngle={endAngle}
+                fill={fill}
+            />
+        </g>
+    );
+};
+
 export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeChart, setActiveChart] = React.useState<'budget' | 'approval'>('budget');
+    const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
     const chartData = budgetChartData[activeChart];
 
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
-        return (
-            <text x={cx} y={cy} fill="white" textAnchor="middle" dominantBaseline="central" className="text-lg font-bold">
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-        );
+    const onPieEnter = (_: any, index: number) => {
+        setActiveIndex(index);
     };
 
+    const onPieLeave = () => {
+        setActiveIndex(null);
+    };
+    
   return (
     <div className="relative p-4 sm:p-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -100,14 +132,17 @@ export default function DashboardPage() {
                       <ResponsiveContainer width="50%" height="100%">
                           <PieChart>
                               <Pie 
+                                  activeIndex={activeIndex !== null ? activeIndex : undefined}
+                                  activeShape={renderActiveShape}
                                   data={chartData}
                                   dataKey="value" 
                                   nameKey="name" 
                                   cx="50%" 
                                   cy="50%" 
-                                  outerRadius={80} 
+                                  outerRadius={60} 
                                   labelLine={false}
-                                  label={renderCustomizedLabel}
+                                  onMouseEnter={onPieEnter}
+                                  onMouseLeave={onPieLeave}
                               >
                                   {chartData.map((entry, index) => (
                                       <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
@@ -121,7 +156,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'budget' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => setActiveChart('budget')}
+                              onClick={() => { setActiveChart('budget'); setActiveIndex(null); }}
                           >
                               Orçamentos
                           </button>
@@ -130,7 +165,7 @@ export default function DashboardPage() {
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
                                   activeChart === 'approval' ? "bg-muted font-semibold" : "hover:bg-muted/50"
                               )}
-                              onClick={() => setActiveChart('approval')}
+                              onClick={() => { setActiveChart('approval'); setActiveIndex(null); }}
                           >
                               Índice de Aprovação
                           </button>
