@@ -5,10 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { DollarSign, Plane, ListTodo, Users, PieChart as PieChartIcon, UserCheck, Donut, TrendingUp, TrendingDown, MessageSquare } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { ListTodo, Plane, MessageSquare } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -102,26 +100,28 @@ export default function DashboardPage() {
                   <CardTitle className="text-base text-primary font-semibold">{chartTitle}</CardTitle>
               </CardHeader>
               <CardContent>
-                  <div className="w-full h-[200px] flex items-center justify-between">
-                      <ResponsiveContainer width="50%" height="100%">
-                           <PieChart>
-                              <Pie 
-                                  data={chartData}
-                                  dataKey="value" 
-                                  nameKey="name" 
-                                  cx="50%" 
-                                  cy="50%" 
-                                  outerRadius={80} 
-                                  labelLine={false}
-                              >
-                                  {chartData.map((entry) => (
-                                      <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                  ))}
-                              </Pie>
-                              <Tooltip content={<CustomTooltip />} />
-                          </PieChart>
-                      </ResponsiveContainer>
-                      <div className="w-48 space-y-2">
+                  <div className="w-full h-[200px] flex items-center justify-center">
+                      <div className="flex-1 h-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={chartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    labelLine={false}
+                                >
+                                    {chartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="w-48 space-y-2 pl-4">
                           <button
                               className={cn(
                                   "w-full text-left p-2 rounded-md transition-colors text-sm",
