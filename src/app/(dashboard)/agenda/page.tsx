@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info } from 'lucide-react';
+import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info, ListFilter, LayoutGrid, List } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -177,7 +177,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
     )
 }
 
-const CalendarCard = ({ currentDate, setCurrentDate, setSelectedDate, appointmentsByDate }: any) => {
+const CalendarCard = ({ currentDate, setCurrentDate, setSelectedDate, selectedDate, appointmentsByDate }: any) => {
     const firstDayOfMonth = startOfMonth(currentDate);
     const lastDayOfMonth = endOfMonth(currentDate);
 
@@ -196,13 +196,13 @@ const CalendarCard = ({ currentDate, setCurrentDate, setSelectedDate, appointmen
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <h2 className="text-xl font-semibold text-foreground capitalize">
-                    {format(currentDate, 'MMMM \'de\' yyyy', { locale: ptBR })}
+                    {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                 </h2>
                 <div className="flex items-center gap-2">
                     <Button variant="outline" size="icon" onClick={() => changeMonth(-1)}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
-                     <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>Hoje</Button>
+                     <Button variant="outline" size="sm" onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}>Hoje</Button>
                     <Button variant="outline" size="icon" onClick={() => changeMonth(1)}>
                         <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -224,8 +224,9 @@ const CalendarCard = ({ currentDate, setCurrentDate, setSelectedDate, appointmen
                                 className={cn(
                                     "h-10 w-10 flex items-center justify-center rounded-full transition-colors relative",
                                     !isSameMonth(day, currentDate) && "text-muted-foreground/50",
+                                    isSameDay(day, selectedDate) && !isToday(day) && "bg-accent text-accent-foreground",
                                     isToday(day) && "bg-primary text-primary-foreground",
-                                    !isToday(day) && "hover:bg-accent",
+                                    !isToday(day) && !isSameDay(day, selectedDate) && "hover:bg-accent",
                                 )}
                             >
                                 {format(day, 'd')}
@@ -263,6 +264,23 @@ const DailyAgendaCard = ({ selectedDate, appointments, onNewTaskClick }: any) =>
     )
 }
 
+const FilterToolbar = () => (
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex items-center gap-2 flex-wrap">
+            <Button variant="outline" size="sm"><ListFilter className="mr-2 h-4 w-4" /> Filtros</Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">Tarefas</Button>
+            <Button variant="ghost" size="sm" className="text-blue-500">Voos</Button>
+            <Button variant="ghost" size="sm" className="text-yellow-500">Pagamentos</Button>
+            <Button variant="ghost" size="sm" className="text-purple-500">Lembretes</Button>
+        </div>
+        <div className="flex items-center gap-1 border border-border rounded-md p-1 bg-muted">
+            <Button variant="ghost" size="sm" className="h-7 bg-background shadow-sm text-primary"><LayoutGrid className="h-4 w-4" /></Button>
+            <Button variant="ghost" size="sm" className="h-7"><List className="h-4 w-4" /></Button>
+        </div>
+    </div>
+);
+
+
 export default function AgendaPage() {
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
     const [currentDate, setCurrentDate] = React.useState(new Date());
@@ -295,12 +313,15 @@ export default function AgendaPage() {
             <h1 className="text-3xl font-bold text-primary">Agenda</h1>
             <Button onClick={() => setIsNewTaskDialogOpen(true)}>Nova Tarefa</Button>
         </header>
+
+        <FilterToolbar />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1">
                 <CalendarCard 
                     currentDate={currentDate}
                     setCurrentDate={setCurrentDate}
+                    selectedDate={selectedDate}
                     setSelectedDate={setSelectedDate}
                     appointmentsByDate={appointmentsByDate}
                 />
