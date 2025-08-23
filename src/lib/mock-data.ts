@@ -17,6 +17,10 @@ export const mockAppointments: Appointment[] = [
   { id: '13', title: 'Tour Torre Eiffel', customer: 'Ana Clara', package: 'Lua de Mel em Paris', date: '2025-08-13T10:00:00Z', type: 'tour' },
   { id: '14', title: 'Embarque Cruzeiro no Mediterrâneo', customer: 'Família Andrade', package: 'Cruzeiro Grécia e Itália', date: '2025-09-05T16:00:00Z', type: 'cruise' },
   { id: '15', title: 'Futuro Evento de Teste', customer: 'Cliente Teste', package: 'Pacote Futuro', date: '2025-10-05T18:00:00Z', type: 'meeting' },
+  { id: '16', title: 'Passeio de Gôndola em Veneza', customer: 'Casal Ferreira', package: 'Itália Romântica', date: '2025-10-10T16:00:00Z', type: 'tour' },
+  { id: '17', title: 'Aniversário da Agência', customer: 'Equipe NoMeioDoMundo', package: 'N/A', date: '2025-11-01T09:00:00Z', type: 'birthday' },
+  { id: '18', title: 'Voo para Cancún', customer: 'Grupo de Amigos', package: 'Férias no México', date: '2025-11-15T11:30:00Z', type: 'flight' },
+  { id: '19', title: 'Check-in no Resort Paradisus', customer: 'Grupo de Amigos', package: 'Férias no México', date: '2025-11-15T18:00:00Z', type: 'hotel' },
 ];
 
 export const mockQuotes: Quote[] = [
