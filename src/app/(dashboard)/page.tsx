@@ -6,9 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map } from 'lucide-react';
+import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, CalendarIcon } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import type { DateRange } from "react-day-picker";
 
 const budgetChartData = {
     budget: [
@@ -18,20 +23,16 @@ const budgetChartData = {
     approval: [
         { name: 'Aprovado', value: 100, total: 100, color: '#10b981' },
     ],
-    productsServices: [
-        { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
-        { name: 'passagem', value: 26.5, color: '#f97316' },
-        { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
-    ],
     salesChannels: [
         { name: 'Agência', value: 60, color: '#3b82f6' },
         { name: 'Website', value: 30, color: '#10b981' },
         { name: 'Indicação', value: 10, color: '#f97316' },
     ],
-    other: [
-        { name: 'Outro', value: 50, total: 100, color: '#3b82f6' },
-        { name: 'Pendente', value: 50, total: 100, color: '#f97316' },
-    ]
+    productsServices: [
+        { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
+        { name: 'passagem', value: 26.5, color: '#f97316' },
+        { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
+    ],
 };
 
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
@@ -94,10 +95,14 @@ export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
     const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+        from: new Date(2025, 7, 1),
+        to: new Date(2025, 7, 31),
+    });
 
     const budgetChartKeys: (keyof typeof budgetChartData | 'accompaniment')[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'accompaniment'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
-    const chartData = activeBudgetKey !== 'accompaniment' ? budgetChartData[activeBudgetKey] : [];
+    const chartData = activeBudgetKey !== 'accompaniment' ? budgetChartData[activeBudgetKey as keyof typeof budgetChartData] : [];
 
     const top10Entities: Top10EntityType[] = ['Clientes', 'Fornecedores', 'Afiliados'];
     const currentTop10Data = top10Data[top10EntityType];
@@ -192,7 +197,7 @@ export default function DashboardPage() {
                 </div>
             </CardContent>
              <div className="flex justify-center items-center gap-2 mt-auto p-4">
-                {top10Entities.map((entity, index) => (
+                {top10Entities.map((entity) => (
                   <button key={entity} onClick={() => setTop10EntityType(entity)} className="w-8 h-1.5 rounded-full bg-gray-300 data-[active=true]:bg-gray-600" data-active={top10EntityType === entity}></button>
                 ))}
             </div>
@@ -203,19 +208,69 @@ export default function DashboardPage() {
                 <CardTitle className="text-lg text-gray-800 font-semibold">
                      {getChartTitle()}
                 </CardTitle>
-                <div className="flex flex-wrap gap-1">
-                    {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                        <Button 
-                            key={filter} 
-                            variant={activeFilter === filter ? 'default' : 'outline'}
-                            size="sm"
-                            className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                            onClick={() => setActiveFilter(filter)}
-                        >
-                            {filter}
-                        </Button>
-                    ))}
-                </div>
+                {activeFilter === 'Personalizado' ? (
+                    <div className="flex items-center justify-center border rounded-md">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className={cn(
+                                        "justify-start text-left font-normal w-full h-9",
+                                        !dateRange?.from && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {dateRange?.from ? format(dateRange.from, "dd/MM/y") : <span>Data inicial</span>}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    initialFocus
+                                    mode="single"
+                                    selected={dateRange?.from}
+                                    onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        <span className="text-muted-foreground mx-2">até</span>
+                         <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className={cn(
+                                        "justify-start text-left font-normal w-full h-9",
+                                        !dateRange?.to && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {dateRange?.to ? format(dateRange.to, "dd/MM/y") : <span>Data final</span>}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    initialFocus
+                                    mode="single"
+                                    selected={dateRange?.to}
+                                    onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+                ) : (
+                    <div className="flex flex-wrap gap-1">
+                        {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                            <Button 
+                                key={filter} 
+                                variant={activeFilter === filter ? 'default' : 'outline'}
+                                size="sm"
+                                className={`text-xs h-7 px-2 ${activeFilter === filter ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                onClick={() => setActiveFilter(filter)}
+                            >
+                                {filter}
+                            </Button>
+                        ))}
+                    </div>
+                )}
             </CardHeader>
             <CardContent className="p-6 pt-0 flex-grow">
                 {activeBudgetKey === 'accompaniment' ? (
@@ -460,7 +515,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
-
-    
