@@ -166,13 +166,12 @@ export default function DashboardPage() {
                     </div>
                 </CardContent>
             </Card>
-          
             <Card className="h-fit">
                 <CardHeader className="p-6 space-y-4">
                     <CardTitle className="text-lg text-gray-800 font-semibold">
                          {activeChart === 'budget' ? 'Orçamentos' : 'Índice de Aprovação'}
                     </CardTitle>
-                     <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1">
                         {['Dia', 'Semana', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                             <Button 
                                 key={filter} 
@@ -446,95 +445,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-800">Casal em Coimbra</h3>
-                            <p className="text-sm text-green-600 font-medium">100,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">4 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">4 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-800">Conexões</h3>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">0 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">0 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            MM
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-800">É o Nosso Quintal</h3>
-                            <p className="text-sm text-green-600 font-medium">100,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">1 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-
-        <Card className="h-fit">
-            <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                            M
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-gray-800">Maxshuell</h3>
-                            <p className="text-sm text-yellow-600 font-medium">50,00%</p>
-                        </div>
-                    </div>
-                    <div className="text-right">
-                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">2 orçamentos</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
-                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
-                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
@@ -579,3 +489,4 @@ export default function DashboardPage() {
     
 
     
+
