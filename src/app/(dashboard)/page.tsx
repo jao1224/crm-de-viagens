@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, MessageSquare, Info, DollarSign } from 'lucide-react';
+import { ListTodo, Plane, MessageSquare, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -17,9 +17,6 @@ const budgetChartData = {
     ],
     approval: [
         { name: 'Aprovado', value: 100, total: 100, color: '#10b981' },
-    ],
-    expense: [
-        { name: 'Pagamento Fornecedor', value: 100, color: '#3b82f6' },
     ],
     productsServices: [
         { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
@@ -63,6 +60,17 @@ const top10Data = {
   ]
 };
 
+const accompanimentData = [
+  { icon: Plane, label: 'Voos', value: 4 },
+  { icon: Hotel, label: 'Hospedagem', value: 0 },
+  { icon: Luggage, label: 'Cruzeiro', value: 0 },
+  { icon: Camera, label: 'Experiências Turísticas', value: 0 },
+  { icon: TrainFront, label: 'Transporte', value: 0 },
+  { icon: HeartPulse, label: 'Seguro', value: 0 },
+  { icon: Map, label: 'Roteiro', value: 0 },
+];
+
+
 type Top10EntityType = keyof typeof top10Data;
 
 
@@ -87,9 +95,9 @@ export default function DashboardPage() {
     const [top10EntityType, setTop10EntityType] = React.useState<Top10EntityType>('Clientes');
     const [activeBudgetChartIndex, setActiveBudgetChartIndex] = React.useState(1);
 
-    const budgetChartKeys: (keyof typeof budgetChartData)[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'expense', 'other'];
+    const budgetChartKeys: (keyof typeof budgetChartData | 'accompaniment')[] = ['budget', 'approval', 'salesChannels', 'productsServices', 'accompaniment'];
     const activeBudgetKey = budgetChartKeys[activeBudgetChartIndex];
-    const chartData = budgetChartData[activeBudgetKey];
+    const chartData = activeBudgetKey !== 'accompaniment' ? budgetChartData[activeBudgetKey] : [];
 
     const top10Entities: Top10EntityType[] = ['Clientes', 'Fornecedores', 'Afiliados'];
     const currentTop10Data = top10Data[top10EntityType];
@@ -98,10 +106,9 @@ export default function DashboardPage() {
         switch(activeBudgetKey) {
             case 'budget': return 'Orçamentos';
             case 'approval': return 'Índice de Aprovação';
-            case 'expense': return 'Despesas por Categoria';
-            case 'productsServices': return 'Produtos/Serviços';
             case 'salesChannels': return 'Canais de Venda';
-            case 'other': return 'Outro Indicador';
+            case 'productsServices': return 'Produtos/Serviços';
+            case 'accompaniment': return 'Acompanhamento';
             default: return 'Orçamentos';
         }
     };
@@ -211,6 +218,32 @@ export default function DashboardPage() {
                 </div>
             </CardHeader>
             <CardContent className="p-6 pt-0 flex-grow">
+                {activeBudgetKey === 'accompaniment' ? (
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-4 pt-4">
+                    <div className="space-y-4">
+                      {accompanimentData.slice(0, 4).map(item => (
+                        <div key={item.label} className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <item.icon className="w-4 h-4" />
+                            <span>{item.label}</span>
+                          </div>
+                          <Badge className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-4">
+                      {accompanimentData.slice(4).map(item => (
+                        <div key={item.label} className="flex items-center justify-between text-sm">
+                           <div className="flex items-center gap-2 text-gray-600">
+                            <item.icon className="w-4 h-4" />
+                            <span>{item.label}</span>
+                          </div>
+                          <Badge className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">{item.value}</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
                 <div className="w-full h-[200px] flex items-center justify-center gap-12">
                     <div className="flex-1 h-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
@@ -242,6 +275,7 @@ export default function DashboardPage() {
                         ))}
                     </div>
                 </div>
+                )}
             </CardContent>
             <div className="flex justify-center items-center gap-2 mt-auto p-4">
                 {budgetChartKeys.map((key, index) => (
@@ -426,5 +460,7 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
 
     
