@@ -30,8 +30,8 @@ const expensesChartData = [
 ]
 
 const budgetChartData = [
-    { name: 'Aprovado', value: 75, color: '#8b5cf6' },
-    { name: 'Aguardando', value: 25, color: '#f59e0b' },
+    { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-1))' },
+    { name: 'Aguardando', value: 25, color: 'hsl(var(--chart-2))' },
 ];
 
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
@@ -165,7 +165,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <CardTitle className="font-headline text-[#8b5cf6] text-2xl">Orçamentos</CardTitle>
+                            <CardTitle className="font-headline text-primary text-2xl">Orçamentos</CardTitle>
                             <CardDescription className="text-base">Análise visual dos seus dados chave.</CardDescription>
                         </div>
                         
@@ -176,7 +176,7 @@ export default function DashboardPage() {
                                     key={filter} 
                                     variant={activeBudgetFilter === filter ? 'default' : 'outline'}
                                     size="sm"
-                                    className={`text-xs h-8 px-3 ${activeBudgetFilter === filter ? 'bg-[#8b5cf6] text-white border-[#8b5cf6]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200'}`}
+                                    className={`text-xs h-8 px-3`}
                                     onClick={() => setActiveBudgetFilter(filter)}
                                 >
                                     {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1" />}
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                                         cy="50%" 
                                         outerRadius={100} 
                                         innerRadius={60}
-                                        fill="#8b5cf6"
+                                        fill="hsl(var(--primary))"
                                         labelLine={false}
                                     >
                                         {budgetChartData.map((entry) => (
@@ -227,11 +227,11 @@ export default function DashboardPage() {
                     
                     {/* Indicadores de paginação */}
                     <div className="flex justify-center gap-2 mt-6">
-                        <div className="w-3 h-3 bg-[#8b5cf6] rounded-full"></div>
-                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-                        <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        <div className="w-3 h-3 bg-primary rounded-full"></div>
+                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
                     </div>
                 </CardContent>
             </Card>
