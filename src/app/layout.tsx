@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'iddas agência',
+  title: 'No Meio do Mundo',
   description: 'Sistema de gestão para agências de viagem.',
 };
 

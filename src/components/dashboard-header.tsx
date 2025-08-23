@@ -22,7 +22,7 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-primary px-4 md:px-6">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
-        <h1 className="font-bold text-xl text-primary-foreground">iddas agência</h1>
+        <h1 className="font-bold text-xl text-primary-foreground">No Meio do Mundo</h1>
       </div>
       
       {/* Navegação Principal do Header (visível em telas maiores) */}
@@ -42,7 +42,7 @@ export function DashboardHeader() {
       <div className="ml-auto flex items-center gap-2">
          <div className="flex items-center gap-2">
             <Avatar className="h-9 w-9">
-              <AvatarImage src="https://placehold.co/100x100" alt="Maxshuell" />
+              <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Maxshuell" />
               <AvatarFallback>M</AvatarFallback>
             </Avatar>
             <div className="hidden sm:flex flex-col items-start">
