@@ -168,41 +168,43 @@ export default function DashboardPage() {
           </Card>
 
           {/* Top 10 Clientes */}
-          <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
-                   <div className="flex items-center border border-primary rounded-md p-0.5">
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                            onClick={() => setTopClientsFilter('Faturamento')}
-                        >
-                            Faturamento
-                        </Button>
-                        <Button 
-                            size="sm"
-                            className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
-                            onClick={() => setTopClientsFilter('Lucro')}
-                        >
-                            Lucro
-                        </Button>
-                   </div>
-              </CardHeader>
-              <CardContent>
-                  <div className="space-y-2 text-sm">
-                      <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
-                      <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
-                      <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
-                      <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
-                      <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
-                  </div>
-                    <div className="flex justify-center gap-2 mt-4">
-                        <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                        <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                   </div>
-              </CardContent>
-          </Card>
+          <div className="mt-auto">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
+                    <div className="flex items-center border border-primary rounded-md p-0.5">
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Faturamento')}
+                          >
+                              Faturamento
+                          </Button>
+                          <Button 
+                              size="sm"
+                              className={`text-xs h-7 px-3 ${topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'bg-transparent text-primary hover:bg-primary/10'}`}
+                              onClick={() => setTopClientsFilter('Lucro')}
+                          >
+                              Lucro
+                          </Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2 text-sm">
+                        <div className="flex justify-between"><span>1) Aneline de Albuquerque Linhares</span> <span className="font-semibold">1 venda(s) <span className="ml-4">23.766,18</span></span></div>
+                        <div className="flex justify-between"><span>2) JULIO VENANCIO MENEZES</span> <span className="font-semibold">1 venda(s) <span className="ml-4">18.540,00</span></span></div>
+                        <div className="flex justify-between"><span>3) Lidiane da Silva Seidenfuhss</span> <span className="font-semibold">1 venda(s) <span className="ml-4">11.400,00</span></span></div>
+                        <div className="flex justify-between"><span>4) Davi William da Silveira de Campos</span> <span className="font-semibold">1 venda(s) <span className="ml-4">8.700,00</span></span></div>
+                        <div className="flex justify-between"><span>5) Maria Brandão Silva Gaspar</span> <span className="font-semibold">1 venda(s) <span className="ml-4">4.800,00</span></span></div>
+                    </div>
+                      <div className="flex justify-center gap-2 mt-4">
+                          <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                          <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+                    </div>
+                </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
       
