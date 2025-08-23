@@ -72,6 +72,7 @@ export type Reservation = {
   status: 'Confirmada' | 'Pendente' | 'Cancelada';
   totalPrice: number;
   travelers: number;
+  agentId: string;
   agentAvatarUrl: string;
 };
 
