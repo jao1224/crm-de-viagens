@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import { ChatWidget } from "@/components/chat-widget";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import type { Project } from "@/lib/types";
+import { Input } from "@/components/ui/input";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
@@ -186,42 +188,65 @@ export default function DashboardPage() {
                                         {filter}
                                     </Button>
                                 ))}
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                         <Button 
-                                            variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
-                                            size="sm"
-                                            className={`text-xs h-8 px-3`}
-                                            onClick={() => setActiveBudgetFilter('Personalizado')}
-                                        >
-                                            <CalendarIcon className="w-3 h-3 mr-1" />
-                                            Personalizado
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="end">
-                                        <Calendar
-                                            initialFocus
-                                            mode="range"
-                                            defaultMonth={dateRange?.from}
-                                            selected={dateRange}
-                                            onSelect={setDateRange}
-                                            numberOfMonths={2}
-                                            locale={ptBR}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <Button 
+                                    variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
+                                    size="sm"
+                                    className={`text-xs h-8 px-3`}
+                                    onClick={() => setActiveBudgetFilter('Personalizado')}
+                                >
+                                    <CalendarIcon className="w-3 h-3 mr-1" />
+                                    Personalizado
+                                </Button>
                             </div>
                         </div>
                     </div>
                      {activeBudgetFilter === 'Personalizado' && (
-                        <div className="flex items-center gap-2 pt-4">
-                            <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
-                                {dateRange?.from ? format(dateRange.from, "dd/MM/yyyy") : "Data de Início"}
-                            </div>
-                             <span className="text-muted-foreground">até</span>
-                             <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background">
-                                {dateRange?.to ? format(dateRange.to, "dd/MM/yyyy") : "Data Final"}
-                            </div>
+                        <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 pt-4">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <div className="relative">
+                                        <Input
+                                          value={dateRange?.from ? format(dateRange.from, 'dd/MM/yyyy') : ''}
+                                          placeholder="Data de Início"
+                                          className="pr-8"
+                                          readOnly
+                                        />
+                                        <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={dateRange?.from}
+                                        onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
+                                        initialFocus
+                                        locale={ptBR}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            <span className="text-muted-foreground">até</span>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                     <div className="relative">
+                                        <Input
+                                          value={dateRange?.to ? format(dateRange.to, 'dd/MM/yyyy') : ''}
+                                          placeholder="Data Final"
+                                          className="pr-8"
+                                          readOnly
+                                        />
+                                        <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="end">
+                                    <Calendar
+                                        mode="single"
+                                        selected={dateRange?.to}
+                                        onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
+                                        initialFocus
+                                        locale={ptBR}
+                                    />
+                                </PopoverContent>
+                            </Popover>
                         </div>
                     )}
                 </CardHeader>
@@ -436,3 +461,6 @@ export default function DashboardPage() {
     
 
 
+
+
+    
