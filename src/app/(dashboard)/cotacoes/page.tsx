@@ -17,52 +17,52 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 const statusConfig: { [key in Quote['status']]: { title: string; borderColor: string; bgColor: string; textColor: string; } } = {
-  aguardando: { title: 'AGUARDANDO', borderColor: 'border-gray-500', bgColor: 'bg-gray-500/10', textColor: 'text-gray-600' },
-  'em-cotacao': { title: 'EM COTAÇÃO', borderColor: 'border-orange-500', bgColor: 'bg-orange-500/10', textColor: 'text-orange-600' },
-  'aguardando-cliente': { title: 'AGUARDANDO CLIENTE', borderColor: 'border-blue-500', bgColor: 'bg-blue-500/10', textColor: 'text-blue-600' },
-  aprovado: { title: 'APROVADO', borderColor: 'border-green-600', bgColor: 'bg-green-600/10', textColor: 'text-green-700' },
-  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-600/10', textColor: 'text-red-700' },
+  aguardando: { title: 'AGUARDANDO', borderColor: 'border-gray-500', bgColor: 'bg-gray-100 dark:bg-gray-800/50', textColor: 'text-gray-600 dark:text-gray-400' },
+  'em-cotacao': { title: 'EM COTAÇÃO', borderColor: 'border-orange-500', bgColor: 'bg-orange-100 dark:bg-orange-800/50', textColor: 'text-orange-600 dark:text-orange-400' },
+  'aguardando-cliente': { title: 'AGUARDANDO CLIENTE', borderColor: 'border-blue-500', bgColor: 'bg-blue-100 dark:bg-blue-800/50', textColor: 'text-blue-600 dark:text-blue-400' },
+  aprovado: { title: 'APROVADO', borderColor: 'border-green-600', bgColor: 'bg-green-100 dark:bg-green-800/50', textColor: 'text-green-700 dark:text-green-500' },
+  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-100 dark:bg-red-800/50', textColor: 'text-red-700 dark:text-red-500' },
 };
 
 const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void }) => {
   const config = statusConfig[quote.status];
   return (
     <Card 
-      className="mb-4 cursor-grab active:cursor-grabbing transition-shadow duration-200 hover:shadow-lg"
+      className="mb-3 cursor-grab active:cursor-grabbing transition-shadow duration-200 hover:shadow-lg bg-card"
       draggable="true"
       onDragStart={(e) => onDragStart(e, quote.id)}
     >
       <CardContent className="p-3">
-        <div className="flex justify-between items-start mb-3">
+        <div className="flex justify-between items-start mb-2">
             <div className="flex items-center gap-2">
-                <Avatar className="h-6 w-6">
+                <Avatar className="h-8 w-8">
                     <AvatarImage src={quote.client.avatarUrl} alt={quote.client.name} />
                     <AvatarFallback>{quote.client.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <p className="font-bold text-sm text-foreground truncate" title={quote.client.name}>
+                    <p className="font-bold text-sm text-foreground truncate max-w-[150px]" title={quote.client.name}>
                     {quote.client.name || 'Cliente não informado'}
                     </p>
                     <span className="text-xs text-muted-foreground font-mono">ID: {quote.id}</span>
                 </div>
             </div>
           
-            <div className="flex items-center font-bold text-sm">
+            <div className="flex items-center text-sm">
                 {quote.value > 0 && (
-                    <span className={cn(quote.status === 'aprovado' ? 'text-green-600' : 'text-foreground')}>
+                    <span className={cn('font-semibold', quote.status === 'aprovado' ? 'text-green-600' : 'text-foreground')}>
                         {quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </span>
                 )}
             </div>
         </div>
         
-        <div className="flex justify-between items-center text-xs text-muted-foreground">
-          <span>{quote.date}</span>
+        <div className="flex justify-between items-center text-xs text-muted-foreground mt-3">
+          <span className="font-medium">{quote.date}</span>
           <div className="flex items-center gap-2.5 text-muted-foreground">
+            {quote.status === 'aprovado' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
             <Eye className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
             <Paperclip className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
             <Pencil className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
-            <MoreHorizontal className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
           </div>
         </div>
       </CardContent>
@@ -93,7 +93,7 @@ const QuoteColumn = ({
       onDragOver={onDragOver}
     >
       <div className={cn('flex justify-between items-center p-3 rounded-t-lg border-t-4', config.borderColor)}>
-        <h2 className={cn("font-bold text-sm", config.textColor)}>{`${config.title} (${quotes.length})`}</h2>
+        <h2 className={cn("font-bold text-sm uppercase tracking-wider", config.textColor)}>{`${config.title} (${quotes.length})`}</h2>
         <span className={cn("font-semibold text-sm", config.textColor)}>
             {totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
         </span>
@@ -114,12 +114,14 @@ const QuoteColumn = ({
 
 export default function CotacoesPage() {
   const [date, setDate] = React.useState<{ from: Date | undefined; to: Date | undefined } | undefined>();
+  const [isClient, setIsClient] = React.useState(false)
   
   useEffect(() => {
     setDate({
       from: new Date(2025, 5, 24),
       to: new Date(2025, 7, 23),
     });
+    setIsClient(true);
   }, []);
 
   const [quotes, setQuotes] = React.useState<Quote[]>(mockQuotes);
@@ -158,7 +160,6 @@ export default function CotacoesPage() {
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-primary">Cotações</h1>
         <div className="flex items-center gap-2">
-            <MoreHorizontal className="h-5 w-5 text-muted-foreground cursor-pointer" />
             <Button variant="outline" size="sm">
                 <LinkIcon className="mr-2 h-4 w-4" />
                 Links
@@ -170,8 +171,8 @@ export default function CotacoesPage() {
       <Card>
         <CardContent className="p-3">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Cliente</label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground px-1">Cliente</label>
               <Select>
                 <SelectTrigger className="h-9">
                   <SelectValue placeholder="Todos" />
@@ -181,13 +182,13 @@ export default function CotacoesPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Tag/Identificador</label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground px-1">Tag/Identificador</label>
               <Input placeholder="Tag ou Identificador" className="h-9" />
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Período</label>
-              <div className="flex items-center gap-2">
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground px-1">Período</label>
+               {isClient && <div className="flex items-center gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
@@ -220,10 +221,10 @@ export default function CotacoesPage() {
                     />
                   </PopoverContent>
                 </Popover>
-              </div>
+              </div>}
             </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Usuário</label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-muted-foreground px-1">Usuário</label>
               <Select>
                 <SelectTrigger className="h-9">
                   <SelectValue placeholder="Todos" />
@@ -258,3 +259,5 @@ export default function CotacoesPage() {
     </div>
   );
 }
+
+    
