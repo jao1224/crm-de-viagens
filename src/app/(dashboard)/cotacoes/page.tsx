@@ -9,7 +9,7 @@ import { Calendar as CalendarIcon, MoreHorizontal, Link as LinkIcon, Filter, Eye
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { mockQuotes } from '@/lib/mock-data';
 import type { Quote } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -24,9 +24,13 @@ const statusConfig: { [key in Quote['status']]: { title: string; color: string; 
   reprovado: { title: 'REPROVADO', color: 'bg-red-600', textColor: 'text-white' },
 };
 
-const QuoteCard = ({ quote }: { quote: Quote }) => {
+const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void }) => {
   return (
-    <Card className="mb-4">
+    <Card 
+      className="mb-4 cursor-grab active:cursor-grabbing"
+      draggable="true"
+      onDragStart={(e) => onDragStart(e, quote.id)}
+    >
       <CardContent className="p-3">
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2">
@@ -61,12 +65,26 @@ const QuoteCard = ({ quote }: { quote: Quote }) => {
   );
 };
 
-const QuoteColumn = ({ status, quotes }: { status: Quote['status']; quotes: Quote[] }) => {
+const QuoteColumn = ({ 
+  status, 
+  quotes, 
+  onDrop,
+  onDragOver
+}: { 
+  status: Quote['status']; 
+  quotes: Quote[];
+  onDrop: (e: React.DragEvent<HTMLDivElement>, newStatus: Quote['status']) => void;
+  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
+}) => {
   const config = statusConfig[status];
   const totalValue = quotes.reduce((acc, q) => acc + q.value, 0);
 
   return (
-    <div className="flex-1 min-w-[280px]">
+    <div 
+      className="flex-1 min-w-[280px]"
+      onDrop={(e) => onDrop(e, status)}
+      onDragOver={onDragOver}
+    >
       <div className={cn('flex justify-between items-center p-2 rounded-t-md', config.color, config.textColor)}>
         <h2 className="font-bold text-sm">{`${config.title} (${quotes.length})`}</h2>
         <span className="font-bold text-sm">
@@ -75,7 +93,7 @@ const QuoteColumn = ({ status, quotes }: { status: Quote['status']; quotes: Quot
       </div>
       <div className="p-2 bg-muted/50 h-full rounded-b-md">
         {quotes.length > 0 ? (
-          quotes.map(quote => <QuoteCard key={quote.id} quote={quote} />)
+          quotes.map(quote => <QuoteCard key={quote.id} quote={quote} onDragStart={onDragStart} />)
         ) : (
           <div className="flex justify-center items-center h-24 text-sm text-muted-foreground">
             Nenhuma cotação.
@@ -86,14 +104,40 @@ const QuoteColumn = ({ status, quotes }: { status: Quote['status']; quotes: Quot
   );
 };
 
+// Dummy onDragStart as it will be defined inside the main component
+const onDragStart = (e: React.DragEvent<HTMLDivElement>, quoteId: string) => {
+    e.dataTransfer.setData("quoteId", quoteId);
+};
+
 
 export default function CotacoesPage() {
   const [date, setDate] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
     from: new Date(2025, 5, 24),
     to: new Date(2025, 7, 23),
   });
+  
+  const [quotes, setQuotes] = React.useState<Quote[]>(mockQuotes);
 
-  const quotesByStatus = mockQuotes.reduce((acc, quote) => {
+  const onDragStart = (e: React.DragEvent<HTMLDivElement>, quoteId: string) => {
+    e.dataTransfer.setData("quoteId", quoteId);
+  };
+  
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault(); 
+  };
+  
+  const onDrop = (e: React.DragEvent<HTMLDivElement>, newStatus: Quote['status']) => {
+    e.preventDefault();
+    const quoteId = e.dataTransfer.getData("quoteId");
+    
+    setQuotes(prevQuotes => 
+      prevQuotes.map(quote => 
+        quote.id === quoteId ? { ...quote, status: newStatus } : quote
+      )
+    );
+  };
+
+  const quotesByStatus = quotes.reduce((acc, quote) => {
     if (!acc[quote.status]) {
       acc[quote.status] = [];
     }
@@ -197,10 +241,15 @@ export default function CotacoesPage() {
             <QuoteColumn 
                 key={statusKey} 
                 status={statusKey as Quote['status']} 
-                quotes={quotesByStatus[statusKey as Quote['status']] || []} 
+                quotes={quotesByStatus[statusKey as Quote['status']] || []}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
             />
         ))}
       </div>
     </div>
   );
 }
+
+
+    
