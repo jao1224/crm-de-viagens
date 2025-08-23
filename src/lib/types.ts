@@ -28,4 +28,5 @@ export type NavItem = {
   label: string;
   icon: LucideIcon;
   badge?: number;
+  external?: boolean;
 };

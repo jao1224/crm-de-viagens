@@ -43,6 +43,12 @@ import {
   XCircle,
   Tag,
   Image as ImageIcon,
+  Mail,
+  RefreshCw,
+  PlayCircle,
+  LifeBuoy,
+  BookText,
+  ExternalLink,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -107,10 +113,17 @@ export const registrationItems: NavItem[] = [
 ];
 
 export const automationItems: NavItem[] = [
-    { href: '/automacao', label: 'Automação', icon: Settings },
+    { href: '/automacao/email', label: 'Comunicação E-mail', icon: Mail },
+    { href: '/automacao/whatsapp', label: 'Comun. Whatsapp', icon: MessageSquare },
+    { href: '/automacao/tarefas', label: 'Tarefas', icon: RefreshCw },
 ];
+
 export const helpItems: NavItem[] = [
-    { href: '/ajuda', label: 'Ajuda', icon: HelpCircle },
+    { href: '/ajuda/tutoriais', label: 'Tutoriais', icon: PlayCircle },
+    { href: '/ajuda/central', label: 'Central de Ajuda', icon: HelpCircle, external: true },
+    { href: '/ajuda/ticket', label: 'Ticket', icon: LifeBuoy },
+    { href: '/ajuda/whatsapp', label: 'Whatsapp', icon: MessageSquare, external: true },
+    { href: '/ajuda/integracao', label: 'Integração', icon: BookText, external: true },
 ];
 
 
@@ -146,7 +159,7 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
-                <span className="text-sm font-medium text-muted-foreground">
+                <span className="text-sm font-semibold text-muted-foreground">
                     Acompanhamento
                 </span>
                 <ChevronDown className="h-4 w-4" />
@@ -170,7 +183,7 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
-                 <span className="text-sm font-medium text-muted-foreground">
+                 <span className="text-sm font-semibold text-muted-foreground">
                     Financeiro
                 </span>
                 <ChevronDown className="h-4 w-4" />
@@ -194,7 +207,7 @@ export function SimpleDashboardNav() {
         
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
-                <span className="text-sm font-medium text-muted-foreground">
+                <span className="text-sm font-semibold text-muted-foreground">
                     Documentos
                 </span>
                 <ChevronDown className="h-4 w-4" />
@@ -218,7 +231,7 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
-                <span className="text-sm font-medium text-muted-foreground">
+                <span className="text-sm font-semibold text-muted-foreground">
                     Cadastros
                 </span>
                 <ChevronDown className="h-4 w-4" />
@@ -240,32 +253,54 @@ export function SimpleDashboardNav() {
             </CollapsibleContent>
         </Collapsible>
 
-         {automationItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
-                <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href)}
-                    tooltip={{ children: item.label, side: "right", align: "center" }}
-                >
-                    <item.icon />
-                    <span className="flex-1">{item.label}</span>
-                </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-        ))}
-         {helpItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
-                <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href)}
-                    tooltip={{ children: item.label, side: "right", align: "center" }}
-                >
-                    <item.icon />
-                    <span className="flex-1">{item.label}</span>
-                </SidebarMenuButton>
-                </Link>
-            </SidebarMenuItem>
-        ))}
+        <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-semibold text-muted-foreground">
+                    Automação
+                </span>
+                <ChevronDown className="h-4 w-4" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 py-1">
+                 {automationItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+            </CollapsibleContent>
+        </Collapsible>
+
+        <Collapsible className="w-full" defaultOpen>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+                <span className="text-sm font-semibold text-muted-foreground">
+                    Ajuda
+                </span>
+                <ChevronDown className="h-4 w-4" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 py-1">
+                 {helpItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
+                        <SidebarMenuButton
+                            isActive={pathname.startsWith(item.href)}
+                            tooltip={{ children: item.label, side: "right", align: "center" }}
+                        >
+                            <item.icon />
+                            <span className="flex-1">{item.label}</span>
+                            {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
+                        </SidebarMenuButton>
+                        </Link>
+                    </SidebarMenuItem>
+                ))}
+            </CollapsibleContent>
+        </Collapsible>
 
     </SidebarMenu>
   );
