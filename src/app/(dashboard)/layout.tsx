@@ -2,6 +2,7 @@
 import { SimpleDashboardNav } from "@/components/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { SidebarProvider, Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import { ChatWidget } from "@/components/chat-widget";
 
 export default function DashboardLayout({
   children,
@@ -23,6 +24,7 @@ export default function DashboardLayout({
                   </main>
               </div>
           </div>
+          <ChatWidget />
       </SidebarProvider>
   );
 }

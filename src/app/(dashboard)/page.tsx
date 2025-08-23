@@ -14,7 +14,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { DateRange } from "react-day-picker";
-import { ChatWidget } from "@/components/chat-widget";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import type { Project } from "@/lib/types";
@@ -447,7 +446,6 @@ export default function DashboardPage() {
                 </Card>
             </div>
 
-            <ChatWidget />
         </div>
     );
 }
