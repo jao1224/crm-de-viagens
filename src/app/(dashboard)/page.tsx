@@ -11,7 +11,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import React from "react";
 
-const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--muted))'];
+const COLORS = ['hsl(var(--chart-1))', '#6b7280']; // Verde e Cinza Escuro
 const COLORS_REVENUE = ['hsl(var(--chart-1))', 'hsl(var(--chart-4))', 'hsl(var(--chart-2))'];
 
 const budgetData = [
@@ -33,6 +33,36 @@ export default function DashboardPage() {
     const [activeFilter, setActiveFilter] = React.useState('Mês');
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
 
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
+        const RADIAN = Math.PI / 180;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
+                {`${(percent * 100).toFixed(1)}%`}
+            </text>
+        );
+    };
+
+    const renderLegend = (props: any) => {
+        const { payload } = props;
+        return (
+            <ul className="flex flex-col space-y-2">
+                {
+                    payload.map((entry: any, index: number) => (
+                        <li key={`item-${index}`} className="flex items-center space-x-2">
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <span className="text-sm text-gray-600">{entry.value}</span>
+                        </li>
+                    ))
+                }
+            </ul>
+        );
+    }
+
+
   return (
     <div className="relative p-4 sm:p-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -42,7 +72,7 @@ export default function DashboardPage() {
           {/* Próximos voos */}
           <Card>
               <CardHeader>
-                  <CardTitle className="text-base text-gray-800 font-semibold">Próximos voos</CardTitle>
+                  <CardTitle className="text-base text-primary font-semibold">Próximos voos</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                   {mockAppointments.filter(a => a.type === 'departure').map((flight, index) => (
@@ -83,41 +113,44 @@ export default function DashboardPage() {
           </div>
 
           {/* Orçamentos */}
-          <Card>
-              <CardHeader>
-                  <CardTitle className="text-base text-gray-800 font-semibold">Orçamentos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div style={{ width: '100%', height: 200 }}>
-                      <ResponsiveContainer>
-                          <PieChart>
-                              <Pie data={budgetData} dataKey="value" cx="50%" cy="50%" outerRadius={80} innerRadius={60} labelLine={false} label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-                                const RADIAN = Math.PI / 180;
-                                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                                return (
-                                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-xs font-bold">
-                                    {`${(percent * 100).toFixed(1)}%`}
-                                </text>
-                                );
-                            }}>
-                                  {budgetData.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                  ))}
-                              </Pie>
-                              <Legend formatter={(value, entry) => <span className="text-foreground text-sm">{value}</span>} />
-                          </PieChart>
-                      </ResponsiveContainer>
-                  </div>
-                   <div className="flex justify-center gap-2 mt-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="w-full h-[200px] flex items-center">
+                        <ResponsiveContainer width="60%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={budgetData} 
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    labelLine={false}
+                                    label={renderCustomizedLabel}
+                                >
+                                    {budgetData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <div className="w-px bg-gray-200 h-20 mx-4"></div>
+                        <ResponsiveContainer width="40%" height="100%">
+                           <Legend content={renderLegend} verticalAlign="middle" />
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="flex justify-center gap-2 mt-4">
                         <div className="w-10 h-1 bg-gray-800 rounded-full"></div>
                         <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
                         <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
                         <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
-                   </div>
-              </CardContent>
-          </Card>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
         
         {/* Coluna Direita */}
@@ -126,7 +159,7 @@ export default function DashboardPage() {
           {/* Tarefas */}
           <Card>
                <CardHeader>
-                  <CardTitle className="text-base text-gray-800 font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
+                  <CardTitle className="text-base text-primary font-semibold">Tarefas para hoje, dia {new Date().getDate()}</CardTitle>
               </CardHeader>
                <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-8">
                   <ListTodo className="w-12 h-12 mb-4 text-gray-400" />
@@ -142,7 +175,7 @@ export default function DashboardPage() {
           {/* Top 10 Clientes */}
           <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-base text-gray-800 font-semibold">Top 10 Clientes</CardTitle>
+                  <CardTitle className="text-base text-primary font-semibold">Top 10 Clientes</CardTitle>
                    <div className="flex items-center border border-primary rounded-md p-0.5">
                         <Button 
                             size="sm"
@@ -187,3 +220,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
