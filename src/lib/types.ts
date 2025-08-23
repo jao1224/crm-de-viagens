@@ -30,3 +30,14 @@ export type NavItem = {
   badge?: number;
   external?: boolean;
 };
+
+export type Quote = {
+  id: string;
+  date: string;
+  client: {
+    name: string;
+    avatarUrl: string;
+  };
+  value: number;
+  status: 'aguardando' | 'em-cotacao' | 'aguardando-cliente' | 'aprovado' | 'reprovado';
+};
