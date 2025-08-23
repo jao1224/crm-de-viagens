@@ -17,6 +17,12 @@ const COLORS_REVENUE = ['hsl(var(--chart-1))', 'hsl(var(--chart-4))', 'hsl(var(-
 const approvalData = [
     { name: 'Aprovado', value: 100 },
 ];
+
+const budgetData = [
+    { name: 'Aprovado', value: 75 },
+    { name: 'Aguardando', value: 25 },
+];
+
 const revenueByCategoryData = [
     { name: 'Venda de Passagem', value: 72.7 },
     { name: 'VISTO PROC. TRABALHO', value: 26.0 },
@@ -37,6 +43,27 @@ export default function DashboardPage() {
             <text x={cx} y={cy} fill="white" textAnchor="middle" dominantBaseline="central" className="text-lg font-bold">
                 {`${(percent * 100).toFixed(0)}%`}
             </text>
+        );
+    };
+    
+    const renderBudgetLabel = (props: any) => {
+        const { cx, cy, percent, payload } = props;
+        const RADIAN = Math.PI / 180;
+        const radius = props.outerRadius + 20;
+        const x = cx + radius * Math.cos(-props.midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-props.midAngle * RADIAN);
+
+        return (
+            <g>
+                <foreignObject x={x - 45} y={y - 20} width={90} height={40}>
+                    <div xmlns="http://www.w3.org/1999/xhtml" className="text-center">
+                        <div className="bg-white rounded-md px-2 py-0.5 shadow-md border border-gray-200">
+                             <div className="text-xs font-semibold text-gray-800">{payload.name}</div>
+                             <div className="text-sm font-bold text-gray-900">{(percent * 100).toFixed(0)}%</div>
+                        </div>
+                    </div>
+                </foreignObject>
+            </g>
         );
     };
 
@@ -70,7 +97,7 @@ export default function DashboardPage() {
                   <CardTitle className="text-base text-primary font-semibold">Próximos voos</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                  {mockAppointments.filter(a => a.type === 'departure').map((flight, index) => (
+                  {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
                       <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4">
                           <div className="text-right">
                               <p className="text-sm text-muted-foreground">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric'})}</p>
@@ -107,7 +134,37 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Índice de Aprovação */}
+          {/* Orçamentos */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-base text-primary font-semibold">Orçamentos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="w-full h-[200px] flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={budgetData} 
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={60} 
+                                    innerRadius={40}
+                                    labelLine={false}
+                                    label={renderBudgetLabel}
+                                >
+                                    {budgetData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Índice de Aprovação */}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-base text-primary font-semibold">Índice de Aprovação</CardTitle>
@@ -213,9 +270,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
