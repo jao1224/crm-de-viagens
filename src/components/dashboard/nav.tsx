@@ -24,12 +24,7 @@ import { cn } from '@/lib/utils';
 export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/cotacoes', label: 'Cotações', icon: FileText },
-  { href: '/negotiations', label: 'Recomendações', icon: Wand2 },
-  { href: '/processes', label: 'Itinerários', icon: Map },
   { href: '/agenda', label: 'Agenda', icon: Calendar },
-  { href: '/financial', label: 'Financeiro', icon: Wallet },
-  { href: '/reports', label: 'Relatórios', icon: BarChart },
-  { href: '/admin', label: 'Admin', icon: Users },
 ];
 
 export function DashboardNav() {
@@ -74,3 +69,5 @@ export function SimpleDashboardNav() {
     </SidebarMenu>
   );
 }
+
+    
