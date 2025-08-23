@@ -226,7 +226,7 @@ export default function DashboardPage() {
                                 className="w-full justify-start text-left"
                                 onClick={() => setActiveChart('approval')}
                             >
-                                Índice de Aprovação
+                                Orçamento
                             </Button>
                         </div>
                     </div>
@@ -373,45 +373,6 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
-                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="w-full h-[250px] flex items-center justify-center gap-6">
-                    <div className="flex-1 h-full flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie 
-                                    data={revenueChartData}
-                                    dataKey="value" 
-                                    nameKey="name" 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={80} 
-                                    innerRadius={40}
-                                    fill="#8884d8"
-                                    labelLine={false}
-                                >
-                                    {revenueChartData.map((entry) => (
-                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                    ))}
-                                </Pie>
-                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                    <div className="w-48 space-y-3 pl-4">
-                        {revenueChartData.map((entry) => (
-                            <div key={entry.name} className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
-                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
-        <Card className="h-fit">
-            <CardHeader>
                 <CardTitle className="text-lg text-gray-800 font-semibold">Despesas por Categoria</CardTitle>
             </CardHeader>
             <CardContent>
@@ -449,8 +410,135 @@ export default function DashboardPage() {
                 </div>
             </CardContent>
         </Card>
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[250px] flex items-center justify-center gap-6">
+                    <div className="flex-1 h-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={revenueChartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    fill="#8884d8"
+                                    labelLine={false}
+                                >
+                                    {revenueChartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-48 space-y-3 pl-4">
+                        {revenueChartData.map((entry) => (
+                            <div key={entry.name} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Casal em Coimbra</h3>
+                            <p className="text-sm text-green-600 font-medium">100,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">4 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">4 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Conexões</h3>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">0 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">0 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">É o Nosso Quintal</h3>
+                            <p className="text-sm text-green-600 font-medium">100,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">1 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            M
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Maxshuell</h3>
+                            <p className="text-sm text-yellow-600 font-medium">50,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">2 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="h-fit">
             <CardHeader>
