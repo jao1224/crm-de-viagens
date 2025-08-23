@@ -533,7 +533,7 @@ export default function DashboardPage() {
                 <span className="sr-only">Chat</span>
             </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex flex-col h-full w-[350px]">
+        <SheetContent side="right" className="flex flex-col h-full w-[350px] p-0">
             <SheetHeader className="p-4 border-b bg-primary text-primary-foreground">
                 <SheetTitle>Assistente Virtual</SheetTitle>
             </SheetHeader>
@@ -543,7 +543,7 @@ export default function DashboardPage() {
                         <div key={index} className={cn("flex items-end gap-2", msg.from === 'user' ? 'justify-end' : 'justify-start')}>
                            {msg.from === 'assistant' && (
                                <Avatar className="h-8 w-8">
-                                   <AvatarImage src="https://i.pinimg.com/736x/05/2d/19/052d19b3a3721345f2a1b92e59530b13.jpg" alt="Assistente" />
+                                   <AvatarImage src="" alt="Assistente" />
                                    <AvatarFallback>A</AvatarFallback>
                                </Avatar>
                            )}
