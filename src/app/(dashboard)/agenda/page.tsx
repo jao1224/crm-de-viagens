@@ -154,6 +154,14 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
             setFileName(null);
         }
     };
+
+    const handleSaveTask = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Here you would typically handle form data submission
+        console.log("Saving task...");
+        // For demonstration, we'll just close the dialog
+        onOpenChange(false);
+    };
     
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -161,94 +169,96 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-foreground">Tarefa</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="task-type">Tipo de tarefa</Label>
-                            <Select defaultValue="tarefa">
-                                <SelectTrigger id="task-type">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="tarefa">Tarefa</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                            <Select defaultValue="maxshuell">
-                                <SelectTrigger id="assignee">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="maxshuell">Maxshuell</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                         <div className="space-y-2">
-                            <Label htmlFor="date">Data <span className="text-destructive">*</span></Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                    "w-full justify-start text-left font-normal",
-                                    !date && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
-                                </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={setDate}
-                                    initialFocus
-                                    locale={ptBR}
-                                />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
-                             <div className="relative">
-                                <Input id="time" type="time" defaultValue="12:00" className="pr-8"/>
-                                <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <form onSubmit={handleSaveTask}>
+                    <div className="grid gap-6 py-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="task-type">Tipo de tarefa</Label>
+                                <Select defaultValue="tarefa">
+                                    <SelectTrigger id="task-type">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="tarefa">Tarefa</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
+                                <Select defaultValue="maxshuell">
+                                    <SelectTrigger id="assignee">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="maxshuell">Maxshuell</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="date">Data <span className="text-destructive">*</span></Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
+                                    </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        initialFocus
+                                        locale={ptBR}
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
+                                 <div className="relative">
+                                    <Input id="time" type="time" defaultValue="12:00" className="pr-8"/>
+                                    <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
-                        <Input id="subject" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="description">Descrição</Label>
-                        <Textarea id="description" rows={4} />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Switch id="recorrente" />
-                        <Label htmlFor="recorrente">Tarefa recorrente</Label>
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="attachment">Anexo</Label>
-                         <div className="flex items-center gap-2">
-                            <Input id="attachment" type="file" className="hidden" onChange={handleFileChange} />
-                            <Button asChild variant="outline">
-                                <label htmlFor="attachment" className="cursor-pointer">Escolher Arquivo</label>
-                            </Button>
-                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
-                                {fileName ?? 'Nenhum arquivo escolhido'}
-                            </span>
+                        <div className="space-y-2">
+                            <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
+                            <Input id="subject" />
                         </div>
-                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                        <div className="space-y-2">
+                            <Label htmlFor="description">Descrição</Label>
+                            <Textarea id="description" rows={4} />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="recorrente" />
+                            <Label htmlFor="recorrente">Tarefa recorrente</Label>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="attachment">Anexo</Label>
+                             <div className="flex items-center gap-2">
+                                <Input id="attachment" type="file" className="hidden" onChange={handleFileChange} />
+                                <Button asChild variant="outline">
+                                    <label htmlFor="attachment" className="cursor-pointer">Escolher Arquivo</label>
+                                </Button>
+                                <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                    {fileName ?? 'Nenhum arquivo escolhido'}
+                                </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                        </div>
                     </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button type="submit">Salvar</Button>
-                </DialogFooter>
+                    <DialogFooter>
+                        <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                        <Button type="submit">Salvar</Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     )
