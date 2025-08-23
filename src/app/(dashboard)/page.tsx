@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, MessageSquare } from 'lucide-react';
+import { ListTodo, Plane, MessageSquare, Info, DollarSign } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -20,18 +20,27 @@ const budgetChartData = {
     ],
 };
 
+const revenueChartData = [
+    { name: 'Venda de Passagem', value: 72.7, color: '#3b82f6' },
+    { name: 'passagem', value: 26.5, color: '#f97316' },
+    { name: 'VISTO PROC. TRABALHO', value: 0.8, color: '#ef4444' },
+];
+
+const expenseChartData = [
+    { name: 'Pagamento Fornecedor', value: 100, color: '#3b82f6' },
+];
+
 const flightCodes = ['7xie9', 't196w', 'sn5ey'];
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const value = payload[0].value;
-    const percentage = data.total ? ((value / data.total) * 100).toFixed(0) : value;
     
     return (
       <div className="bg-white/90 p-2 border border-gray-200 rounded-md shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:border-gray-700">
         <p className="font-semibold">{data.name}</p>
-        <p className="font-bold text-lg">{`${value} (${percentage}%)`}</p>
+        <p className="font-bold text-lg">{`${value}%`}</p>
       </div>
     );
   }
@@ -48,6 +57,226 @@ export default function DashboardPage() {
   return (
     <div className="relative p-4 sm:p-6 space-y-6">
       
+      {/* Seção 1: Cards de Clientes/Projetos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Casal em Coimbra</h3>
+                            <p className="text-sm text-green-600 font-medium">100,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">4 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">4 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 48.666,18</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Conexões</h3>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">0 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">0 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            MM
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">É o Nosso Quintal</h3>
+                            <p className="text-sm text-green-600 font-medium">100,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">1 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 18.450,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            M
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-gray-800">Maxshuell</h3>
+                            <p className="text-sm text-yellow-600 font-medium">50,00%</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-1">2 orçamentos</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                        <Badge className="bg-green-100 text-green-700 border-green-200 mt-1">1 aprovados</Badge>
+                        <p className="text-sm font-semibold text-gray-800">R$ 0,00</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+
+      {/* Seção 2: Cards Financeiros */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardContent className="p-4 text-center">
+                <h3 className="text-sm text-gray-600 mb-2">Recebido (R$)</h3>
+                <p className="text-2xl font-bold text-blue-600">67.206,18</p>
+                <div className="w-full h-1 bg-blue-600 mt-2"></div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4 text-center">
+                <h3 className="text-sm text-gray-600 mb-2">Pago (R$)</h3>
+                <p className="text-2xl font-bold text-red-600">60.582,30</p>
+                <div className="w-full h-1 bg-red-600 mt-2"></div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4 text-center">
+                <h3 className="text-sm text-gray-600 mb-2">Faturamento (R$)</h3>
+                <p className="text-2xl font-bold text-green-600">67.206,18</p>
+                <div className="w-full h-1 bg-green-600 mt-2"></div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                    <h3 className="text-sm text-gray-600">Lucro (R$)</h3>
+                    <Info className="w-4 h-4 text-gray-400" />
+                </div>
+                <p className="text-2xl font-bold text-green-600">6.623,88</p>
+                <div className="w-full h-1 bg-green-600 mt-2"></div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardContent className="p-4 text-center">
+                <h3 className="text-sm text-gray-600 mb-2">Ticket Médio (R$)</h3>
+                <p className="text-2xl font-bold text-blue-600">11.186,03</p>
+                <div className="w-full h-1 bg-blue-600 mt-2"></div>
+            </CardContent>
+        </Card>
+      </div>
+
+      {/* Seção 3: Gráficos de Categorias */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[250px] flex items-center justify-center gap-6">
+                    <div className="flex-1 h-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={revenueChartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    fill="#8884d8"
+                                    labelLine={false}
+                                >
+                                    {revenueChartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-48 space-y-3 pl-4">
+                        {revenueChartData.map((entry) => (
+                            <div key={entry.name} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Despesas por Categoria</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="w-full h-[250px] flex items-center justify-center gap-6">
+                    <div className="flex-1 h-full flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie 
+                                    data={expenseChartData}
+                                    dataKey="value" 
+                                    nameKey="name" 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={80} 
+                                    innerRadius={40}
+                                    fill="#8884d8"
+                                    labelLine={false}
+                                >
+                                    {expenseChartData.map((entry) => (
+                                        <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                    ))}
+                                </Pie>
+                                <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="w-48 space-y-3 pl-4">
+                        {expenseChartData.map((entry) => (
+                            <div key={entry.name} className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                <span className="text-sm font-medium text-gray-700">{entry.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+
+      {/* Seção 4: Dashboard Original */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         
         {/* Top-Left Card: Próximos voos */}
@@ -215,6 +444,37 @@ export default function DashboardPage() {
                     <div className="w-8 h-1.5 bg-gray-600 rounded-full"></div>
                     <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
                     <div className="w-8 h-1.5 bg-gray-300 rounded-full"></div>
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+
+      {/* Seção 5: Resumos Diários */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Receitas para hoje, dia {new Date().getDate()}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
+                <DollarSign className="w-16 h-16 mb-4 text-gray-400" />
+                <p>Nenhuma receita para o dia de hoje.</p>
+                <div className="flex gap-2 mt-6">
+                    <Badge className="bg-red-500 text-white hover:bg-red-600">23 atrasada(s)</Badge>
+                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="h-fit">
+            <CardHeader>
+                <CardTitle className="text-lg text-gray-800 font-semibold">Despesas para hoje, dia {new Date().getDate()}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center text-center text-gray-600 py-8">
+                <DollarSign className="w-16 h-16 mb-4 text-gray-400" />
+                <p>Nenhuma despesa para o dia de hoje.</p>
+                <div className="flex gap-2 mt-6">
+                    <Badge className="bg-red-500 text-white hover:bg-red-600">157 atrasada(s)</Badge>
+                    <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">0 para o dia de hoje</Badge>
                 </div>
             </CardContent>
         </Card>
