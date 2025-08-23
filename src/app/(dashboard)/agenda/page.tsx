@@ -5,7 +5,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
-import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info, ListFilter, LayoutGrid, List } from 'lucide-react';
+import { Users, Plane, DollarSign, Bell, ChevronLeft, ChevronRight, Clock, Calendar as CalendarIcon, Info, ListFilter, LayoutGrid, List, ListTodo, Cake, Hotel, TrainFront, Camera, Ship } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -267,11 +267,34 @@ const DailyAgendaCard = ({ selectedDate, appointments, onNewTaskClick }: any) =>
 const FilterToolbar = () => (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-2 flex-wrap">
-            <Button variant="outline" size="sm"><ListFilter className="mr-2 h-4 w-4" /> Filtros</Button>
-            <Button variant="ghost" size="sm" className="text-muted-foreground">Tarefas</Button>
-            <Button variant="ghost" size="sm" className="text-blue-500">Voos</Button>
-            <Button variant="ghost" size="sm" className="text-yellow-500">Pagamentos</Button>
-            <Button variant="ghost" size="sm" className="text-purple-500">Lembretes</Button>
+             <Button variant="outline" size="sm" className="bg-background text-foreground shadow-sm">
+                <ListTodo className="mr-2 h-4 w-4" />
+                Tarefas
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Cake className="mr-2 h-4 w-4" />
+                Aniversários
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Plane className="mr-2 h-4 w-4" />
+                Voos
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Hotel className="mr-2 h-4 w-4" />
+                Hospedagens
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <TrainFront className="mr-2 h-4 w-4" />
+                Transportes
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Camera className="mr-2 h-4 w-4" />
+                Experiências Turísticas
+            </Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Ship className="mr-2 h-4 w-4" />
+                Cruzeiros
+            </Button>
         </div>
         <div className="flex items-center gap-1 border border-border rounded-md p-1 bg-muted">
             <Button variant="ghost" size="sm" className="h-7 bg-background shadow-sm text-primary"><LayoutGrid className="h-4 w-4" /></Button>
