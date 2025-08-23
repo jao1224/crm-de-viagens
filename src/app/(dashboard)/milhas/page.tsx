@@ -9,9 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, Filter, MoreHorizontal, Search } from 'lucide-react';
+import { Calendar as CalendarIcon, Filter, MoreHorizontal, Search, FileText, BarChart2 } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
 
 export default function MilhasPage() {
@@ -24,9 +25,23 @@ export default function MilhasPage() {
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Milhas</h1>
-                <Button>
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
+                 <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                            <FileText className="mr-2 h-4 w-4" />
+                            Exportar CSV
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <BarChart2 className="mr-2 h-4 w-4" />
+                            Configurar painel
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </header>
 
             <Card>
