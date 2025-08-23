@@ -126,6 +126,12 @@ export default function NotificacoesPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todos">Todos</SelectItem>
+                                    <SelectItem value="solicitacao-orcamento">Solicitação Orçamento</SelectItem>
+                                    <SelectItem value="check-in">Check-in</SelectItem>
+                                    <SelectItem value="aniversarios">Aniversários</SelectItem>
+                                    <SelectItem value="tarefas">Tarefas</SelectItem>
+                                    <SelectItem value="cadastro-pessoa">Cadastro de Pessoa</SelectItem>
+                                    <SelectItem value="nova-avaliacao">Nova Avaliação</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
