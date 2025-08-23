@@ -60,7 +60,7 @@ import { buttonVariants } from '@/components/ui/button';
 
 export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: Gauge },
-  { href: '/cotações', label: 'Cotações', icon: FileText }, 
+  { href: '/cotacoes', label: 'Cotações', icon: FileText }, 
   { href: '/agenda', label: 'Calendário', icon: Calendar },
   { href: '/tarefas', label: 'Tarefas', icon: ClipboardList },
 ];
