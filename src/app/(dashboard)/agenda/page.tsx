@@ -143,7 +143,7 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
     );
 };
 
-const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpenChange: (open: boolean) => void, onAddTask: (task: Appointment) => void }) => {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
     const [fileName, setFileName] = React.useState<string | null>(null);
 
@@ -154,15 +154,35 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
             setFileName(null);
         }
     };
-
+    
     const handleSaveTask = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Here you would typically handle form data submission
-        console.log("Saving task...");
-        // For demonstration, we'll just close the dialog
-        onOpenChange(false);
+        const formData = new FormData(event.currentTarget);
+        const subject = formData.get('subject') as string;
+        const time = formData.get('time') as string;
+
+        if (!subject || !date || !time) {
+            // Basic validation
+            return;
+        }
+
+        const [hours, minutes] = time.split(':').map(Number);
+        const finalDate = new Date(date);
+        finalDate.setHours(hours, minutes, 0, 0);
+
+        const newTask: Appointment = {
+            id: Date.now().toString(),
+            title: subject,
+            date: finalDate.toISOString(),
+            type: 'task',
+            customer: 'Interno', // Or get from form
+            package: 'N/A', // Or get from form
+        };
+
+        onAddTask(newTask);
+        onOpenChange(false); // Close dialog after saving
     };
-    
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[650px]">
@@ -174,7 +194,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor="task-type">Tipo de tarefa</Label>
-                                <Select defaultValue="tarefa">
+                                <Select defaultValue="tarefa" name="task-type">
                                     <SelectTrigger id="task-type">
                                         <SelectValue />
                                     </SelectTrigger>
@@ -185,7 +205,7 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                                <Select defaultValue="maxshuell">
+                                <Select defaultValue="maxshuell" name="assignee">
                                     <SelectTrigger id="assignee">
                                         <SelectValue />
                                     </SelectTrigger>
@@ -223,18 +243,18 @@ const NewTaskDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (o
                             <div className="space-y-2">
                                 <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
                                  <div className="relative">
-                                    <Input id="time" type="time" defaultValue="12:00" className="pr-8"/>
+                                    <Input id="time" name="time" type="time" defaultValue="12:00" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
-                            <Input id="subject" />
+                            <Input id="subject" name="subject" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="description">Descrição</Label>
-                            <Textarea id="description" rows={4} />
+                            <Textarea id="description" name="description" rows={4} />
                         </div>
                         <div className="flex items-center space-x-2">
                             <Switch id="recorrente" />
@@ -407,10 +427,15 @@ const FilterToolbar = ({ activeFilters, onFilterToggle }: { activeFilters: Appoi
 
 
 export default function AgendaPage() {
+    const [appointments, setAppointments] = React.useState(mockAppointments);
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = React.useState(false);
     const [currentDate, setCurrentDate] = React.useState(new Date());
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [activeFilters, setActiveFilters] = React.useState<Appointment['type'][]>(['meeting', 'task', 'birthday', 'flight', 'hotel', 'transport', 'tour', 'cruise', 'departure', 'payment', 'reminder']);
+
+    const handleAddTask = (newTask: Appointment) => {
+        setAppointments(prev => [newTask, ...prev]);
+    };
 
     const toggleFilter = (filter: Appointment['type']) => {
         setActiveFilters(prev =>
@@ -422,10 +447,10 @@ export default function AgendaPage() {
 
     const filteredAppointments = React.useMemo(() => {
         if (activeFilters.length === filterOptions.map(f => f.type).length) {
-            return mockAppointments;
+            return appointments;
         }
-        return mockAppointments.filter(app => activeFilters.includes(app.type));
-    }, [activeFilters]);
+        return appointments.filter(app => activeFilters.includes(app.type));
+    }, [activeFilters, appointments]);
 
     const appointmentsByDate = React.useMemo(() => {
         const grouped: { [key: string]: Appointment[] } = {};
@@ -495,7 +520,11 @@ export default function AgendaPage() {
             </CardContent>
         </Card>
 
-        <NewTaskDialog open={isNewTaskDialogOpen} onOpenChange={setIsNewTaskDialogOpen} />
+        <NewTaskDialog 
+            open={isNewTaskDialogOpen} 
+            onOpenChange={setIsNewTaskDialogOpen}
+            onAddTask={handleAddTask}
+        />
     </div>
   );
 }
