@@ -153,12 +153,14 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
                     
                     <Tabs defaultValue="contato">
-                        <TabsList>
-                            <TabsTrigger value="contato">Contato</TabsTrigger>
-                            <TabsTrigger value="documentos">Documentos</TabsTrigger>
-                            <TabsTrigger value="informacoes">Informações</TabsTrigger>
-                            <TabsTrigger value="endereco">Endereço</TabsTrigger>
-                            <TabsTrigger value="observacao">Observação</TabsTrigger>
+                        <TabsList className="bg-transparent p-0 h-auto">
+                            <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+                                <TabsTrigger value="contato">Contato</TabsTrigger>
+                                <TabsTrigger value="documentos">Documentos</TabsTrigger>
+                                <TabsTrigger value="informacoes">Informações</TabsTrigger>
+                                <TabsTrigger value="endereco">Endereço</TabsTrigger>
+                                <TabsTrigger value="observacao">Observação</TabsTrigger>
+                            </div>
                         </TabsList>
                         <TabsContent value="contato" className="pt-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
