@@ -598,7 +598,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-destructive text-destructive-foreground font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -693,7 +693,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-600 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -776,7 +776,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-600 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -1380,7 +1380,7 @@ export default function NovaCotacaoPage() {
 
                                 <div className="space-y-4">
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
+                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Custo</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1396,7 +1396,7 @@ export default function NovaCotacaoPage() {
                                     </div>
 
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1412,7 +1412,7 @@ export default function NovaCotacaoPage() {
                                     </div>
                                     
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1423,7 +1423,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                     </div>
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
+                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Pagamento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
