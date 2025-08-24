@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -16,7 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -60,21 +59,35 @@ const Stepper = ({ currentStep }: { currentStep: number }) => (
 );
 
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
+    const [passportIssueDate, setPassportIssueDate] = useState<Date>();
+    const [passportExpiryDate, setPassportExpiryDate] = useState<Date>();
+    const [visaValidityDate, setVisaValidityDate] = useState<Date>();
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-3xl">
+            <DialogContent className="sm:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-6">
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-                        <div className="space-y-2 col-span-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                        <div className="space-y-2 lg:col-span-1">
                             <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
-                            <Input id="person-name" />
+                             <div className="flex items-center gap-2">
+                                <Input id="person-name" className="flex-1" />
+                                <div className="flex items-center">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button key={star} onClick={() => setRating(star)} className="focus:outline-none">
+                                            <Star className={cn("h-5 w-5", rating >= star ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/30")} />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                         <div className="space-y-2">
+                        <div className="space-y-2">
                             <Label htmlFor="birth-date">Data Nascimento</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
@@ -107,22 +120,22 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
                      <div className="space-y-2">
                         <Label>Tipo <span className="text-destructive">*</span></Label>
-                        <div className="flex items-center gap-4">
+                         <div className="flex items-center gap-6">
                             <div className="flex items-center space-x-2">
                                 <Switch id="type-passenger" defaultChecked />
-                                <Label htmlFor="type-passenger">Passageiro</Label>
+                                <Label htmlFor="type-passenger" className="font-normal">Passageiro</Label>
                             </div>
                              <div className="flex items-center space-x-2">
                                 <Switch id="type-client" />
-                                <Label htmlFor="type-client">Cliente</Label>
+                                <Label htmlFor="type-client" className="font-normal">Cliente</Label>
                             </div>
                              <div className="flex items-center space-x-2">
                                 <Switch id="type-supplier" />
-                                <Label htmlFor="type-supplier">Fornecedor</Label>
+                                <Label htmlFor="type-supplier" className="font-normal">Fornecedor</Label>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Switch id="type-representative" />
-                                <Label htmlFor="type-representative">Representante</Label>
+                                <Label htmlFor="type-representative" className="font-normal">Representante</Label>
                             </div>
                         </div>
                     </div>
@@ -172,8 +185,105 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <Label htmlFor="accepts-communication">Aceita receber comunicação via E-mail/Whatsapp</Label>
                             </div>
                         </TabsContent>
-                         <TabsContent value="documentos" className="pt-4">
-                            <p className="text-muted-foreground text-center p-8">Nenhum documento para exibir.</p>
+                         <TabsContent value="documentos" className="pt-4 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-cpf">CPF/CNPJ</Label>
+                                    <Input id="doc-cpf" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-rg">RG</Label>
+                                    <Input id="doc-rg" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-rg-issuer">Órgão Emissor RG</Label>
+                                    <Input id="doc-rg-issuer" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-municipal">Inscrição Municipal</Label>
+                                    <Input id="doc-municipal" />
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-foreign-id">ID Estrangeiro</Label>
+                                    <Input id="doc-foreign-id" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-nationality">Nacionalidade</Label>
+                                    <Select>
+                                        <SelectTrigger id="doc-nationality">
+                                            <SelectValue placeholder="Selecione a Nacionalidade" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {/* Add nationalities */}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="doc-marital-status">Estado Civil</Label>
+                                    <Select>
+                                        <SelectTrigger id="doc-marital-status">
+                                            <SelectValue placeholder="Selecione o Estado Civil" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {/* Add marital statuses */}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-passport">Passaporte</Label>
+                                    <Input id="doc-passport" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-passport-issue">Emissão Passaporte</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !passportIssueDate && "text-muted-foreground")}>
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {passportIssueDate ? format(passportIssueDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={passportIssueDate} onSelect={setPassportIssueDate} locale={ptBR} /></PopoverContent>
+                                    </Popover>
+                                </div>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="doc-passport-expiry">Vencimento Passaporte</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !passportExpiryDate && "text-muted-foreground")}>
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {passportExpiryDate ? format(passportExpiryDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={passportExpiryDate} onSelect={setPassportExpiryDate} locale={ptBR} /></PopoverContent>
+                                    </Popover>
+                                </div>
+                                 <div className="space-y-2">
+                                    <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
+                                    <Select><SelectTrigger id="doc-passport-nat"><SelectValue placeholder="Selecione a Nacionalidade..." /></SelectTrigger><SelectContent>{/* Add nationalities */}</SelectContent></Select>
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-visa">Visto</Label>
+                                    <Input id="doc-visa" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="doc-visa-validity">Validade do Visto</Label>
+                                     <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !visaValidityDate && "text-muted-foreground")}>
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {visaValidityDate ? format(visaValidityDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={visaValidityDate} onSelect={setVisaValidityDate} locale={ptBR} /></PopoverContent>
+                                    </Popover>
+                                </div>
+                            </div>
                         </TabsContent>
                          <TabsContent value="informacoes" className="pt-4">
                             <p className="text-muted-foreground text-center p-8">Nenhuma informação para exibir.</p>
@@ -659,5 +769,3 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
-
-    
