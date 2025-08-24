@@ -61,6 +61,202 @@ const Stepper = ({ currentStep }: { currentStep: number }) => (
     </div>
 );
 
+const nationalities = [
+    { value: "afghan", label: "Afegã" },
+    { value: "german", label: "Alemã" },
+    { value: "andorran", label: "Andorrana" },
+    { value: "angolan", label: "Angolana" },
+    { value: "antiguan", label: "Antiguana" },
+    { value: "algerian", label: "Argelina" },
+    { value: "argentine", label: "Argentina" },
+    { value: "armenian", label: "Armênia" },
+    { value: "australian", label: "Australiana" },
+    { value: "austrian", label: "Austríaca" },
+    { value: "azerbaijani", label: "Azerbaijana" },
+    { value: "bahamian", label: "Bahamense" },
+    { value: "bahraini", label: "Bareinita" },
+    { value: "bangladeshi", label: "Bangladesa" },
+    { value: "barbadian", label: "Barbadiana" },
+    { value: "belarusian", label: "Bielorrussa" },
+    { value: "belgian", label: "Belga" },
+    { value: "belizean", label: "Belizenha" },
+    { value: "beninese", label: "Beninense" },
+    { value: "bhutanese", label: "Butanesa" },
+    { value: "bolivian", label: "Boliviana" },
+    { value: "bosnian", label: "Bósnia" },
+    { value: "botswanan", label: "Botsuana" },
+    { value: "brazilian", label: "Brasileira" },
+    { value: "bruneian", label: "Bruneana" },
+    { value: "bulgarian", label: "Búlgara" },
+    { value: "burkinabe", label: "Burquinense" },
+    { value: "burundian", label: "Burundiana" },
+    { value: "cambodian", label: "Cambojana" },
+    { value: "cameroonian", label: "Camaronesa" },
+    { value: "canadian", label: "Canadense" },
+    { value: "cape_verdean", label: "Cabo-verdiana" },
+    { value: "qatari", label: "Catariana" },
+    { value: "kazakh", label: "Cazaque" },
+    { value: "chadian", label: "Chadiana" },
+    { value: "chilean", label: "Chilena" },
+    { value: "chinese", label: "Chinesa" },
+    { value: "cypriot", label: "Cipriota" },
+    { value: "colombian", label: "Colombiana" },
+    { value: "comorian", label: "Comoriana" },
+    { value: "congolese_drc", label: "Congolesa (RDC)" },
+    { value: "congolese_roc", label: "Congolesa (República)" },
+    { value: "north_korean", label: "Norte-coreana" },
+    { value: "south_korean", label: "Sul-coreana" },
+    { value: "ivorian", label: "Marfinense" },
+    { value: "costa_rican", label: "Costa-riquenha" },
+    { value: "croatian", label: "Croata" },
+    { value: "cuban", label: "Cubana" },
+    { value: "danish", label: "Dinamarquesa" },
+    { value: "djiboutian", label: "Djibutiana" },
+    { value: "dominican", label: "Dominiquesa" },
+    { value: "egyptian", label: "Egípcia" },
+    { value: "salvadoran", label: "Salvadorenha" },
+    { value: "emirati", label: "Emiratense" },
+    { value: "ecuadorian", label: "Equatoriana" },
+    { value: "eritrean", label: "Eritreia" },
+    { value: "slovak", label: "Eslovaca" },
+    { value: "slovenian", label: "Eslovena" },
+    { value: "spanish", label: "Espanhola" },
+    { value: "estonian", label: "Estoniana" },
+    { value: "ethiopian", label: "Etíope" },
+    { value: "fijian", label: "Fijiana" },
+    { value: "filipino", label: "Filipina" },
+    { value: "finnish", label: "Finlandesa" },
+    { value: "french", label: "Francesa" },
+    { value: "gabonese", label: "Gabonesa" },
+    { value: "gambian", label: "Gambiana" },
+    { value: "ghanaian", label: "Ganesa" },
+    { value: "georgian", label: "Georgiana" },
+    { value: "grenadian", label: "Granadina" },
+    { value: "greek", label: "Grega" },
+    { value: "guatemalan", label: "Guatemalteca" },
+    { value: "guyanese", label: "Guianesa" },
+    { value: "guinean", label: "Guineense" },
+    { value: "equatorial_guinean", label: "Guinéu-equatoriana" },
+    { value: "guinea_bissauan", label: "Guineense (Bissau)" },
+    { value: "haitian", label: "Haitiana" },
+    { value: "dutch", label: "Holandesa" },
+    { value: "honduran", label: "Hondurenha" },
+    { value: "hungarian", label: "Húngara" },
+    { value: "yemeni", label: "Iemenita" },
+    { value: "marshallese", label: "Marshallina" },
+    { value: "solomon_islander", label: "Salomônica" },
+    { value: "indian", label: "Indiana" },
+    { value: "indonesian", label: "Indonésia" },
+    { value: "iranian", label: "Iraniana" },
+    { value: "iraqi", label: "Iraquiana" },
+    { value: "irish", label: "Irlandesa" },
+    { value: "icelandic", label: "Islandesa" },
+    { value: "israeli", label: "Israelense" },
+    { value: "italian", label: "Italiana" },
+    { value: "jamaican", label: "Jamaicana" },
+    { value: "japanese", label: "Japonesa" },
+    { value: "jordanian", label: "Jordaniana" },
+    { value: "kiribatian", label: "Kiribatiana" },
+    { value: "kosovar", label: "Kosovar" },
+    { value: "kuwaiti", label: "Kuwaitiana" },
+    { value: "laotian", label: "Laosiana" },
+    { value: "lesotho", label: "Lesota" },
+    { value: "latvian", label: "Letã" },
+    { value: "lebanese", label: "Libanesa" },
+    { value: "liberian", label: "Liberiana" },
+    { value: "libyan", label: "Líbia" },
+    { value: "liechtensteiner", label: "Liechtensteiniense" },
+    { value: "lithuanian", label: "Lituana" },
+    { value: "luxembourgish", label: "Luxemburguesa" },
+    { value: "macedonian", label: "Macedônia" },
+    { value: "malagasy", label: "Malgaxe" },
+    { value: "malaysian", label: "Malaia" },
+    { value: "malawian", label: "Malauiana" },
+    { value: "maldivan", label: "Maldiva" },
+    { value: "malian", label: "Maliana" },
+    { value: "maltese", label: "Maltesa" },
+    { value: "moroccan", label: "Marroquina" },
+    { value: "mauritanian", label: "Mauritana" },
+    { value: "mauritian", label: "Mauriciana" },
+    { value: "mexican", label: "Mexicana" },
+    { value: "micronesian", label: "Micronésia" },
+    { value: "mozambican", label: "Moçambicana" },
+    { value: "moldovan", label: "Moldávia" },
+    { value: "monacan", label: "Monegasca" },
+    { value: "mongolian", label: "Mongol" },
+    { value: "montenegrin", label: "Montenegrina" },
+    { value: "myanmarese", label: "Birmanesa" },
+    { value: "namibian", label: "Namibiana" },
+    { value: "nauruan", label: "Nauruana" },
+    { value: "nepalese", label: "Nepalesa" },
+    { value: "nicaraguan", label: "Nicaraguense" },
+    { value: "nigerien", label: "Nigerina" },
+    { value: "nigerian", label: "Nigeriana" },
+    { value: "norwegian", label: "Norueguesa" },
+    { value: "new_zealander", label: "Neozelandesa" },
+    { value: "omani", label: "Omanense" },
+    { value: "palauan", label: "Palauana" },
+    { value: "panamanian", label: "Panamenha" },
+    { value: "papua_new_guinean", label: "Papuásia" },
+    { value: "pakistani", label: "Paquistanesa" },
+    { value: "paraguayan", label: "Paraguaia" },
+    { value: "peruvian", label: "Peruana" },
+    { value: "polish", label: "Polonesa" },
+    { value: "portuguese", label: "Portuguesa" },
+    { value: "kenyan", label: "Queniana" },
+    { value: "kyrgyz", label: "Quirguiz" },
+    { value: "british", label: "Britânica" },
+    { value: "central_african", label: "Centro-africana" },
+    { value: "czech", label: "Tcheca" },
+    { value: "dominican_republic", label: "Dominicana" },
+    { value: "romanian", label: "Romena" },
+    { value: "rwandan", label: "Ruandesa" },
+    { value: "russian", label: "Russa" },
+    { value: "saint_kitts_and_nevis", label: "São-cristovense" },
+    { value: "saint_lucian", label: "Santa-lucense" },
+    { value: "saint_vincent_and_the_grenadines", label: "São-vicentina" },
+    { value: "samoan", label: "Samoana" },
+    { value: "san_marinese", label: "São-marinense" },
+    { value: "sao_tomean", label: "Santomense" },
+    { value: "saudi", label: "Saudita" },
+    { value: "senegalese", label: "Senegalesa" },
+    { value: "sierra_leonean", label: "Serra-leonesa" },
+    { value: "serbian", label: "Sérvia" },
+    { value: "seychellois", label: "Seichelense" },
+    { value: "singaporean", label: "Singapurense" },
+    { value: "syrian", label: "Síria" },
+    { value: "somali", label: "Somali" },
+    { value: "sri_lankan", label: "Cingalesa" },
+    { value: "swazi", label: "Suazi" },
+    { value: "sudanese", label: "Sudanesa" },
+    { value: "south_sudanese", label: "Sul-sudanesa" },
+    { value: "swedish", label: "Sueca" },
+    { value: "swiss", label: "Suíça" },
+    { value: "surinamese", label: "Surinamesa" },
+    { value: "thai", label: "Tailandesa" },
+    { value: "taiwanese", label: "Taiwanesa" },
+    { value: "tanzanian", label: "Tanzaniana" },
+    { value: "tajik", label: "Tadjique" },
+    { value: "east_timorese", label: "Timorense" },
+    { value: "togolese", label: "Togolesa" },
+    { value: "tongan", label: "Tonganesa" },
+    { value: "trinidadian_and_tobagonian", label: "Trinitário-tobagense" },
+    { value: "tunisian", label: "Tunisiana" },
+    { value: "turkmen", label: "Turcomena" },
+    { value: "turkish", label: "Turca" },
+    { value: "tuvaluan", label: "Tuvaluana" },
+    { value: "ukrainian", label: "Ucraniana" },
+    { value: "ugandan", label: "Ugandense" },
+    { value: "uruguayan", label: "Uruguaia" },
+    { value: "uzbek", label: "Uzbeque" },
+    { value: "vanuatuan", label: "Vanuatuense" },
+    { value: "vatican", label: "Vaticana" },
+    { value: "venezuelan", label: "Venezuelana" },
+    { value: "vietnamese", label: "Vietnamita" },
+    { value: "zambian", label: "Zambiana" },
+    { value: "zimbabwean", label: "Zimbabuana" }
+];
+
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
@@ -230,7 +426,9 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             <SelectValue placeholder="Selecione a Nacionalidade" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {/* Add nationalities */}
+                                            {nationalities.map((nat) => (
+                                                <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -241,7 +439,11 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             <SelectValue placeholder="Selecione o Estado Civil" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {/* Add marital statuses */}
+                                            <SelectItem value="solteiro">Solteiro(a)</SelectItem>
+                                            <SelectItem value="casado">Casado(a)</SelectItem>
+                                            <SelectItem value="divorciado">Divorciado(a)</SelectItem>
+                                            <SelectItem value="viuvo">Viuvo(a)</SelectItem>
+                                            <SelectItem value="uniao-estavel">União Estável</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -277,7 +479,16 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                                  <div className="space-y-2">
                                     <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
-                                    <Select><SelectTrigger id="doc-passport-nat"><SelectValue placeholder="Selecione a Nacionalidade..." /></SelectTrigger><SelectContent>{/* Add nationalities */}</SelectContent></Select>
+                                    <Select>
+                                        <SelectTrigger id="doc-passport-nat">
+                                            <SelectValue placeholder="Selecione a Nacionalidade..." />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {nationalities.map((nat) => (
+                                                <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
