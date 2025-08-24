@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -280,9 +280,6 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
                 return;
             }
         }
-        // Keep invalid input for user correction, or clear it.
-        // Clearing it might be frustrating if it was a small typo.
-        // Maybe do nothing and let validation handle it on submit.
     };
     
     const handleDateSelect = (date: Date | undefined) => {
@@ -993,6 +990,22 @@ export default function NovaCotacaoPage() {
                             <CardContent>
                                 <div className="text-center py-8 border-dashed border-2 rounded-md">
                                     <p className="text-muted-foreground">Nenhuma tarefa incluída.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                     <TabsContent value="observacoes" className="mt-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <MessageSquare className="h-5 w-5 text-primary" />
+                                    <CardTitle className="text-xl">Observações</CardTitle>
+                                </div>
+                                <Button>Incluir</Button>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                    <p className="text-muted-foreground">Nenhuma observação incluída.</p>
                                 </div>
                             </CardContent>
                         </Card>
