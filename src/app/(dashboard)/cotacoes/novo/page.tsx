@@ -266,17 +266,22 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
     }, [value]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
+        let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+        if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+        if (v.length > 5) v = v.slice(0, 5) + '/' + v.slice(5);
+        setInputValue(v);
     };
 
     const handleInputBlur = () => {
-        const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
-        if (!isNaN(parsedDate.getTime())) {
-            onSelect(parsedDate);
-        } else {
-            onSelect(undefined);
-            setInputValue("");
+        if (inputValue.length === 10) {
+            const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
+            if (!isNaN(parsedDate.getTime())) {
+                onSelect(parsedDate);
+                return;
+            }
         }
+        onSelect(undefined);
+        setInputValue("");
     };
     
     const handleDateSelect = (date: Date | undefined) => {
