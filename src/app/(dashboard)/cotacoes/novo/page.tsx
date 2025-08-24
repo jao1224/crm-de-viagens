@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2 } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -416,6 +416,50 @@ export default function NovaCotacaoPage() {
                         </CardFooter>
                     </Card>
                 </TabsContent>
+                 <TabsContent value="passageiros" className="mt-4">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                             <div className="flex items-center gap-2">
+                                <User className="h-5 w-5 text-primary" />
+                                <CardTitle className="text-xl">Passageiros</CardTitle>
+                            </div>
+                             <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <MoreVertical className="h-5 w-5" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem>
+                                        Configurar
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Passageiro</Label>
+                                <div className="flex items-center gap-2">
+                                    <Select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {/* Options go here */}
+                                        </SelectContent>
+                                    </Select>
+                                    <Button size="icon" variant="outline">
+                                        <UserPlus className="h-4 w-4" />
+                                    </Button>
+                                    <Button>Adicionar</Button>
+                                </div>
+                            </div>
+                             <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                <p className="text-muted-foreground">Nenhum passageiro informado.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
                 <TabsContent value="valores" className="mt-4">
                     <Card>
                         <CardContent className="p-6 space-y-6">
@@ -470,5 +514,3 @@ export default function NovaCotacaoPage() {
         </div>
     );
 }
-
-    
