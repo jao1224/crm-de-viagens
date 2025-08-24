@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane } from 'lucide-react';
 import Link from 'next/link';
 
 const steps = [
@@ -233,17 +233,54 @@ export default function NovaCotacaoPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+                            
                             <Card>
                                 <CardHeader className="flex flex-row items-center justify-between">
-                                    <CardTitle className="text-lg">Produtos</CardTitle>
-                                    <Button variant="outline">
-                                        <PlusCircle className="mr-2 h-4 w-4"/>
-                                        Adicionar
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <ArrowRight className="h-5 w-5 text-green-600" />
+                                        <CardTitle className="text-lg text-green-600">Voo de Ida</CardTitle>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button variant="outline">Incluir via Localizador</Button>
+                                        <Button>Incluir</Button>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="text-center py-10 border-dashed border-2 rounded-md">
-                                        <p className="text-muted-foreground">Nenhum produto/serviço adicionado.</p>
+                                    <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum voo incluído.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <ArrowLeft className="h-5 w-5 text-green-600" />
+                                        <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button variant="outline">Incluir via Localizador</Button>
+                                        <Button>Incluir</Button>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum voo incluído.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Plane className="h-5 w-5 text-green-600" />
+                                        <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
+                                    </div>
+                                    <Button>Incluir</Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum voo incluído.</p>
                                     </div>
                                 </CardContent>
                             </Card>
