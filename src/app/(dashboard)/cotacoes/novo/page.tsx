@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -274,10 +274,17 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
 
     const handleInputBlur = () => {
         if (inputValue.length === 10) {
-            const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
-            if (!isNaN(parsedDate.getTime())) {
-                onSelect(parsedDate);
-                return;
+            try {
+                const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
+                 if (!isNaN(parsedDate.getTime())) {
+                    onSelect(parsedDate);
+                } else {
+                    onSelect(undefined);
+                    setInputValue("");
+                }
+            } catch (error) {
+                 onSelect(undefined);
+                 setInputValue("");
             }
         }
     };
@@ -398,7 +405,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     
                     <Tabs defaultValue="contato">
                          <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-                            <TabsList className="bg-transparent p-0 h-auto">
+                            <TabsList className="bg-transparent p-0 h-auto gap-1">
                                 <TabsTrigger value="contato">Contato</TabsTrigger>
                                 <TabsTrigger value="documentos">Documentos</TabsTrigger>
                                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
@@ -1055,6 +1062,78 @@ export default function NovaCotacaoPage() {
                                     <div className="flex items-center gap-2 text-sm text-muted-foreground border p-3 rounded-md bg-muted/50">
                                         <AlertTriangle className="h-5 w-5 text-amber-500" />
                                         Nenhuma forma de pagamento cadastrada.
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="venda" className="mt-4">
+                        <Card>
+                            <CardContent className="p-6 space-y-6">
+                                <div className="flex justify-between items-start">
+                                    <div className="space-y-1">
+                                        <Label>Data da Venda</Label>
+                                        <div className="flex items-center gap-2 p-2 border rounded-md w-fit">
+                                            <span>22/08/2025</span>
+                                            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-8 text-right">
+                                        <div>
+                                            <Label>Lucro</Label>
+                                            <p className="text-2xl font-bold">R$ 0,00</p>
+                                        </div>
+                                        <div>
+                                            <Label>Lucro <sup className="font-medium">1</sup></Label>
+                                            <p className="text-2xl font-bold">R$ 0,00</p>
+                                            <p className="text-xs text-muted-foreground">¹ lucro com comissões</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="rounded-lg overflow-hidden border">
+                                        <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
+                                            <h3 className="font-semibold">Valores de Custo</h3>
+                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                        </div>
+                                        <div className="p-4 space-y-3">
+                                            <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
+                                                <AlertTriangle className="h-5 w-5" />
+                                                <p>Há lançamentos que não foram totalmente configurados, estes valores serão desconsiderados no lançamento da venda, realize o ajuste na lista abaixo.</p>
+                                            </div>
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum custo informado.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="rounded-lg overflow-hidden border">
+                                        <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+                                            <h3 className="font-semibold">Valores de Venda</h3>
+                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                        </div>
+                                        <div className="p-4 space-y-3">
+                                            <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
+                                                <AlertTriangle className="h-5 w-5" />
+                                                <p>Há lançamentos que não foram totalmente configurados, estes valores serão desconsiderados no lançamento da venda, realize o ajuste na lista abaixo.</p>
+                                            </div>
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum valor de venda informado.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="rounded-lg overflow-hidden border">
+                                        <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
+                                            <h3 className="font-semibold">Recebimento de Comissão</h3>
+                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                        </div>
+                                        <div className="p-4 space-y-3">
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground max-w-md mx-auto">Nenhum valor de comissão a ser recebido, lance aqui comissões recebidas de consolidadoras ou outros parceiros. Ao informar uma comissão os valores de custos e de venda acima não precisam ser informados, caso não seja necessário lança-los no financeiro.</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </CardContent>
