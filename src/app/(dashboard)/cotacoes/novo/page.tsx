@@ -1086,7 +1086,7 @@ export default function NovaCotacaoPage() {
                                         <div>
                                             <Label>Lucro <sup className="font-medium">1</sup></Label>
                                             <p className="text-2xl font-bold">R$ 0,00</p>
-                                            <p className="text-xs text-muted-foreground">¹ lucro com comissões</p>
+                                            <p className="text-xs text-muted-foreground">¹ lucro com bonificações</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1126,23 +1126,23 @@ export default function NovaCotacaoPage() {
                                     
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
-                                            <h3 className="font-semibold">Recebimento de Comissão</h3>
+                                            <h3 className="font-semibold">Recebimento de Bonificação</h3>
                                             <Button variant="secondary" size="sm">Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                                <p className="text-muted-foreground max-w-md mx-auto">Nenhum valor de comissão a ser recebido, lance aqui comissões recebidas de consolidadoras ou outros parceiros. Ao informar uma comissão os valores de custos e de venda acima não precisam ser informados, caso não seja necessário lança-los no financeiro.</p>
+                                                <p className="text-muted-foreground max-w-md mx-auto">Nenhum valor de bonificação a ser recebido, lance aqui bonificações recebidas de consolidadoras ou outros parceiros. Ao informar uma bonificação os valores de custos e de venda acima não precisam ser informados, caso não seja necessário lança-los no financeiro.</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
-                                            <h3 className="font-semibold">Pagamento de Comissão</h3>
+                                            <h3 className="font-semibold">Pagamento de Bonificação</h3>
                                             <Button variant="secondary" size="sm">Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                                <p className="text-muted-foreground">Nenhum valor de comissão a ser paga foi informada.</p>
+                                                <p className="text-muted-foreground">Nenhum valor de bonificação a ser paga foi informada.</p>
                                             </div>
                                         </div>
                                     </div>
