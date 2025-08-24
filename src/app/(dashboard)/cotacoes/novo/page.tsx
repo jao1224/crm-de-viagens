@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -58,6 +59,7 @@ const Stepper = ({ currentStep }: { currentStep: number }) => (
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
+    const [activeTab, setActiveTab] = useState('orcamento');
 
     return (
         <div className="space-y-6">
@@ -173,7 +175,7 @@ export default function NovaCotacaoPage() {
                 </CardContent>
             </Card>
 
-            <Tabs defaultValue="orcamento">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList>
                     <TabsTrigger value="solicitacao">Solicitação</TabsTrigger>
                     <TabsTrigger value="orcamento">Orçamento</TabsTrigger>
@@ -400,7 +402,15 @@ export default function NovaCotacaoPage() {
 
                         </CardContent>
                         <CardFooter>
-                            <p className="text-sm text-muted-foreground">Informe os valores da cotação na aba <span className="font-semibold text-primary">Valores</span></p>
+                            <p className="text-sm text-muted-foreground">
+                                Informe os valores da cotação na aba{' '}
+                                <button 
+                                    onClick={() => setActiveTab('valores')}
+                                    className="font-semibold text-primary hover:underline"
+                                >
+                                    Valores
+                                </button>
+                            </p>
                         </CardFooter>
                     </Card>
                 </TabsContent>
