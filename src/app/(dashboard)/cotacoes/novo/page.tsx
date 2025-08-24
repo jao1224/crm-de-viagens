@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -412,6 +412,56 @@ export default function NovaCotacaoPage() {
                                 </button>
                             </p>
                         </CardFooter>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="valores" className="mt-4">
+                    <Card>
+                        <CardContent className="p-6 space-y-6">
+                            <Card>
+                                <CardHeader className="flex-row items-center justify-between py-3">
+                                    <div className="flex items-center gap-2">
+                                        <Minus className="h-5 w-5 text-destructive" />
+                                        <h3 className="font-semibold text-destructive">Valores de Custo</h3>
+                                    </div>
+                                    <Button>Incluir</Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum custo informado.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader className="flex-row items-center justify-between py-3">
+                                    <div className="flex items-center gap-2">
+                                        <Plus className="h-5 w-5 text-blue-600" />
+                                        <h3 className="font-semibold text-blue-600">Valores de Venda</h3>
+                                    </div>
+                                    <Button>Incluir</Button>
+                                </CardHeader>
+                                <CardContent>
+                                     <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum valor informado.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="valor-comparacao" className="flex items-center gap-1.5">
+                                    Valor de Comparação <Info className="h-4 w-4 text-muted-foreground" />
+                                </Label>
+                                <Input id="valor-comparacao" defaultValue="R$ 0,00" />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <Label>Forma(s) de Pagamento</Label>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground border p-3 rounded-md bg-muted/50">
+                                    <AlertTriangle className="h-5 w-5 text-amber-500" />
+                                    Nenhuma forma de pagamento cadastrada.
+                                </div>
+                            </div>
+                        </CardContent>
                     </Card>
                 </TabsContent>
             </Tabs>
