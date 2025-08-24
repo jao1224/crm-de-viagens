@@ -267,8 +267,8 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let v = e.target.value.replace(/\D/g, '').slice(0, 8);
-        if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
-        if (v.length > 5) v = v.slice(0, 5) + '/' + v.slice(5);
+        if (v.length > 2 && v.length <= 4) v = `${v.slice(0, 2)}/${v.slice(2)}`;
+        else if (v.length > 4) v = `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
         setInputValue(v);
     };
 
@@ -751,6 +751,101 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
     )
 }
 
+const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
+    
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Informação da Bonificação Recebida</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="bonus-description">Descrição <span className="text-destructive">*</span></Label>
+                            <Input id="bonus-description" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="bonus-value">Bonificação <span className="text-destructive">*</span></Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="bonus-value" className="pl-8" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-md border">
+                        <div className="bg-blue-600 text-white font-semibold p-3 rounded-t-md">
+                            Pagamento
+                        </div>
+                        <div className="p-4 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                 <div className="space-y-2">
+                                    <Label htmlFor="bonus-supplier">Fornecedor <span className="text-destructive">*</span></Label>
+                                     <div className="flex items-center gap-2">
+                                        <Select>
+                                            <SelectTrigger id="bonus-supplier">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                        <Button size="icon"><UserPlus className="h-4 w-4" /></Button>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="bonus-account">Conta <span className="text-destructive">*</span></Label>
+                                    <Select>
+                                        <SelectTrigger id="bonus-account">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="bonus-category">Categoria <span className="text-destructive">*</span></Label>
+                                     <div className="flex items-center gap-2">
+                                        <Select>
+                                            <SelectTrigger id="bonus-category">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="bonus-due-date">Vencimento <span className="text-destructive">*</span></Label>
+                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="bonus-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
+                                    <Select>
+                                        <SelectTrigger id="bonus-payment-method">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="bonus-installments">Parcelas <span className="text-destructive">*</span></Label>
+                                    <Input id="bonus-installments" type="number" defaultValue={1} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -758,6 +853,7 @@ export default function NovaCotacaoPage() {
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [isCostInfoDialogOpen, setIsCostInfoDialogOpen] = useState(false);
     const [isSaleValueInfoDialogOpen, setIsSaleValueInfoDialogOpen] = useState(false);
+    const [isBonusInfoDialogOpen, setIsBonusInfoDialogOpen] = useState(false);
 
 
     return (
@@ -1318,7 +1414,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
-                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
@@ -1350,6 +1446,7 @@ export default function NovaCotacaoPage() {
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
             <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} />
             <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
+            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
         </>
     );
 }
