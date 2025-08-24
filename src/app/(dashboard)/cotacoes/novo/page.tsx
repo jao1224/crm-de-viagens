@@ -562,11 +562,118 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
+const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
+    
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Informação dos Custos</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-[1fr,2fr,1fr] gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="cost-type">Tipo</Label>
+                            <Select defaultValue="dinheiro">
+                                <SelectTrigger id="cost-type">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="cost-description">Descrição <span className="text-destructive">*</span></Label>
+                            <Input id="cost-description" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="cost-value">Valor <span className="text-destructive">*</span></Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="cost-value" className="pl-8" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-md border">
+                        <div className="bg-destructive text-destructive-foreground font-semibold p-3 rounded-t-md">
+                            Pagamento
+                        </div>
+                        <div className="p-4 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                 <div className="space-y-2">
+                                    <Label htmlFor="cost-supplier">Fornecedor</Label>
+                                     <div className="flex items-center gap-2">
+                                        <Select>
+                                            <SelectTrigger id="cost-supplier">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                        <Button size="icon"><UserPlus className="h-4 w-4" /></Button>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cost-account">Conta</Label>
+                                    <Select>
+                                        <SelectTrigger id="cost-account">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cost-category">Categoria</Label>
+                                     <div className="flex items-center gap-2">
+                                        <Select>
+                                            <SelectTrigger id="cost-category">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                    </div>
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="cost-due-date">Vencimento</Label>
+                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cost-payment-method">Forma de Pagamento</Label>
+                                    <Select>
+                                        <SelectTrigger id="cost-payment-method">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="cost-installments">Parcelas</Label>
+                                    <Input id="cost-installments" type="number" defaultValue={1} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
-    const [activeTab, setActiveTab] = useState('orcamento');
+    const [activeTab, setActiveTab] = useState('valores');
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
+    const [isCostInfoDialogOpen, setIsCostInfoDialogOpen] = useState(false);
 
 
     return (
@@ -1026,7 +1133,7 @@ export default function NovaCotacaoPage() {
                                             <Minus className="h-5 w-5 text-destructive" />
                                             <h3 className="font-semibold text-destructive">Valores de Custo</h3>
                                         </div>
-                                        <Button>Incluir</Button>
+                                        <Button onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-8 border-dashed border-2 rounded-md">
@@ -1157,6 +1264,7 @@ export default function NovaCotacaoPage() {
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
+            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} />
         </>
     );
 }
