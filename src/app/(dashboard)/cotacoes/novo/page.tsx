@@ -591,7 +591,7 @@ export default function NovaCotacaoPage() {
                                                 {/* Options go here */}
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" variant="outline">
+                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}>
                                             <UserPlus className="h-4 w-4" />
                                         </Button>
                                         <Button>Adicionar</Button>
