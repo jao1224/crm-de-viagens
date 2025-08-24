@@ -1202,7 +1202,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Custo</h3>
-                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
@@ -1218,7 +1218,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
-                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
@@ -1234,7 +1234,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
-                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
@@ -1245,7 +1245,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Pagamento de Bonificação</h3>
-                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
