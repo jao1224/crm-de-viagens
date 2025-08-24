@@ -19,6 +19,7 @@ import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, U
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const steps = [
   { id: 1, name: 'Aguardando' },
@@ -286,7 +287,7 @@ export default function NovaCotacaoPage() {
                                 </CardContent>
                             </Card>
                             
-                             <Accordion type="single" collapsible className="w-full" defaultValue="servicos">
+                             <Accordion type="single" collapsible className="w-full">
                                 <AccordionItem value="hospedagem">
                                     <AccordionTrigger className="text-lg font-semibold hover:no-underline">
                                         <div className="flex items-center gap-2">
@@ -362,7 +363,45 @@ export default function NovaCotacaoPage() {
                                 </AccordionItem>
                             </Accordion>
 
+                             <Card>
+                                <CardContent className="p-4 space-y-4">
+                                     <Accordion type="single" collapsible className="w-full">
+                                        <AccordionItem value="roteiro">
+                                            <AccordionTrigger className="font-semibold text-base hover:no-underline">
+                                                <div className="flex items-center gap-2">
+                                                    <Checkbox id="roteiro-check" />
+                                                    <Label htmlFor="roteiro-check" className="cursor-pointer">Roteiro (Day By Day)</Label>
+                                                </div>
+                                            </AccordionTrigger>
+                                            <AccordionContent className="pt-2">
+                                                <Textarea placeholder="Descreva o roteiro dia a dia..." />
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+
+                                    <div className="space-y-2 pt-4">
+                                        <Label htmlFor="detalhes-viagem">Detalhes da Viagem</Label>
+                                        <Textarea id="detalhes-viagem" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="forma-pagamento">Forma de Pagamento</Label>
+                                        <Textarea id="forma-pagamento" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="termos">Termos e Condições</Label>
+                                        <Textarea id="termos" />
+                                    </div>
+                                     <div className="space-y-2">
+                                        <Label htmlFor="outras-info">Outras Informações</Label>
+                                        <Textarea id="outras-info" />
+                                    </div>
+                                </CardContent>
+                            </Card>
+
                         </CardContent>
+                        <CardFooter>
+                            <p className="text-sm text-muted-foreground">Informe os valores da cotação na aba <span className="font-semibold text-primary">Valores</span></p>
+                        </CardFooter>
                     </Card>
                 </TabsContent>
             </Tabs>
