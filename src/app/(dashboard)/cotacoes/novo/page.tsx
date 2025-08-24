@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 
 const steps = [
@@ -233,6 +233,20 @@ export default function NovaCotacaoPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <CardTitle className="text-lg">Produtos</CardTitle>
+                                    <Button variant="outline">
+                                        <PlusCircle className="mr-2 h-4 w-4"/>
+                                        Adicionar
+                                    </Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-10 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum produto/serviço adicionado.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -240,5 +254,3 @@ export default function NovaCotacaoPage() {
         </div>
     );
 }
-
-    
