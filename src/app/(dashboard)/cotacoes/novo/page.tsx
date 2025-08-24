@@ -668,12 +668,96 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
     )
 }
 
+const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
+    
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Informação dos Valores de Venda</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="sale-description">Descrição <span className="text-destructive">*</span></Label>
+                            <Input id="sale-description" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="sale-value">Valor <span className="text-destructive">*</span></Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="sale-value" className="pl-8" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-md border">
+                        <div className="bg-blue-600 text-white font-semibold p-3 rounded-t-md">
+                            Pagamento
+                        </div>
+                        <div className="p-4 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                 <div className="space-y-2">
+                                    <Label htmlFor="sale-account">Conta <span className="text-destructive">*</span></Label>
+                                     <Select>
+                                        <SelectTrigger id="sale-account">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="sale-category">Categoria <span className="text-destructive">*</span></Label>
+                                    <div className="flex items-center gap-2">
+                                        <Select>
+                                            <SelectTrigger id="sale-category">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="sale-due-date">Vencimento <span className="text-destructive">*</span></Label>
+                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="sale-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
+                                    <Select>
+                                        <SelectTrigger id="sale-payment-method">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent></SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="sale-installments">Parcelas <span className="text-destructive">*</span></Label>
+                                    <Input id="sale-installments" type="number" defaultValue={1} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
     const [activeTab, setActiveTab] = useState('valores');
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [isCostInfoDialogOpen, setIsCostInfoDialogOpen] = useState(false);
+    const [isSaleValueInfoDialogOpen, setIsSaleValueInfoDialogOpen] = useState(false);
 
 
     return (
@@ -1148,7 +1232,7 @@ export default function NovaCotacaoPage() {
                                             <Plus className="h-5 w-5 text-blue-600" />
                                             <h3 className="font-semibold text-blue-600">Valores de Venda</h3>
                                         </div>
-                                        <Button>Incluir</Button>
+                                        <Button onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-8 border-dashed border-2 rounded-md">
@@ -1218,7 +1302,7 @@ export default function NovaCotacaoPage() {
                                     <div className="rounded-lg overflow-hidden border">
                                         <div className="bg-blue-600 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
-                                            <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
+                                            <Button variant="secondary" size="sm" onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                         <div className="p-4 space-y-3">
                                             <div className="flex items-center gap-2 text-sm bg-red-50 border border-red-200 text-red-800 p-3 rounded-md">
@@ -1265,6 +1349,7 @@ export default function NovaCotacaoPage() {
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
             <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} />
+            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
         </>
     );
 }
