@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Star } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -280,8 +280,9 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
                 return;
             }
         }
-        onSelect(undefined);
-        setInputValue("");
+        // Keep invalid input for user correction, or clear it.
+        // Clearing it might be frustrating if it was a small typo.
+        // Maybe do nothing and let validation handle it on submit.
     };
     
     const handleDateSelect = (date: Date | undefined) => {
@@ -304,7 +305,16 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
                 </div>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" selected={value} onSelect={handleDateSelect} initialFocus locale={ptBR} />
+                <Calendar
+                  mode="single"
+                  selected={value}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                  locale={ptBR}
+                  captionLayout="dropdown-buttons"
+                  fromYear={new Date().getFullYear() - 100}
+                  toYear={new Date().getFullYear() + 20}
+                 />
             </PopoverContent>
         </Popover>
     );
@@ -951,6 +961,22 @@ export default function NovaCotacaoPage() {
                                 </div>
                                 <div className="text-center py-8 border-dashed border-2 rounded-md">
                                     <p className="text-muted-foreground">Nenhum passageiro informado.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="anexos" className="mt-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Paperclip className="h-5 w-5 text-primary" />
+                                    <CardTitle className="text-xl">Anexos</CardTitle>
+                                </div>
+                                <Button>Incluir</Button>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                    <p className="text-muted-foreground">Nenhum anexo incluído.</p>
                                 </div>
                             </CardContent>
                         </Card>
