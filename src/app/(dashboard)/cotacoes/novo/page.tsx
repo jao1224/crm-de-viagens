@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -16,8 +15,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Textarea } from '@/components/ui/textarea';
 
 const steps = [
   { id: 1, name: 'Aguardando' },
@@ -284,6 +285,83 @@ export default function NovaCotacaoPage() {
                                     </div>
                                 </CardContent>
                             </Card>
+                            
+                             <Accordion type="single" collapsible className="w-full" defaultValue="servicos">
+                                <AccordionItem value="hospedagem">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                                        <div className="flex items-center gap-2">
+                                            <Hotel className="h-5 w-5" /> Hospedagem
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhuma hospedagem incluída.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="transporte">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                                        <div className="flex items-center gap-2">
+                                            <TrainFront className="h-5 w-5" /> Transporte
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhum transporte incluído.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="cruzeiro">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                                        <div className="flex items-center gap-2">
+                                            <Ship className="h-5 w-5" /> Cruzeiro
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhum cruzeiro incluído.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="experiencias">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                                        <div className="flex items-center gap-2">
+                                            <Camera className="h-5 w-5" /> Experiências Turísticas
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhuma experiência incluída.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                <AccordionItem value="seguros">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                                        <div className="flex items-center gap-2">
+                                            <HeartPulse className="h-5 w-5" /> Seguros
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhum seguro incluído.</p>
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                                 <AccordionItem value="servicos">
+                                    <AccordionTrigger className="text-lg font-semibold hover:no-underline bg-primary/10 px-4 rounded-md">
+                                        <div className="flex items-center gap-2">
+                                            <ShoppingCart className="h-5 w-5" /> Serviços Adicionais
+                                        </div>
+                                    </AccordionTrigger>
+                                    <AccordionContent className="p-4 space-y-4">
+                                         <div className="space-y-2">
+                                            <Label htmlFor="descricao-servicos">Descrição dos Serviços</Label>
+                                            <Textarea id="descricao-servicos" defaultValue="Visto Procura de trabalho" />
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+
                         </CardContent>
                     </Card>
                 </TabsContent>
