@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -1134,6 +1134,21 @@ export default function NovaCotacaoPage() {
                                                 <p className="text-muted-foreground max-w-md mx-auto">Nenhum valor de comissão a ser recebido, lance aqui comissões recebidas de consolidadoras ou outros parceiros. Ao informar uma comissão os valores de custos e de venda acima não precisam ser informados, caso não seja necessário lança-los no financeiro.</p>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="rounded-lg overflow-hidden border">
+                                        <div className="bg-destructive text-destructive-foreground p-3 flex justify-between items-center">
+                                            <h3 className="font-semibold">Pagamento de Comissão</h3>
+                                            <Button variant="secondary" size="sm">Incluir</Button>
+                                        </div>
+                                        <div className="p-4 space-y-3">
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum valor de comissão a ser paga foi informada.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="venda-observacao">Observação</Label>
+                                        <Textarea id="venda-observacao" />
                                     </div>
                                 </div>
                             </CardContent>
