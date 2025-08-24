@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, MoreHorizontal, Link as LinkIcon, Filter, Eye, Paperclip, Pencil, CheckCircle2, Copy, ExternalLink, X } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreHorizontal, Link as LinkIcon, Filter, Eye, Paperclip, Pencil, CheckCircle2, Copy, ExternalLink, X, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const statusConfig: { [key in Quote['status']]: { title: string; borderColor: string; bgColor: string; textColor: string; } } = {
   aguardando: { title: 'AGUARDANDO', borderColor: 'border-gray-500', bgColor: 'bg-gray-100 dark:bg-gray-800/50', textColor: 'text-gray-600 dark:text-gray-400' },
@@ -218,6 +219,12 @@ export default function CotacoesPage() {
                 <LinkIcon className="mr-2 h-4 w-4" />
                 Links
             </Button>
+            <Button asChild size="sm">
+              <Link href="/cotacoes/novo">
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Cotação
+              </Link>
+            </Button>
         </div>
       </header>
 
@@ -313,3 +320,5 @@ export default function CotacoesPage() {
     </div>
   );
 }
+
+    
