@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -257,6 +257,55 @@ const nationalities = [
     { value: "zimbabwean", label: "Zimbabuana" }
 ];
 
+const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { value: Date | undefined, onSelect: (date: Date | undefined) => void, placeholder?: string }) => {
+    const [inputValue, setInputValue] = useState(value ? format(value, "dd/MM/yyyy") : "");
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+    React.useEffect(() => {
+        setInputValue(value ? format(value, "dd/MM/yyyy") : "");
+    }, [value]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleInputBlur = () => {
+        const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
+        if (!isNaN(parsedDate.getTime())) {
+            onSelect(parsedDate);
+        } else {
+            onSelect(undefined);
+            setInputValue("");
+        }
+    };
+    
+    const handleDateSelect = (date: Date | undefined) => {
+        onSelect(date);
+        setIsPopoverOpen(false);
+    }
+
+    return (
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+            <PopoverTrigger asChild>
+                <div className="relative w-full">
+                    <Input
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                        placeholder={placeholder}
+                        className="pr-8"
+                    />
+                    <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={value} onSelect={handleDateSelect} initialFocus locale={ptBR} />
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
@@ -296,21 +345,8 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="birth-date">Data Nascimento</Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={cn("w-full justify-start text-left font-normal", !birthDate && "text-muted-foreground")}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {birthDate ? format(birthDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
-                                    <Calendar mode="single" selected={birthDate} onSelect={setBirthDate} initialFocus locale={ptBR} />
-                                </PopoverContent>
-                            </Popover>
+                             <Label htmlFor="birth-date">Data Nascimento</Label>
+                            <DatePickerInput value={birthDate} onSelect={setBirthDate} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="person-gender">Sexo</Label>
@@ -349,15 +385,15 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
                     
                     <Tabs defaultValue="contato">
-                        <TabsList className="bg-transparent p-0 h-auto">
-                            <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+                         <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+                            <TabsList className="bg-transparent p-0 h-auto">
                                 <TabsTrigger value="contato">Contato</TabsTrigger>
                                 <TabsTrigger value="documentos">Documentos</TabsTrigger>
                                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                                 <TabsTrigger value="endereco">Endereço</TabsTrigger>
                                 <TabsTrigger value="observacao">Observação</TabsTrigger>
-                            </div>
-                        </TabsList>
+                            </TabsList>
+                        </div>
                         <TabsContent value="contato" className="pt-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
@@ -455,27 +491,11 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="doc-passport-issue">Emissão Passaporte</Label>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !passportIssueDate && "text-muted-foreground")}>
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {passportIssueDate ? format(passportIssueDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={passportIssueDate} onSelect={setPassportIssueDate} locale={ptBR} /></PopoverContent>
-                                    </Popover>
+                                    <DatePickerInput value={passportIssueDate} onSelect={setPassportIssueDate} />
                                 </div>
                                  <div className="space-y-2">
                                     <Label htmlFor="doc-passport-expiry">Vencimento Passaporte</Label>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !passportExpiryDate && "text-muted-foreground")}>
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {passportExpiryDate ? format(passportExpiryDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={passportExpiryDate} onSelect={setPassportExpiryDate} locale={ptBR} /></PopoverContent>
-                                    </Popover>
+                                    <DatePickerInput value={passportExpiryDate} onSelect={setPassportExpiryDate} />
                                 </div>
                                  <div className="space-y-2">
                                     <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
@@ -498,15 +518,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="doc-visa-validity">Validade do Visto</Label>
-                                     <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button variant={"outline"} className={cn("w-full justify-start text-left font-normal", !visaValidityDate && "text-muted-foreground")}>
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {visaValidityDate ? format(visaValidityDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={visaValidityDate} onSelect={setVisaValidityDate} locale={ptBR} /></PopoverContent>
-                                    </Popover>
+                                    <DatePickerInput value={visaValidityDate} onSelect={setVisaValidityDate} />
                                 </div>
                             </div>
                         </TabsContent>
