@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -242,13 +242,14 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
                     
                     <Tabs defaultValue="contato">
-                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-7 h-auto">
+                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto">
                             <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
                             <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
                             <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
                             <TabsTrigger value="endereco" className="flex-col h-auto gap-1.5 py-2"><Home className="w-5 h-5"/>Endereço</TabsTrigger>
                             <TabsTrigger value="familia" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Família</TabsTrigger>
                             <TabsTrigger value="cotacoes" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
+                            <TabsTrigger value="anexos" className="flex-col h-auto gap-1.5 py-2"><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
                             <TabsTrigger value="observacao" className="flex-col h-auto gap-1.5 py-2"><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
                         </TabsList>
                         <TabsContent value="contato" className="pt-4">
@@ -495,6 +496,19 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                         </TabsContent>
                         <TabsContent value="cotacoes" className="pt-4">
                             <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
+                        </TabsContent>
+                        <TabsContent value="anexos" className="pt-4">
+                            <Card>
+                                <CardHeader className="flex flex-row items-center justify-between py-3">
+                                    <CardTitle className="text-base">Anexos</CardTitle>
+                                    <Button size="sm">Incluir</Button>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum anexo incluído.</p>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         </TabsContent>
                         <TabsContent value="observacao" className="pt-4">
                            <Textarea placeholder="Observações sobre esta pessoa..." />
