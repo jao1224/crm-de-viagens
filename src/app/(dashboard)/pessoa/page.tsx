@@ -129,6 +129,51 @@ const initialAddressState = {
     pais: 'Brasil'
 };
 
+const AttachmentDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [fileName, setFileName] = useState<string | null>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Anexo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="attachment-file">Selecione o arquivo <span className="text-destructive">*</span></Label>
+                         <div className="flex items-center gap-2">
+                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} />
+                            <Button asChild variant="outline">
+                                <label htmlFor="attachment-file" className="cursor-pointer">Escolher Arquivo</label>
+                            </Button>
+                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                {fileName ?? 'Nenhum arquivo escolhido'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="attachment-description">Descrição <span className="text-destructive">*</span></Label>
+                        <Input id="attachment-description" placeholder="Não informada" />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
@@ -136,6 +181,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const [passportExpiryDate, setPassportExpiryDate] = useState<Date>();
     const [visaValidityDate, setVisaValidityDate] = useState<Date>();
     const [address, setAddress] = useState(initialAddressState);
+    const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -172,356 +218,359 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-4xl">
-                <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
-                </DialogHeader>
-                <div className="py-4 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                        <div className="space-y-2 lg:col-span-1">
-                            <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
-                             <div className="flex items-center gap-2">
-                                <Input id="person-name" className="flex-1" />
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <div className="flex items-center">
-                                                {[1, 2, 3, 4, 5].map((diamond) => (
-                                                    <button key={diamond} onClick={() => setRating(diamond)} className="focus:outline-none">
-                                                        <Gem className={cn("h-5 w-5", rating >= diamond ? "text-blue-400 fill-blue-400" : "text-muted-foreground/30")} />
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Classifique esta pessoa</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+        <>
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent className="sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4 space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                            <div className="space-y-2 lg:col-span-1">
+                                <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
+                                <div className="flex items-center gap-2">
+                                    <Input id="person-name" className="flex-1" />
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <div className="flex items-center">
+                                                    {[1, 2, 3, 4, 5].map((diamond) => (
+                                                        <button key={diamond} onClick={() => setRating(diamond)} className="focus:outline-none">
+                                                            <Gem className={cn("h-5 w-5", rating >= diamond ? "text-blue-400 fill-blue-400" : "text-muted-foreground/30")} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Classifique esta pessoa</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="birth-date">Data Nascimento</Label>
+                                <DatePickerInput value={birthDate} onSelect={setBirthDate} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="person-gender">Sexo</Label>
+                                <Select>
+                                    <SelectTrigger id="person-gender">
+                                        <SelectValue placeholder="Não Informado" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="not-informed">Não Informado</SelectItem>
+                                        <SelectItem value="male">Masculino</SelectItem>
+                                        <SelectItem value="female">Feminino</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
                         <div className="space-y-2">
-                             <Label htmlFor="birth-date">Data Nascimento</Label>
-                            <DatePickerInput value={birthDate} onSelect={setBirthDate} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="person-gender">Sexo</Label>
-                            <Select>
-                                <SelectTrigger id="person-gender">
-                                    <SelectValue placeholder="Não Informado" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="not-informed">Não Informado</SelectItem>
-                                    <SelectItem value="male">Masculino</SelectItem>
-                                    <SelectItem value="female">Feminino</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                     <div className="space-y-2">
-                        <Label>Tipo <span className="text-destructive">*</span></Label>
-                         <div className="flex items-center gap-6">
-                            <div className="flex items-center space-x-2">
-                                <Switch id="type-passenger" defaultChecked />
-                                <Label htmlFor="type-passenger" className="font-normal">Passageiro</Label>
-                            </div>
-                             <div className="flex items-center space-x-2">
-                                <Switch id="type-client" />
-                                <Label htmlFor="type-client" className="font-normal">Cliente</Label>
-                            </div>
-                             <div className="flex items-center space-x-2">
-                                <Switch id="type-supplier" />
-                                <Label htmlFor="type-supplier" className="font-normal">Fornecedor</Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Switch id="type-representative" />
-                                <Label htmlFor="type-representative" className="font-normal">Representante</Label>
+                            <Label>Tipo <span className="text-destructive">*</span></Label>
+                            <div className="flex items-center gap-6">
+                                <div className="flex items-center space-x-2">
+                                    <Switch id="type-passenger" defaultChecked />
+                                    <Label htmlFor="type-passenger" className="font-normal">Passageiro</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Switch id="type-client" />
+                                    <Label htmlFor="type-client" className="font-normal">Cliente</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Switch id="type-supplier" />
+                                    <Label htmlFor="type-supplier" className="font-normal">Fornecedor</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Switch id="type-representative" />
+                                    <Label htmlFor="type-representative" className="font-normal">Representante</Label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <Tabs defaultValue="contato">
-                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto">
-                            <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
-                            <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
-                            <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
-                            <TabsTrigger value="endereco" className="flex-col h-auto gap-1.5 py-2"><Home className="w-5 h-5"/>Endereço</TabsTrigger>
-                            <TabsTrigger value="familia" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Família</TabsTrigger>
-                            <TabsTrigger value="cotacoes" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
-                            <TabsTrigger value="anexos" className="flex-col h-auto gap-1.5 py-2"><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
-                            <TabsTrigger value="observacao" className="flex-col h-auto gap-1.5 py-2"><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="contato" className="pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="person-phone">Celular</Label>
-                                    <Input id="person-phone" placeholder="(11) 96123-4567" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="person-email">E-mail</Label>
-                                    <div className="relative">
-                                        <Input id="person-email" type="email" className="pl-9"/>
-                                        <Mail className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="person-social">Rede Social</Label>
-                                    <div className="relative">
-                                        <Input id="person-social" className="pl-9"/>
-                                        <Instagram className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="person-site">Site</Label>
-                                     <div className="relative">
-                                        <Input id="person-site" className="pl-9"/>
-                                        <Globe className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2 col-span-2">
-                                    <Label htmlFor="person-pix">Chave Pix</Label>
-                                    <Input id="person-pix" />
-                                </div>
-                            </div>
-                             <div className="flex items-center space-x-2 mt-6">
-                                <Switch id="accepts-communication" defaultChecked />
-                                <Label htmlFor="accepts-communication">Aceita receber comunicação via E-mail/Whatsapp</Label>
-                            </div>
-                        </TabsContent>
-                         <TabsContent value="documentos" className="pt-4 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-cpf">CPF/CNPJ</Label>
-                                    <Input id="doc-cpf" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-rg">RG</Label>
-                                    <Input id="doc-rg" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-rg-issuer">Órgão Emissor RG</Label>
-                                    <Input id="doc-rg-issuer" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-municipal">Inscrição Municipal</Label>
-                                    <Input id="doc-municipal" />
-                                </div>
-                            </div>
-                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-foreign-id">ID Estrangeiro</Label>
-                                    <Input id="doc-foreign-id" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-nationality">Nacionalidade</Label>
-                                    <Select>
-                                        <SelectTrigger id="doc-nationality">
-                                            <SelectValue placeholder="Selecione a Nacionalidade" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {nationalities.map((nat) => (
-                                                <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="doc-marital-status">Estado Civil</Label>
-                                    <Select>
-                                        <SelectTrigger id="doc-marital-status">
-                                            <SelectValue placeholder="Selecione o Estado Civil" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="solteiro">Solteiro(a)</SelectItem>
-                                            <SelectItem value="casado">Casado(a)</SelectItem>
-                                            <SelectItem value="divorciado">Divorciado(a)</SelectItem>
-                                            <SelectItem value="viuvo">Viuvo(a)</SelectItem>
-                                            <SelectItem value="uniao-estavel">União Estável</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-passport">Passaporte</Label>
-                                    <Input id="doc-passport" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-passport-issue">Emissão Passaporte</Label>
-                                    <DatePickerInput value={passportIssueDate} onSelect={setPassportIssueDate} />
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="doc-passport-expiry">Vencimento Passaporte</Label>
-                                    <DatePickerInput value={passportExpiryDate} onSelect={setPassportExpiryDate} />
-                                </div>
-                                 <div className="space-y-2">
-                                    <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
-                                    <Select>
-                                        <SelectTrigger id="doc-passport-nat">
-                                            <SelectValue placeholder="Selecione a Nacionalidade..." />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {nationalities.map((nat) => (
-                                                <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-visa">Visto</Label>
-                                    <Input id="doc-visa" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="doc-visa-validity">Validade do Visto</Label>
-                                    <DatePickerInput value={visaValidityDate} onSelect={setVisaValidityDate} />
-                                </div>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="informacoes" className="pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="info-profession">Profissão</Label>
-                                    <Select>
-                                        <SelectTrigger id="info-profession">
-                                            <SelectValue placeholder="Selecione" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {/* Add profession options here */}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="info-income">Renda</Label>
-                                    <Input id="info-income" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="info-sales-channel">Canal de Venda</Label>
-                                    <Select>
-                                        <SelectTrigger id="info-sales-channel">
-                                            <SelectValue placeholder="Selecione" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                             {/* Add sales channel options here */}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                        </TabsContent>
-                         <TabsContent value="endereco" className="pt-4">
-                            <div className="space-y-6">
+                        
+                        <Tabs defaultValue="contato">
+                            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto">
+                                <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
+                                <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
+                                <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
+                                <TabsTrigger value="endereco" className="flex-col h-auto gap-1.5 py-2"><Home className="w-5 h-5"/>Endereço</TabsTrigger>
+                                <TabsTrigger value="familia" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Família</TabsTrigger>
+                                <TabsTrigger value="cotacoes" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
+                                <TabsTrigger value="anexos" className="flex-col h-auto gap-1.5 py-2"><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
+                                <TabsTrigger value="observacao" className="flex-col h-auto gap-1.5 py-2"><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="contato" className="pt-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-pais">País</Label>
-                                        <Select value={address.pais} onValueChange={(v) => setAddress(p => ({...p, pais: v}))}>
-                                            <SelectTrigger id="addr-pais">
-                                                <SelectValue />
+                                        <Label htmlFor="person-phone">Celular</Label>
+                                        <Input id="person-phone" placeholder="(11) 96123-4567" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="person-email">E-mail</Label>
+                                        <div className="relative">
+                                            <Input id="person-email" type="email" className="pl-9"/>
+                                            <Mail className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="person-social">Rede Social</Label>
+                                        <div className="relative">
+                                            <Input id="person-social" className="pl-9"/>
+                                            <Instagram className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="person-site">Site</Label>
+                                        <div className="relative">
+                                            <Input id="person-site" className="pl-9"/>
+                                            <Globe className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2 col-span-2">
+                                        <Label htmlFor="person-pix">Chave Pix</Label>
+                                        <Input id="person-pix" />
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-2 mt-6">
+                                    <Switch id="accepts-communication" defaultChecked />
+                                    <Label htmlFor="accepts-communication">Aceita receber comunicação via E-mail/Whatsapp</Label>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="documentos" className="pt-4 space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-cpf">CPF/CNPJ</Label>
+                                        <Input id="doc-cpf" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-rg">RG</Label>
+                                        <Input id="doc-rg" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-rg-issuer">Órgão Emissor RG</Label>
+                                        <Input id="doc-rg-issuer" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-municipal">Inscrição Municipal</Label>
+                                        <Input id="doc-municipal" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-foreign-id">ID Estrangeiro</Label>
+                                        <Input id="doc-foreign-id" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-nationality">Nacionalidade</Label>
+                                        <Select>
+                                            <SelectTrigger id="doc-nationality">
+                                                <SelectValue placeholder="Selecione a Nacionalidade" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {countries.map(country => (
-                                                  <SelectItem key={country.value} value={country.label}>{country.label}</SelectItem>
+                                                {nationalities.map((nat) => (
+                                                    <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-cep">CEP</Label>
-                                        <div className="relative">
-                                            <Input id="addr-cep" value={address.cep} onChange={handleAddressChange} />
-                                            <Button type="button" size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
-                                                <Search className="h-4 w-4 text-muted-foreground" />
-                                            </Button>
+                                        <Label htmlFor="doc-marital-status">Estado Civil</Label>
+                                        <Select>
+                                            <SelectTrigger id="doc-marital-status">
+                                                <SelectValue placeholder="Selecione o Estado Civil" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="solteiro">Solteiro(a)</SelectItem>
+                                                <SelectItem value="casado">Casado(a)</SelectItem>
+                                                <SelectItem value="divorciado">Divorciado(a)</SelectItem>
+                                                <SelectItem value="viuvo">Viuvo(a)</SelectItem>
+                                                <SelectItem value="uniao-estavel">União Estável</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-passport">Passaporte</Label>
+                                        <Input id="doc-passport" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-passport-issue">Emissão Passaporte</Label>
+                                        <DatePickerInput value={passportIssueDate} onSelect={setPassportIssueDate} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-passport-expiry">Vencimento Passaporte</Label>
+                                        <DatePickerInput value={passportExpiryDate} onSelect={setPassportExpiryDate} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
+                                        <Select>
+                                            <SelectTrigger id="doc-passport-nat">
+                                                <SelectValue placeholder="Selecione a Nacionalidade..." />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {nationalities.map((nat) => (
+                                                    <SelectItem key={nat.value} value={nat.value}>{nat.label}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-visa">Visto</Label>
+                                        <Input id="doc-visa" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="doc-visa-validity">Validade do Visto</Label>
+                                        <DatePickerInput value={visaValidityDate} onSelect={setVisaValidityDate} />
+                                    </div>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="informacoes" className="pt-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="info-profession">Profissão</Label>
+                                        <Select>
+                                            <SelectTrigger id="info-profession">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {/* Add profession options here */}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="info-income">Renda</Label>
+                                        <Input id="info-income" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="info-sales-channel">Canal de Venda</Label>
+                                        <Select>
+                                            <SelectTrigger id="info-sales-channel">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {/* Add sales channel options here */}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="endereco" className="pt-4">
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-pais">País</Label>
+                                            <Select value={address.pais} onValueChange={(v) => setAddress(p => ({...p, pais: v}))}>
+                                                <SelectTrigger id="addr-pais">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {countries.map(country => (
+                                                    <SelectItem key={country.value} value={country.label}>{country.label}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-cep">CEP</Label>
+                                            <div className="relative">
+                                                <Input id="addr-cep" value={address.cep} onChange={handleAddressChange} />
+                                                <Button type="button" size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
+                                                    <Search className="h-4 w-4 text-muted-foreground" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-localidade">Cidade</Label>
+                                            <Input id="addr-localidade" value={address.localidade} onChange={handleAddressChange} />
                                         </div>
                                     </div>
-                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-localidade">Cidade</Label>
-                                        <Input id="addr-localidade" value={address.localidade} onChange={handleAddressChange} />
+                                    <div className="grid grid-cols-1 md:grid-cols-[3fr,1fr] gap-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-logradouro">Endereço</Label>
+                                            <Input id="addr-logradouro" value={address.logradouro} onChange={handleAddressChange} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-numero">Número</Label>
+                                            <Input id="addr-numero" value={address.numero} onChange={handleAddressChange} />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-complemento">Complemento</Label>
+                                            <Input id="addr-complemento" value={address.complemento} onChange={handleAddressChange} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="addr-bairro">Bairro</Label>
+                                            <Input id="addr-bairro" value={address.bairro} onChange={handleAddressChange} />
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end gap-2">
+                                        <Button variant="outline">Cancelar</Button>
+                                        <Button>Salvar</Button>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-[3fr,1fr] gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="addr-logradouro">Endereço</Label>
-                                        <Input id="addr-logradouro" value={address.logradouro} onChange={handleAddressChange} />
+                            </TabsContent>
+                            <TabsContent value="familia" className="pt-4">
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="family-person">Pessoa</Label>
+                                            <Select>
+                                                <SelectTrigger id="family-person">
+                                                    <SelectValue placeholder="Selecione" />
+                                                </SelectTrigger>
+                                                <SelectContent></SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="family-member">Membro</Label>
+                                            <Select>
+                                                <SelectTrigger id="family-member">
+                                                    <SelectValue placeholder="Selecione" />
+                                                </SelectTrigger>
+                                                <SelectContent></SelectContent>
+                                            </Select>
+                                        </div>
+                                        <Button className="self-end">Adicionar</Button>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="addr-numero">Número</Label>
-                                        <Input id="addr-numero" value={address.numero} onChange={handleAddressChange} />
+                                    <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md">
+                                        Nenhum membro familiar informado.
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="addr-complemento">Complemento</Label>
-                                        <Input id="addr-complemento" value={address.complemento} onChange={handleAddressChange} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="addr-bairro">Bairro</Label>
-                                        <Input id="addr-bairro" value={address.bairro} onChange={handleAddressChange} />
-                                    </div>
-                                </div>
-                                <div className="flex justify-end gap-2">
-                                    <Button variant="outline">Cancelar</Button>
-                                    <Button>Salvar</Button>
-                                </div>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="familia" className="pt-4">
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="family-person">Pessoa</Label>
-                                        <Select>
-                                            <SelectTrigger id="family-person">
-                                                <SelectValue placeholder="Selecione" />
-                                            </SelectTrigger>
-                                            <SelectContent></SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="family-member">Membro</Label>
-                                        <Select>
-                                            <SelectTrigger id="family-member">
-                                                <SelectValue placeholder="Selecione" />
-                                            </SelectTrigger>
-                                            <SelectContent></SelectContent>
-                                        </Select>
-                                    </div>
-                                    <Button className="self-end">Adicionar</Button>
-                                </div>
-                                <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md">
-                                    Nenhum membro familiar informado.
-                                </div>
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="cotacoes" className="pt-4">
-                            <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
-                        </TabsContent>
-                        <TabsContent value="anexos" className="pt-4">
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between py-3">
-                                    <CardTitle className="text-base">Anexos</CardTitle>
-                                    <Button size="sm">Incluir</Button>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                        <p className="text-muted-foreground">Nenhum anexo incluído.</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-                        <TabsContent value="observacao" className="pt-4">
-                           <Textarea placeholder="Observações sobre esta pessoa..." />
-                        </TabsContent>
-                    </Tabs>
+                            </TabsContent>
+                            <TabsContent value="cotacoes" className="pt-4">
+                                <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
+                            </TabsContent>
+                            <TabsContent value="anexos" className="pt-4">
+                                <Card>
+                                    <CardHeader className="flex flex-row items-center justify-between py-3">
+                                        <CardTitle className="text-base">Anexos</CardTitle>
+                                        <Button size="sm" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                            <p className="text-muted-foreground">Nenhum anexo incluído.</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
+                            <TabsContent value="observacao" className="pt-4">
+                            <Textarea placeholder="Observações sobre esta pessoa..." />
+                            </TabsContent>
+                        </Tabs>
 
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                        <Button>Salvar</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <AttachmentDialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen} />
+        </>
     )
 }
 
