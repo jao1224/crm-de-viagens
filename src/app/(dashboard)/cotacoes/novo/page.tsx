@@ -411,6 +411,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <TabsTrigger value="documentos">Documentos</TabsTrigger>
                                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                                 <TabsTrigger value="endereco">Endereço</TabsTrigger>
+                                <TabsTrigger value="cotações">Cotações</TabsTrigger>
                                 <TabsTrigger value="observacao">Observação</TabsTrigger>
                             </TabsList>
                         </div>
@@ -574,6 +575,9 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                         </TabsContent>
                          <TabsContent value="endereco" className="pt-4">
                             <p className="text-muted-foreground text-center p-8">Nenhum endereço para exibir.</p>
+                        </TabsContent>
+                        <TabsContent value="cotações" className="pt-4">
+                            <p className="text-muted-foreground text-center p-8">Nenhuma cotação para exibir.</p>
                         </TabsContent>
                         <TabsContent value="observacao" className="pt-4">
                            <Textarea placeholder="Observações sobre esta pessoa..." />
