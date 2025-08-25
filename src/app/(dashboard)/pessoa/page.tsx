@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -242,17 +242,15 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
                     
                     <Tabs defaultValue="contato">
-                         <div className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-                            <TabsList className="bg-transparent p-0 h-auto gap-1">
-                                <TabsTrigger value="contato">Contato</TabsTrigger>
-                                <TabsTrigger value="documentos">Documentos</TabsTrigger>
-                                <TabsTrigger value="informacoes">Informações</TabsTrigger>
-                                <TabsTrigger value="endereco">Endereço</TabsTrigger>
-                                <TabsTrigger value="familia">Família</TabsTrigger>
-                                <TabsTrigger value="cotações">Cotações</TabsTrigger>
-                                <TabsTrigger value="observacao">Observação</TabsTrigger>
-                            </TabsList>
-                        </div>
+                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-7 h-auto">
+                            <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
+                            <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
+                            <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
+                            <TabsTrigger value="endereco" className="flex-col h-auto gap-1.5 py-2"><Home className="w-5 h-5"/>Endereço</TabsTrigger>
+                            <TabsTrigger value="familia" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Família</TabsTrigger>
+                            <TabsTrigger value="cotacoes" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
+                            <TabsTrigger value="observacao" className="flex-col h-auto gap-1.5 py-2"><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
+                        </TabsList>
                         <TabsContent value="contato" className="pt-4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
@@ -495,7 +493,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                             </div>
                         </TabsContent>
-                        <TabsContent value="cotações" className="pt-4">
+                        <TabsContent value="cotacoes" className="pt-4">
                             <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
                         </TabsContent>
                         <TabsContent value="observacao" className="pt-4">
@@ -656,5 +654,7 @@ export default function PessoasPage() {
         </>
     );
 }
+
+    
 
     
