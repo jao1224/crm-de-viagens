@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState } from 'react';
@@ -1433,12 +1434,15 @@ export default function NovaCotacaoPage() {
                                     <CardContent className="p-4 space-y-4">
                                         <Accordion type="single" collapsible className="w-full">
                                             <AccordionItem value="roteiro">
-                                                <AccordionTrigger className="font-semibold text-base hover:no-underline">
+                                                <div className="flex items-center justify-between py-4">
                                                     <div className="flex items-center gap-2">
                                                         <Checkbox id="roteiro-check" />
-                                                        <Label htmlFor="roteiro-check" className="cursor-pointer">Roteiro (Day By Day)</Label>
+                                                        <Label htmlFor="roteiro-check" className="font-semibold text-base cursor-pointer">
+                                                            Roteiro (Day By Day)
+                                                        </Label>
                                                     </div>
-                                                </AccordionTrigger>
+                                                    <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5"></AccordionTrigger>
+                                                </div>
                                                 <AccordionContent className="pt-2">
                                                     <Textarea placeholder="Descreva o roteiro dia a dia..." />
                                                 </AccordionContent>
