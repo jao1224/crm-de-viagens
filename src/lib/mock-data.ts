@@ -1,6 +1,15 @@
 
 import type { Appointment, Quote, Project, User } from './types';
 
+export const currentUser: User = {
+    id: 'user-lima',
+    name: 'Lima',
+    email: 'nomeiodomundoviagens@gmail.com',
+    avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg',
+    status: 'active',
+    permission: 'Admin',
+};
+
 export const mockAppointments: Appointment[] = [
   { id: '1', title: 'Embarque Voo 7XIE9', customer: 'Kelly Freires Diogo Tossi', package: 'São Paulo (VCP) > Lisboa (LIS)', date: '2025-08-23T17:15:00Z', type: 'departure' },
   { id: '2', title: 'Embarque Voo T196W', customer: 'Herlingue Carvalho Azevedo', package: 'São Paulo (VCP) > Porto (OPO)', date: '2025-09-10T20:30:00Z', type: 'departure' },
@@ -70,6 +79,7 @@ export const mockProjects: Project[] = [
 ];
 
 export const mockUsers: User[] = [
+    currentUser,
     {
         id: '1',
         name: 'Casal em Coimbra Franquia',

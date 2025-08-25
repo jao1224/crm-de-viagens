@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from '@/components/ui/badge';
+import { currentUser } from '@/lib/mock-data';
 
 const headerNavLinks = [
     { href: '#', label: 'Home'},
@@ -92,11 +93,11 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
              <div className="flex items-center gap-2 cursor-pointer">
                 <Avatar className="h-9 w-9 border-2 border-primary/50">
-                  <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Lima" />
-                  <AvatarFallback>L</AvatarFallback>
+                  <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
+                  <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="hidden sm:flex flex-col items-start">
-                  <span className="text-sm font-semibold text-foreground">Lima</span>
+                  <span className="text-sm font-semibold text-foreground">{currentUser.name}</span>
                 </div>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
              </div>

@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { mockAppointments, mockProjects } from "@/lib/mock-data";
+import { mockAppointments, mockProjects, currentUser } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users } from 'lucide-react';
 import React from "react";
@@ -161,7 +161,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
             <header>
                 <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
-                <p className="text-muted-foreground">Bem-vindo(a) de volta, Lima!</p>
+                <p className="text-muted-foreground">Bem-vindo(a) de volta, {currentUser.name}!</p>
             </header>
 
             {/* Seção de Orçamentos */}

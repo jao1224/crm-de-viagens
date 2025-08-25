@@ -9,13 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Shield, FileSignature, Trash2 } from 'lucide-react';
+import { currentUser } from '@/lib/mock-data';
 
 const ProfileForm = () => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div className="md:col-span-1 flex flex-col items-center gap-4">
       <Avatar className="h-40 w-40 border-4 border-primary/20">
-        <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Lima" />
-        <AvatarFallback>L</AvatarFallback>
+        <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
+        <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
       </Avatar>
       <Button variant="destructive">
         <Trash2 className="mr-2 h-4 w-4" />
@@ -25,11 +26,11 @@ const ProfileForm = () => (
     <div className="md:col-span-2 space-y-6">
       <div className="space-y-2">
         <Label htmlFor="nome">Nome <span className="text-destructive">*</span></Label>
-        <Input id="nome" defaultValue="Lima" />
+        <Input id="nome" defaultValue={currentUser.name.split(' ')[0]} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="sobrenome">Sobrenome <span className="text-destructive">*</span></Label>
-        <Input id="sobrenome" defaultValue="" />
+        <Input id="sobrenome" defaultValue={currentUser.name.split(' ').slice(1).join(' ')} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="celular">Celular <span className="text-destructive">*</span></Label>
@@ -38,7 +39,7 @@ const ProfileForm = () => (
       <div className="space-y-2">
         <Label htmlFor="email">E-mail <span className="text-destructive">*</span></Label>
         <div className="flex items-center gap-2">
-          <Input id="email" defaultValue="nomeiodomundoviagens@gmail.com" readOnly className="bg-muted" />
+          <Input id="email" defaultValue={currentUser.email} readOnly className="bg-muted" />
           <Button variant="outline">Alterar e-mail</Button>
         </div>
       </div>
@@ -98,12 +99,16 @@ export default function PerfilPage() {
     setIsClient(true);
   }, []);
 
+  if (!isClient) {
+    return null; // Ou um skeleton
+  }
+
   return (
     <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-bold text-primary">Perfil</h1>
       </header>
-      {isClient && (
+      
         <Tabs defaultValue="meus-dados" className="w-full">
             <TabsList className="grid w-full grid-cols-3 max-w-md">
             <TabsTrigger value="meus-dados">
@@ -133,7 +138,6 @@ export default function PerfilPage() {
             <SignatureForm />
             </TabsContent>
         </Tabs>
-      )}
     </div>
   );
 }
