@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2 } from 'lucide-react';
-import { mockUsers } from '@/lib/mock-data';
+import { mockUsers, currentUser } from '@/lib/mock-data';
 import type { User } from '@/lib/types';
 import Link from 'next/link';
 
@@ -43,6 +43,8 @@ const UserCard = ({ user }: { user: User }) => {
 };
 
 export default function UsuariosPage() {
+  const otherUsers = mockUsers.filter(user => user.id !== currentUser.id);
+
   return (
     <div className="space-y-6">
       <header className="flex justify-between items-center">
@@ -55,7 +57,7 @@ export default function UsuariosPage() {
       <Card>
         <CardContent className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <Badge variant="secondary" className="text-sm font-semibold">3 usuário(s) de 3 disponível(eis)</Badge>
+                <Badge variant="secondary" className="text-sm font-semibold">{mockUsers.length} usuário(s) de 3 disponível(eis)</Badge>
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <div className="flex-1 sm:flex-initial sm:w-48">
@@ -76,7 +78,7 @@ export default function UsuariosPage() {
       </Card>
 
       <div className="space-y-4">
-        {mockUsers.map(user => (
+        {otherUsers.map(user => (
           <UserCard key={user.id} user={user} />
         ))}
       </div>
