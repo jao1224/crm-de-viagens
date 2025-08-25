@@ -14,8 +14,8 @@ const ProfileForm = () => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
     <div className="md:col-span-1 flex flex-col items-center gap-4">
       <Avatar className="h-40 w-40 border-4 border-primary/20">
-        <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Maxshuell" />
-        <AvatarFallback>M</AvatarFallback>
+        <AvatarImage src="https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg" alt="Lima" />
+        <AvatarFallback>L</AvatarFallback>
       </Avatar>
       <Button variant="destructive">
         <Trash2 className="mr-2 h-4 w-4" />
@@ -25,11 +25,11 @@ const ProfileForm = () => (
     <div className="md:col-span-2 space-y-6">
       <div className="space-y-2">
         <Label htmlFor="nome">Nome <span className="text-destructive">*</span></Label>
-        <Input id="nome" defaultValue="Maxshuell" />
+        <Input id="nome" defaultValue="Lima" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="sobrenome">Sobrenome <span className="text-destructive">*</span></Label>
-        <Input id="sobrenome" defaultValue="Eufrasio da Silva" />
+        <Input id="sobrenome" defaultValue="" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="celular">Celular <span className="text-destructive">*</span></Label>
@@ -130,3 +130,5 @@ export default function PerfilPage() {
     </div>
   );
 }
+
+    

@@ -206,12 +206,12 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                                <Select defaultValue="maxshuell" name="assignee">
+                                <Select defaultValue="lima" name="assignee">
                                     <SelectTrigger id="assignee">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="maxshuell">Maxshuell</SelectItem>
+                                        <SelectItem value="lima">Lima</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -568,5 +568,7 @@ export default function AgendaPage() {
     </div>
   );
 }
+
+    
 
     

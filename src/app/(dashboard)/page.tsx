@@ -161,7 +161,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
             <header>
                 <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
-                <p className="text-muted-foreground">Bem-vindo(a) de volta, Maxshuell!</p>
+                <p className="text-muted-foreground">Bem-vindo(a) de volta, Lima!</p>
             </header>
 
             {/* Seção de Orçamentos */}
@@ -460,6 +460,8 @@ export default function DashboardPage() {
 
 
 
+
+    
 
     
 

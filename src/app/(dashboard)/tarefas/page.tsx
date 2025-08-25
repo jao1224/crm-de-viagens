@@ -72,7 +72,7 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
         const newTask = {
             id: Date.now().toString(),
             date: finalDate,
-            assignee: { name: 'Maxshuell', avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
+            assignee: { name: 'Lima', avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
             quoteId: 'new_t',
             type: 'Tarefa',
             description: subject || 'Nova tarefa',
@@ -106,12 +106,12 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                                <Select defaultValue="maxshuell" name="assignee">
+                                <Select defaultValue="lima" name="assignee">
                                     <SelectTrigger id="assignee">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="maxshuell">Maxshuell</SelectItem>
+                                        <SelectItem value="lima">Lima</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -391,3 +391,6 @@ export default function TarefasPage() {
 
         </div>
     );
+
+
+    

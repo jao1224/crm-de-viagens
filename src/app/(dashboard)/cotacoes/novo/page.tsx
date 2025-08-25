@@ -1007,25 +1007,25 @@ const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenCha
 const historyItems = [
     {
         icon: DollarSign,
-        user: 'Maxshuell',
+        user: 'Lima',
         action: 'Removeu a venda.',
         timestamp: '24/08/2025 10:59'
     },
     {
         icon: DollarSign,
-        user: 'Maxshuell',
+        user: 'Lima',
         action: 'Realizou o lançamento da venda.',
         timestamp: '24/08/2025 10:58'
     },
     {
         icon: Pencil,
-        user: 'Maxshuell',
+        user: 'Lima',
         action: 'Alterou a situação para Aprovado.',
         timestamp: '22/08/2025 17:52'
     },
     {
         icon: FileTextIcon,
-        user: 'Maxshuell',
+        user: 'Lima',
         action: 'Cadastrou a cotação.',
         timestamp: '22/08/2025 17:51'
     }
@@ -1204,12 +1204,12 @@ export default function NovaCotacaoPage() {
                             </div>
                             <div className="space-y-1.5">
                                 <Label>Usuário</Label>
-                                <Select defaultValue="maxshuell">
+                                <Select defaultValue="lima">
                                     <SelectTrigger>
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="maxshuell">Maxshuell</SelectItem>
+                                        <SelectItem value="lima">Lima</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1814,5 +1814,7 @@ export default function NovaCotacaoPage() {
     );
 }
 
+
+    
 
     
