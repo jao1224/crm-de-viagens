@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState } from 'react';
@@ -541,7 +542,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, 
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                         <div className="space-y-2">
                                             <Label htmlFor="addr-pais">País</Label>
-                                            <Select value={address.pais} onValueChange={(v) => setAddress(p => ({...p, pais: v}))}>
+                                            <Select value={address.pais} onValueChange={(v) => handleAddressChange({ target: { id: 'addr-pais', value: v } } as any)}>
                                                 <SelectTrigger id="addr-pais">
                                                     <SelectValue />
                                                 </SelectTrigger>
@@ -712,6 +713,14 @@ export default function PessoasPage() {
     const handleDeletePerson = (personId: number) => {
         setPeople(prev => prev.filter(p => p.id !== personId));
     }
+    
+    const handleToggleActive = (personId: number) => {
+        setPeople(prev => 
+            prev.map(p => 
+                p.id === personId ? { ...p, active: !p.active } : p
+            )
+        );
+    }
 
 
     return (
@@ -801,7 +810,7 @@ export default function PessoasPage() {
                                                 <PhoneCell phone={person.phone} />
                                             </TableCell>
                                             <TableCell>
-                                                <Switch checked={person.active} />
+                                                <Switch checked={person.active} onCheckedChange={() => handleToggleActive(person.id)} />
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-2">
