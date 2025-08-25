@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -211,6 +211,10 @@ export default function CotacoesPage() {
         return acc;
       }, {} as Record<Quote['status'], Quote[]>);
   }, [quotes]);
+  
+  if (!isClient) {
+    return null; // ou um esqueleto de carregamento
+  }
 
   return (
     <div className="flex flex-col h-full gap-4 overflow-hidden">
@@ -250,7 +254,7 @@ export default function CotacoesPage() {
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground px-1">Período da Cotação</label>
-               {isClient && <div className="flex items-center gap-2">
+               <div className="flex items-center gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant={'outline'} className="w-full justify-start text-left font-normal h-9">
@@ -283,7 +287,7 @@ export default function CotacoesPage() {
                     />
                   </PopoverContent>
                 </Popover>
-              </div>}
+              </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground px-1">Usuário</label>
@@ -322,5 +326,3 @@ export default function CotacoesPage() {
     </div>
   );
 }
-
-    
