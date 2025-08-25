@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState } from 'react';
@@ -942,6 +941,67 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
     )
 }
 
+const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Serviços da Fatura</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="service-description">Descrição <span className="text-destructive">*</span></Label>
+                        <Textarea id="service-description" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="service-fare">Tarifa <span className="text-destructive">*</span></Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="service-fare" className="pl-8" />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="service-taxes">Taxas</Label>
+                             <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="service-taxes" className="pl-8" />
+                            </div>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="service-impostos">Impostos</Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="service-impostos" className="pl-8" />
+                            </div>
+                        </div>
+                    </div>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="service-rav">RAV</Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="service-rav" className="pl-8" />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="service-discount">Desconto (-)</Label>
+                            <div className="relative">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                                <Input id="service-discount" className="pl-8" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -951,6 +1011,7 @@ export default function NovaCotacaoPage() {
     const [isSaleValueInfoDialogOpen, setIsSaleValueInfoDialogOpen] = useState(false);
     const [isBonusInfoDialogOpen, setIsBonusInfoDialogOpen] = useState(false);
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
+    const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
 
@@ -1567,7 +1628,7 @@ export default function NovaCotacaoPage() {
                                 <div>
                                      <div className="flex items-center justify-between mb-2">
                                         <Label className="text-green-600 font-semibold">Discriminação dos Serviços</Label>
-                                        <Button size="sm">Incluir</Button>
+                                        <Button size="sm" onClick={() => setIsInvoiceServiceDialogOpen(true)}>Incluir</Button>
                                     </div>
                                     <div className="text-center py-8 border-dashed border-2 rounded-md">
                                         <p className="text-sm text-muted-foreground">
@@ -1594,6 +1655,9 @@ export default function NovaCotacaoPage() {
             <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
+            <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
         </>
     );
 }
+
+    
