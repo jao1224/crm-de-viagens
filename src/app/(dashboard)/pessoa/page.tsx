@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Paperclip } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -129,14 +129,33 @@ const initialAddressState = {
     pais: 'Brasil'
 };
 
-const AttachmentDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+interface Attachment {
+    id: string;
+    fileName: string;
+    description: string;
+}
+
+const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (attachment: Omit<Attachment, 'id'>) => void }) => {
     const [fileName, setFileName] = useState<string | null>(null);
+    const [description, setDescription] = useState('');
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             setFileName(event.target.files[0].name);
         } else {
             setFileName(null);
+        }
+    };
+
+    const handleSave = () => {
+        if (fileName && description) {
+            onSave({ fileName, description });
+            onOpenChange(false);
+            // Reset state
+            setFileName(null);
+            setDescription('');
+        } else {
+            alert('Por favor, selecione um arquivo e adicione uma descrição.');
         }
     };
 
@@ -162,12 +181,12 @@ const AttachmentDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange:
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="attachment-description">Descrição <span className="text-destructive">*</span></Label>
-                        <Input id="attachment-description" placeholder="Não informada" />
+                        <Input id="attachment-description" placeholder="Não informada" value={description} onChange={(e) => setDescription(e.target.value)} />
                     </div>
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={() => onOpenChange(false)}>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -182,6 +201,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const [visaValidityDate, setVisaValidityDate] = useState<Date>();
     const [address, setAddress] = useState(initialAddressState);
     const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
+    const [attachments, setAttachments] = useState<Attachment[]>([]);
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
@@ -214,6 +234,14 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
             console.error(error);
             alert('Falha ao buscar o CEP. Tente novamente.');
         }
+    };
+    
+    const handleSaveAttachment = (attachment: Omit<Attachment, 'id'>) => {
+        setAttachments(prev => [...prev, { ...attachment, id: Date.now().toString() }]);
+    };
+
+    const handleDeleteAttachment = (id: string) => {
+        setAttachments(prev => prev.filter(att => att.id !== id));
     };
 
 
@@ -551,9 +579,28 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                         <Button size="sm" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                            <p className="text-muted-foreground">Nenhum anexo incluído.</p>
-                                        </div>
+                                        {attachments.length > 0 ? (
+                                            <ul className="space-y-3">
+                                                {attachments.map(att => (
+                                                    <li key={att.id} className="flex items-center justify-between p-2 rounded-md border bg-muted/50">
+                                                        <div className="flex items-center gap-3">
+                                                            <Paperclip className="h-5 w-5 text-muted-foreground" />
+                                                            <div>
+                                                                <p className="text-sm font-medium text-foreground">{att.fileName}</p>
+                                                                <p className="text-xs text-muted-foreground">{att.description}</p>
+                                                            </div>
+                                                        </div>
+                                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDeleteAttachment(att.id)}>
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum anexo incluído.</p>
+                                            </div>
+                                        )}
                                     </CardContent>
                                 </Card>
                             </TabsContent>
@@ -569,7 +616,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            <AttachmentDialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen} />
+            <AttachmentDialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen} onSave={handleSaveAttachment} />
         </>
     )
 }
