@@ -423,7 +423,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             </div>
                         </TabsContent>
                         <TabsContent value="cotações" className="pt-4">
-                            <p className="text-muted-foreground text-center p-8">Nenhuma cotação para exibir.</p>
+                            <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
                         </TabsContent>
                         <TabsContent value="observacao" className="pt-4">
                            <Textarea placeholder="Observações sobre esta pessoa..." />
