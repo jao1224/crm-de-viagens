@@ -1271,10 +1271,9 @@ export default function NovaCotacaoPage() {
                                             <p className="text-muted-foreground mb-4">Nenhuma imagem incluída.</p>
                                             <div className="flex gap-2">
                                                 <Input id="imagem-upload" type="file" className="hidden" />
-                                                <Button asChild variant="outline">
+                                                <Button asChild variant="outline" size="icon">
                                                     <label htmlFor="imagem-upload" className="cursor-pointer">
-                                                        <Upload className="mr-2 h-4 w-4"/>
-                                                        Upload
+                                                        <Upload className="h-4 w-4"/>
                                                     </label>
                                                 </Button>
                                                 <Button variant="outline" onClick={() => setIsImageLibraryOpen(true)}><Library className="mr-2 h-4 w-4"/>Biblioteca</Button>
@@ -1809,3 +1808,4 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
