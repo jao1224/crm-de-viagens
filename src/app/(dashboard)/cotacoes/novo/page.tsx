@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -1003,6 +1003,33 @@ const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenCha
     )
 }
 
+const historyItems = [
+    {
+        icon: DollarSign,
+        user: 'Maxshuell',
+        action: 'Removeu a venda.',
+        timestamp: '24/08/2025 10:59'
+    },
+    {
+        icon: DollarSign,
+        user: 'Maxshuell',
+        action: 'Realizou o lançamento da venda.',
+        timestamp: '24/08/2025 10:58'
+    },
+    {
+        icon: Pencil,
+        user: 'Maxshuell',
+        action: 'Alterou a situação para Aprovado.',
+        timestamp: '22/08/2025 17:52'
+    },
+    {
+        icon: FileTextIcon,
+        user: 'Maxshuell',
+        action: 'Cadastrou a cotação.',
+        timestamp: '22/08/2025 17:51'
+    }
+];
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -1661,6 +1688,31 @@ export default function NovaCotacaoPage() {
                                 <div className="text-center py-8 border-dashed border-2 rounded-md">
                                     <p className="text-muted-foreground">Nenhuma comunicação enviada.</p>
                                 </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="historico" className="mt-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <History className="h-5 w-5 text-primary" />
+                                    Histórico
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {historyItems.map((item, index) => (
+                                    <div key={index} className="flex items-start gap-4">
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
+                                            <item.icon className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-foreground">
+                                                <span className="font-bold">{item.user}</span> {item.action}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">{item.timestamp}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </CardContent>
                         </Card>
                     </TabsContent>
