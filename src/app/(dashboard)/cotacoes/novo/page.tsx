@@ -261,7 +261,6 @@ const nationalities = [
 
 const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { value: Date | undefined, onSelect: (date: Date | undefined) => void, placeholder?: string }) => {
     const [inputValue, setInputValue] = useState(value ? format(value, "dd/MM/yyyy") : "");
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
     React.useEffect(() => {
         setInputValue(value ? format(value, "dd/MM/yyyy") : "");
@@ -293,36 +292,37 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
     
     const handleDateSelect = (date: Date | undefined) => {
         onSelect(date);
-        setIsPopoverOpen(false);
     }
 
     return (
-        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-            <PopoverTrigger asChild>
-                <div className="relative w-full">
-                    <Input
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onBlur={handleInputBlur}
-                        placeholder={placeholder}
-                        className="pr-8"
+        <div className="relative w-full">
+            <Input
+                value={inputValue}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                placeholder={placeholder}
+                className="pr-8"
+            />
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                         <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                    <Calendar
+                        mode="single"
+                        selected={value}
+                        onSelect={handleDateSelect}
+                        initialFocus
+                        locale={ptBR}
+                        captionLayout="dropdown-buttons"
+                        fromYear={new Date().getFullYear() - 100}
+                        toYear={new Date().getFullYear() + 20}
                     />
-                    <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={value}
-                  onSelect={handleDateSelect}
-                  initialFocus
-                  locale={ptBR}
-                  captionLayout="dropdown-buttons"
-                  fromYear={new Date().getFullYear() - 100}
-                  toYear={new Date().getFullYear() + 20}
-                 />
-            </PopoverContent>
-        </Popover>
+                </PopoverContent>
+            </Popover>
+        </div>
     );
 };
 
