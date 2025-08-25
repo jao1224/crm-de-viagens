@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -598,7 +598,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -693,7 +693,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -776,7 +776,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -872,7 +872,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -1033,7 +1033,7 @@ const historyItems = [
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
-    const [activeTab, setActiveTab] = useState('valores');
+    const [activeTab, setActiveTab] = useState('orcamento');
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [isCostInfoDialogOpen, setIsCostInfoDialogOpen] = useState(false);
     const [isSaleValueInfoDialogOpen, setIsSaleValueInfoDialogOpen] = useState(false);
@@ -1047,39 +1047,45 @@ export default function NovaCotacaoPage() {
     return (
         <>
             <div className="space-y-6">
-                <header className="flex justify-between items-center">
+                <header className="flex flex-col sm:flex-row justify-between items-center gap-4">
                     <h1 className="text-3xl font-bold text-primary">Cotação</h1>
                     <div className="flex items-center gap-2">
-                        <DropdownMenu>
+                        <Button variant="outline" asChild><Link href="/cotacoes">Cancelar</Link></Button>
+                        <Button>Salvar e Fechar</Button>
+                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
+                                <Button variant="outline" size="icon">
                                     <MoreVertical className="h-5 w-5" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
+                                 <DropdownMenuItem>
+                                    Salvar
+                                </DropdownMenuItem>
                                 <DropdownMenuItem className="text-destructive">
                                     <Trash2 className="mr-2 h-4 w-4" />
                                     Excluir
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button variant="outline" asChild><Link href="/cotacoes">Cancelar</Link></Button>
-                        <Button variant="outline">Salvar</Button>
-                        <Button>Salvar e Fechar</Button>
                     </div>
                 </header>
 
                 <Card>
-                    <CardContent className="p-4 space-y-4">
-                        <div className="flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-lg font-mono font-semibold">ispg5</Badge>
+                    <CardContent className="p-4 md:p-6">
+                         <Stepper currentStep={currentStep} />
+                        
+                        <Separator className="my-6"/>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+                             <div className="flex items-center gap-2 lg:col-span-1">
+                                <Badge variant="outline" className="text-lg font-mono font-semibold py-2">ispg5</Badge>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "w-[180px] justify-start text-left font-normal",
+                                                "w-full justify-start text-left font-normal",
                                                 !date && "text-muted-foreground"
                                             )}
                                         >
@@ -1098,13 +1104,6 @@ export default function NovaCotacaoPage() {
                                     </PopoverContent>
                                 </Popover>
                             </div>
-                        </div>
-                        
-                        <Stepper currentStep={currentStep} />
-                        
-                        <Separator/>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
                             <div className="space-y-1.5 lg:col-span-1">
                                 <Label>Cliente</Label>
                                 <div className="flex items-center gap-2">
@@ -1132,17 +1131,6 @@ export default function NovaCotacaoPage() {
                                 </Select>
                             </div>
                             <div className="space-y-1.5">
-                                <Label>Afiliado</Label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecione"/>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="nenhum">Nenhum</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-1.5">
                                 <Label>Usuário</Label>
                                 <Select defaultValue="maxshuell">
                                     <SelectTrigger>
@@ -1161,20 +1149,33 @@ export default function NovaCotacaoPage() {
                     </CardContent>
                 </Card>
 
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                    <TabsList>
-                        <TabsTrigger value="solicitacao">Solicitação</TabsTrigger>
-                        <TabsTrigger value="orcamento">Orçamento</TabsTrigger>
-                        <TabsTrigger value="passageiros">Passageiros</TabsTrigger>
-                        <TabsTrigger value="anexos">Anexos</TabsTrigger>
-                        <TabsTrigger value="tarefas">Tarefas</TabsTrigger>
-                        <TabsTrigger value="observacoes">Observações</TabsTrigger>
-                        <TabsTrigger value="valores">Valores</TabsTrigger>
-                        <TabsTrigger value="venda">Venda</TabsTrigger>
-                        <TabsTrigger value="fatura">Fatura</TabsTrigger>
-                        <TabsTrigger value="comunicacao">Comunicação</TabsTrigger>
-                        <TabsTrigger value="historico">Histórico</TabsTrigger>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-11 h-auto">
+                        <TabsTrigger value="solicitacao" className="flex-col h-auto gap-1.5 py-2"><Handshake className="w-5 h-5"/>Solicitação</TabsTrigger>
+                        <TabsTrigger value="orcamento" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Orçamento</TabsTrigger>
+                        <TabsTrigger value="passageiros" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Passageiros</TabsTrigger>
+                        <TabsTrigger value="anexos" className="flex-col h-auto gap-1.5 py-2"><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
+                        <TabsTrigger value="tarefas" className="flex-col h-auto gap-1.5 py-2"><ListTodo className="w-5 h-5"/>Tarefas</TabsTrigger>
+                        <TabsTrigger value="observacoes" className="flex-col h-auto gap-1.5 py-2"><MessageSquare className="w-5 h-5"/>Observações</TabsTrigger>
+                        <TabsTrigger value="valores" className="flex-col h-auto gap-1.5 py-2"><DollarSign className="w-5 h-5"/>Valores</TabsTrigger>
+                        <TabsTrigger value="venda" className="flex-col h-auto gap-1.5 py-2"><HandCoins className="w-5 h-5"/>Venda</TabsTrigger>
+                        <TabsTrigger value="fatura" className="flex-col h-auto gap-1.5 py-2"><ReceiptText className="w-5 h-5"/>Fatura</TabsTrigger>
+                        <TabsTrigger value="comunicacao" className="flex-col h-auto gap-1.5 py-2"><MessagesSquare className="w-5 h-5"/>Comunicação</TabsTrigger>
+                        <TabsTrigger value="historico" className="flex-col h-auto gap-1.5 py-2"><History className="w-5 h-5"/>Histórico</TabsTrigger>
                     </TabsList>
+                     <TabsContent value="solicitacao" className="mt-4">
+                        <Card>
+                             <CardHeader>
+                                <CardTitle>Solicitação do Cliente</CardTitle>
+                                <CardDescription>Detalhes da solicitação original do cliente.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Textarea readOnly className="bg-muted min-h-48">
+                                    Nenhuma solicitação encontrada.
+                                </Textarea>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
                     <TabsContent value="orcamento" className="mt-4">
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
@@ -1559,16 +1560,15 @@ export default function NovaCotacaoPage() {
                                             <p className="text-2xl font-bold">R$ 0,00</p>
                                         </div>
                                         <div>
-                                            <Label>Lucro <sup className="font-medium">1</sup></Label>
+                                            <Label>Bonificação</Label>
                                             <p className="text-2xl font-bold">R$ 0,00</p>
-                                            <p className="text-xs text-muted-foreground">¹ lucro com bonificações</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Custo</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1584,7 +1584,7 @@ export default function NovaCotacaoPage() {
                                     </div>
 
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1600,7 +1600,7 @@ export default function NovaCotacaoPage() {
                                     </div>
                                     
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1611,7 +1611,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                     </div>
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Pagamento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsPaidBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1691,7 +1691,7 @@ export default function NovaCotacaoPage() {
                             </CardContent>
                         </Card>
                     </TabsContent>
-                    <TabsContent value="historico" className="mt-4">
+                     <TabsContent value="historico" className="mt-4">
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
@@ -1700,7 +1700,7 @@ export default function NovaCotacaoPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-6">
-                                {historyItems.map((item, index) => (
+                                {historyItems.length > 0 ? historyItems.map((item, index) => (
                                     <div key={index} className="flex items-start gap-4">
                                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
                                             <item.icon className="h-5 w-5 text-muted-foreground" />
@@ -1712,7 +1712,11 @@ export default function NovaCotacaoPage() {
                                             <p className="text-sm text-muted-foreground">{item.timestamp}</p>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                     <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum histórico de alterações.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -1727,3 +1731,5 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
+    
