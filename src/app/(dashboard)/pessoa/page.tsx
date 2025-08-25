@@ -189,7 +189,7 @@ const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpe
     )
 }
 
-const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, onOpenChange: (open: boolean) => void, personToEdit: Person | null }) => {
+const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, personToEdit: Person | null, onSave: (person: Person) => void }) => {
     const { toast } = useToast();
     const formRef = React.useRef<HTMLFormElement>(null);
     const [rating, setRating] = useState(0);
@@ -259,10 +259,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, 
         const form = formRef.current;
         if (!form) return;
 
-        const cpfCnpj = (form.querySelector('#doc-cpf') as HTMLInputElement)?.value;
-        const profession = (form.querySelector('#info-profession-select') as HTMLSelectElement)?.value;
-        const cep = (form.querySelector('#addr-cep') as HTMLInputElement)?.value;
-
+        // Basic validation
         if (!personName) {
              toast({
                 title: 'Campo Obrigatório',
@@ -271,13 +268,32 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, 
             });
             return;
         }
+        
+        const newPerson: Person = {
+            id: personToEdit?.id || Date.now(), // Use existing id or generate a new one
+            name: personName,
+            rating: rating,
+            types: ['Passageiro'], // Default, can be changed
+            cpfCnpj: (form.querySelector('#doc-cpf') as HTMLInputElement)?.value || '',
+            phone: (form.querySelector('#person-phone') as HTMLInputElement)?.value || '',
+            email: (form.querySelector('#person-email') as HTMLInputElement)?.value || '',
+            sexo: (form.querySelector('#person-gender') as HTMLSelectElement)?.value || '',
+            nascimento: birthDate ? format(birthDate, 'yyyy-MM-dd') : '',
+            rg: (form.querySelector('#doc-rg') as HTMLInputElement)?.value || '',
+            orgaoEmissor: (form.querySelector('#doc-rg-issuer') as HTMLInputElement)?.value || '',
+            id_estrangeiro: (form.querySelector('#doc-foreign-id') as HTMLInputElement)?.value || '',
+            nacionalidade: (form.querySelector('#doc-nationality') as HTMLSelectElement)?.value || '',
+            estadoCivil: (form.querySelector('#doc-marital-status') as HTMLSelectElement)?.value || '',
+            passaporte: (form.querySelector('#doc-passport') as HTMLInputElement)?.value || '',
+            emissaoPassaporte: passportIssueDate ? format(passportIssueDate, 'yyyy-MM-dd') : '',
+            vencimentoPassaporte: passportExpiryDate ? format(passportExpiryDate, 'yyyy-MM-dd') : '',
+            nacionalidadePassaporte: (form.querySelector('#doc-passport-nat') as HTMLSelectElement)?.value || '',
+            visto: (form.querySelector('#doc-visa') as HTMLInputElement)?.value || '',
+            validadeVisto: visaValidityDate ? format(visaValidityDate, 'yyyy-MM-dd') : '',
+            active: personToEdit?.active ?? true,
+        };
 
-        // Lógica de salvamento aqui...
-        console.log('Salvando pessoa...');
-        toast({
-            title: 'Sucesso',
-            description: personToEdit ? 'Pessoa atualizada com sucesso!' : 'Pessoa salva com sucesso!',
-        });
+        onSave(newPerson);
         onOpenChange(false);
     };
 
@@ -793,6 +809,18 @@ export default function PessoasPage() {
         );
     }
 
+    const handleSavePerson = (personData: Person) => {
+        setPeople(prev => {
+            const exists = prev.some(p => p.id === personData.id);
+            if (exists) {
+                // Update existing person
+                return prev.map(p => p.id === personData.id ? personData : p);
+            } else {
+                // Add new person
+                return [personData, ...prev];
+            }
+        });
+    }
 
     return (
         <>
@@ -924,6 +952,7 @@ export default function PessoasPage() {
                 open={isNewPersonDialogOpen} 
                 onOpenChange={setIsNewPersonDialogOpen}
                 personToEdit={personToEdit}
+                onSave={handleSavePerson}
             />
              <ViewPersonDialog 
                 open={isViewPersonDialogOpen} 
