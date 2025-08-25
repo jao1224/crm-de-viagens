@@ -324,7 +324,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                                                 </div>
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                <p>Classifique esta pessoa</p>
+                                                <p>Avalie este cliente/pessoa</p>
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
@@ -964,3 +964,4 @@ export default function PessoasPage() {
     );
 }
     
+
