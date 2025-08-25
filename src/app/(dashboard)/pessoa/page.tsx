@@ -23,6 +23,7 @@ import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Textarea } from '@/components/ui/textarea';
 import { countries } from '@/lib/countries';
+import { useToast } from '@/hooks/use-toast';
 
 
 const mockPeople = [
@@ -138,14 +139,8 @@ interface Attachment {
 const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (attachment: Omit<Attachment, 'id'>) => void }) => {
     const [fileName, setFileName] = useState<string | null>(null);
     const [description, setDescription] = useState('');
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            setFileName(event.target.files[0].name);
-        } else {
-            setFileName(null);
-        }
-    };
 
     const handleSave = () => {
         if (fileName && description) {
@@ -154,10 +149,22 @@ const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpe
             // Reset state
             setFileName(null);
             setDescription('');
+            if(fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         } else {
             alert('Por favor, selecione um arquivo e adicione uma descrição.');
         }
     };
+    
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -169,7 +176,7 @@ const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpe
                     <div className="space-y-2">
                         <Label htmlFor="attachment-file">Selecione o arquivo <span className="text-destructive">*</span></Label>
                          <div className="flex items-center gap-2">
-                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} />
+                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} ref={fileInputRef} />
                             <Button asChild variant="outline">
                                 <label htmlFor="attachment-file" className="cursor-pointer">Escolher Arquivo</label>
                             </Button>
@@ -194,6 +201,8 @@ const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpe
 }
 
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
+    const formRef = React.useRef<HTMLFormElement>(null);
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
     const [passportIssueDate, setPassportIssueDate] = useState<Date>();
@@ -203,7 +212,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
 
-    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
         setAddress(prev => ({ ...prev, [id.replace('addr-', '')]: value }));
     }
@@ -211,7 +220,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const handleCepSearch = async () => {
         const cep = address.cep.replace(/\D/g, '');
         if (cep.length !== 8) {
-            alert('CEP inválido.');
+            toast({ title: "Erro", description: "CEP inválido.", variant: "destructive"});
             return;
         }
 
@@ -220,7 +229,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
             if (!response.ok) throw new Error('Erro ao buscar CEP');
             const data = await response.json();
             if (data.erro) {
-                alert('CEP não encontrado.');
+                toast({ title: "Erro", description: "CEP não encontrado.", variant: "destructive"});
                 return;
             }
             setAddress(prev => ({
@@ -232,7 +241,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
             }));
         } catch (error) {
             console.error(error);
-            alert('Falha ao buscar o CEP. Tente novamente.');
+            toast({ title: "Erro", description: "Falha ao buscar o CEP. Tente novamente.", variant: "destructive" });
         }
     };
     
@@ -243,7 +252,33 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const handleDeleteAttachment = (id: string) => {
         setAttachments(prev => prev.filter(att => att.id !== id));
     };
+    
+    const handleSavePerson = () => {
+        const form = formRef.current;
+        if (!form) return;
 
+        const personName = (form.querySelector('#person-name') as HTMLInputElement)?.value;
+        const cpfCnpj = (form.querySelector('#doc-cpf') as HTMLInputElement)?.value;
+        const profession = (form.querySelector('#info-profession-select') as HTMLSelectElement)?.value;
+        const cep = (form.querySelector('#addr-cep') as HTMLInputElement)?.value;
+
+        if (!personName || !cpfCnpj || !profession || !cep) {
+            toast({
+                title: 'Campos Obrigatórios',
+                description: 'Por favor, preencha todos os campos obrigatórios nas abas Contato, Documentos, Informações e Endereço.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        // Lógica de salvamento aqui...
+        console.log('Salvando pessoa...');
+        toast({
+            title: 'Sucesso',
+            description: 'Pessoa salva com sucesso!',
+        });
+        onOpenChange(false);
+    };
 
     return (
         <>
@@ -252,6 +287,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
                     </DialogHeader>
+                    <form ref={formRef}>
                     <div className="py-4 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                             <div className="space-y-2 lg:col-span-1">
@@ -263,7 +299,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             <TooltipTrigger asChild>
                                                 <div className="flex items-center">
                                                     {[1, 2, 3, 4, 5].map((diamond) => (
-                                                        <button key={diamond} onClick={() => setRating(diamond)} className="focus:outline-none">
+                                                        <button key={diamond} type="button" onClick={() => setRating(diamond)} className="focus:outline-none">
                                                             <Gem className={cn("h-5 w-5", rating >= diamond ? "text-blue-400 fill-blue-400" : "text-muted-foreground/30")} />
                                                         </button>
                                                     ))}
@@ -459,12 +495,14 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="info-profession">Profissão</Label>
-                                        <Select>
-                                            <SelectTrigger id="info-profession">
+                                        <Select name="info-profession" id="info-profession-select">
+                                            <SelectTrigger>
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {/* Add profession options here */}
+                                                <SelectItem value="developer">Desenvolvedor</SelectItem>
+                                                <SelectItem value="designer">Designer</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -535,10 +573,6 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             <Input id="addr-bairro" value={address.bairro} onChange={handleAddressChange} />
                                         </div>
                                     </div>
-                                    <div className="flex justify-end gap-2">
-                                        <Button variant="outline">Cancelar</Button>
-                                        <Button>Salvar</Button>
-                                    </div>
                                 </div>
                             </TabsContent>
                             <TabsContent value="familia" className="pt-4">
@@ -576,7 +610,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between py-3">
                                         <CardTitle className="text-base">Anexos</CardTitle>
-                                        <Button size="sm" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
+                                        <Button size="sm" type="button" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         {attachments.length > 0 ? (
@@ -590,7 +624,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                                                 <p className="text-xs text-muted-foreground">{att.description}</p>
                                                             </div>
                                                         </div>
-                                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDeleteAttachment(att.id)}>
+                                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" type="button" onClick={() => handleDeleteAttachment(att.id)}>
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </li>
@@ -608,11 +642,11 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             <Textarea placeholder="Observações sobre esta pessoa..." />
                             </TabsContent>
                         </Tabs>
-
                     </div>
+                    </form>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                        <Button>Salvar</Button>
+                        <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                        <Button type="button" onClick={handleSavePerson}>Salvar</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -768,3 +802,4 @@ export default function PessoasPage() {
     
 
     
+
