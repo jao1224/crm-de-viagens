@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Download, Users } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -384,7 +384,9 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                         <Label htmlFor="addr-cep">CEP</Label>
                                         <div className="relative">
                                             <Input id="addr-cep" />
-                                            <Download className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                                                <Search className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
                                         </div>
                                     </div>
                                      <div className="space-y-2">
