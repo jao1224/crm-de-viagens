@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Paperclip } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Users, Search, Handshake, FileText as FileTextIcon, Info, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Paperclip, Copy, X } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -24,28 +24,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { countries } from '@/lib/countries';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Separator } from '@/components/ui/separator';
 
 
 const mockPeopleData = [
-    { id: 1, name: 'Aalyah Evelyn Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
-    { id: 2, name: 'Aayslah Raquel Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
-    { id: 3, name: 'Abdessalam bara', rating: 5, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 4, name: 'ADEILSON', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 5, name: 'ADEMIR', rating: 0, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 6, name: 'ADEMIR', rating: 0, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 7, name: 'ADEMIR', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 8, name: 'ADEMIR CAETANO', rating: 0, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
-    { id: 9, name: 'Adriana Bulhões Vieira', rating: 5, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '+5519996182481', active: true },
-    { id: 10, name: 'Adriana e Davi', rating: 5, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 11, name: 'ADRIANA E JAMILLA', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 12, name: 'Adriano da Conceição Carreiro', rating: 0, types: ['Passageiro'], cpfCnpj: '080.659.707-02', phone: '', active: true },
-    { id: 13, name: 'adriano e jamilla', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 14, name: 'Adriano e jamilla', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 15, name: 'Agatha Batista Amaral', rating: 0, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '', active: true },
-    { id: 16, name: 'Agatha Batista Amaral', rating: 0, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
-    { id: 17, name: 'AILANA CLARA LIMA BARATA', rating: 5, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '(85) 98828-0142', active: true },
-    { id: 18, name: 'Alessandra Neris Pereira', rating: 0, types: ['Passageiro'], cpfCnpj: '282.332.928-50', phone: '(11) 93961-6954', active: true },
-    { id: 19, name: 'Alessandro Cavalcante', rating: 5, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '(98) 99991-5130', active: true },
+    { id: 1, name: 'Aalyah Evelyn Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '123.456.789-00', phone: '+55 85 91234-5678', email: 'aalyah@email.com', sexo: 'Feminino', nascimento: '2004-07-13', rg: '2004123456789', orgaoEmissor: 'SSP/CE', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: 'Solteira', passaporte: 'GJ407853', emissaoPassaporte: '2024-05-21', vencimentoPassaporte: '2034-05-20', nacionalidadePassaporte: 'Brasil', visto: '', validadeVisto: '', active: true },
+    { id: 2, name: 'Aayslah Raquel Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true },
+    { id: 3, name: 'Abdessalam bara', rating: 5, types: ['Cliente'], cpfCnpj: '', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Marrocos', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true },
+    { id: 4, name: 'ADEILSON', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', email: '', sexo: '', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true },
+    { id: 5, name: 'ADEMIR', rating: 0, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '', email: '', sexo: '', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true },
 ];
 
 type Person = typeof mockPeopleData[0];
@@ -276,10 +263,10 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, 
         const profession = (form.querySelector('#info-profession-select') as HTMLSelectElement)?.value;
         const cep = (form.querySelector('#addr-cep') as HTMLInputElement)?.value;
 
-        if (!personName || !cpfCnpj || !profession || !cep) {
-            toast({
-                title: 'Campos Obrigatórios',
-                description: 'Por favor, preencha todos os campos obrigatórios nas abas Contato, Documentos, Informações e Endereço.',
+        if (!personName) {
+             toast({
+                title: 'Campo Obrigatório',
+                description: 'O campo "Nome" é obrigatório.',
                 variant: 'destructive',
             });
             return;
@@ -695,10 +682,89 @@ const PhoneCell = ({ phone }: { phone: string }) => {
     );
 };
 
+const ViewPersonDialog = ({ open, onOpenChange, person }: { open: boolean, onOpenChange: (open: boolean) => void, person: Person | null }) => {
+    if (!person) return null;
+
+    const InfoItem = ({ label, value, hasCopy = false }: { label: string, value: string | undefined, hasCopy?: boolean }) => {
+        if (!value) return null;
+        return (
+            <div className="flex flex-col">
+                <p className="text-xs text-muted-foreground">{label}</p>
+                <div className="flex items-center gap-1">
+                    <p className="font-medium text-foreground">{value}</p>
+                    {hasCopy && <Copy className="h-3 w-3 text-muted-foreground cursor-pointer hover:text-primary" />}
+                </div>
+            </div>
+        );
+    }
+    
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return '';
+        try {
+            return format(parse(dateString, 'yyyy-MM-dd', new Date()), 'dd/MM/yyyy');
+        } catch {
+            return dateString;
+        }
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-4xl">
+                <DialogHeader className="flex-row items-center justify-between pr-8">
+                     <div className="flex items-center gap-3">
+                        <UserRound className="h-6 w-6 text-primary" />
+                        <DialogTitle className="text-xl font-bold text-foreground">{person.name}</DialogTitle>
+                         <Copy className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                    </div>
+                     <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Fechar</span>
+                    </button>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div className="grid grid-cols-2 gap-y-4">
+                        <InfoItem label="Telefone" value={person.phone} />
+                        <InfoItem label="E-mail" value={person.email} />
+                    </div>
+                     <Separator />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                        <InfoItem label="Sexo" value={person.sexo} />
+                        <InfoItem label="Nascimento" value={formatDate(person.nascimento)} hasCopy />
+                        <InfoItem label="Tipo" value={person.types.join(', ')} />
+                    </div>
+                    <Separator />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                        <InfoItem label="CPF/CNPJ" value={person.cpfCnpj} />
+                        <InfoItem label="RG" value={person.rg} />
+                        <InfoItem label="Órgão Emissor RG" value={person.orgaoEmissor} />
+                        <InfoItem label="ID Estrangeiro" value={person.id_estrangeiro} />
+                        <InfoItem label="Nacionalidade" value={person.nacionalidade} />
+                        <InfoItem label="Estado Civil" value={person.estadoCivil} />
+                    </div>
+                    <Separator />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                        <InfoItem label="Passaporte" value={person.passaporte} hasCopy/>
+                        <InfoItem label="Emissão Passaporte" value={formatDate(person.emissaoPassaporte)} />
+                        <InfoItem label="Vencimento Passaporte" value={formatDate(person.vencimentoPassaporte)} />
+                        <InfoItem label="Nacionalidade do Passaporte" value={person.nacionalidadePassaporte} />
+                        <InfoItem label="Visto" value={person.visto} />
+                        <InfoItem label="Validade do Visto" value={formatDate(person.validadeVisto)} />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function PessoasPage() {
     const [people, setPeople] = useState(mockPeopleData);
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [personToEdit, setPersonToEdit] = useState<Person | null>(null);
+    const [isViewPersonDialogOpen, setIsViewPersonDialogOpen] = useState(false);
+    const [personToView, setPersonToView] = useState<Person | null>(null);
 
     const handleNewPerson = () => {
         setPersonToEdit(null);
@@ -708,6 +774,11 @@ export default function PessoasPage() {
     const handleEditPerson = (person: Person) => {
         setPersonToEdit(person);
         setIsNewPersonDialogOpen(true);
+    }
+
+    const handleViewPerson = (person: Person) => {
+        setPersonToView(person);
+        setIsViewPersonDialogOpen(true);
     }
 
     const handleDeletePerson = (personId: number) => {
@@ -814,7 +885,7 @@ export default function PessoasPage() {
                                             </TableCell>
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-2">
-                                                    <Button variant="ghost" size="icon">
+                                                    <Button variant="ghost" size="icon" onClick={() => handleViewPerson(person)}>
                                                         <Eye className="h-4 w-4" />
                                                     </Button>
                                                     <Button variant="ghost" size="icon" onClick={() => handleEditPerson(person)}>
@@ -853,6 +924,11 @@ export default function PessoasPage() {
                 open={isNewPersonDialogOpen} 
                 onOpenChange={setIsNewPersonDialogOpen}
                 personToEdit={personToEdit}
+            />
+             <ViewPersonDialog 
+                open={isViewPersonDialogOpen} 
+                onOpenChange={setIsViewPersonDialogOpen}
+                person={personToView}
             />
         </>
     );

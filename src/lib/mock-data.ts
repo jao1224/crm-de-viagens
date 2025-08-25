@@ -105,3 +105,29 @@ export const mockUsers: User[] = [
         permission: 'Acessa somente suas cotações',
     }
 ]
+
+export const mockPeople = [
+    { 
+      id: 1, 
+      name: 'Aalyah Evelyn Bulhões Domingues', 
+      rating: 5, 
+      types: ['Passageiro'], 
+      cpfCnpj: '123.456.789-00', 
+      phone: '(85) 99123-4567', 
+      active: true,
+      email: 'aalyah.evelyn@example.com',
+      sexo: 'Feminino',
+      nascimento: '2004-07-13',
+      rg: '2004123456789',
+      orgaoEmissor: 'SSP/CE',
+      id_estrangeiro: '',
+      nacionalidade: 'Brasil',
+      estadoCivil: 'Solteira',
+      passaporte: 'GJ407853',
+      emissaoPassaporte: '2024-05-21',
+      vencimentoPassaporte: '2034-05-21',
+      nacionalidadePassaporte: 'Brasil',
+      visto: 'Não possui',
+      validadeVisto: '',
+    },
+];
