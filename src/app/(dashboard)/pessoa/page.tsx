@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import React, { useState } from 'react';
@@ -24,9 +22,10 @@ import { ptBR } from 'date-fns/locale';
 import { Textarea } from '@/components/ui/textarea';
 import { countries } from '@/lib/countries';
 import { useToast } from '@/hooks/use-toast';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 
-const mockPeople = [
+const mockPeopleData = [
     { id: 1, name: 'Aalyah Evelyn Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
     { id: 2, name: 'Aayslah Raquel Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', active: true },
     { id: 3, name: 'Abdessalam bara', rating: 5, types: ['Cliente'], cpfCnpj: '', phone: '', active: true },
@@ -47,6 +46,8 @@ const mockPeople = [
     { id: 18, name: 'Alessandra Neris Pereira', rating: 0, types: ['Passageiro'], cpfCnpj: '282.332.928-50', phone: '(11) 93961-6954', active: true },
     { id: 19, name: 'Alessandro Cavalcante', rating: 5, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '(98) 99991-5130', active: true },
 ];
+
+type Person = typeof mockPeopleData[0];
 
 const nationalities = [
     { value: "afghan", label: "Afegã" }, { value: "german", label: "Alemã" }, { value: "andorran", label: "Andorrana" }, { value: "angolan", label: "Angolana" }, { value: "antiguan", label: "Antiguana" }, { value: "algerian", label: "Argelina" }, { value: "argentine", label: "Argentina" }, { value: "armenian", label: "Armênia" }, { value: "australian", label: "Australiana" }, { value: "austrian", label: "Austríaca" }, { value: "azerbaijani", label: "Azerbaijana" }, { value: "bahamian", label: "Bahamense" }, { value: "bahraini", label: "Bareinita" }, { value: "bangladeshi", label: "Bangladesa" }, { value: "barbadian", label: "Barbadiana" }, { value: "belarusian", label: "Bielorrussa" }, { value: "belgian", label: "Belga" }, { value: "belizean", label: "Belizenha" }, { value: "beninese", label: "Beninense" }, { value: "bhutanese", label: "Butanesa" }, { value: "bolivian", label: "Boliviana" }, { value: "bosnian", label: "Bósnia" }, { value: "botswanan", label: "Botsuana" }, { value: "brazilian", label: "Brasileira" }, { value: "bruneian", label: "Bruneana" }, { value: "bulgarian", label: "Búlgara" }, { value: "burkinabe", label: "Burquinense" }, { value: "burundian", label: "Burundiana" }, { value: "cambodian", label: "Cambojana" }, { value: "cameroonian", label: "Camaronesa" }, { value: "canadian", label: "Canadense" }, { value: "cape_verdean", label: "Cabo-verdiana" }, { value: "qatari", label: "Catariana" }, { value: "kazakh", label: "Cazaque" }, { value: "chadian", label: "Chadiana" }, { value: "chilean", label: "Chilena" }, { value: "chinese", label: "Chinesa" }, { value: "cypriot", label: "Cipriota" }, { value: "colombian", label: "Colombiana" }, { value: "comorian", label: "Comoriana" }, { value: "congolese_drc", label: "Congolesa (RDC)" }, { value: "congolese_roc", label: "Congolesa (República)" }, { value: "north_korean", label: "Norte-coreana" }, { value: "south_korean", label: "Sul-coreana" }, { value: "ivorian", label: "Marfinense" }, { value: "costa_rican", label: "Costa-riquenha" }, { value: "croatian", label: "Croata" }, { value: "cuban", label: "Cubana" }, { value: "danish", label: "Dinamarquesa" }, { value: "djiboutian", label: "Djibutiana" }, { value: "dominican", label: "Dominiquesa" }, { value: "egyptian", label: "Egípcia" }, { value: "salvadoran", label: "Salvadorenha" }, { value: "emirati", label: "Emiratense" }, { value: "ecuadorian", label: "Equatoriana" }, { value: "eritrean", label: "Eritreia" }, { value: "slovak", label: "Eslovaca" }, { value: "slovenian", label: "Eslovena" }, { value: "spanish", label: "Espanhola" }, { value: "estonian", label: "Estoniana" }, { value: "ethiopian", label: "Etíope" }, { value: "fijian", label: "Fijiana" }, { value: "filipino", label: "Filipina" }, { value: "finnish", label: "Finlandesa" }, { value: "french", label: "Francesa" }, { value: "gabonese", label: "Gabonesa" }, { value: "gambian", label: "Gambiana" }, { value: "ghanaian", label: "Ganesa" }, { value: "georgian", label: "Georgiana" }, { value: "grenadian", label: "Granadina" }, { value: "greek", label: "Grega" }, { value: "guatemalan", label: "Guatemalteca" }, { value: "guyanese", label: "Guianesa" }, { value: "guinean", label: "Guineense" }, { value: "equatorial_guinean", label: "Guinéu-equatoriana" }, { value: "guinea_bissauan", label: "Guineense (Bissau)" }, { value: "haitian", label: "Haitiana" }, { value: "dutch", label: "Holandesa" }, { value: "honduran", label: "Hondurenha" }, { value: "hungarian", label: "Húngara" }, { value: "yemeni", label: "Iemenita" }, { value: "marshallese", label: "Marshallina" }, { value: "solomon_islander", label: "Salomônica" }, { value: "indian", label: "Indiana" }, { value: "indonesian", label: "Indonésia" }, { value: "iranian", label: "Iraniana" }, { value: "iraqi", label: "Iraquiana" }, { value: "irish", label: "Irlandesa" }, { value: "icelandic", label: "Islandesa" }, { value: "israeli", label: "Israelense" }, { value: "italian", label: "Italiana" }, { value: "jamaican", label: "Jamaicana" }, { value: "japanese", label: "Japonesa" }, { value: "jordanian", label: "Jordaniana" }, { value: "kiribatian", label: "Kiribatiana" }, { value: "kosovar", label: "Kosovar" }, { value: "kuwaiti", label: "Kuwaitiana" }, { value: "laotian", label: "Laosiana" }, { value: "lesotho", label: "Lesota" }, { value: "latvian", label: "Letã" }, { value: "lebanese", label: "Libanesa" }, { value: "liberian", label: "Liberiana" }, { value: "libyan", label: "Líbia" }, { value: "liechtensteiner", label: "Liechtensteiniense" }, { value: "lithuanian", label: "Lituana" }, { value: "luxembourgish", label: "Luxemburguesa" }, { value: "macedonian", label: "Macedônia" }, { value: "malagasy", label: "Malgaxe" }, { value: "malaysian", label: "Malaia" }, { value: "malawian", label: "Malauiana" }, { value: "maldivan", label: "Maldiva" }, { value: "malian", label: "Maliana" }, { value: "maltese", label: "Maltesa" }, { value: "moroccan", label: "Marroquina" }, { value: "mauritanian", label: "Mauritana" }, { value: "mauritian", label: "Mauriciana" }, { value: "mexican", label: "Mexicana" }, { value: "micronesian", label: "Micronésia" }, { value: "mozambican", label: "Moçambicana" }, { value: "moldovan", label: "Moldávia" }, { value: "monacan", label: "Monegasca" }, { value: "mongolian", label: "Mongol" }, { value: "montenegrin", label: "Montenegrina" }, { value: "myanmarese", label: "Birmanesa" }, { value: "namibian", label: "Namibiana" }, { value: "nauruan", label: "Nauruana" }, { value: "nepalese", label: "Nepalesa" }, { value: "nicaraguan", label: "Nicaraguense" }, { value: "nigerien", label: "Nigerina" }, { value: "nigerian", label: "Nigeriana" }, { value: "norwegian", label: "Norueguesa" }, { value: "new_zealander", label: "Neozelandesa" }, { value: "omani", label: "Omanense" }, { value: "palauan", label: "Palauana" }, { value: "panamanian", label: "Panamenha" }, { value: "papua_new_guinean", label: "Papuásia" }, { value: "pakistani", label: "Paquistanesa" }, { value: "paraguayan", label: "Paraguaia" }, { value: "peruvian", label: "Peruana" }, { value: "polish", label: "Polonesa" }, { value: "portuguese", label: "Portuguesa" }, { value: "kenyan", label: "Queniana" }, { value: "kyrgyz", label: "Quirguiz" }, { value: "british", label: "Britânica" }, { value: "central_african", label: "Centro-africana" }, { value: "czech", label: "Tcheca" }, { value: "dominican_republic", label: "Dominicana" }, { value: "romanian", label: "Romena" }, { value: "rwandan", label: "Ruandesa" }, { value: "russian", label: "Russa" }, { value: "saint_kitts_and_nevis", label: "São-cristovense" }, { value: "saint_lucian", label: "Santa-lucense" }, { value: "saint_vincent_and_the_grenadines", label: "São-vicentina" }, { value: "samoan", label: "Samoana" }, { value: "san_marinese", label: "São-marinense" }, { value: "sao_tomean", label: "Santomense" }, { value: "saudi", label: "Saudita" }, { value: "senegalese", label: "Senegalesa" }, { value: "sierra_leonean", label: "Serra-leonesa" }, { value: "serbian", label: "Sérvia" }, { value: "seychellois", label: "Seichelense" }, { value: "singaporean", label: "Singapurense" }, { value: "syrian", label: "Síria" }, { value: "somali", label: "Somali" }, { value: "sri_lankan", label: "Cingalesa" }, { value: "swazi", label: "Suazi" }, { value: "sudanese", label: "Sudanesa" }, { value: "south_sudanese", label: "Sul-sudanesa" }, { value: "swedish", label: "Sueca" }, { value: "swiss", label: "Suíça" }, { value: "surinamese", label: "Surinamesa" }, { value: "thai", label: "Tailandesa" }, { value: "taiwanese", label: "Taiwanesa" }, { value: "tanzanian", label: "Tanzaniana" }, { value: "tajik", label: "Tadjique" }, { value: "east_timorese", label: "Timorense" }, { value: "togolese", label: "Togolesa" }, { value: "tongan", label: "Tonganesa" }, { value: "trinidadian_and_tobagonian", label: "Trinitário-tobagense" }, { value: "tunisian", label: "Tunisiana" }, { value: "turkmen", label: "Turcomena" }, { value: "turkish", label: "Turca" }, { value: "tuvaluan", label: "Tuvaluana" }, { value: "ukrainian", label: "Ucraniana" }, { value: "ugandan", label: "Ugandense" }, { value: "uruguayan", label: "Uruguaia" }, { value: "uzbek", label: "Uzbeque" }, { value: "vanuatuan", label: "Vanuatuense" }, { value: "vatican", label: "Vaticana" }, { value: "venezuelan", label: "Venezuelana" }, { value: "vietnamese", label: "Vietnamita" }, { value: "zambian", label: "Zambiana" }, { value: "zimbabwean", label: "Zimbabuana" }
@@ -200,7 +201,7 @@ const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpe
     )
 }
 
-const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const NewPersonDialog = ({ open, onOpenChange, personToEdit }: { open: boolean, onOpenChange: (open: boolean) => void, personToEdit: Person | null }) => {
     const { toast } = useToast();
     const formRef = React.useRef<HTMLFormElement>(null);
     const [rating, setRating] = useState(0);
@@ -211,6 +212,19 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const [address, setAddress] = useState(initialAddressState);
     const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
+    const [personName, setPersonName] = useState('');
+
+    React.useEffect(() => {
+        if (personToEdit) {
+            setPersonName(personToEdit.name);
+            setRating(personToEdit.rating);
+            // Preencher outros campos se necessário
+        } else {
+            // Resetar campos para um novo formulário
+            setPersonName('');
+            setRating(0);
+        }
+    }, [personToEdit]);
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -257,7 +271,6 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
         const form = formRef.current;
         if (!form) return;
 
-        const personName = (form.querySelector('#person-name') as HTMLInputElement)?.value;
         const cpfCnpj = (form.querySelector('#doc-cpf') as HTMLInputElement)?.value;
         const profession = (form.querySelector('#info-profession-select') as HTMLSelectElement)?.value;
         const cep = (form.querySelector('#addr-cep') as HTMLInputElement)?.value;
@@ -275,7 +288,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
         console.log('Salvando pessoa...');
         toast({
             title: 'Sucesso',
-            description: 'Pessoa salva com sucesso!',
+            description: personToEdit ? 'Pessoa atualizada com sucesso!' : 'Pessoa salva com sucesso!',
         });
         onOpenChange(false);
     };
@@ -285,7 +298,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
+                        <DialogTitle className="text-2xl font-bold text-foreground">{personToEdit ? 'Editar Pessoa' : 'Nova Pessoa'}</DialogTitle>
                     </DialogHeader>
                     <form ref={formRef}>
                     <div className="py-4 space-y-6">
@@ -293,7 +306,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             <div className="space-y-2 lg:col-span-1">
                                 <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
                                 <div className="flex items-center gap-2">
-                                    <Input id="person-name" className="flex-1" />
+                                    <Input id="person-name" className="flex-1" value={personName} onChange={(e) => setPersonName(e.target.value)} />
                                     <TooltipProvider>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
@@ -682,14 +695,31 @@ const PhoneCell = ({ phone }: { phone: string }) => {
 };
 
 export default function PessoasPage() {
+    const [people, setPeople] = useState(mockPeopleData);
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
+    const [personToEdit, setPersonToEdit] = useState<Person | null>(null);
+
+    const handleNewPerson = () => {
+        setPersonToEdit(null);
+        setIsNewPersonDialogOpen(true);
+    }
+
+    const handleEditPerson = (person: Person) => {
+        setPersonToEdit(person);
+        setIsNewPersonDialogOpen(true);
+    }
+
+    const handleDeletePerson = (personId: number) => {
+        setPeople(prev => prev.filter(p => p.id !== personId));
+    }
+
 
     return (
         <>
             <div className="space-y-6">
                 <header className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold text-primary">Pessoas</h1>
-                    <Button onClick={() => setIsNewPersonDialogOpen(true)}>Novo</Button>
+                    <Button onClick={handleNewPerson}>Novo</Button>
                 </header>
 
                 <Card>
@@ -751,7 +781,7 @@ export default function PessoasPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {mockPeople.map((person) => (
+                                    {people.map((person) => (
                                         <TableRow key={person.id}>
                                             <TableCell className="font-medium">
                                                 <div className="flex items-center gap-2">
@@ -778,12 +808,28 @@ export default function PessoasPage() {
                                                     <Button variant="ghost" size="icon">
                                                         <Eye className="h-4 w-4" />
                                                     </Button>
-                                                    <Button variant="ghost" size="icon">
+                                                    <Button variant="ghost" size="icon" onClick={() => handleEditPerson(person)}>
                                                         <Pencil className="h-4 w-4" />
                                                     </Button>
-                                                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                                              <Trash2 className="h-4 w-4" />
+                                                          </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    Essa ação não pode ser desfeita. Isso excluirá permanentemente os dados da pessoa de nossos servidores.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => handleDeletePerson(person.id)}>Continuar</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -794,12 +840,12 @@ export default function PessoasPage() {
                     </CardContent>
                 </Card>
             </div>
-            <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
+            <NewPersonDialog 
+                open={isNewPersonDialogOpen} 
+                onOpenChange={setIsNewPersonDialogOpen}
+                personToEdit={personToEdit}
+            />
         </>
     );
 }
-
     
-
-    
-
