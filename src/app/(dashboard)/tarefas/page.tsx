@@ -193,9 +193,8 @@ export default function TarefasPage() {
     });
     const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>('overdue');
     const [situation, setSituation] = React.useState('aguardando');
-    const [isClient, setIsClient] = useState(false);
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false);
-
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -206,7 +205,7 @@ export default function TarefasPage() {
     }, []);
 
     useEffect(() => {
-        if (isClient) {
+        if(isClient) {
             localStorage.setItem('taskSituationFilter', situation);
         }
     }, [situation, isClient]);
@@ -214,6 +213,10 @@ export default function TarefasPage() {
     const handleAddTask = (newTask: any) => {
         setTasks(prevTasks => [newTask, ...prevTasks]);
     };
+
+    if (!isClient) {
+        return null;
+    }
 
     return (
         <div className="space-y-6">
@@ -283,20 +286,16 @@ export default function TarefasPage() {
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-muted-foreground px-1">Situação</label>
-                            {isClient ? (
-                                <Select value={situation} onValueChange={setSituation}>
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="todos">Todos</SelectItem>
-                                        <SelectItem value="aguardando">Aguardando</SelectItem>
-                                        <SelectItem value="concluida">Concluída</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            ) : (
-                                <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 animate-pulse"></div>
-                            )}
+                            <Select value={situation} onValueChange={setSituation}>
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="todos">Todos</SelectItem>
+                                    <SelectItem value="aguardando">Aguardando</SelectItem>
+                                    <SelectItem value="concluida">Concluída</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-muted-foreground px-1">Tarefa</label>
@@ -392,5 +391,3 @@ export default function TarefasPage() {
 
         </div>
     );
-
-    
