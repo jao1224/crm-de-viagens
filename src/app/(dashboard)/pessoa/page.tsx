@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Download } from 'lucide-react';
+import { Gem, Eye, Pencil, Trash2, Filter, UserPlus, Mail, Globe, Instagram, Calendar as CalendarIcon, Check, Download, Users } from 'lucide-react';
 import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -203,6 +203,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <TabsTrigger value="documentos">Documentos</TabsTrigger>
                                 <TabsTrigger value="informacoes">Informações</TabsTrigger>
                                 <TabsTrigger value="endereco">Endereço</TabsTrigger>
+                                <TabsTrigger value="familia">Família</TabsTrigger>
                                 <TabsTrigger value="cotações">Cotações</TabsTrigger>
                                 <TabsTrigger value="observacao">Observação</TabsTrigger>
                             </TabsList>
@@ -419,6 +420,34 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 <div className="flex justify-end gap-2">
                                     <Button variant="outline">Cancelar</Button>
                                     <Button>Salvar</Button>
+                                </div>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="familia" className="pt-4">
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="family-person">Pessoa</Label>
+                                        <Select>
+                                            <SelectTrigger id="family-person">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="family-member">Membro</Label>
+                                        <Select>
+                                            <SelectTrigger id="family-member">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                    </div>
+                                    <Button className="self-end">Adicionar</Button>
+                                </div>
+                                <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md">
+                                    Nenhum membro familiar informado.
                                 </div>
                             </div>
                         </TabsContent>
