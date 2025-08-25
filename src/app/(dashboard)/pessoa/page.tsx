@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState } from 'react';
@@ -333,8 +334,35 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                             </div>
                         </TabsContent>
-                         <TabsContent value="informacoes" className="pt-4">
-                            <p className="text-muted-foreground text-center p-8">Nenhuma informação para exibir.</p>
+                        <TabsContent value="informacoes" className="pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="info-profession">Profissão</Label>
+                                    <Select>
+                                        <SelectTrigger id="info-profession">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {/* Add profession options here */}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="info-income">Renda</Label>
+                                    <Input id="info-income" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="info-sales-channel">Canal de Venda</Label>
+                                    <Select>
+                                        <SelectTrigger id="info-sales-channel">
+                                            <SelectValue placeholder="Selecione" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                             {/* Add sales channel options here */}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </div>
                         </TabsContent>
                          <TabsContent value="endereco" className="pt-4">
                             <p className="text-muted-foreground text-center p-8">Nenhum endereço para exibir.</p>
