@@ -92,43 +92,48 @@ const SignatureForm = () => (
 
 
 export default function PerfilPage() {
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className="space-y-6">
       <header>
         <h1 className="text-3xl font-bold text-primary">Perfil</h1>
       </header>
-
-      <Tabs defaultValue="meus-dados" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md">
-          <TabsTrigger value="meus-dados">
-            <User className="mr-2 h-4 w-4" />
-            Meus Dados
-          </TabsTrigger>
-          <TabsTrigger value="senha">
-            <Shield className="mr-2 h-4 w-4" />
-            Senha
-          </TabsTrigger>
-          <TabsTrigger value="assinatura">
-            <FileSignature className="mr-2 h-4 w-4" />
-            Assinatura
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="meus-dados" className="mt-6">
-            <Card>
-                <CardContent className="p-6">
-                    <ProfileForm />
-                </CardContent>
-            </Card>
-        </TabsContent>
-        <TabsContent value="senha" className="mt-6">
-          <PasswordForm />
-        </TabsContent>
-        <TabsContent value="assinatura" className="mt-6">
-          <SignatureForm />
-        </TabsContent>
-      </Tabs>
+      {isClient && (
+        <Tabs defaultValue="meus-dados" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 max-w-md">
+            <TabsTrigger value="meus-dados">
+                <User className="mr-2 h-4 w-4" />
+                Meus Dados
+            </TabsTrigger>
+            <TabsTrigger value="senha">
+                <Shield className="mr-2 h-4 w-4" />
+                Senha
+            </TabsTrigger>
+            <TabsTrigger value="assinatura">
+                <FileSignature className="mr-2 h-4 w-4" />
+                Assinatura
+            </TabsTrigger>
+            </TabsList>
+            <TabsContent value="meus-dados" className="mt-6">
+                <Card>
+                    <CardContent className="p-6">
+                        <ProfileForm />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+            <TabsContent value="senha" className="mt-6">
+            <PasswordForm />
+            </TabsContent>
+            <TabsContent value="assinatura" className="mt-6">
+            <SignatureForm />
+            </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 }
-
-    
