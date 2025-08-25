@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Download } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -573,7 +573,61 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             </div>
                         </TabsContent>
                          <TabsContent value="endereco" className="pt-4">
-                            <p className="text-muted-foreground text-center p-8">Nenhum endereço para exibir.</p>
+                            <div className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-country">País</Label>
+                                        <Select defaultValue="brasil">
+                                            <SelectTrigger id="addr-country">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="brasil">Brasil</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-cep">CEP</Label>
+                                        <div className="relative">
+                                            <Input id="addr-cep" />
+                                            <Download className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </div>
+                                     <div className="space-y-2">
+                                        <Label htmlFor="addr-city">Cidade</Label>
+                                        <Select>
+                                            <SelectTrigger id="addr-city">
+                                                <SelectValue placeholder="Selecione" />
+                                            </SelectTrigger>
+                                            <SelectContent></SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-[3fr,1fr] gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-street">Endereço</Label>
+                                        <Input id="addr-street" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-number">Número</Label>
+                                        <Input id="addr-number" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-complement">Complemento</Label>
+                                        <Input id="addr-complement" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="addr-district">Bairro</Label>
+                                        <Input id="addr-district" />
+                                    </div>
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <Button variant="outline">Cancelar</Button>
+                                    <Button>Salvar</Button>
+                                </div>
+                            </div>
                         </TabsContent>
                         <TabsContent value="observacao" className="pt-4">
                            <Textarea placeholder="Observações sobre esta pessoa..." />
@@ -1845,3 +1899,4 @@ export default function NovaCotacaoPage() {
     
 
     
+
