@@ -22,6 +22,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Textarea } from '@/components/ui/textarea';
+import { countries } from '@/lib/countries';
 
 
 const mockPeople = [
@@ -420,7 +421,9 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="Brasil">Brasil</SelectItem>
+                                                {countries.map(country => (
+                                                  <SelectItem key={country.value} value={country.label}>{country.label}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
