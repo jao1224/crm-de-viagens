@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState } from 'react';
@@ -17,15 +16,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Users, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import Image from 'next/image';
 
 
 const steps = [
@@ -598,7 +598,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -693,7 +693,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -776,7 +776,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -872,7 +872,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -1030,6 +1030,76 @@ const historyItems = [
     }
 ];
 
+const libraryImages = [
+  { id: '1', src: 'https://placehold.co/600x400.png', alt: 'Rio de Janeiro', hint: 'Rio de Janeiro' },
+  { id: '2', src: 'https://placehold.co/600x400.png', alt: 'Torre de Belém, Lisboa', hint: 'Lisbon' },
+  { id: '3', src: 'https://placehold.co/600x400.png', alt: 'Torre de Belém, Lisboa, ao entardecer', hint: 'Lisbon' },
+  { id: '4', src: 'https://placehold.co/600x400.png', alt: 'Ponte Estaiada, São Paulo', hint: 'Sao Paulo' },
+];
+
+const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [selectedImages, setSelectedImages] = useState<string[]>([]);
+    
+    const toggleImageSelection = (id: string) => {
+        setSelectedImages(prev => 
+            prev.includes(id) ? prev.filter(imageId => imageId !== id) : [...prev, id]
+        );
+    }
+    
+    return (
+         <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-4xl">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-normal text-foreground flex justify-between items-center">
+                        Selecionar imagens da biblioteca
+                        <DialogClose />
+                    </DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="flex-1 space-y-1.5">
+                             <Label htmlFor="search-library">Imagens de Destaque</Label>
+                             <div className="flex gap-2">
+                                <Input id="search-library" placeholder="Pesquisar pela descrição" />
+                                <Button>Pesquisar</Button>
+                             </div>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-96 overflow-y-auto pr-2">
+                        {libraryImages.map(image => {
+                            const isSelected = selectedImages.includes(image.id);
+                            return (
+                                <div 
+                                    key={image.id} 
+                                    className="relative rounded-lg overflow-hidden cursor-pointer group"
+                                    onClick={() => toggleImageSelection(image.id)}
+                                >
+                                    <Image 
+                                        src={image.src} 
+                                        alt={image.alt} 
+                                        width={600} 
+                                        height={400} 
+                                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                        data-ai-hint={image.hint}
+                                    />
+                                    {isSelected && (
+                                        <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1.5">
+                                            <Check className="h-4 w-4" />
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Voltar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -1040,6 +1110,7 @@ export default function NovaCotacaoPage() {
     const [isBonusInfoDialogOpen, setIsBonusInfoDialogOpen] = useState(false);
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
+    const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
 
@@ -1200,7 +1271,7 @@ export default function NovaCotacaoPage() {
                                             <p className="text-muted-foreground mb-4">Nenhuma imagem incluída.</p>
                                             <div className="flex gap-2">
                                                 <Button variant="outline"><Upload className="mr-2 h-4 w-4"/>Upload</Button>
-                                                <Button variant="outline"><Library className="mr-2 h-4 w-4"/>Biblioteca</Button>
+                                                <Button variant="outline" onClick={() => setIsImageLibraryOpen(true)}><Library className="mr-2 h-4 w-4"/>Biblioteca</Button>
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -1405,7 +1476,7 @@ export default function NovaCotacaoPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <User className="h-5 w-5 text-primary" />
+                                    <Users className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Passageiros</CardTitle>
                                 </div>
                                 <DropdownMenu>
@@ -1568,7 +1639,7 @@ export default function NovaCotacaoPage() {
 
                                 <div className="space-y-4">
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Custo</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1584,7 +1655,7 @@ export default function NovaCotacaoPage() {
                                     </div>
 
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1600,7 +1671,7 @@ export default function NovaCotacaoPage() {
                                     </div>
                                     
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1611,7 +1682,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                     </div>
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Pagamento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsPaidBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1680,7 +1751,7 @@ export default function NovaCotacaoPage() {
                         <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <MessageSquare className="h-5 w-5 text-primary" />
+                                    <MessagesSquare className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Comunicação</CardTitle>
                                 </div>
                             </CardHeader>
@@ -1728,6 +1799,7 @@ export default function NovaCotacaoPage() {
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
+            <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} />
         </>
     );
 }
