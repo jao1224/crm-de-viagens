@@ -37,7 +37,7 @@ const mockPeople = [
 const RatingStars = ({ rating }: { rating: number }) => (
     <div className="flex items-center">
         {[...Array(5)].map((_, i) => (
-            <Gem key={i} className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+            <Gem key={i} className={`h-4 w-4 ${i < rating ? 'text-blue-500 fill-blue-500' : 'text-gray-300'}`} />
         ))}
     </div>
 );
@@ -172,5 +172,3 @@ export default function PessoasPage() {
         </div>
     );
 }
-
-    
