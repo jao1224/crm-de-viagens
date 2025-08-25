@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState } from 'react';
@@ -597,7 +598,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -692,7 +693,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -775,7 +776,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-blue-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-blue-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -871,7 +872,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                     </div>
 
                     <div className="rounded-md border">
-                        <div className="bg-red-800 text-white font-semibold p-3 rounded-t-md">
+                        <div className="bg-red-900 text-white font-semibold p-3 rounded-t-md">
                             Pagamento
                         </div>
                         <div className="p-4 space-y-6">
@@ -1540,7 +1541,7 @@ export default function NovaCotacaoPage() {
 
                                 <div className="space-y-4">
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Custo</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsCostInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1556,7 +1557,7 @@ export default function NovaCotacaoPage() {
                                     </div>
 
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Valores de Venda</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsSaleValueInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1572,7 +1573,7 @@ export default function NovaCotacaoPage() {
                                     </div>
                                     
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-blue-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-blue-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Recebimento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1583,7 +1584,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                     </div>
                                     <div className="rounded-lg overflow-hidden border">
-                                        <div className="bg-red-800 text-white p-3 flex justify-between items-center">
+                                        <div className="bg-red-900 text-white p-3 flex justify-between items-center">
                                             <h3 className="font-semibold">Pagamento de Bonificação</h3>
                                             <Button variant="secondary" size="sm" onClick={() => setIsPaidBonusInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
@@ -1648,6 +1649,21 @@ export default function NovaCotacaoPage() {
                             </CardContent>
                         </Card>
                     </TabsContent>
+                    <TabsContent value="comunicacao" className="mt-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <MessageSquare className="h-5 w-5 text-primary" />
+                                    <CardTitle className="text-xl">Comunicação</CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                    <p className="text-muted-foreground">Nenhuma comunicação enviada.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
@@ -1659,5 +1675,3 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
-
-    
