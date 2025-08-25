@@ -325,6 +325,16 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
     );
 };
 
+const initialAddressState = {
+    cep: '',
+    logradouro: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    localidade: '',
+    uf: '',
+    pais: 'Brasil'
+};
 
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     const [rating, setRating] = useState(0);
@@ -332,7 +342,40 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     const [passportIssueDate, setPassportIssueDate] = useState<Date>();
     const [passportExpiryDate, setPassportExpiryDate] = useState<Date>();
     const [visaValidityDate, setVisaValidityDate] = useState<Date>();
+    const [address, setAddress] = useState(initialAddressState);
 
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setAddress(prev => ({ ...prev, [id.replace('addr-', '')]: value }));
+    }
+
+    const handleCepSearch = async () => {
+        const cep = address.cep.replace(/\D/g, '');
+        if (cep.length !== 8) {
+            alert('CEP inválido.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            if (!response.ok) throw new Error('Erro ao buscar CEP');
+            const data = await response.json();
+            if (data.erro) {
+                alert('CEP não encontrado.');
+                return;
+            }
+            setAddress(prev => ({
+                ...prev,
+                logradouro: data.logradouro,
+                bairro: data.bairro,
+                localidade: data.localidade,
+                uf: data.uf,
+            }));
+        } catch (error) {
+            console.error(error);
+            alert('Falha ao buscar o CEP. Tente novamente.');
+        }
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -576,53 +619,48 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             <div className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-country">País</Label>
-                                        <Select defaultValue="brasil">
-                                            <SelectTrigger id="addr-country">
+                                        <Label htmlFor="addr-pais">País</Label>
+                                        <Select value={address.pais} onValueChange={(v) => setAddress(p => ({...p, pais: v}))}>
+                                            <SelectTrigger id="addr-pais">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="brasil">Brasil</SelectItem>
+                                                <SelectItem value="Brasil">Brasil</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="addr-cep">CEP</Label>
                                         <div className="relative">
-                                            <Input id="addr-cep" />
-                                            <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                                            <Input id="addr-cep" value={address.cep} onChange={handleAddressChange} />
+                                            <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
                                                 <Search className="h-4 w-4 text-muted-foreground" />
                                             </Button>
                                         </div>
                                     </div>
                                      <div className="space-y-2">
-                                        <Label htmlFor="addr-city">Cidade</Label>
-                                        <Select>
-                                            <SelectTrigger id="addr-city">
-                                                <SelectValue placeholder="Selecione" />
-                                            </SelectTrigger>
-                                            <SelectContent></SelectContent>
-                                        </Select>
+                                        <Label htmlFor="addr-localidade">Cidade</Label>
+                                        <Input id="addr-localidade" value={address.localidade} onChange={handleAddressChange} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-[3fr,1fr] gap-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-street">Endereço</Label>
-                                        <Input id="addr-street" />
+                                        <Label htmlFor="addr-logradouro">Endereço</Label>
+                                        <Input id="addr-logradouro" value={address.logradouro} onChange={handleAddressChange} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-number">Número</Label>
-                                        <Input id="addr-number" />
+                                        <Label htmlFor="addr-numero">Número</Label>
+                                        <Input id="addr-numero" value={address.numero} onChange={handleAddressChange} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-complement">Complemento</Label>
-                                        <Input id="addr-complement" />
+                                        <Label htmlFor="addr-complemento">Complemento</Label>
+                                        <Input id="addr-complemento" value={address.complemento} onChange={handleAddressChange} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="addr-district">Bairro</Label>
-                                        <Input id="addr-district" />
+                                        <Label htmlFor="addr-bairro">Bairro</Label>
+                                        <Input id="addr-bairro" value={address.bairro} onChange={handleAddressChange} />
                                     </div>
                                 </div>
                                 <div className="flex justify-end gap-2">
@@ -1896,10 +1934,3 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
-
-
-    
-
-    
-
-
