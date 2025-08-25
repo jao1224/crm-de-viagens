@@ -64,7 +64,9 @@ const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: Reac
             {quote.status === 'aprovado' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
             <Eye className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
             <Paperclip className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
-            <Pencil className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
+            <Link href="/cotacoes/novo">
+                <Pencil className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
+            </Link>
           </div>
         </div>
       </CardContent>
