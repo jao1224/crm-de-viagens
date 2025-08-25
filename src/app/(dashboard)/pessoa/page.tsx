@@ -84,7 +84,6 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 placeholder={placeholder}
-                className="pr-8"
             />
             <Popover>
                 <PopoverTrigger asChild>
@@ -202,16 +201,37 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
     const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [personName, setPersonName] = useState('');
+    const [cpfCnpj, setCpfCnpj] = useState('');
+
+    const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+
+        if (value.length <= 11) { // CPF
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        } else { // CNPJ
+            value = value.slice(0, 14); // Limit to 14 digits
+            value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+        }
+        setCpfCnpj(value);
+    };
+
 
     React.useEffect(() => {
         if (personToEdit) {
             setPersonName(personToEdit.name);
             setRating(personToEdit.rating);
+            setCpfCnpj(personToEdit.cpfCnpj || '');
             // Preencher outros campos se necessário
         } else {
             // Resetar campos para um novo formulário
             setPersonName('');
             setRating(0);
+            setCpfCnpj('');
         }
     }, [personToEdit]);
 
@@ -275,7 +295,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
             name: personName,
             rating: rating,
             types: ['Passageiro'], // Default, can be changed
-            cpfCnpj: (form.querySelector('#doc-cpf') as HTMLInputElement)?.value || '',
+            cpfCnpj: cpfCnpj,
             phone: (form.querySelector('#person-phone') as HTMLInputElement)?.value || '',
             email: (form.querySelector('#person-email') as HTMLInputElement)?.value || '',
             sexo: (form.querySelector('#person-gender') as HTMLSelectElement)?.value || '',
@@ -422,7 +442,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="doc-cpf">CPF/CNPJ</Label>
-                                        <Input id="doc-cpf" />
+                                        <Input id="doc-cpf" value={cpfCnpj} onChange={handleCpfCnpjChange} maxLength={18} />
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="doc-rg">RG</Label>
@@ -818,7 +838,7 @@ export default function PessoasPage() {
                 return prev.map(p => p.id === personData.id ? personData : p);
             } else {
                 // Add new person
-                return [personData, ...prev];
+                return [{...personData, id: Date.now()}, ...prev];
             }
         });
     }
