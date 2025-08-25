@@ -1265,12 +1265,18 @@ export default function NovaCotacaoPage() {
                                     <Input id="titulo" placeholder="Informe um título para o orçamento" />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="imagem"><ImageIcon className="inline-block mr-2 h-4 w-4" />Imagem</Label>
+                                    <Label htmlFor="imagem-upload"><ImageIcon className="inline-block mr-2 h-4 w-4" />Imagem</Label>
                                     <Card className="border-dashed">
                                         <CardContent className="p-6 flex flex-col items-center justify-center text-center">
                                             <p className="text-muted-foreground mb-4">Nenhuma imagem incluída.</p>
                                             <div className="flex gap-2">
-                                                <Button variant="outline"><Upload className="mr-2 h-4 w-4"/>Upload</Button>
+                                                <Input id="imagem-upload" type="file" className="hidden" />
+                                                <Button asChild variant="outline">
+                                                    <label htmlFor="imagem-upload" className="cursor-pointer">
+                                                        <Upload className="mr-2 h-4 w-4"/>
+                                                        Upload
+                                                    </label>
+                                                </Button>
                                                 <Button variant="outline" onClick={() => setIsImageLibraryOpen(true)}><Library className="mr-2 h-4 w-4"/>Biblioteca</Button>
                                             </div>
                                         </CardContent>
