@@ -633,7 +633,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                         <Label htmlFor="addr-cep">CEP</Label>
                                         <div className="relative">
                                             <Input id="addr-cep" value={address.cep} onChange={handleAddressChange} />
-                                            <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
+                                            <Button type="button" size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
                                                 <Search className="h-4 w-4 text-muted-foreground" />
                                             </Button>
                                         </div>
