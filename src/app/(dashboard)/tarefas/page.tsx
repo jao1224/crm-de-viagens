@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { mockUsers } from '@/lib/mock-data';
 
 
 const mockTasks = [
@@ -187,21 +188,22 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
 
 export default function TarefasPage() {
     const [tasks, setTasks] = useState(mockTasks);
-    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-        from: new Date(2025, 7, 8),
-        to: new Date(2025, 8, 22),
-    });
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
     const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>('overdue');
     const [situation, setSituation] = React.useState('aguardando');
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
+        setDateRange({
+            from: new Date(2025, 7, 8),
+            to: new Date(2025, 8, 22),
+        });
         const savedSituation = localStorage.getItem('taskSituationFilter');
         if (savedSituation) {
             setSituation(savedSituation);
         }
+        setIsClient(true);
     }, []);
 
     useEffect(() => {
@@ -317,6 +319,9 @@ export default function TarefasPage() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="todos">Todos</SelectItem>
+                                        {mockUsers.map(user => (
+                                            <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -392,5 +397,7 @@ export default function TarefasPage() {
         </div>
     );
 
+
+    
 
     
