@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -951,6 +951,8 @@ export default function NovaCotacaoPage() {
     const [isSaleValueInfoDialogOpen, setIsSaleValueInfoDialogOpen] = useState(false);
     const [isBonusInfoDialogOpen, setIsBonusInfoDialogOpen] = useState(false);
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
+    const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
+    const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
 
 
     return (
@@ -1533,6 +1535,53 @@ export default function NovaCotacaoPage() {
                                     <div className="space-y-2">
                                         <Label htmlFor="venda-observacao">Observação</Label>
                                         <Textarea id="venda-observacao" />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="fatura" className="mt-4">
+                        <Card>
+                            <CardHeader className="flex-row items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <ReceiptText className="h-5 w-5 text-primary" />
+                                    <CardTitle className="text-xl">Fatura</CardTitle>
+                                </div>
+                                <Button>Lançar Fatura</Button>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="fatura-emissao">Emissão</Label>
+                                        <DatePickerInput value={faturaEmissao} onSelect={setFaturaEmissao} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="fatura-vencimento">Vencimento <span className="text-destructive">*</span></Label>
+                                        <DatePickerInput value={faturaVencimento} onSelect={setFaturaVencimento} />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="fatura-info-adicional">Informação Adicional</Label>
+                                    <Textarea id="fatura-info-adicional" />
+                                </div>
+                                <div>
+                                     <div className="flex items-center justify-between mb-2">
+                                        <Label className="text-green-600 font-semibold">Discriminação dos Serviços</Label>
+                                        <Button size="sm">Incluir</Button>
+                                    </div>
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-sm text-muted-foreground">
+                                            Nenhum serviço informado.
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Informe manualmente ou importe os valores de venda{' '}
+                                            <button 
+                                                onClick={() => setActiveTab('valores')} 
+                                                className="text-primary hover:underline font-semibold"
+                                            >
+                                                clicando aqui
+                                            </button>.
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>
