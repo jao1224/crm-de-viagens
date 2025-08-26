@@ -174,7 +174,7 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                                     {fileName ?? 'Nenhum arquivo escolhido'}
                                 </span>
                             </div>
-                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de até 5MB</p>
                         </div>
                     </div>
                     <DialogFooter>
@@ -199,6 +199,7 @@ function TarefasContent() {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         setDateRange({
             from: new Date(2025, 7, 8),
             to: new Date(2025, 8, 22),
@@ -207,7 +208,6 @@ function TarefasContent() {
         if (savedSituation) {
             setSituation(savedSituation);
         }
-        setIsClient(true);
     }, []);
 
     useEffect(() => {
