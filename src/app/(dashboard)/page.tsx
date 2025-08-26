@@ -374,31 +374,31 @@ export default function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-bold">Top 10 Clientes</CardTitle>
-                        <div className="relative flex items-center rounded-full p-1 bg-muted/50">
-                            <div
-                                className={cn(
-                                'absolute h-full w-1/2 bg-primary rounded-full shadow-sm transition-transform duration-300 ease-in-out',
-                                topClientsFilter === 'Faturamento' ? 'translate-x-0' : 'translate-x-full'
-                                )}
-                            />
-                            <button
+                        <div className="flex items-center gap-1 rounded-full p-1 bg-muted/50">
+                            <Button
                                 onClick={() => setTopClientsFilter('Faturamento')}
+                                size="sm"
                                 className={cn(
-                                'relative z-10 text-xs font-semibold h-7 px-4 transition-colors',
-                                topClientsFilter === 'Faturamento' ? 'text-primary-foreground' : 'text-primary'
+                                'text-xs font-semibold h-7 px-4 transition-colors duration-300',
+                                topClientsFilter === 'Faturamento'
+                                    ? 'bg-primary text-primary-foreground shadow-sm'
+                                    : 'bg-transparent text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Faturamento
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => setTopClientsFilter('Lucro')}
+                                size="sm"
                                 className={cn(
-                                'relative z-10 text-xs font-semibold h-7 px-4 transition-colors',
-                                topClientsFilter === 'Lucro' ? 'text-primary-foreground' : 'text-primary'
+                                'text-xs font-semibold h-7 px-4 transition-colors duration-300',
+                                topClientsFilter === 'Lucro'
+                                    ? 'bg-primary text-primary-foreground shadow-sm'
+                                    : 'bg-transparent text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Lucro
-                            </button>
+                            </Button>
                         </div>
                     </CardHeader>
                     <CardContent className="p-6">
