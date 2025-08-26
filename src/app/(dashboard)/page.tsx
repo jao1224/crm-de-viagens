@@ -18,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import type { Project } from "@/lib/types";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
@@ -437,7 +438,9 @@ export default function DashboardPage() {
                     <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
                     <p className="text-sm">Aproveite para planejar sua semana!</p>
                     <div className="flex gap-2 mt-6">
-                        <Badge variant="destructive">4 atrasada(s)</Badge>
+                        <Link href="/tarefas?status=overdue">
+                            <Badge variant="destructive">4 atrasada(s)</Badge>
+                        </Link>
                         <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
                     </div>
                 </CardContent>

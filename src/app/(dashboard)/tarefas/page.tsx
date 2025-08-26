@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { mockUsers } from '@/lib/mock-data';
+import { useSearchParams } from 'next/navigation';
 
 
 const mockTasks = [
@@ -186,10 +187,13 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
     )
 }
 
-export default function TarefasPage() {
+function TarefasContent() {
+    const searchParams = useSearchParams();
+    const statusFromQuery = searchParams.get('status') as TaskStatus | null;
+    
     const [tasks, setTasks] = useState(mockTasks);
     const [dateRange, setDateRange] = React.useState<DateRange | undefined>(undefined);
-    const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>('overdue');
+    const [activeStatusFilter, setActiveStatusFilter] = React.useState<TaskStatus>(statusFromQuery || 'overdue');
     const [situation, setSituation] = React.useState('aguardando');
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false);
     const [isClient, setIsClient] = useState(false);
@@ -211,6 +215,12 @@ export default function TarefasPage() {
             localStorage.setItem('taskSituationFilter', situation);
         }
     }, [situation, isClient]);
+
+    useEffect(() => {
+        if (statusFromQuery) {
+            setActiveStatusFilter(statusFromQuery);
+        }
+    }, [statusFromQuery]);
 
     const handleAddTask = (newTask: any) => {
         setTasks(prevTasks => [newTask, ...prevTasks]);
@@ -396,8 +406,15 @@ export default function TarefasPage() {
 
         </div>
     );
+}
 
-
+export default function TarefasPage() {
+    return (
+        <Suspense fallback={<div>Carregando...</div>}>
+            <TarefasContent />
+        </Suspense>
+    );
+}
     
 
     
