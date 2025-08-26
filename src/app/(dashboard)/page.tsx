@@ -79,7 +79,7 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-primary text-xl">{title}</CardTitle>
+                <CardTitle className="font-bold text-primary text-xl">{title}</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
                 <div className="w-full h-[250px] flex items-center justify-center gap-12">
@@ -177,7 +177,7 @@ export default function DashboardPage() {
     return (
         <div className="space-y-6">
             <header>
-                <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
+                <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
                 <p className="text-muted-foreground">Bem-vindo(a) de volta, {currentUser.name}!</p>
             </header>
 
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                 <CardHeader>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                            <CardTitle className="font-headline text-primary text-2xl">Orçamentos</CardTitle>
+                            <CardTitle className="font-bold text-primary text-2xl">Orçamentos</CardTitle>
                             <CardDescription className="text-base">Análise visual dos seus dados chave.</CardDescription>
                         </div>
                         
@@ -326,7 +326,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
-                        <CardTitle className="font-headline text-primary">Top 10 Clientes</CardTitle>
+                        <CardTitle className="font-bold text-primary">Top 10 Clientes</CardTitle>
                         <div className="flex items-center border rounded-md p-0.5 bg-muted/50">
                               <Button 
                                   size="sm"
@@ -363,7 +363,7 @@ export default function DashboardPage() {
                 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
-                        <CardTitle className="font-headline text-primary">Top 10 Fornecedores</CardTitle>
+                        <CardTitle className="font-bold text-primary">Top 10 Fornecedores</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
                         <div className="space-y-1 text-sm">
@@ -384,7 +384,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-primary">Tarefas para Hoje</CardTitle>
+                        <CardTitle className="font-bold text-primary">Tarefas para Hoje</CardTitle>
                         <CardDescription>Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 p-6">
@@ -400,7 +400,7 @@ export default function DashboardPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle className="font-headline text-primary">Próximos Voos</CardTitle>
+                        <CardTitle className="font-bold text-primary">Próximos Voos</CardTitle>
                         <CardDescription>Fique de olho nos embarques que se aproximam.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4 p-6">
@@ -426,7 +426,7 @@ export default function DashboardPage() {
             
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline text-primary">Acompanhe seus projetos</CardTitle>
+                    <CardTitle className="font-bold text-primary">Acompanhe seus projetos</CardTitle>
                     <CardDescription>Visão geral do andamento dos seus grupos e viagens.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -473,3 +473,4 @@ export default function DashboardPage() {
         </div>
     );
 }
+
