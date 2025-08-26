@@ -297,7 +297,7 @@ export default function DashboardPage() {
                                                 const y = cy + radius * Math.sin(-midAngle * RADIAN);
                                                 
                                                 return (
-                                                    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-sm font-bold">
+                                                    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
                                                         {`${value}%`}
                                                     </text>
                                                 );
