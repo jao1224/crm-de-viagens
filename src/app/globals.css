@@ -42,7 +42,7 @@
     --radius: 0.75rem;
 
     /* Sidebar Specific Palette */
-    --sidebar-background: 273 100% 16%; /* Darker Deep Indigo #3D0072 */
+    --sidebar-background: 273 100% 25%; /* Deep Indigo, same as primary */
     --sidebar-foreground: 0 0% 98%; /* White */
     --sidebar-primary: 45 99% 51%; /* Gold/Yellow: #FFC107 */
     --sidebar-primary-foreground: 45 99% 51%;
@@ -88,7 +88,7 @@
     --chart-5: 275 47% 60%;
 
     /* Sidebar remains the same in dark mode */
-    --sidebar-background: 273 100% 16%;
+    --sidebar-background: 273 100% 25%; /* Deep Indigo, same as primary */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 45 99% 51%;
     --sidebar-primary-foreground: 45 99% 51%;
