@@ -40,10 +40,8 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-gradient-to-r from-primary to-[#9B59B6] px-4 md:px-6 text-primary-foreground">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
-        <Link href="/" legacyBehavior>
-          <a className="font-headline text-2xl font-bold cursor-pointer">
-              NoMeioDo<span className="text-yellow-400">Mundo</span>
-          </a>
+        <Link href="/" className="font-headline text-2xl font-bold cursor-pointer">
+          NoMeioDo<span className="text-yellow-400">Mundo</span>
         </Link>
       </div>
       
