@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 
 const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
     const [open, setOpen] = useState(false);
+    const getFlagUrl = (countryCode: string) => `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -32,7 +33,7 @@ const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry
                 >
                     {selectedCountry ? (
                         <div className="flex items-center gap-2">
-                            <Image src={selectedCountry.flag} alt={selectedCountry.label} width={16} height={12} />
+                            <Image src={getFlagUrl(selectedCountry.value)} alt={selectedCountry.label} width={20} height={15} />
                             <span>{`+${selectedCountry.phone}`}</span>
                         </div>
                     ) : (
@@ -57,7 +58,7 @@ const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry
                                     }}
                                 >
                                     <div className="flex items-center gap-2 w-full">
-                                        <Image src={country.flag} alt={country.label} width={16} height={12} className="shrink-0" />
+                                        <Image src={getFlagUrl(country.value)} alt={country.label} width={20} height={15} className="shrink-0" />
                                         <span className="flex-1 truncate">{country.label}</span>
                                         <span className="text-muted-foreground text-xs">{`+${country.phone}`}</span>
                                     </div>
@@ -221,6 +222,8 @@ const AddressTab = () => {
         setAddress(prev => ({ ...prev, [id]: value }));
     }
 
+    const getFlagUrl = (countryCode: string) => `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
+
     return (
         <Card>
             <CardContent className="p-6 space-y-6">
@@ -235,7 +238,7 @@ const AddressTab = () => {
                                 {countries.map(country => (
                                     <SelectItem key={country.value} value={country.label}>
                                         <div className="flex items-center gap-2">
-                                           <Image src={country.flag} alt={country.label} width={16} height={12} />
+                                           <Image src={getFlagUrl(country.value)} alt={country.label} width={20} height={15} />
                                            {country.label}
                                         </div>
                                     </SelectItem>

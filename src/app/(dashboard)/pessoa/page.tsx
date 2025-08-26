@@ -703,17 +703,16 @@ const RatingStars = ({ rating }: { rating: number }) => (
 
 const PhoneCell = ({ phone }: { phone: string }) => {
     if (!phone) return null;
+    const getFlagUrl = (countryCode: string) => `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
 
-    let flag = '';
-    if (phone.includes('(85)') || phone.includes('(98)')) {
-        flag = '/flags/br.svg';
-    } else if (phone.startsWith('+55')) {
-        flag = '/flags/br.svg';
-    }
+    let countryCode = 'BR'; // Default
+    if (phone.startsWith('+351')) countryCode = 'PT';
+    else if (phone.startsWith('+1')) countryCode = 'US';
+    // Add more mappings as needed
 
     return (
         <div className="flex items-center gap-2">
-            {flag && <Image src={flag} alt="Bandeira" width={16} height={12} />}
+            <Image src={getFlagUrl(countryCode)} alt="Bandeira" width={16} height={12} />
             <span>{phone}</span>
         </div>
     );
@@ -984,4 +983,3 @@ export default function PessoasPage() {
     );
 }
     
-
