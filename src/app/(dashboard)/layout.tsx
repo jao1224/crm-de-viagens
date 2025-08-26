@@ -19,7 +19,7 @@ export default function DashboardLayout({
                       <SimpleDashboardNav />
                   </SidebarContent>
               </Sidebar>
-              <div className="flex-1 flex flex-col bg-muted/30">
+              <div className="flex-1 flex flex-col bg-muted/30 pt-16">
                   <main className="flex-1 p-4 md:p-6 relative">
                       {children}
                   </main>

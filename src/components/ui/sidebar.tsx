@@ -224,7 +224,7 @@ const Sidebar = React.forwardRef<
       >
         <div
           className={cn(
-            "duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] flex-col bg-sidebar transition-[width] ease-linear md:flex",
+            "duration-200 fixed inset-y-0 z-0 hidden h-full w-[--sidebar-width] flex-col bg-sidebar transition-[width] ease-linear md:flex",
             "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
             className
           )}
