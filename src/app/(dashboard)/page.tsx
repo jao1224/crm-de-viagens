@@ -82,7 +82,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const PieChartCard = ({ title, data }: { title: string, data: {name: string, value: number, color: string}[] }) => {
     return (
-        <Card>
+        <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
             <CardHeader>
                 <CardTitle className="font-bold text-xl">{title}</CardTitle>
             </CardHeader>
@@ -128,7 +128,7 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
 }
 
 const ProjectCard = ({ project }: { project: Project }) => (
-    <Card>
+    <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
         <CardContent className="p-6">
             <h3 className="font-bold text-lg">{project.title}</h3>
             <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
@@ -155,7 +155,7 @@ const ProjectCard = ({ project }: { project: Project }) => (
 );
 
 const KpiCard = ({ title, value, icon: Icon, details }: { title: string, value: string, icon: React.ElementType, details?: string }) => (
-    <Card>
+    <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
         <CardContent className="p-6">
             <div className="flex items-start justify-between">
                 <div className="space-y-1">
@@ -195,7 +195,7 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Seção de Orçamentos */}
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div>
@@ -344,7 +344,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader>
                         <CardTitle className="font-bold">Próximos Voos</CardTitle>
                         <CardDescription className="font-normal">Fique de olho nos embarques que se aproximam.</CardDescription>
@@ -371,7 +371,7 @@ export default function DashboardPage() {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-bold">Top 10 Clientes</CardTitle>
                         <div className="flex items-center gap-1 rounded-full p-1 bg-muted/50">
@@ -416,7 +416,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
                 
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-bold">Top 10 Fornecedores</CardTitle>
                     </CardHeader>
@@ -436,7 +436,7 @@ export default function DashboardPage() {
                 </Card>
             </div>
 
-            <Card>
+            <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                 <CardHeader>
                     <CardTitle className="font-bold">Tarefas para Hoje</CardTitle>
                     <CardDescription className="font-normal">Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
@@ -454,7 +454,7 @@ export default function DashboardPage() {
                 </CardContent>
             </Card>
             
-            <Card>
+            <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                 <CardHeader>
                     <CardTitle className="font-bold">Acompanhe seus projetos</CardTitle>
                     <CardDescription className="font-normal">Visão geral do andamento dos seus grupos e viagens.</CardDescription>
@@ -474,27 +474,27 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
                     <p className="text-4xl font-bold text-primary">R$ 67k</p>
                 </Card>
 
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
                     <p className="text-4xl font-bold text-destructive">R$ 60k</p>
                 </Card>
 
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
                     <p className="text-4xl font-bold text-green-600">R$ 67k</p>
                 </Card>
                 
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
                     <p className="text-4xl font-bold text-green-600">R$ 6.6k</p>
                 </Card>
 
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
                     <p className="text-4xl font-bold text-primary">R$ 11.1k</p>
                 </Card>
@@ -507,3 +507,4 @@ export default function DashboardPage() {
 
 
     
+
