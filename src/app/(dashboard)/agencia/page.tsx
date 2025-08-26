@@ -44,10 +44,16 @@ const AgencyInfoTab = () => {
                             <Logo className="h-24 w-24 text-primary/50" />
                             {/* <Image src="/logo-full.png" alt="Logo da Agência" layout="fill" objectFit="cover" /> */}
                         </div>
-                        <Button variant="destructive">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Remover
-                        </Button>
+                        <div className="flex gap-2">
+                             <Button variant="outline">
+                                <ImageIcon className="mr-2 h-4 w-4" />
+                                Adicionar
+                            </Button>
+                            <Button variant="destructive">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Remover
+                            </Button>
+                        </div>
                     </Card>
                     <div className="space-y-2">
                         <Label htmlFor="layout-color">Cor do Layout</Label>
