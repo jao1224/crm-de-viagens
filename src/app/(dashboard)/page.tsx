@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments, mockProjects, currentUser } from "@/lib/mock-data";
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, BarChart, XAxis, YAxis, Bar } from 'recharts';
 import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass, CheckCircle, XCircle } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import type { Project } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
@@ -36,6 +37,15 @@ const budgetChartData = [
     { name: 'Cancelado', value: 17, raw: 4, color: 'hsl(var(--chart-4))', icon: XCircle },
 ];
 const totalQuotes = budgetChartData.reduce((acc, curr) => acc + curr.raw, 0);
+
+const monthlyBudgetData = [
+  { month: 'Mar', total: 18, approved: 10 },
+  { month: 'Abr', total: 22, approved: 12 },
+  { month: 'Mai', total: 25, approved: 15 },
+  { month: 'Jun', total: 28, approved: 18 },
+  { month: 'Jul', total: 32, approved: 20 },
+  { month: 'Ago', total: 38, approved: 25 },
+];
 
 
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
@@ -280,67 +290,85 @@ export default function DashboardPage() {
                         )}
                     </CardHeader>
                     <CardContent className="p-6">
-                        <div className="w-full h-[300px] flex items-center justify-center gap-8">
-                            <div className="flex-1 h-full flex items-center justify-center">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie 
-                                            data={budgetChartData}
-                                            dataKey="value" 
-                                            nameKey="name" 
-                                            cx="50%" 
-                                            cy="50%" 
-                                            outerRadius={100} 
-                                            innerRadius={60}
-                                            fill="hsl(var(--primary))"
-                                            labelLine={false}
-                                            isAnimationActive={true}
-                                            label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
-                                                const RADIAN = Math.PI / 180;
-                                                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                                                
+                         <Carousel className="w-full" opts={{ loop: true }}>
+                            <CarouselContent>
+                                <CarouselItem>
+                                    <div className="w-full h-[300px] flex items-center justify-center gap-8">
+                                        <div className="flex-1 h-full flex items-center justify-center">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <PieChart>
+                                                    <Pie 
+                                                        data={budgetChartData}
+                                                        dataKey="value" 
+                                                        nameKey="name" 
+                                                        cx="50%" 
+                                                        cy="50%" 
+                                                        outerRadius={100} 
+                                                        innerRadius={60}
+                                                        fill="hsl(var(--primary))"
+                                                        labelLine={false}
+                                                        isAnimationActive={true}
+                                                        label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
+                                                            const RADIAN = Math.PI / 180;
+                                                            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                                            const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                                            const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                                            
+                                                            return (
+                                                                <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
+                                                                    {`${value}%`}
+                                                                </text>
+                                                            );
+                                                        }}
+                                                    >
+                                                        {budgetChartData.map((entry) => (
+                                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                                        ))}
+                                                    </Pie>
+                                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                                </PieChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                        
+                                        {/* Legenda */}
+                                        <div className="w-48 space-y-4">
+                                            {budgetChartData.map((entry) => {
+                                                const Icon = entry.icon;
                                                 return (
-                                                    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
-                                                        {`${value}%`}
-                                                    </text>
-                                                );
-                                            }}
-                                        >
-                                            {budgetChartData.map((entry) => (
-                                                <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </div>
-                            
-                            {/* Legenda */}
-                            <div className="w-48 space-y-4">
-                                {budgetChartData.map((entry) => {
-                                    const Icon = entry.icon;
-                                    return (
-                                    <div key={entry.name} className="flex items-center gap-3">
-                                        <Icon className="w-5 h-5" style={{ color: entry.color }} />
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-semibold text-foreground">{entry.name}</span>
-                                            <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
+                                                <div key={entry.name} className="flex items-center gap-3">
+                                                    <Icon className="w-5 h-5" style={{ color: entry.color }} />
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-semibold text-foreground">{entry.name}</span>
+                                                        <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
+                                                    </div>
+                                                </div>
+                                            )})}
                                         </div>
                                     </div>
-                                )})}
-                            </div>
-                        </div>
-                        
-                        {/* Indicadores de paginação */}
-                        <div className="flex justify-center gap-2 mt-6">
-                            <div className="w-3 h-3 bg-primary rounded-full"></div>
-                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                        </div>
+                                </CarouselItem>
+                                <CarouselItem>
+                                     <div className="w-full h-[300px]">
+                                        <ResponsiveContainer width="100%" height="100%">
+                                            <BarChart data={monthlyBudgetData}>
+                                                <XAxis dataKey="month" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
+                                                <Tooltip
+                                                    contentStyle={{
+                                                        backgroundColor: 'hsl(var(--background))',
+                                                        border: '1px solid hsl(var(--border))',
+                                                        borderRadius: 'var(--radius)',
+                                                    }}
+                                                />
+                                                <Bar dataKey="total" fill="hsl(var(--chart-2))" name="Total de Cotações" radius={[4, 4, 0, 0]} />
+                                                <Bar dataKey="approved" fill="hsl(var(--chart-1))" name="Aprovadas" radius={[4, 4, 0, 0]} />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </CarouselItem>
+                            </CarouselContent>
+                            <CarouselPrevious className="left-[-1rem]" />
+                            <CarouselNext className="right-[-1rem]" />
+                        </Carousel>
                     </CardContent>
                 </Card>
 
@@ -374,31 +402,33 @@ export default function DashboardPage() {
                 <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-bold">Top 10 Clientes</CardTitle>
-                        <div className="flex items-center gap-1 rounded-full p-1 bg-muted/50">
-                            <Button
+                         <div className="relative flex items-center rounded-full p-1 bg-muted/50">
+                            <button
                                 onClick={() => setTopClientsFilter('Faturamento')}
-                                size="sm"
                                 className={cn(
-                                'text-xs font-semibold h-7 px-4 transition-colors duration-300',
-                                topClientsFilter === 'Faturamento'
-                                    ? 'bg-primary text-primary-foreground shadow-sm'
-                                    : 'bg-transparent text-primary hover:bg-primary/10'
+                                    "relative z-10 text-xs font-semibold h-7 px-4 transition-colors duration-300 rounded-full",
+                                    topClientsFilter === 'Faturamento' ? 'text-primary-foreground' : 'text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Faturamento
-                            </Button>
-                            <Button
+                            </button>
+                            <button
                                 onClick={() => setTopClientsFilter('Lucro')}
-                                size="sm"
                                 className={cn(
-                                'text-xs font-semibold h-7 px-4 transition-colors duration-300',
-                                topClientsFilter === 'Lucro'
-                                    ? 'bg-primary text-primary-foreground shadow-sm'
-                                    : 'bg-transparent text-primary hover:bg-primary/10'
+                                    "relative z-10 text-xs font-semibold h-7 px-4 transition-colors duration-300 rounded-full",
+                                    topClientsFilter === 'Lucro' ? 'text-primary-foreground' : 'text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Lucro
-                            </Button>
+                            </button>
+                            <div
+                                className={cn(
+                                    "absolute z-0 h-7 bg-primary rounded-full transition-all duration-300 ease-in-out",
+                                    topClientsFilter === 'Faturamento'
+                                        ? 'w-[108px] transform translate-x-0'
+                                        : 'w-[70px] transform translate-x-[108px]'
+                                )}
+                            />
                         </div>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -508,3 +538,6 @@ export default function DashboardPage() {
 
     
 
+
+
+    
