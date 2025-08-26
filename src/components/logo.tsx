@@ -27,7 +27,7 @@ export const Logo = ({ className, ...props }: React.ComponentProps<"svg">) => (
       
       {/* Globe shape */}
       <g transform="translate(13, 12) scale(1.2)">
-        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h2m8 0h2m-5-5a4 4 0 100 8" fill="none" stroke="#FFC107" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h2m8 0h2m-5-5a4 4 0 100 8" fill="none" stroke="#FFC107" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
       </g>
       
       {/* Plane Icon */}
