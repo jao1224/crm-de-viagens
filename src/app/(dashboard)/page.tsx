@@ -188,156 +188,183 @@ export default function DashboardPage() {
                 <KpiCard title="Aguardando Cliente" value="8" icon={Hourglass} details="-2% da última semana" />
             </div>
 
-            {/* Seção de Orçamentos */}
-            <Card>
-                <CardHeader>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div>
-                            <CardTitle className="font-bold text-2xl">Orçamentos</CardTitle>
-                            <CardDescription className="text-base font-normal">Análise visual dos seus dados chave.</CardDescription>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 flex-wrap">
-                            {/* Filtros de Período */}
-                            <div className="flex flex-wrap gap-1">
-                                {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Seção de Orçamentos */}
+                <Card>
+                    <CardHeader>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <CardTitle className="font-bold text-2xl">Orçamentos</CardTitle>
+                                <CardDescription className="text-base font-normal">Análise visual dos seus dados chave.</CardDescription>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 flex-wrap">
+                                {/* Filtros de Período */}
+                                <div className="flex flex-wrap gap-1">
+                                    {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
+                                        <Button 
+                                            key={filter} 
+                                            variant={activeBudgetFilter === filter ? 'default' : 'outline'}
+                                            size="sm"
+                                            className={`text-xs h-8 px-3`}
+                                            onClick={() => setActiveBudgetFilter(filter)}
+                                        >
+                                            {filter}
+                                        </Button>
+                                    ))}
                                     <Button 
-                                        key={filter} 
-                                        variant={activeBudgetFilter === filter ? 'default' : 'outline'}
+                                        variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
                                         size="sm"
                                         className={`text-xs h-8 px-3`}
-                                        onClick={() => setActiveBudgetFilter(filter)}
+                                        onClick={() => setActiveBudgetFilter('Personalizado')}
                                     >
-                                        {filter}
+                                        <CalendarIcon className="w-3 h-3 mr-1.5" />
+                                        Personalizado
                                     </Button>
-                                ))}
-                                <Button 
-                                    variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
-                                    size="sm"
-                                    className={`text-xs h-8 px-3`}
-                                    onClick={() => setActiveBudgetFilter('Personalizado')}
-                                >
-                                    <CalendarIcon className="w-3 h-3 mr-1.5" />
-                                    Personalizado
-                                </Button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                     {activeBudgetFilter === 'Personalizado' && (
-                        <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 pt-4">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <div className="relative">
-                                        <Input
-                                          value={dateRange?.from ? format(dateRange.from, 'dd/MM/yyyy') : ''}
-                                          placeholder="Data de Início"
-                                          className="pr-8"
-                                          readOnly
+                        {activeBudgetFilter === 'Personalizado' && (
+                            <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 pt-4">
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div className="relative">
+                                            <Input
+                                            value={dateRange?.from ? format(dateRange.from, 'dd/MM/yyyy') : ''}
+                                            placeholder="Data de Início"
+                                            className="pr-8"
+                                            readOnly
+                                            />
+                                            <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={dateRange?.from}
+                                            onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
+                                            initialFocus
+                                            locale={ptBR}
                                         />
-                                        <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={dateRange?.from}
-                                        onSelect={(day) => setDateRange(prev => ({...prev, from: day}))}
-                                        initialFocus
-                                        locale={ptBR}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <span className="text-muted-foreground">até</span>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                     <div className="relative">
-                                        <Input
-                                          value={dateRange?.to ? format(dateRange.to, 'dd/MM/yyyy') : ''}
-                                          placeholder="Data Final"
-                                          className="pr-8"
-                                          readOnly
+                                    </PopoverContent>
+                                </Popover>
+                                <span className="text-muted-foreground">até</span>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div className="relative">
+                                            <Input
+                                            value={dateRange?.to ? format(dateRange.to, 'dd/MM/yyyy') : ''}
+                                            placeholder="Data Final"
+                                            className="pr-8"
+                                            readOnly
+                                            />
+                                            <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="end">
+                                        <Calendar
+                                            mode="single"
+                                            selected={dateRange?.to}
+                                            onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
+                                            initialFocus
+                                            locale={ptBR}
                                         />
-                                        <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                        )}
+                    </CardHeader>
+                    <CardContent className="p-6">
+                        <div className="w-full h-[300px] flex items-center justify-center gap-8">
+                            <div className="flex-1 h-full flex items-center justify-center">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie 
+                                            data={budgetChartData}
+                                            dataKey="value" 
+                                            nameKey="name" 
+                                            cx="50%" 
+                                            cy="50%" 
+                                            outerRadius={100} 
+                                            innerRadius={60}
+                                            fill="hsl(var(--primary))"
+                                            labelLine={false}
+                                            isAnimationActive={true}
+                                            label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
+                                                const RADIAN = Math.PI / 180;
+                                                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                                
+                                                return (
+                                                    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-sm font-bold">
+                                                        {`${value}%`}
+                                                    </text>
+                                                );
+                                            }}
+                                        >
+                                            {budgetChartData.map((entry) => (
+                                                <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            
+                            {/* Legenda */}
+                            <div className="w-48 space-y-4">
+                                {budgetChartData.map((entry) => {
+                                    const Icon = entry.icon;
+                                    return (
+                                    <div key={entry.name} className="flex items-center gap-3">
+                                        <Icon className="w-5 h-5" style={{ color: entry.color }} />
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-semibold text-foreground">{entry.name}</span>
+                                            <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
+                                        </div>
                                     </div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="end">
-                                    <Calendar
-                                        mode="single"
-                                        selected={dateRange?.to}
-                                        onSelect={(day) => setDateRange(prev => ({...prev, to: day}))}
-                                        initialFocus
-                                        locale={ptBR}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                    )}
-                </CardHeader>
-                <CardContent className="p-6">
-                    <div className="w-full h-[300px] flex items-center justify-center gap-8">
-                        <div className="flex-1 h-full flex items-center justify-center">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie 
-                                        data={budgetChartData}
-                                        dataKey="value" 
-                                        nameKey="name" 
-                                        cx="50%" 
-                                        cy="50%" 
-                                        outerRadius={100} 
-                                        innerRadius={60}
-                                        fill="hsl(var(--primary))"
-                                        labelLine={false}
-                                        isAnimationActive={true}
-                                        label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
-                                            const RADIAN = Math.PI / 180;
-                                            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                                            const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                                            const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                                            
-                                            return (
-                                                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-sm font-bold">
-                                                    {`${value}%`}
-                                                </text>
-                                            );
-                                        }}
-                                    >
-                                        {budgetChartData.map((entry) => (
-                                            <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                                </PieChart>
-                            </ResponsiveContainer>
+                                )})}
+                            </div>
                         </div>
                         
-                        {/* Legenda */}
-                        <div className="w-48 space-y-4">
-                            {budgetChartData.map((entry) => {
-                                const Icon = entry.icon;
-                                return (
-                                <div key={entry.name} className="flex items-center gap-3">
-                                    <Icon className="w-5 h-5" style={{ color: entry.color }} />
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-semibold text-foreground">{entry.name}</span>
-                                        <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
-                                    </div>
-                                </div>
-                            )})}
+                        {/* Indicadores de paginação */}
+                        <div className="flex justify-center gap-2 mt-6">
+                            <div className="w-3 h-3 bg-primary rounded-full"></div>
+                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
+                            <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
                         </div>
-                    </div>
-                    
-                    {/* Indicadores de paginação */}
-                    <div className="flex justify-center gap-2 mt-6">
-                        <div className="w-3 h-3 bg-primary rounded-full"></div>
-                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                        <div className="w-3 h-3 bg-muted-foreground/30 rounded-full"></div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
 
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-bold">Próximos Voos</CardTitle>
+                        <CardDescription className="font-normal">Fique de olho nos embarques que se aproximam.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4 p-6">
+                        {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
+                            <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
+                                <div className="text-center">
+                                    <p className="font-bold text-lg text-primary">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit'})}</p>
+                                    <p className="text-xs text-muted-foreground -mt-1">{new Date(flight.date).toLocaleDateString('pt-BR', {month: 'short'})}</p>
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-foreground">{flight.customer}</p>
+                                    <p className="text-sm text-muted-foreground font-medium">{flight.package}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Plane className="w-5 h-5 text-primary" />
+                                    <Badge variant="outline" className="font-mono text-primary border-primary/20">{flightCodes[index % flightCodes.length]}</Badge>
+                                </div>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </div>
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -396,48 +423,21 @@ export default function DashboardPage() {
                 </Card>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="font-bold">Tarefas para Hoje</CardTitle>
-                        <CardDescription className="font-normal">Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 p-6">
-                        <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
-                        <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
-                        <p className="text-sm">Aproveite para planejar sua semana!</p>
-                        <div className="flex gap-2 mt-6">
-                            <Badge variant="destructive">4 atrasada(s)</Badge>
-                            <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="font-bold">Próximos Voos</CardTitle>
-                        <CardDescription className="font-normal">Fique de olho nos embarques que se aproximam.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4 p-6">
-                        {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
-                            <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
-                                <div className="text-center">
-                                    <p className="font-bold text-lg text-primary">{new Date(flight.date).toLocaleDateString('pt-BR', {day: '2-digit'})}</p>
-                                    <p className="text-xs text-muted-foreground -mt-1">{new Date(flight.date).toLocaleDateString('pt-BR', {month: 'short'})}</p>
-                                </div>
-                                <div>
-                                    <p className="font-semibold text-foreground">{flight.customer}</p>
-                                    <p className="text-sm text-muted-foreground font-medium">{flight.package}</p>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Plane className="w-5 h-5 text-primary" />
-                                    <Badge variant="outline" className="font-mono text-primary border-primary/20">{flightCodes[index % flightCodes.length]}</Badge>
-                                </div>
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-bold">Tarefas para Hoje</CardTitle>
+                    <CardDescription className="font-normal">Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 p-6">
+                    <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
+                    <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
+                    <p className="text-sm">Aproveite para planejar sua semana!</p>
+                    <div className="flex gap-2 mt-6">
+                        <Badge variant="destructive">4 atrasada(s)</Badge>
+                        <Badge className="bg-green-500/10 text-green-700 border-green-500/20">0 no prazo</Badge>
+                    </div>
+                </CardContent>
+            </Card>
             
             <Card>
                 <CardHeader>
