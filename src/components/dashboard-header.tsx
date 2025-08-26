@@ -44,7 +44,7 @@ export function DashboardHeader() {
         <Link href="/" className="font-headline text-2xl font-bold cursor-pointer flex items-center gap-3">
           <Logo className="h-10 w-10" />
           <span className="hidden sm:inline-block">
-             <span className="text-primary-foreground">No</span><span className="text-yellow-400">MeiodoMundo</span>
+             <span className="text-primary-foreground">No</span><span className="text-yellow-400">Meio</span><span className="text-primary-foreground">do</span><span className="text-yellow-400">Mundo</span>
           </span>
           <span className="sr-only">No Meio do Mundo</span>
         </Link>
