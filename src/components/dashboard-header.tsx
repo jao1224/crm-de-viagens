@@ -38,7 +38,7 @@ const notifications = [
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-primary px-4 md:px-6 text-primary-foreground">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-primary px-4 text-primary-foreground">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
         <Link href="/" className="font-headline text-2xl font-bold cursor-pointer flex items-center gap-3">
