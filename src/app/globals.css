@@ -47,9 +47,9 @@
     --sidebar-background: 273 100% 16%; /* Darker Deep Indigo #3D0072 */
     --sidebar-foreground: 0 0% 98%; /* White */
     --sidebar-primary: 45 99% 51%; /* Gold/Yellow: #FFC107 */
-    --sidebar-primary-foreground: 273 82% 15%;
-    --sidebar-accent: 282 44% 53%; /* Light Lilac Hover: #9B59B6 */
-    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-primary-foreground: 45 99% 51%;
+    --sidebar-accent: 45 99% 51% / 0.1; /* Translucent Yellow */
+    --sidebar-accent-foreground: 45 99% 51%;
     --sidebar-border: 275 47% 43%;
     --sidebar-ring: 45 99% 51%; /* Gold/Yellow Ring */
   }
@@ -93,9 +93,9 @@
     --sidebar-background: 273 100% 16%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 45 99% 51%;
-    --sidebar-primary-foreground: 273 82% 15%;
-    --sidebar-accent: 282 44% 53%;
-    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-primary-foreground: 45 99% 51%;
+    --sidebar-accent: 45 99% 51% / 0.1;
+    --sidebar-accent-foreground: 45 99% 51%;
     --sidebar-border: 275 47% 43%;
     --sidebar-ring: 45 99% 51%;
   }
@@ -110,7 +110,7 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline text-primary;
+    @apply font-headline;
   }
   body, p, span, div, input, button, select, textarea {
     @apply font-body;

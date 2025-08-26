@@ -130,6 +130,11 @@ export const helpItems: NavItem[] = [
 
 export function SimpleDashboardNav() {
   const pathname = usePathname();
+  
+  const isActive = (href: string) => {
+    return pathname.startsWith(href) && (href !== '/' || pathname === '/');
+  }
+
   return (
     <SidebarMenu>
         <Collapsible className="w-full" defaultOpen>
@@ -144,13 +149,13 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                            className={cn(pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') && 'text-sidebar-primary font-bold')}
+                            className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
-                            <span className="flex-1">{item.label}</span>
-                             {item.badge && <Badge className="bg-yellow-400 text-primary-foreground font-bold text-xs size-5 flex items-center justify-center p-0">{item.badge}</Badge>}
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
+                             {item.badge && <Badge className="bg-yellow-400 text-primary-foreground font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -171,12 +176,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                            className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                            className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -196,12 +201,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -221,12 +226,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -246,12 +251,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -271,12 +276,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -296,12 +301,12 @@ export function SimpleDashboardNav() {
                     <SidebarMenuItem key={item.href}>
                         <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
                         <SidebarMenuButton
-                            isActive={pathname.startsWith(item.href)}
+                            isActive={isActive(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
+                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
                         >
-                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className="flex-1">{item.label}</span>
+                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
+                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
                             {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
                         </SidebarMenuButton>
                         </Link>
