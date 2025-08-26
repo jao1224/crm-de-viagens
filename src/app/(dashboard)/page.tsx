@@ -19,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import type { Project } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
@@ -188,6 +188,27 @@ export default function DashboardPage() {
         from: new Date(2025, 7, 1),
         to: new Date(2025, 7, 31),
     });
+    const [carouselApi, setCarouselApi] = React.useState<CarouselApi>()
+    const [currentSlide, setCurrentSlide] = React.useState(0)
+
+    React.useEffect(() => {
+        if (!carouselApi) return
+        
+        setCurrentSlide(carouselApi.selectedScrollSnap())
+
+        const onSelect = () => {
+             setCurrentSlide(carouselApi.selectedScrollSnap())
+        }
+        carouselApi.on("select", onSelect)
+        
+        return () => {
+            carouselApi.off("select", onSelect)
+        }
+    }, [carouselApi])
+
+    const scrollTo = (index: number) => {
+        carouselApi?.scrollTo(index)
+    }
     
     return (
         <div className="space-y-6">
@@ -289,8 +310,8 @@ export default function DashboardPage() {
                             </div>
                         )}
                     </CardHeader>
-                    <CardContent className="p-6">
-                         <Carousel className="w-full" opts={{ loop: true }}>
+                    <CardContent className="p-6 space-y-4">
+                        <Carousel setApi={setCarouselApi} className="w-full">
                             <CarouselContent>
                                 <CarouselItem>
                                     <div className="w-full h-[300px] flex items-center justify-center gap-8">
@@ -329,8 +350,6 @@ export default function DashboardPage() {
                                                 </PieChart>
                                             </ResponsiveContainer>
                                         </div>
-                                        
-                                        {/* Legenda */}
                                         <div className="w-48 space-y-4">
                                             {budgetChartData.map((entry) => {
                                                 const Icon = entry.icon;
@@ -347,7 +366,7 @@ export default function DashboardPage() {
                                     </div>
                                 </CarouselItem>
                                 <CarouselItem>
-                                     <div className="w-full h-[300px]">
+                                    <div className="w-full h-[300px]">
                                         <ResponsiveContainer width="100%" height="100%">
                                             <BarChart data={monthlyBudgetData}>
                                                 <XAxis dataKey="month" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
@@ -366,9 +385,19 @@ export default function DashboardPage() {
                                     </div>
                                 </CarouselItem>
                             </CarouselContent>
-                            <CarouselPrevious className="left-[-1rem]" />
-                            <CarouselNext className="right-[-1rem]" />
                         </Carousel>
+                        <div className="flex justify-center gap-2">
+                            {Array.from({ length: 2 }).map((_, i) => (
+                                <button 
+                                    key={i} 
+                                    onClick={() => scrollTo(i)}
+                                    className={cn(
+                                        "h-2 w-2 rounded-full transition-all",
+                                        i === currentSlide ? "w-4 bg-primary" : "bg-primary/30"
+                                    )}
+                                />
+                            ))}
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -402,12 +431,12 @@ export default function DashboardPage() {
                 <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-bold">Top 10 Clientes</CardTitle>
-                         <div className="relative flex items-center rounded-full p-1 bg-muted/50">
+                        <div className="relative flex items-center rounded-full p-1 bg-muted/50">
                             <button
                                 onClick={() => setTopClientsFilter('Faturamento')}
                                 className={cn(
                                     "relative z-10 text-xs font-semibold h-7 px-4 transition-colors duration-300 rounded-full",
-                                    topClientsFilter === 'Faturamento' ? 'text-primary-foreground' : 'text-primary hover:bg-primary/10'
+                                    topClientsFilter === 'Faturamento' ? 'bg-primary text-primary-foreground' : 'text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Faturamento
@@ -416,19 +445,11 @@ export default function DashboardPage() {
                                 onClick={() => setTopClientsFilter('Lucro')}
                                 className={cn(
                                     "relative z-10 text-xs font-semibold h-7 px-4 transition-colors duration-300 rounded-full",
-                                    topClientsFilter === 'Lucro' ? 'text-primary-foreground' : 'text-primary hover:bg-primary/10'
+                                    topClientsFilter === 'Lucro' ? 'bg-primary text-primary-foreground' : 'text-primary hover:bg-primary/10'
                                 )}
                             >
                                 Lucro
                             </button>
-                            <div
-                                className={cn(
-                                    "absolute z-0 h-7 bg-primary rounded-full transition-all duration-300 ease-in-out",
-                                    topClientsFilter === 'Faturamento'
-                                        ? 'w-[108px] transform translate-x-0'
-                                        : 'w-[70px] transform translate-x-[108px]'
-                                )}
-                            />
                         </div>
                     </CardHeader>
                     <CardContent className="p-6">
