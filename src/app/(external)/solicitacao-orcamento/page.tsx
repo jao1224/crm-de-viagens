@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Image from 'next/image';
+import { Logo } from '@/components/logo';
 
 export default function SolicitacaoOrcamentoPage() {
     const [idaDate, setIdaDate] = React.useState<Date>();
@@ -24,7 +25,7 @@ export default function SolicitacaoOrcamentoPage() {
     return (
         <div className="max-w-4xl mx-auto flex flex-col items-center space-y-6">
             <div className="text-center">
-                <Image src="/logo.png" alt="No Meio do Mundo Viagens" width={80} height={80} className="mx-auto rounded-full" data-ai-hint="logo travel agency"/>
+                <Logo className="h-16 w-auto mx-auto text-primary" />
                 <h1 className="text-2xl font-bold text-primary mt-2">No Meio do Mundo Viagens</h1>
                 <div className="flex justify-center items-center gap-4 mt-2">
                     <Button variant="ghost" size="icon"><MessageCircle className="h-5 w-5"/></Button>

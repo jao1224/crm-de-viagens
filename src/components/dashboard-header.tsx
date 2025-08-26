@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from '@/components/ui/badge';
 import { currentUser } from '@/lib/mock-data';
+import { Logo } from '@/components/logo';
 
 const headerNavLinks = [
     { href: '#', label: 'Home'},
@@ -37,11 +38,12 @@ const notifications = [
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-gradient-to-r from-primary to-[#9B59B6] px-4 md:px-6 text-primary-foreground">
+    <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-primary px-4 md:px-6 text-primary-foreground">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
         <Link href="/" className="font-headline text-2xl font-bold cursor-pointer">
-          No<span className="text-yellow-400">Meio</span>Do<span className="text-yellow-400">Mundo</span>
+          <Logo className="h-8 w-auto" />
+          <span className="sr-only">No Meio do Mundo</span>
         </Link>
       </div>
       
@@ -107,7 +109,7 @@ export function DashboardHeader() {
           <DropdownMenuContent className="w-64" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2 items-center py-2">
-                    <Image src="/logo.png" alt="Logo" width={60} height={60} className="rounded-md" data-ai-hint="logo travel agency"/>
+                    <Logo className="h-12 w-auto text-primary" />
                     <p className="text-sm font-medium leading-none text-foreground">No Meio do Mundo Viagens</p>
                 </div>
               </DropdownMenuLabel>
