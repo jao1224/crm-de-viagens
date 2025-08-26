@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --background: 240 10% 98%; /* Light Lavender */
+    --background: 275 60% 98%; /* Light Lavender */
     --foreground: 273 82% 15%; /* Darker Indigo for text */
 
     --card: 0 0% 100%;
@@ -16,22 +16,22 @@
     --popover: 0 0% 100%;
     --popover-foreground: 273 82% 15%;
 
-    --primary: 273 82% 26%; /* Deep Indigo: #4B0082 */
+    --primary: 273 100% 25%; /* Deep Indigo: #4B0082 */
     --primary-foreground: 0 0% 98%;
     
     --secondary: 273 30% 95%; /* Lighter purple for secondary elements */
     --secondary-foreground: 273 82% 26%;
 
     --muted: 273 20% 96%;
-    --muted-foreground: 273 10% 45%;
+    --muted-foreground: 240 4% 46%; /* Medium Gray */
     
-    --accent: 275 47% 94%; /* Very Light Lilac for hover */
-    --accent-foreground: 273 82% 26%;
+    --accent: 285 100% 49%; /* Electric Purple: #BF00FF */
+    --accent-foreground: 0 0% 98%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 275 47% 90%; /* Soft Lilac border */
+    --border: 275 47% 90%; /* Soft Lilac border #E6D9F7 */
     --input: 273 30% 95%;
     --ring: 273 82% 40%;
 
@@ -44,11 +44,11 @@
     --radius: 0.75rem;
 
     /* Sidebar Specific Palette */
-    --sidebar-background: 273 82% 20%; /* Dark Purple: #3D0072 - slightly lighter than primary */
+    --sidebar-background: 273 100% 16%; /* Darker Deep Indigo #3D0072 */
     --sidebar-foreground: 0 0% 98%; /* White */
     --sidebar-primary: 45 99% 51%; /* Gold/Yellow: #FFC107 */
     --sidebar-primary-foreground: 273 82% 15%;
-    --sidebar-accent: 275 47% 53%; /* Light Lilac Hover: #9B59B6 */
+    --sidebar-accent: 282 44% 53%; /* Light Lilac Hover: #9B59B6 */
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 275 47% 43%;
     --sidebar-ring: 45 99% 51%; /* Gold/Yellow Ring */
@@ -71,9 +71,9 @@
     --secondary-foreground: 0 0% 98%;
 
     --muted: 273 82% 12%;
-    --muted-foreground: 273 10% 65%;
+    --muted-foreground: 240 4% 65%; /* Lighter gray for dark mode */
     
-    --accent: 275 47% 30%;
+    --accent: 285 100% 60%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 74% 50%;
@@ -90,11 +90,11 @@
     --chart-5: 275 47% 60%;
 
     /* Sidebar remains the same in dark mode */
-    --sidebar-background: 273 82% 20%;
+    --sidebar-background: 273 100% 16%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 45 99% 51%;
     --sidebar-primary-foreground: 273 82% 15%;
-    --sidebar-accent: 275 47% 53%;
+    --sidebar-accent: 282 44% 53%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 275 47% 43%;
     --sidebar-ring: 45 99% 51%;
