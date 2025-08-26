@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 
 const revenueChartData = [
     { name: 'Venda de Passagem', value: 72.7, color: 'hsl(var(--chart-1))' },
-    { name: 'passagem', value: 26.5, color: 'hsl(var(--chart-2))' },
+    { name: 'Passagem', value: 26.5, color: 'hsl(var(--chart-2))' },
     { name: 'VISTO PROC. TRABALHO', value: 0.8, color: 'hsl(var(--chart-3))' },
 ];
 
