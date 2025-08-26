@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments, mockProjects, currentUser } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass, CheckCircle } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -30,8 +30,8 @@ const expensesChartData = [
 ]
 
 const budgetChartData = [
-    { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-1))' },
-    { name: 'Aguardando', value: 25, color: 'hsl(var(--chart-2))' },
+    { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-1))', icon: CheckCircle },
+    { name: 'Aguardando', value: 25, color: 'hsl(var(--chart-2))', icon: Hourglass },
 ];
 
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
@@ -154,7 +154,7 @@ const KpiCard = ({ title, value, icon: Icon, details }: { title: string, value: 
         <CardContent className="p-6">
             <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                    <CardTitle className="text-base font-semibold text-muted-foreground">{title}</CardTitle>
+                    <p className="text-base font-semibold text-muted-foreground">{title}</p>
                     <p className="text-3xl font-bold text-primary">{value}</p>
                 </div>
                 <div className="p-3 bg-primary/10 rounded-full">
@@ -288,6 +288,19 @@ export default function DashboardPage() {
                                         innerRadius={60}
                                         fill="hsl(var(--primary))"
                                         labelLine={false}
+                                        isAnimationActive={true}
+                                        label={({ cx, cy, midAngle, innerRadius, outerRadius, value, index }) => {
+                                            const RADIAN = Math.PI / 180;
+                                            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                            const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                            const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                            
+                                            return (
+                                                <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-sm font-bold">
+                                                    {`${value}%`}
+                                                </text>
+                                            );
+                                        }}
                                     >
                                         {budgetChartData.map((entry) => (
                                             <Cell key={`cell-${entry.name}`} fill={entry.color} strokeWidth={0} />
@@ -300,15 +313,17 @@ export default function DashboardPage() {
                         
                         {/* Legenda */}
                         <div className="w-48 space-y-4">
-                            {budgetChartData.map((entry) => (
+                            {budgetChartData.map((entry) => {
+                                const Icon = entry.icon;
+                                return (
                                 <div key={entry.name} className="flex items-center gap-3">
-                                    <div className="w-4 h-4 rounded-full" style={{backgroundColor: entry.color}}></div>
+                                    <Icon className="w-5 h-5" style={{ color: entry.color }} />
                                     <div className="flex flex-col">
                                         <span className="text-sm font-semibold text-foreground">{entry.name}</span>
                                         <span className="text-xs text-muted-foreground">{entry.value}% do total</span>
                                     </div>
                                 </div>
-                            ))}
+                            )})}
                         </div>
                     </div>
                     
@@ -473,4 +488,5 @@ export default function DashboardPage() {
         </div>
     );
 }
+
 
