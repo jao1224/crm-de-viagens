@@ -155,7 +155,7 @@ export function SimpleDashboardNav() {
                         >
                             <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
                             <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                             {item.badge && <Badge className="bg-yellow-400 text-primary-foreground font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
+                             {item.badge && <Badge className="bg-yellow-400 text-primary font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
