@@ -133,7 +133,7 @@ export function SimpleDashboardNav() {
   return (
     <SidebarMenu>
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Principal
                 </span>
@@ -159,7 +159,7 @@ export function SimpleDashboardNav() {
 
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Acompanhamento
                 </span>
@@ -183,7 +183,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                  <span className="text-sm font-semibold text-muted-foreground">
                     Financeiro
                 </span>
@@ -207,7 +207,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
         
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Documentos
                 </span>
@@ -231,7 +231,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Cadastros
                 </span>
@@ -255,7 +255,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Automação
                 </span>
@@ -279,7 +279,7 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2")}>
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
                 <span className="text-sm font-semibold text-muted-foreground">
                     Ajuda
                 </span>
