@@ -40,9 +40,11 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-gradient-to-r from-primary to-[#9B59B6] px-4 md:px-6 text-primary-foreground">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
-        <h1 className="font-headline text-2xl font-bold">
-            NoMeioDo<span className="text-yellow-400">Mundo</span>
-        </h1>
+        <Link href="/">
+          <h1 className="font-headline text-2xl font-bold cursor-pointer">
+              NoMeioDo<span className="text-yellow-400">Mundo</span>
+          </h1>
+        </Link>
       </div>
       
       {/* Navegação Principal do Header (visível em telas maiores) */}
