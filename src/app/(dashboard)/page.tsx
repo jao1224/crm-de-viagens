@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments, mockProjects, currentUser } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass, CheckCircle } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass, CheckCircle, XCircle } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -30,8 +30,9 @@ const expensesChartData = [
 ]
 
 const budgetChartData = [
-    { name: 'Aprovado', value: 75, raw: 12, color: 'hsl(var(--chart-1))', icon: CheckCircle },
-    { name: 'Aguardando', value: 25, raw: 8, color: 'hsl(var(--chart-2))', icon: Hourglass },
+    { name: 'Aprovado', value: 50, raw: 12, color: 'hsl(var(--chart-1))', icon: CheckCircle },
+    { name: 'Aguardando', value: 33, raw: 8, color: 'hsl(var(--chart-2))', icon: Hourglass },
+    { name: 'Cancelado', value: 17, raw: 4, color: 'hsl(var(--chart-4))', icon: XCircle },
 ];
 const totalQuotes = budgetChartData.reduce((acc, curr) => acc + curr.raw, 0);
 
@@ -492,3 +493,6 @@ export default function DashboardPage() {
     );
 }
 
+
+
+    
