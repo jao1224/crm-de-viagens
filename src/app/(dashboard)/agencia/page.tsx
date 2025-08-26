@@ -7,18 +7,76 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search } from 'lucide-react';
+import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown } from 'lucide-react';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { countries } from '@/lib/countries';
+import { countries, type Country } from '@/lib/countries';
 import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
+
+
+const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[150px] justify-between"
+                >
+                    {selectedCountry ? (
+                        <div className="flex items-center gap-2">
+                            <Image src={selectedCountry.flag} alt={selectedCountry.label} width={16} height={12} />
+                            <span>{`+${selectedCountry.phone}`}</span>
+                        </div>
+                    ) : (
+                        "Select country"
+                    )}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[250px] p-0">
+                <Command>
+                    <CommandInput placeholder="Procurar país..." />
+                    <CommandList>
+                        <CommandEmpty>Nenhum país encontrado.</CommandEmpty>
+                        <CommandGroup>
+                            {countries.map((country) => (
+                                <CommandItem
+                                    key={country.value}
+                                    value={country.label}
+                                    onSelect={() => {
+                                        onSelectCountry(country);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <div className="flex items-center gap-2 w-full">
+                                        <Image src={country.flag} alt={country.label} width={16} height={12} className="shrink-0" />
+                                        <span className="flex-1 truncate">{country.label}</span>
+                                        <span className="text-muted-foreground text-xs">{`+${country.phone}`}</span>
+                                    </div>
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    )
+}
 
 const AgencyInfoTab = () => {
     
     const [cpfCnpj, setCpfCnpj] = useState('39.606.486/0001-41');
     const [logo, setLogo] = useState<string | null>(null);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
+    const [selectedPhoneCountry, setSelectedPhoneCountry] = useState<Country | undefined>(countries.find(c => c.value === 'PT'));
 
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,30 +174,8 @@ const AgencyInfoTab = () => {
                          <div className="space-y-2">
                             <Label htmlFor="agency-phone">Celular</Label>
                              <div className="flex gap-2">
-                                <Select defaultValue="PT">
-                                    <SelectTrigger className="w-24">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {/* Simplificando a lista para o exemplo */}
-                                        <SelectItem value="BR">
-                                            <div className="flex items-center gap-2">
-                                               <Image src="/flags/br.svg" alt="Brasil" width={16} height={12} /> BR
-                                            </div>
-                                        </SelectItem>
-                                        <SelectItem value="PT">
-                                             <div className="flex items-center gap-2">
-                                               <Image src="/flags/pt.svg" alt="Portugal" width={16} height={12} /> PT
-                                             </div>
-                                        </SelectItem>
-                                         <SelectItem value="US">
-                                             <div className="flex items-center gap-2">
-                                               <Image src="/flags/us.svg" alt="EUA" width={16} height={12} /> US
-                                             </div>
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <Input id="agency-phone" type="tel" defaultValue="924 782 269" />
+                                <CountryCombobox selectedCountry={selectedPhoneCountry} onSelectCountry={setSelectedPhoneCountry} />
+                                <Input id="agency-phone" type="tel" defaultValue="924 782 269" className="flex-1" />
                             </div>
                         </div>
                     </div>
@@ -197,7 +233,12 @@ const AddressTab = () => {
                             </SelectTrigger>
                             <SelectContent>
                                 {countries.map(country => (
-                                    <SelectItem key={country.value} value={country.label}>{country.label}</SelectItem>
+                                    <SelectItem key={country.value} value={country.label}>
+                                        <div className="flex items-center gap-2">
+                                           <Image src={country.flag} alt={country.label} width={16} height={12} />
+                                           {country.label}
+                                        </div>
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -297,3 +338,5 @@ export default function AgenciaPage() {
         </div>
     );
 }
+
+    
