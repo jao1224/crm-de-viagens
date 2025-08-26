@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAppointments, mockProjects, currentUser } from "@/lib/mock-data";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
-import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users } from 'lucide-react';
+import { ListTodo, Plane, Info, DollarSign, Hotel, Luggage, Camera, TrainFront, HeartPulse, Map, Calendar as CalendarIcon, Users, FileText, TrendingUp, Hourglass } from 'lucide-react';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -81,7 +81,7 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
             <CardHeader>
                 <CardTitle className="font-headline text-primary text-xl">{title}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
                 <div className="w-full h-[250px] flex items-center justify-center gap-12">
                     <div className="flex-1 h-full flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
@@ -124,7 +124,7 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
 
 const ProjectCard = ({ project }: { project: Project }) => (
     <Card className="hover:shadow-md transition-shadow">
-        <CardContent className="p-4">
+        <CardContent className="p-6">
             <h3 className="font-bold text-lg text-primary">{project.title}</h3>
             <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
             <div className="flex items-center justify-between mb-2">
@@ -149,6 +149,23 @@ const ProjectCard = ({ project }: { project: Project }) => (
     </Card>
 );
 
+const KpiCard = ({ title, value, icon: Icon, details }: { title: string, value: string, icon: React.ElementType, details?: string }) => (
+    <Card>
+        <CardContent className="p-6">
+            <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                    <CardTitle className="text-base font-semibold text-muted-foreground">{title}</CardTitle>
+                    <p className="text-3xl font-bold text-primary">{value}</p>
+                </div>
+                <div className="p-3 bg-primary/10 rounded-full">
+                    <Icon className="h-6 w-6 text-primary" />
+                </div>
+            </div>
+            {details && <p className="text-xs text-muted-foreground mt-2">{details}</p>}
+        </CardContent>
+    </Card>
+);
+
 export default function DashboardPage() {
     const [topClientsFilter, setTopClientsFilter] = React.useState('Faturamento');
     const [activeBudgetFilter, setActiveBudgetFilter] = React.useState('Mês');
@@ -163,6 +180,13 @@ export default function DashboardPage() {
                 <h1 className="text-3xl font-headline text-primary">Dashboard</h1>
                 <p className="text-muted-foreground">Bem-vindo(a) de volta, {currentUser.name}!</p>
             </header>
+
+             {/* Seção de KPIs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <KpiCard title="Total de Cotações" value="38" icon={FileText} details="+20.1% do último mês" />
+                <KpiCard title="Cotações Aprovadas" value="12" icon={TrendingUp} details="+180.1% do último mês" />
+                <KpiCard title="Aguardando Cliente" value="8" icon={Hourglass} details="-2% da última semana" />
+            </div>
 
             {/* Seção de Orçamentos */}
             <Card>
@@ -249,7 +273,7 @@ export default function DashboardPage() {
                         </div>
                     )}
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                     <div className="w-full h-[300px] flex items-center justify-center gap-8">
                         <div className="flex-1 h-full flex items-center justify-center">
                             <ResponsiveContainer width="100%" height="100%">
@@ -322,7 +346,7 @@ export default function DashboardPage() {
                               </Button>
                         </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
                         <div className="space-y-1 text-sm">
                             {top10Data.Clientes.map((item, index) => (
                               <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
@@ -341,7 +365,7 @@ export default function DashboardPage() {
                     <CardHeader className="flex flex-row items-center justify-between pb-4">
                         <CardTitle className="font-headline text-primary">Top 10 Fornecedores</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
                         <div className="space-y-1 text-sm">
                             {top10Data.Fornecedores.map((item, index) => (
                               <div key={index} className="flex justify-between items-center py-2.5 border-b last:border-b-0">
@@ -363,7 +387,7 @@ export default function DashboardPage() {
                         <CardTitle className="font-headline text-primary">Tarefas para Hoje</CardTitle>
                         <CardDescription>Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10">
+                    <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 p-6">
                         <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
                         <p className="font-medium">Você não possui nenhuma tarefa para hoje.</p>
                         <p className="text-sm">Aproveite para planejar sua semana!</p>
@@ -379,7 +403,7 @@ export default function DashboardPage() {
                         <CardTitle className="font-headline text-primary">Próximos Voos</CardTitle>
                         <CardDescription>Fique de olho nos embarques que se aproximam.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 p-6">
                         {mockAppointments.filter(a => a.type === 'departure').slice(0, 3).map((flight, index) => (
                             <div key={flight.id} className="grid grid-cols-[auto,1fr,auto] items-center gap-4 p-3 rounded-lg bg-muted/50">
                                 <div className="text-center">
@@ -405,8 +429,8 @@ export default function DashboardPage() {
                     <CardTitle className="font-headline text-primary">Acompanhe seus projetos</CardTitle>
                     <CardDescription>Visão geral do andamento dos seus grupos e viagens.</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <CardContent className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {mockProjects.map(project => (
                             <ProjectCard key={project.id} project={project} />
                         ))}
@@ -419,28 +443,28 @@ export default function DashboardPage() {
                 <PieChartCard title="Despesas por Categoria" data={expensesChartData} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                <Card className="text-center p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <Card className="text-center p-6">
                     <h3 className="text-sm font-medium text-muted-foreground">Recebido</h3>
                     <p className="text-4xl font-bold text-primary">R$ 67k</p>
                 </Card>
 
-                <Card className="text-center p-4">
+                <Card className="text-center p-6">
                     <h3 className="text-sm font-medium text-muted-foreground">Pago</h3>
                     <p className="text-4xl font-bold text-destructive">R$ 60k</p>
                 </Card>
 
-                <Card className="text-center p-4">
+                <Card className="text-center p-6">
                     <h3 className="text-sm font-medium text-muted-foreground">Faturamento</h3>
                     <p className="text-4xl font-bold text-green-600">R$ 67k</p>
                 </Card>
                 
-                <Card className="text-center p-4">
+                <Card className="text-center p-6">
                     <h3 className="text-sm font-medium text-muted-foreground">Lucro</h3>
                     <p className="text-4xl font-bold text-green-600">R$ 6.6k</p>
                 </Card>
 
-                <Card className="text-center p-4">
+                <Card className="text-center p-6">
                     <h3 className="text-sm font-medium text-muted-foreground">Ticket Médio</h3>
                     <p className="text-4xl font-bold text-primary">R$ 11.1k</p>
                 </Card>
@@ -449,22 +473,3 @@ export default function DashboardPage() {
         </div>
     );
 }
-
-    
-
-
-
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
-
-    
