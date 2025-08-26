@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family=Belleza&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -108,11 +106,5 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
-  }
-  body, p, span, div, input, button, select, textarea {
-    @apply font-body;
   }
 }

@@ -3,18 +3,13 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from '@/lib/utils';
-import { Alegreya, Belleza } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 
-const fontBody = Alegreya({ 
+const fontSans = Inter({ 
   subsets: ['latin'], 
-  variable: '--font-body',
-});
-
-const fontHeadline = Belleza({
-  subsets: ['latin'],
-  variable: '--font-headline',
-  weight: '400'
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className={cn("min-h-screen bg-background antialiased", fontBody.variable, fontHeadline.variable)}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <ThemeProvider
             attribute="class"
             defaultTheme="light"
