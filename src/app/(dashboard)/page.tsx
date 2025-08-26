@@ -30,9 +30,11 @@ const expensesChartData = [
 ]
 
 const budgetChartData = [
-    { name: 'Aprovado', value: 75, color: 'hsl(var(--chart-3))', icon: CheckCircle },
-    { name: 'Aguardando', value: 25, color: 'hsl(var(--chart-2))', icon: Hourglass },
+    { name: 'Aprovado', value: 75, raw: 12, color: 'hsl(var(--chart-3))', icon: CheckCircle },
+    { name: 'Aguardando', value: 25, raw: 8, color: 'hsl(var(--chart-2))', icon: Hourglass },
 ];
+const totalQuotes = budgetChartData.reduce((acc, curr) => acc + curr.raw, 0);
+
 
 const flightCodes = ['7XIE9', 'T196W', 'SN5EY'];
 
@@ -63,12 +65,13 @@ const top10Data = {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const value = payload[0].value;
-    
+    const percentage = payload[0].value;
+    const absoluteValue = Math.round((percentage / 100) * totalQuotes);
+
     return (
       <div className="bg-background/80 p-2.5 border border-border rounded-lg shadow-lg backdrop-blur-sm">
         <p className="font-headline text-foreground">{data.name}</p>
-        <p className="font-bold text-lg text-primary">{`${value}%`}</p>
+        <p className="font-bold text-lg text-primary">{`${absoluteValue} cotações (${percentage}%)`}</p>
       </div>
     );
   }
@@ -488,3 +491,4 @@ export default function DashboardPage() {
         </div>
     );
 }
+
