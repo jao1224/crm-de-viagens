@@ -377,7 +377,7 @@ export default function DashboardPage() {
                         <div className="relative flex items-center rounded-full p-1 bg-muted/50">
                             <div
                                 className={cn(
-                                'absolute h-full w-1/2 bg-background rounded-full shadow-sm transition-transform duration-300 ease-in-out',
+                                'absolute h-full w-1/2 bg-primary rounded-full shadow-sm transition-transform duration-300 ease-in-out',
                                 topClientsFilter === 'Faturamento' ? 'translate-x-0' : 'translate-x-full'
                                 )}
                             />
@@ -385,7 +385,7 @@ export default function DashboardPage() {
                                 onClick={() => setTopClientsFilter('Faturamento')}
                                 className={cn(
                                 'relative z-10 text-xs font-semibold h-7 px-4 transition-colors',
-                                topClientsFilter === 'Faturamento' ? 'text-primary' : 'text-muted-foreground'
+                                topClientsFilter === 'Faturamento' ? 'text-primary-foreground' : 'text-primary'
                                 )}
                             >
                                 Faturamento
@@ -394,7 +394,7 @@ export default function DashboardPage() {
                                 onClick={() => setTopClientsFilter('Lucro')}
                                 className={cn(
                                 'relative z-10 text-xs font-semibold h-7 px-4 transition-colors',
-                                topClientsFilter === 'Lucro' ? 'text-primary' : 'text-muted-foreground'
+                                topClientsFilter === 'Lucro' ? 'text-primary-foreground' : 'text-primary'
                                 )}
                             >
                                 Lucro
