@@ -47,7 +47,7 @@ export function DashboardHeader() {
       
       {/* Navegação Principal do Header (visível em telas maiores) */}
       <nav className="hidden md:flex flex-1 items-center justify-center">
-          <ul className="flex items-center gap-6 text-sm font-medium">
+          <ul className="flex items-center gap-6 text-base font-medium">
             {headerNavLinks.map(link => (
                 <li key={link.label}>
                     <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
