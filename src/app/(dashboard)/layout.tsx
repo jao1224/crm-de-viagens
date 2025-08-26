@@ -14,7 +14,7 @@ export default function DashboardLayout({
         <div className="flex min-h-screen w-full flex-col">
           <DashboardHeader />
           <div className="flex flex-1">
-              <Sidebar variant="sidebar" collapsible="icon" className="border-r">
+              <Sidebar variant="sidebar" collapsible="icon" className="border-r pt-16">
                   <SidebarContent className="p-0">
                       <SimpleDashboardNav />
                   </SidebarContent>

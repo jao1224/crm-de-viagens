@@ -41,7 +41,7 @@ export function DashboardHeader() {
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
         <Link href="/" className="font-headline text-2xl font-bold cursor-pointer">
-          No<span className="text-yellow-400">Meio</span>Do<span className="text-yellow-400">Mundo</span>
+          No<span className="text-yellow-400">Meio</span><span className="text-yellow-400">DoMundo</span>
         </Link>
       </div>
       
