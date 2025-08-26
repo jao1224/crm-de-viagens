@@ -30,7 +30,7 @@ const expensesChartData = [
 ]
 
 const budgetChartData = [
-    { name: 'Aprovado', value: 75, raw: 12, color: 'hsl(var(--chart-3))', icon: CheckCircle },
+    { name: 'Aprovado', value: 75, raw: 12, color: 'hsl(var(--chart-1))', icon: CheckCircle },
     { name: 'Aguardando', value: 25, raw: 8, color: 'hsl(var(--chart-2))', icon: Hourglass },
 ];
 const totalQuotes = budgetChartData.reduce((acc, curr) => acc + curr.raw, 0);
@@ -66,7 +66,7 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const percentage = payload[0].value;
-    const absoluteValue = Math.round((percentage / 100) * totalQuotes);
+    const absoluteValue = data.raw;
 
     return (
       <div className="bg-background/80 p-2.5 border border-border rounded-lg shadow-lg backdrop-blur-sm">
@@ -126,7 +126,7 @@ const PieChartCard = ({ title, data }: { title: string, data: {name: string, val
 }
 
 const ProjectCard = ({ project }: { project: Project }) => (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card>
         <CardContent className="p-6">
             <h3 className="font-bold text-lg">{project.title}</h3>
             <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
