@@ -41,8 +41,11 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-primary px-4 md:px-6 text-primary-foreground">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden text-primary-foreground" />
-        <Link href="/" className="font-headline text-2xl font-bold cursor-pointer">
-          <Logo className="h-8 w-auto" />
+        <Link href="/" className="font-headline text-2xl font-bold cursor-pointer flex items-center gap-3">
+          <Logo className="h-10 w-10" />
+          <span className="hidden sm:inline-block">
+             <span className="text-primary-foreground">No</span><span className="text-yellow-400">Meio</span><span className="text-yellow-400">doMundo</span>
+          </span>
           <span className="sr-only">No Meio do Mundo</span>
         </Link>
       </div>

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Shield, FileSignature, Trash2 } from 'lucide-react';
 import { currentUser } from '@/lib/mock-data';
+import { Logo } from '@/components/logo';
 
 const ProfileForm = () => (
   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
