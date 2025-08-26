@@ -63,7 +63,7 @@ export const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: Gauge },
   { href: '/cotacoes', label: 'Cotações', icon: FileText }, 
   { href: '/agenda', label: 'Calendário', icon: Calendar },
-  { href: '/tarefas', label: 'Tarefas', icon: ClipboardList },
+  { href: '/tarefas', label: 'Tarefas', icon: ClipboardList, badge: 1 },
 ];
 
 export const accompanimentItems: NavItem[] = [
@@ -134,10 +134,10 @@ export function SimpleDashboardNav() {
     <SidebarMenu>
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Principal
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {navItems.map((item) => (
@@ -146,10 +146,11 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/')}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                            className={cn(pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) && (item.href !== '/' || pathname === '/') ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
                             <span className="flex-1">{item.label}</span>
-                            {item.badge && <Badge className="bg-red-500 text-white">{item.badge}</Badge>}
+                             {item.badge && <Badge className="bg-yellow-400 text-primary-foreground font-bold text-xs size-5 flex items-center justify-center p-0">{item.badge}</Badge>}
                         </SidebarMenuButton>
                         </Link>
                     </SidebarMenuItem>
@@ -160,10 +161,10 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Acompanhamento
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {accompanimentItems.map((item) => (
@@ -172,8 +173,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                            className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
@@ -184,10 +186,10 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                 <span className="text-sm font-semibold text-muted-foreground">
+                 <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Financeiro
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {financialItems.map((item) => (
@@ -196,8 +198,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
@@ -208,10 +211,10 @@ export function SimpleDashboardNav() {
         
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Documentos
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                 {documentItems.map((item) => (
@@ -220,8 +223,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
@@ -232,10 +236,10 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Cadastros
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                  {registrationItems.map((item) => (
@@ -244,8 +248,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
@@ -256,10 +261,10 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Automação
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                  {automationItems.map((item) => (
@@ -268,8 +273,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                         </SidebarMenuButton>
                         </Link>
@@ -280,10 +286,10 @@ export function SimpleDashboardNav() {
 
         <Collapsible className="w-full" defaultOpen>
             <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-muted-foreground">
+                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
                     Ajuda
                 </span>
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-1 py-1">
                  {helpItems.map((item) => (
@@ -292,8 +298,9 @@ export function SimpleDashboardNav() {
                         <SidebarMenuButton
                             isActive={pathname.startsWith(item.href)}
                             tooltip={{ children: item.label, side: "right", align: "center" }}
+                             className={cn(pathname.startsWith(item.href) && 'text-sidebar-primary font-bold')}
                         >
-                            <item.icon />
+                            <item.icon className={cn(pathname.startsWith(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
                             <span className="flex-1">{item.label}</span>
                             {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
                         </SidebarMenuButton>
@@ -306,5 +313,3 @@ export function SimpleDashboardNav() {
     </SidebarMenu>
   );
 }
-
-    

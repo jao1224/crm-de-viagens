@@ -37,10 +37,12 @@ const notifications = [
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-gradient-to-r from-primary to-[#9B59B6] px-4 md:px-6 text-primary-foreground">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="md:hidden text-foreground" />
-        <h1 className="font-headline text-2xl font-bold text-primary">NoMeioDoMundo</h1>
+        <SidebarTrigger className="md:hidden text-primary-foreground" />
+        <h1 className="font-headline text-2xl font-bold">
+            NoMeioDo<span className="text-yellow-400">Mundo</span>
+        </h1>
       </div>
       
       {/* Navegação Principal do Header (visível em telas maiores) */}
@@ -48,7 +50,7 @@ export function DashboardHeader() {
           <ul className="flex items-center gap-6 text-sm font-medium">
             {headerNavLinks.map(link => (
                 <li key={link.label}>
-                    <Link href={link.href} className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors">
+                    <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                         {link.label}
                         {link.icon && <link.icon className="h-4 w-4"/>}
                     </Link>
@@ -60,9 +62,9 @@ export function DashboardHeader() {
       <div className="ml-auto flex items-center gap-4">
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                 <Button variant="ghost" size="icon" className="text-muted-foreground relative">
+                 <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 relative">
                     <Bell className="h-5 w-5" />
-                    <span className="absolute top-2 right-2.5 block h-2 w-2 rounded-full bg-destructive" />
+                    <span className="absolute top-1.5 right-1.5 block h-2.5 w-2.5 rounded-full bg-yellow-400 ring-2 ring-primary" />
                     <span className="sr-only">Notificações</span>
                 </Button>
             </DropdownMenuTrigger>
@@ -92,14 +94,14 @@ export function DashboardHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
              <div className="flex items-center gap-2 cursor-pointer">
-                <Avatar className="h-9 w-9 border-2 border-primary/50">
+                <Avatar className="h-9 w-9 border-2 border-white/50">
                   <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} />
                   <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="hidden sm:flex flex-col items-start">
-                  <span className="text-sm font-semibold text-foreground">{currentUser.name}</span>
+                  <span className="text-sm font-semibold text-primary-foreground">{currentUser.name}</span>
                 </div>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 text-primary-foreground/80" />
              </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64" align="end" forceMount>
@@ -168,5 +170,3 @@ export function DashboardHeader() {
     </header>
   );
 }
-
-    
