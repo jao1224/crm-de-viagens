@@ -17,6 +17,27 @@ import { Textarea } from '@/components/ui/textarea';
 const AgencyInfoTab = () => {
     
     const [cpfCnpj, setCpfCnpj] = useState('39.606.486/0001-41');
+    const [logo, setLogo] = useState<string | null>(null);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+
+    const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setLogo(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRemoveLogo = () => {
+        setLogo(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
 
     const handleCpfCnpjChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.replace(/\D/g, ''); 
@@ -41,15 +62,28 @@ const AgencyInfoTab = () => {
                 <div className="md:col-span-1 space-y-4">
                     <Card className="p-4 flex flex-col items-center gap-4">
                          <div className="w-40 h-40 relative rounded-md overflow-hidden border-2 border-primary/20 flex items-center justify-center bg-muted">
-                            <Logo className="h-24 w-24 text-primary/50" />
-                            {/* <Image src="/logo-full.png" alt="Logo da Agência" layout="fill" objectFit="cover" /> */}
+                            {logo ? (
+                                <Image src={logo} alt="Logo da Agência" layout="fill" objectFit="cover" />
+                            ) : (
+                                <Logo className="h-24 w-24 text-primary/50" />
+                            )}
                         </div>
                         <div className="flex gap-2">
-                             <Button variant="outline">
-                                <ImageIcon className="mr-2 h-4 w-4" />
-                                Adicionar
+                             <Button asChild variant="outline">
+                                <label htmlFor="logo-upload" className="cursor-pointer">
+                                    <ImageIcon className="mr-2 h-4 w-4" />
+                                    Adicionar
+                                </label>
                             </Button>
-                            <Button variant="destructive">
+                             <input
+                                type="file"
+                                id="logo-upload"
+                                ref={fileInputRef}
+                                onChange={handleLogoChange}
+                                className="hidden"
+                                accept="image/png, image/jpeg, image/gif"
+                            />
+                            <Button variant="destructive" onClick={handleRemoveLogo} disabled={!logo}>
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Remover
                             </Button>
@@ -96,12 +130,12 @@ const AgencyInfoTab = () => {
                                         <SelectItem value="PT">
                                              <div className="flex items-center gap-2">
                                                <Image src="/flags/pt.svg" alt="Portugal" width={16} height={12} /> PT
-                                            </div>
+                                             </div>
                                         </SelectItem>
                                          <SelectItem value="US">
                                              <div className="flex items-center gap-2">
                                                <Image src="/flags/us.svg" alt="EUA" width={16} height={12} /> US
-                                            </div>
+                                             </div>
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
