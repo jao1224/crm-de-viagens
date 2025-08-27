@@ -17,6 +17,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 
 
 const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
@@ -304,6 +307,81 @@ const AddressTab = () => {
     );
 };
 
+const QuoteFormTab = () => {
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Formulário de cotação salvo com sucesso.",
+        });
+    };
+
+    return (
+        <Card>
+            <CardContent className="p-6 space-y-6">
+                <div className="space-y-2">
+                    <Label htmlFor="quote-instructions">Instruções da página de Solicitação de Cotação</Label>
+                    <Textarea id="quote-instructions" rows={5} />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                    <Label className="font-semibold">Serviços adicionais</Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-hospedagem" defaultChecked />
+                            <Label htmlFor="svc-hospedagem" className="font-normal">Hospedagem</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-transporte" defaultChecked />
+                            <Label htmlFor="svc-transporte" className="font-normal">Transporte</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-passeios" defaultChecked />
+                            <Label htmlFor="svc-passeios" className="font-normal">Passeios</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-seguros" defaultChecked />
+                            <Label htmlFor="svc-seguros" className="font-normal">Seguros</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-cruzeiro" />
+                            <Label htmlFor="svc-cruzeiro" className="font-normal">Cruzeiro</Label>
+                        </div>
+                         <div className="flex items-center space-x-2">
+                            <Checkbox id="svc-roteiro" />
+                            <Label htmlFor="svc-roteiro" className="font-normal">Roteiro Personalizado</Label>
+                        </div>
+                    </div>
+                     <div className="flex items-center space-x-2 pt-2">
+                        <Switch id="show-discount" />
+                        <Label htmlFor="show-discount" className="font-normal">Exibir cupom de desconto</Label>
+                    </div>
+                </div>
+
+                <Separator />
+                
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <Label className="font-semibold">Configuração de campos adicionais</Label>
+                        <Button>Incluir</Button>
+                    </div>
+                    <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md border border-dashed">
+                        Nenhum campo adicional incluído.
+                    </div>
+                </div>
+
+                <div className="flex justify-end">
+                    <Button onClick={handleSave}>Salvar</Button>
+                </div>
+
+            </CardContent>
+        </Card>
+    )
+}
+
 const PlaceholderTab = ({ title }: { title: string }) => (
     <Card>
         <CardHeader>
@@ -342,7 +420,7 @@ export default function AgenciaPage() {
                     <AddressTab />
                 </TabsContent>
                 <TabsContent value="formulario" className="mt-6">
-                    <PlaceholderTab title="Formulário de Cotação" />
+                    <QuoteFormTab />
                 </TabsContent>
                 <TabsContent value="configuracoes" className="mt-6">
                     <PlaceholderTab title="Configurações" />
@@ -357,5 +435,7 @@ export default function AgenciaPage() {
         </div>
     );
 }
+
+    
 
     
