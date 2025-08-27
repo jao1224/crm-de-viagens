@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown } from 'lucide-react';
+import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown, FileEdit, GripVertical } from 'lucide-react';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
-
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
     const [open, setOpen] = useState(false);
@@ -307,8 +307,134 @@ const AddressTab = () => {
     );
 };
 
+interface AdditionalField {
+  id: number;
+  name: string;
+  type: string;
+  required: boolean;
+}
+
+const AdditionalFieldDialog = ({
+  open,
+  onOpenChange,
+  onSave,
+  fieldToEdit
+}: {
+  open: boolean,
+  onOpenChange: (open: boolean) => void,
+  onSave: (field: AdditionalField) => void,
+  fieldToEdit: AdditionalField | null,
+}) => {
+  const [name, setName] = useState('');
+  const [type, setType] = useState('text');
+  const [required, setRequired] = useState(false);
+
+  React.useEffect(() => {
+    if (fieldToEdit) {
+      setName(fieldToEdit.name);
+      setType(fieldToEdit.type);
+      setRequired(fieldToEdit.required);
+    } else {
+      setName('');
+      setType('text');
+      setRequired(false);
+    }
+  }, [fieldToEdit]);
+
+  const handleSave = () => {
+    if (!name) {
+      // Basic validation
+      alert('O nome do campo é obrigatório.');
+      return;
+    }
+    onSave({
+      id: fieldToEdit?.id || Date.now(),
+      name,
+      type,
+      required
+    });
+    onOpenChange(false);
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Campo Adicional</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="field-name">Nome <span className="text-destructive">*</span></Label>
+            <Input id="field-name" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="field-type">Tipo <span className="text-destructive">*</span></Label>
+            <Select value={type} onValueChange={setType}>
+              <SelectTrigger id="field-type">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="text">Texto simples</SelectItem>
+                <SelectItem value="number">Número</SelectItem>
+                <SelectItem value="date">Data</SelectItem>
+                <SelectItem value="textarea">Área de texto</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="field-required">Obrigatório <span className="text-destructive">*</span></Label>
+            <Select value={String(required)} onValueChange={(val) => setRequired(val === 'true')}>
+              <SelectTrigger id="field-required">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Sim</SelectItem>
+                <SelectItem value="false">Não</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button onClick={handleSave}>Salvar</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+
 const QuoteFormTab = () => {
     const { toast } = useToast();
+    const [additionalFields, setAdditionalFields] = useState<AdditionalField[]>([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [fieldToEdit, setFieldToEdit] = useState<AdditionalField | null>(null);
+
+    const handleSaveField = (field: AdditionalField) => {
+        setAdditionalFields(prev => {
+            const index = prev.findIndex(f => f.id === field.id);
+            if (index > -1) {
+                const newFields = [...prev];
+                newFields[index] = field;
+                return newFields;
+            }
+            return [...prev, field];
+        });
+    };
+
+    const handleNewField = () => {
+        setFieldToEdit(null);
+        setIsDialogOpen(true);
+    };
+    
+    const handleEditField = (field: AdditionalField) => {
+        setFieldToEdit(field);
+        setIsDialogOpen(true);
+    };
+
+    const handleRemoveField = (id: number) => {
+        setAdditionalFields(prev => prev.filter(f => f.id !== id));
+    };
 
     const handleSave = () => {
         toast({
@@ -317,7 +443,15 @@ const QuoteFormTab = () => {
         });
     };
 
+    const fieldTypeLabels: { [key: string]: string } = {
+      text: 'Texto simples',
+      number: 'Número',
+      date: 'Data',
+      textarea: 'Área de texto'
+    };
+
     return (
+      <>
         <Card>
             <CardContent className="p-6 space-y-6">
                 <div className="space-y-2">
@@ -366,11 +500,37 @@ const QuoteFormTab = () => {
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
                         <Label className="font-semibold">Configuração de campos adicionais</Label>
-                        <Button>Incluir</Button>
+                        <Button onClick={handleNewField}>Incluir</Button>
                     </div>
-                    <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md border border-dashed">
-                        Nenhum campo adicional incluído.
-                    </div>
+                    {additionalFields.length > 0 ? (
+                        <div className="border rounded-md">
+                           {additionalFields.map(field => (
+                               <div key={field.id} className="flex items-center justify-between p-3 border-b last:border-b-0">
+                                   <div className="flex items-center gap-2">
+                                       <GripVertical className="h-5 w-5 text-muted-foreground" />
+                                       <div>
+                                           <p className="font-medium">{field.name}</p>
+                                           <p className="text-xs text-muted-foreground">
+                                               {fieldTypeLabels[field.type]} - {field.required ? 'Obrigatório' : 'Opcional'}
+                                            </p>
+                                       </div>
+                                   </div>
+                                   <div className="flex items-center gap-1">
+                                       <Button variant="ghost" size="icon" onClick={() => handleEditField(field)}>
+                                           <FileEdit className="h-4 w-4" />
+                                       </Button>
+                                       <Button variant="ghost" size="icon" onClick={() => handleRemoveField(field.id)} className="text-destructive hover:text-destructive">
+                                           <Trash2 className="h-4 w-4" />
+                                       </Button>
+                                   </div>
+                               </div>
+                           ))}
+                        </div>
+                    ) : (
+                        <div className="p-8 text-center text-muted-foreground bg-muted/50 rounded-md border border-dashed">
+                            Nenhum campo adicional incluído.
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex justify-end">
@@ -379,6 +539,13 @@ const QuoteFormTab = () => {
 
             </CardContent>
         </Card>
+        <AdditionalFieldDialog
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            onSave={handleSaveField}
+            fieldToEdit={fieldToEdit}
+        />
+      </>
     )
 }
 
