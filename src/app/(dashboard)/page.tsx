@@ -221,6 +221,8 @@ export default function DashboardPage() {
     const scrollTo = (index: number) => {
         carouselApi?.scrollTo(index)
     }
+
+    const budgetFilters = ['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'];
     
     return (
         <div className="space-y-6">
@@ -245,14 +247,13 @@ export default function DashboardPage() {
                                 <CardTitle className="font-bold text-2xl">Orçamentos</CardTitle>
                                 <CardDescription className="text-base font-normal">Análise visual dos seus dados chave.</CardDescription>
                             </div>
-                            
-                            <div className="flex flex-wrap gap-1">
-                                {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                            <div className="flex items-center gap-1">
+                                {budgetFilters.map(filter => (
                                     <Button 
                                         key={filter} 
                                         variant={activeBudgetFilter === filter ? 'default' : 'outline'}
                                         size="sm"
-                                        className={`text-xs h-8 px-3`}
+                                        className="text-xs h-8 px-3"
                                         onClick={() => setActiveBudgetFilter(filter)}
                                     >
                                         {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1.5" />}
@@ -556,13 +557,4 @@ export default function DashboardPage() {
     );
 }
 
-
-
     
-
-
-
-    
-
-
-
