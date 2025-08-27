@@ -193,13 +193,14 @@ export default function DashboardPage() {
     const [formattedDate, setFormattedDate] = React.useState('');
 
     React.useEffect(() => {
-        setFormattedDate(
-            new Date().toLocaleDateString('pt-BR', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-            })
-        );
+      // useEffect only runs on the client, so this will prevent a hydration error
+      setFormattedDate(
+        new Date().toLocaleDateString('pt-BR', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+        })
+      );
     }, []);
 
     React.useEffect(() => {
@@ -245,22 +246,19 @@ export default function DashboardPage() {
                                 <CardDescription className="text-base font-normal">Análise visual dos seus dados chave.</CardDescription>
                             </div>
                             
-                            <div className="flex items-center gap-2 flex-wrap">
-                                {/* Filtros de Período */}
-                                <div className="flex flex-wrap gap-1">
-                                    {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
-                                        <Button 
-                                            key={filter} 
-                                            variant={activeBudgetFilter === filter ? 'default' : 'outline'}
-                                            size="sm"
-                                            className={`text-xs h-8 px-3`}
-                                            onClick={() => setActiveBudgetFilter(filter)}
-                                        >
-                                            {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1.5" />}
-                                            {filter}
-                                        </Button>
-                                    ))}
-                                </div>
+                            <div className="flex flex-wrap gap-1">
+                                {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
+                                    <Button 
+                                        key={filter} 
+                                        variant={activeBudgetFilter === filter ? 'default' : 'outline'}
+                                        size="sm"
+                                        className={`text-xs h-8 px-3`}
+                                        onClick={() => setActiveBudgetFilter(filter)}
+                                    >
+                                        {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1.5" />}
+                                        {filter}
+                                    </Button>
+                                ))}
                             </div>
                         </div>
                         {activeBudgetFilter === 'Personalizado' && (
@@ -565,5 +563,6 @@ export default function DashboardPage() {
 
 
     
+
 
 
