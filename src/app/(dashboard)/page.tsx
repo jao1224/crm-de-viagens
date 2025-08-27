@@ -190,6 +190,17 @@ export default function DashboardPage() {
     });
     const [carouselApi, setCarouselApi] = React.useState<CarouselApi>()
     const [currentSlide, setCurrentSlide] = React.useState(0)
+    const [formattedDate, setFormattedDate] = React.useState('');
+
+    React.useEffect(() => {
+        setFormattedDate(
+            new Date().toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+            })
+        );
+    }, []);
 
     React.useEffect(() => {
         if (!carouselApi) return
@@ -490,7 +501,7 @@ export default function DashboardPage() {
             <Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-px">
                 <CardHeader>
                     <CardTitle className="font-bold">Tarefas para Hoje</CardTitle>
-                    <CardDescription className="font-normal">Suas prioridades para {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}.</CardDescription>
+                    <CardDescription className="font-normal">Suas prioridades para {formattedDate}.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center justify-center text-center text-muted-foreground py-10 p-6">
                     <ListTodo className="w-12 h-12 mb-4 text-primary/50" />
@@ -562,3 +573,4 @@ export default function DashboardPage() {
 
 
     
+
