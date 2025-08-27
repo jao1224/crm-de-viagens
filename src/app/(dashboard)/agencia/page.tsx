@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 
 const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
@@ -73,7 +74,7 @@ const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry
 }
 
 const AgencyInfoTab = () => {
-    
+    const { toast } = useToast();
     const [cpfCnpj, setCpfCnpj] = useState('39.606.486/0001-41');
     const [logo, setLogo] = useState<string | null>(null);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -113,6 +114,13 @@ const AgencyInfoTab = () => {
             value = value.replace(/(\d{4})(\d)/, '$1-$2');
         }
         setCpfCnpj(value);
+    };
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Informações da agência salvas com sucesso.",
+        });
     };
     
     return (
@@ -198,7 +206,7 @@ const AgencyInfoTab = () => {
                     </div>
                 </div>
                  <div className="md:col-span-3 flex justify-end">
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </div>
             </CardContent>
         </Card>
@@ -206,6 +214,7 @@ const AgencyInfoTab = () => {
 };
 
 const AddressTab = () => {
+    const { toast } = useToast();
     const [address, setAddress] = useState({
         cep: '',
         logradouro: '',
@@ -223,6 +232,13 @@ const AddressTab = () => {
     }
 
     const getFlagUrl = (countryCode: string) => `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Endereço salvo com sucesso.",
+        });
+    };
 
     return (
         <Card>
@@ -281,7 +297,7 @@ const AddressTab = () => {
                     </div>
                 </div>
                  <div className="flex justify-end">
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </div>
             </CardContent>
         </Card>
