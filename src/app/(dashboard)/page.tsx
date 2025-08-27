@@ -248,7 +248,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-2 flex-wrap">
                                 {/* Filtros de Período */}
                                 <div className="flex flex-wrap gap-1">
-                                    {['Dia', 'Mês', 'Ano', 'Total'].map(filter => (
+                                    {['Dia', 'Mês', 'Ano', 'Total', 'Personalizado'].map(filter => (
                                         <Button 
                                             key={filter} 
                                             variant={activeBudgetFilter === filter ? 'default' : 'outline'}
@@ -256,18 +256,10 @@ export default function DashboardPage() {
                                             className={`text-xs h-8 px-3`}
                                             onClick={() => setActiveBudgetFilter(filter)}
                                         >
+                                            {filter === 'Personalizado' && <CalendarIcon className="w-3 h-3 mr-1.5" />}
                                             {filter}
                                         </Button>
                                     ))}
-                                    <Button 
-                                        variant={activeBudgetFilter === 'Personalizado' ? 'default' : 'outline'}
-                                        size="sm"
-                                        className={`text-xs h-8 px-3`}
-                                        onClick={() => setActiveBudgetFilter('Personalizado')}
-                                    >
-                                        <CalendarIcon className="w-3 h-3 mr-1.5" />
-                                        Personalizado
-                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -573,4 +565,5 @@ export default function DashboardPage() {
 
 
     
+
 
