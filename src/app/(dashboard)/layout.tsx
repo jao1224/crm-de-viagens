@@ -4,7 +4,6 @@
 import { SimpleDashboardNav } from "@/components/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { SidebarProvider, Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
-import { ChatWidget } from "@/components/chat-widget";
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +15,7 @@ function DashboardMainContent({ children }: { children: React.ReactNode }) {
             state === 'expanded' ? 'md:ml-64' : 'md:ml-14'
         )}>
             <DashboardHeader />
-            <main className="flex-1 p-4 md:p-6 bg-muted/30 h-[calc(100vh-4rem)] overflow-y-auto">
+            <main className="flex-1 p-4 md:p-6 bg-muted/30 overflow-y-auto">
                 {children}
             </main>
         </div>
@@ -31,7 +30,7 @@ export default function DashboardLayout({
   return (
       <SidebarProvider>
         <div className="min-h-screen w-full bg-background relative flex">
-            <Sidebar variant="sidebar" collapsible="icon" className="border-r top-16 h-screen">
+            <Sidebar variant="sidebar" collapsible="icon" className="border-r">
                 <SidebarContent className="p-0 pt-4">
                     <SimpleDashboardNav />
                 </SidebarContent>
@@ -40,7 +39,6 @@ export default function DashboardLayout({
                 {children}
             </DashboardMainContent>
         </div>
-        <ChatWidget />
       </SidebarProvider>
   );
 }
