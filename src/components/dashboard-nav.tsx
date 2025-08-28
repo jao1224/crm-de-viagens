@@ -59,14 +59,14 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 
 
-export const navItems: NavItem[] = [
+const navItems: NavItem[] = [
   { href: '/', label: 'Dashboard', icon: Gauge },
   { href: '/cotacoes', label: 'Cotações', icon: FileText }, 
   { href: '/agenda', label: 'Calendário', icon: Calendar },
   { href: '/tarefas', label: 'Tarefas', icon: ClipboardList, badge: 1 },
 ];
 
-export const accompanimentItems: NavItem[] = [
+const accompanimentItems: NavItem[] = [
     { href: '/voos', label: 'Voos', icon: Plane },
     { href: '/hospedagens', label: 'Hospedagens', icon: Hotel },
     { href: '/transportes', label: 'Transportes', icon: TrainFront },
@@ -75,7 +75,7 @@ export const accompanimentItems: NavItem[] = [
     { href: '/seguros', label: 'Seguros', icon: HeartPulse },
 ];
 
-export const financialItems: NavItem[] = [
+const financialItems: NavItem[] = [
     { href: '/vendas', label: 'Vendas', icon: Wallet },
     { href: '/fluxo-caixa', label: 'Fluxo de Caixa', icon: WalletCards },
     { href: '/receitas', label: 'Receitas', icon: Plus },
@@ -87,14 +87,14 @@ export const financialItems: NavItem[] = [
     { href: '/milhas', label: 'Milhas', icon: Gem },
 ];
 
-export const documentItems: NavItem[] = [
+const documentItems: NavItem[] = [
     { href: '/faturas', label: 'Faturas', icon: FileText },
     { href: '/pagamentos', label: 'Pagamentos', icon: FileText },
     { href: '/contratos', label: 'Contratos', icon: FileText },
     { href: '/nota-fiscal', label: 'Nota Fiscal', icon: FileText },
 ];
 
-export const registrationItems: NavItem[] = [
+const registrationItems: NavItem[] = [
     { href: '/agencia', label: 'Agência', icon: Building2 },
     { href: '/link-cotacao', label: 'Link Cotação', icon: Link2 },
     { href: '/link-pessoa', label: 'Link Pessoa', icon: Link2 },
@@ -113,13 +113,13 @@ export const registrationItems: NavItem[] = [
     { href: '/imagens', label: 'Imagens', icon: ImageIcon },
 ];
 
-export const automationItems: NavItem[] = [
+const automationItems: NavItem[] = [
     { href: '/automacao/email', label: 'Comunicação E-mail', icon: Mail },
     { href: '/automacao/whatsapp', label: 'Comun. Whatsapp', icon: MessageSquare },
     { href: '/automacao/tarefas', label: 'Tarefas', icon: RefreshCw },
 ];
 
-export const helpItems: NavItem[] = [
+const helpItems: NavItem[] = [
     { href: '/ajuda/tutoriais', label: 'Tutoriais', icon: PlayCircle },
     { href: '/ajuda/central', label: 'Central de Ajuda', icon: HelpCircle, external: true },
     { href: '/ajuda/ticket', label: 'Ticket', icon: LifeBuoy },
@@ -127,12 +127,25 @@ export const helpItems: NavItem[] = [
     { href: '/ajuda/integracao', label: 'Integração', icon: BookText, external: true },
 ];
 
+const navGroups = [
+    { title: 'Principal', items: navItems },
+    { title: 'Acompanhamento', items: accompanimentItems },
+    { title: 'Financeiro', items: financialItems },
+    { title: 'Documentos', items: documentItems },
+    { title: 'Cadastros', items: registrationItems },
+    { title: 'Automação', items: automationItems },
+    { title: 'Ajuda', items: helpItems },
+];
 
 export function SimpleDashboardNav() {
   const pathname = usePathname();
   
   const isActive = (href: string) => {
-    return pathname.startsWith(href) && (href !== '/' || pathname === '/');
+    // Handle the dashboard link specifically
+    if (href === '/') {
+        return pathname === '/';
+    }
+    return pathname.startsWith(href);
   }
 
   const isGroupActive = (items: NavItem[]) => {
@@ -141,184 +154,34 @@ export function SimpleDashboardNav() {
 
   return (
     <SidebarMenu>
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(navItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(navItems) && "text-sidebar-accent-foreground")}>
-                    Principal
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                {navItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                            className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                             {item.badge && <Badge className="bg-yellow-400 text-primary font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
-
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(accompanimentItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(accompanimentItems) && "text-sidebar-accent-foreground")}>
-                    Acompanhamento
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                {accompanimentItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                            className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(financialItems) && "bg-sidebar-accent")}>
-                 <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(financialItems) && "text-sidebar-accent-foreground")}>
-                    Financeiro
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                {financialItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-        
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(documentItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(documentItems) && "text-sidebar-accent-foreground")}>
-                    Documentos
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                {documentItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(registrationItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(registrationItems) && "text-sidebar-accent-foreground")}>
-                    Cadastros
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                 {registrationItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(automationItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(automationItems) && "text-sidebar-accent-foreground")}>
-                    Automação
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                 {automationItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
-        <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(helpItems) && "bg-sidebar-accent")}>
-                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(helpItems) && "text-sidebar-accent-foreground")}>
-                    Ajuda
-                </span>
-                <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 py-1">
-                 {helpItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
-                        <SidebarMenuButton
-                            isActive={isActive(item.href)}
-                            tooltip={{ children: item.label, side: "right", align: "center" }}
-                             className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                        >
-                            <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')} />
-                            <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                            {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
-                        </SidebarMenuButton>
-                        </Link>
-                    </SidebarMenuItem>
-                ))}
-            </CollapsibleContent>
-        </Collapsible>
-
+        {navGroups.map((group) => (
+            <Collapsible className="w-full" key={group.title} defaultOpen>
+                <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(group.items) && "bg-sidebar-accent")}>
+                    <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(group.items) && "text-sidebar-accent-foreground")}>
+                        {group.title}
+                    </span>
+                    <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-1 py-1">
+                    {group.items.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
+                                <SidebarMenuButton
+                                    isActive={isActive(item.href)}
+                                    tooltip={{ children: item.label, side: "right", align: "center" }}
+                                    className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
+                                >
+                                    <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
+                                    <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
+                                    {item.badge && <Badge className="bg-yellow-400 text-primary font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
+                                    {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
+                                </SidebarMenuButton>
+                            </Link>
+                        </SidebarMenuItem>
+                    ))}
+                </CollapsibleContent>
+            </Collapsible>
+        ))}
     </SidebarMenu>
   );
 }
