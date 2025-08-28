@@ -113,8 +113,8 @@ export default function NovaContaBancariaPage() {
                             <Input id="conta" value={conta} onChange={(e) => setConta(e.target.value)} />
                         </div>
                     </div>
-                     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
-                        <div className="space-y-2 md:col-span-2">
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div className="space-y-2">
                             <Label htmlFor="saldo">Saldo Inicial <span className="text-destructive">*</span></Label>
                              <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">R$</span>
