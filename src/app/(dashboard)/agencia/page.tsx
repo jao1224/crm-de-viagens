@@ -693,21 +693,59 @@ const EmailSettingsTab = () => {
             </CardContent>
         </Card>
     )
-}
+};
 
-const PlaceholderTab = ({ title }: { title: string }) => (
-    <Card>
-        <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>Configurações para {title.toLowerCase()}.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <div className="h-40 flex items-center justify-center text-muted-foreground bg-muted/50 rounded-md">
-                Conteúdo para {title} em breve.
-            </div>
-        </CardContent>
-    </Card>
-);
+const TextsTab = () => {
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Textos padrão salvos com sucesso.",
+        });
+    };
+
+    return (
+        <Card>
+            <CardContent className="p-6 space-y-6">
+                <Alert className="bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-200">
+                    <Info className="h-4 w-4 !text-blue-800 dark:!text-blue-200" />
+                    <AlertDescription>
+                        Realize a definição de textos padrões para as novas cotações.
+                    </AlertDescription>
+                </Alert>
+
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="text-payment-method">Forma de Pagamento</Label>
+                        <Textarea id="text-payment-method" rows={4} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="text-terms">Termos e Condições</Label>
+                        <Textarea id="text-terms" rows={4} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="text-other-info">Outras Informações</Label>
+                        <Textarea id="text-other-info" rows={4} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="text-service-desc">Descrição dos Serviços</Label>
+                        <Textarea id="text-service-desc" rows={4} defaultValue="Visto Procura de trabalho" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="text-voucher-terms">Termos e Condições - Voucher</Label>
+                        <Textarea id="text-voucher-terms" rows={4} />
+                    </div>
+                </div>
+
+                <div className="flex justify-end">
+                    <Button onClick={handleSave}>Salvar</Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
 
 export default function AgenciaPage() {
     return (
@@ -742,7 +780,7 @@ export default function AgenciaPage() {
                     <EmailSettingsTab />
                 </TabsContent>
                  <TabsContent value="textos" className="mt-6">
-                    <PlaceholderTab title="Textos" />
+                    <TextsTab />
                 </TabsContent>
             </Tabs>
         </div>
@@ -752,6 +790,7 @@ export default function AgenciaPage() {
     
 
     
+
 
 
 
