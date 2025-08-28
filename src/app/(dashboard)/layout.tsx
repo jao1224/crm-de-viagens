@@ -6,6 +6,7 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { SidebarProvider, Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { ChatWidget } from "@/components/chat-widget";
 
 function DashboardMainContent({ children }: { children: React.ReactNode }) {
     const { state } = useSidebar();
@@ -38,6 +39,7 @@ export default function DashboardLayout({
                   {children}
               </DashboardMainContent>
             </div>
+            <ChatWidget />
         </div>
       </SidebarProvider>
   );
