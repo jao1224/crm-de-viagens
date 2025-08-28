@@ -391,7 +391,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                         </div>
                         
                         <Tabs defaultValue="contato">
-                             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto">
+                             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto border-2 border-primary/20 shadow-lg shadow-primary/10">
                                 <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
                                 <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
                                 <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
@@ -983,3 +983,4 @@ export default function PessoasPage() {
     );
 }
     
+
