@@ -145,6 +145,8 @@ export function SimpleDashboardNav() {
     if (href === '/') {
         return pathname === '/';
     }
+    // For other links, check if the pathname starts with the href.
+    // This handles nested routes correctly (e.g., /link-pessoa/novo should activate /link-pessoa).
     return pathname.startsWith(href);
   }
 
