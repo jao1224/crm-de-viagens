@@ -9,10 +9,14 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 function DashboardMainContent({ children }: { children: React.ReactNode }) {
+    const { state } = useSidebar();
     return (
-        <div className="flex-1 flex flex-col bg-muted/30">
+        <div className={cn(
+            "flex flex-col flex-1 transition-[margin-left] duration-300 ease-in-out",
+            state === 'expanded' ? 'md:ml-64' : 'md:ml-14'
+        )}>
             <DashboardHeader />
-            <main className="flex-1 p-4 md:p-6 relative">
+            <main className="flex-1 p-4 md:p-6 bg-muted/30">
                 {children}
             </main>
         </div>
@@ -26,19 +30,17 @@ export default function DashboardLayout({
 }) {
   return (
       <SidebarProvider>
-        <div className="flex min-h-screen w-full">
-            <Sidebar variant="sidebar" collapsible="icon" className="border-r">
+        <div className="flex min-h-screen w-full bg-background">
+            <Sidebar variant="sidebar" collapsible="icon" className="border-r fixed">
                 <SidebarContent className="p-0 pt-4">
                     <SimpleDashboardNav />
                 </SidebarContent>
             </Sidebar>
-            <div className="w-full">
-               <DashboardMainContent>
-                    {children}
-                </DashboardMainContent>
-            </div>
+            <DashboardMainContent>
+                {children}
+            </DashboardMainContent>
         </div>
-          <ChatWidget />
+        <ChatWidget />
       </SidebarProvider>
   );
 }
