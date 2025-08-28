@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState } from 'react';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown, FileEdit, GripVertical, ExternalLink, Link as LinkIcon } from 'lucide-react';
+import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown, FileEdit, GripVertical, ExternalLink, Link as LinkIcon, Info } from 'lucide-react';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -21,6 +22,8 @@ import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const CountryCombobox = ({ selectedCountry, onSelectCountry }: { selectedCountry: Country | undefined, onSelectCountry: (country: Country) => void }) => {
     const [open, setOpen] = useState(false);
@@ -622,6 +625,76 @@ const SettingsTab = () => {
     );
 };
 
+const EmailSettingsTab = () => {
+    const [sendMethod, setSendMethod] = useState('system');
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Configurações de e-mail salvas com sucesso.",
+        });
+    };
+
+    return (
+        <Card>
+            <CardContent className="p-6 space-y-6">
+                <Alert className="bg-blue-50 border-blue-200 text-blue-800">
+                    <Info className="h-4 w-4 !text-blue-800" />
+                    <AlertDescription>
+                        Escolha aqui como prefere realizar envio de e-mail através da automação de comunicação ao cliente.
+                    </AlertDescription>
+                </Alert>
+
+                <RadioGroup value={sendMethod} onValueChange={setSendMethod} className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="system" id="send-system" />
+                        <Label htmlFor="send-system" className="font-normal">Enviar através do e-mail <span className="font-semibold">naoresponder@iddas.com.br</span></Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="custom" id="send-custom" />
+                        <Label htmlFor="send-custom" className="font-normal">Enviar através do meu próprio e-mail</Label>
+                    </div>
+                </RadioGroup>
+
+                {sendMethod === 'custom' && (
+                    <div className="space-y-6 pt-4 border-t border-dashed">
+                        <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800">
+                            <Info className="h-4 w-4 !text-yellow-800" />
+                            <AlertDescription>
+                                Não nos responsabilizamos pelo envio realizado através de e-mail próprio.
+                            </AlertDescription>
+                        </Alert>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr,2fr,1fr,1fr,auto] gap-4 items-end">
+                            <div className="space-y-2">
+                                <Label htmlFor="smtp-email">E-mail</Label>
+                                <Input id="smtp-email" placeholder="seuemail@provedor.com" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="smtp-server">Servidor SMTP</Label>
+                                <Input id="smtp-server" placeholder="smtp.provedor.com" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="smtp-port">Porta</Label>
+                                <Input id="smtp-port" placeholder="587" />
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="smtp-pass">Senha</Label>
+                                <Input id="smtp-pass" type="password" />
+                            </div>
+                            <Button variant="outline" className="bg-green-600 text-white hover:bg-green-700">Testar</Button>
+                        </div>
+                    </div>
+                )}
+                
+                <div className="flex justify-start">
+                    <Button onClick={handleSave}>Salvar</Button>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
 const PlaceholderTab = ({ title }: { title: string }) => (
     <Card>
         <CardHeader>
@@ -666,7 +739,7 @@ export default function AgenciaPage() {
                     <SettingsTab />
                 </TabsContent>
                  <TabsContent value="email" className="mt-6">
-                    <PlaceholderTab title="Configuração de E-mail" />
+                    <EmailSettingsTab />
                 </TabsContent>
                  <TabsContent value="textos" className="mt-6">
                     <PlaceholderTab title="Textos" />
@@ -679,4 +752,5 @@ export default function AgenciaPage() {
     
 
     
+
 
