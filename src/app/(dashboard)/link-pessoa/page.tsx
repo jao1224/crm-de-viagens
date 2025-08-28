@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -6,10 +7,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Copy, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 export default function LinkPessoaPage() {
     const { toast } = useToast();
-    const link = "https://seusite.com/cadastro/casdastro";
+    const link = typeof window !== 'undefined' ? `${window.location.origin}/cadastro-pessoa` : '';
 
     const copyLink = () => {
         navigator.clipboard.writeText(link);
@@ -35,12 +37,12 @@ export default function LinkPessoaPage() {
                                 <Copy className="mr-2 h-4 w-4" />
                                 Copiar link
                             </Button>
-                            <a href={link} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" asChild>
+                                <a href={link} target="_blank" rel="noopener noreferrer">
                                     <ExternalLink className="mr-2 h-4 w-4" />
                                     Abrir em nova aba
-                                </Button>
-                            </a>
+                                </a>
+                            </Button>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -57,3 +59,4 @@ export default function LinkPessoaPage() {
         </div>
     );
 }
+
