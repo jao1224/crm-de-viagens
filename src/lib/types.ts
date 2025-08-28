@@ -110,3 +110,10 @@ export interface PaymentMethod {
     observacao: string;
     isActive: boolean;
 }
+
+export interface Program {
+  id: string;
+  nome: string;
+  valorMilheiro: string;
+  isActive: boolean;
+}
