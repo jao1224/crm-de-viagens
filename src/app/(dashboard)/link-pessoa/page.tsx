@@ -29,7 +29,9 @@ export default function LinkPessoaPage() {
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Links de cadastro de Pessoas</h1>
-                <Button>Novo</Button>
+                <Button asChild>
+                    <Link href="/link-pessoa/novo">Novo</Link>
+                </Button>
             </header>
 
             <Card>
