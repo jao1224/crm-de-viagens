@@ -45,6 +45,14 @@ export default function NovaContaBancariaPage() {
             }
         }
     }, [accountId]);
+    
+    const handleSaldoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+        value = value.replace(/\D/g, ''); // Remove todos os não-dígitos
+        value = value.replace(/(\d)(\d{2})$/, '$1,$2'); // Adiciona vírgula antes dos últimos 2 dígitos
+        value = value.replace(/(?=(\d{3})+(\D))\B/g, '.'); // Adiciona ponto como separador de milhar
+        setSaldoInicial(value);
+    };
 
     const handleSave = () => {
         if (!nome) {
@@ -110,7 +118,7 @@ export default function NovaContaBancariaPage() {
                             <Label htmlFor="saldo">Saldo Inicial <span className="text-destructive">*</span></Label>
                              <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">R$</span>
-                                <Input id="saldo" value={saldoInicial} onChange={(e) => setSaldoInicial(e.target.value)} className="pl-9" />
+                                <Input id="saldo" value={saldoInicial} onChange={handleSaldoChange} className="pl-9" />
                             </div>
                         </div>
                          <div className="space-y-2">
