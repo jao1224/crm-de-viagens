@@ -117,3 +117,10 @@ export interface Program {
   valorMilheiro: string;
   isActive: boolean;
 }
+
+export interface ProductService {
+    id: string;
+    name: string;
+    value: string;
+    isActive: boolean;
+}
