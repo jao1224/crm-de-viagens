@@ -21,18 +21,18 @@ import { currentUser } from '@/lib/mock-data';
 import { Logo } from '@/components/logo';
 
 const headerNavLinks = [
-    { href: '#', label: 'Home'},
-    { href: '#', label: 'Sistema'},
-    { href: '#', label: 'Funcionalidades'},
-    { href: '#', label: 'Planos'},
-    { href: '#', label: 'Suporte'},
-    { href: '#', label: 'Contato'},
+    { href: '/', label: 'Home'},
+    { href: '/sistema', label: 'Sistema'},
+    { href: '/funcionalidades', label: 'Funcionalidades'},
+    { href: '/planos', label: 'Planos'},
+    { href: '/suporte', label: 'Suporte'},
+    { href: '/contato', label: 'Contato'},
 ]
 
 const notifications = [
-    { icon: CheckCircle, text: "Pagamento de R$1.854,00 recebido de Julio Venancio.", time: "agora", color: "text-green-500" },
-    { icon: AlertCircle, text: "Tarefa 'Volta combinada' está atrasada há 2 dias.", time: "2d atrás", color: "text-red-500" },
-    { icon: Plane, text: "Lembrete: Voo 7XIE9 para Lisboa (LIS) em 3 horas.", time: "às 17:15", color: "text-blue-500" },
+    { icon: CheckCircle, text: "Pagamento de R$1.854,00 recebido de Julio Venancio.", time: "agora", color: "text-green-500", href: "/pagamentos" },
+    { icon: AlertCircle, text: "Tarefa 'Volta combinada' está atrasada há 2 dias.", time: "2d atrás", color: "text-red-500", href: "/tarefas" },
+    { icon: Plane, text: "Lembrete: Voo 7XIE9 para Lisboa (LIS) em 3 horas.", time: "às 17:15", color: "text-blue-500", href: "/voos" },
 ];
 
 
@@ -57,7 +57,6 @@ export function DashboardHeader() {
                 <li key={link.label}>
                     <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
                         {link.label}
-                        {link.icon && <link.icon className="h-4 w-4"/>}
                     </Link>
                 </li>
             ))}
@@ -78,12 +77,14 @@ export function DashboardHeader() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     {notifications.map((item, index) => (
-                        <DropdownMenuItem key={index} className="flex items-start gap-3">
-                           <item.icon className={`h-4 w-4 mt-1 ${item.color}`} />
-                           <div className="flex flex-col">
-                                <p className="text-xs text-wrap font-medium">{item.text}</p>
-                                <span className="text-xs text-muted-foreground">{item.time}</span>
-                           </div>
+                        <DropdownMenuItem key={index} asChild>
+                            <Link href={item.href} className="flex items-start gap-3">
+                               <item.icon className={`h-4 w-4 mt-1 ${item.color}`} />
+                               <div className="flex flex-col">
+                                    <p className="text-xs text-wrap font-medium">{item.text}</p>
+                                    <span className="text-xs text-muted-foreground">{item.time}</span>
+                               </div>
+                           </Link>
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>
@@ -124,13 +125,17 @@ export function DashboardHeader() {
                         <span>Perfil</span>
                     </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Building className="mr-2 h-4 w-4" />
-                    <span>Agência</span>
+                <DropdownMenuItem asChild>
+                    <Link href="/agencia">
+                        <Building className="mr-2 h-4 w-4" />
+                        <span>Agência</span>
+                    </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Configurações</span>
+                <DropdownMenuItem asChild>
+                     <Link href="/agencia">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Configurações</span>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                     <Link href="/notificacoes">
@@ -144,28 +149,36 @@ export function DashboardHeader() {
                         <span>Usuários</span>
                     </Link>
                 </DropdownMenuItem>
-                 <DropdownMenuItem>
-                    <Goal className="mr-2 h-4 w-4" />
-                    <span>Metas</span>
+                 <DropdownMenuItem asChild>
+                     <Link href="#">
+                        <Goal className="mr-2 h-4 w-4" />
+                        <span>Metas</span>
+                    </Link>
                 </DropdownMenuItem>
-                 <DropdownMenuItem>
-                    <Webhook className="mr-2 h-4 w-4" />
-                    <span>Webhook</span>
+                 <DropdownMenuItem asChild>
+                    <Link href="#">
+                        <Webhook className="mr-2 h-4 w-4" />
+                        <span>Webhook</span>
+                    </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
                <DropdownMenuGroup>
-                <DropdownMenuItem>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    <span>Serviços Adicionais</span>
+                <DropdownMenuItem asChild>
+                     <Link href="#">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        <span>Serviços Adicionais</span>
+                    </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Ticket className="mr-2 h-4 w-4" />
-                    <span>Tickets</span>
+                <DropdownMenuItem asChild>
+                     <Link href="/ajuda/ticket">
+                        <Ticket className="mr-2 h-4 w-4" />
+                        <span>Tickets</span>
+                    </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => alert('Funcionalidade de sair a ser implementada')}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sair</span>
               </DropdownMenuItem>
