@@ -55,7 +55,7 @@ export default function NovaContaBancariaPage() {
                                     <Button
                                         variant={"outline"}
                                         className={cn(
-                                            "w-full justify-start text-left font-normal",
+                                            "w-[180px] justify-start text-left font-normal",
                                             !date && "text-muted-foreground"
                                         )}
                                     >
