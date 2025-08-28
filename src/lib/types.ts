@@ -99,3 +99,14 @@ export interface QuoteLink {
     salesChannel?: string;
     isPrincipal: boolean;
 }
+
+export interface PaymentMethod {
+    id: string;
+    nome: string;
+    numeroParcelas: number;
+    intervaloDias: number;
+    desconto: string;
+    acrescimo: string;
+    observacao: string;
+    isActive: boolean;
+}
