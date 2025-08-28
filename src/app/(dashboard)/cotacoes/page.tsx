@@ -42,32 +42,30 @@ const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: Reac
                     <AvatarFallback>{quote.client.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <p className="font-bold text-sm text-foreground truncate max-w-[150px]" title={quote.client.name}>
+                    <p className="font-bold text-sm text-foreground" title={quote.client.name}>
                     {quote.client.name || 'Cliente não informado'}
                     </p>
                     <span className="text-xs text-muted-foreground font-mono">ID: {quote.id}</span>
                 </div>
             </div>
           
-            <div className="flex items-center text-sm">
-                {quote.value > 0 && (
-                    <span className={cn('font-semibold', quote.status === 'aprovado' ? 'text-green-600' : 'text-foreground')}>
-                        {quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                    </span>
-                )}
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                {quote.status === 'aprovado' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                <Eye className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
+                <Paperclip className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
+                <Link href={`/cotacoes/novo?id=${quote.id}`}>
+                    <Pencil className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
+                </Link>
             </div>
         </div>
         
         <div className="flex justify-between items-center text-xs text-muted-foreground mt-3">
           <span className="font-medium">{quote.date}</span>
-          <div className="flex items-center gap-2.5 text-muted-foreground">
-            {quote.status === 'aprovado' && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-            <Eye className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
-            <Paperclip className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
-            <Link href="/cotacoes/novo">
-                <Pencil className="h-4 w-4 cursor-pointer transition-colors hover:text-primary" />
-            </Link>
-          </div>
+          {quote.value > 0 && (
+              <span className={cn('font-semibold text-sm', quote.status === 'aprovado' ? 'text-green-600' : 'text-foreground')}>
+                  {quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              </span>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -326,3 +324,5 @@ export default function CotacoesPage() {
     </div>
   );
 }
+
+    
