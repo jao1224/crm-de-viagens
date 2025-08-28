@@ -626,7 +626,7 @@ const SettingsTab = () => {
 };
 
 const EmailSettingsTab = () => {
-    const [sendMethod, setSendMethod] = useState('system');
+    const [sendMethod, setSendMethod] = useState('custom');
     const { toast } = useToast();
 
     const handleSave = () => {
@@ -639,8 +639,8 @@ const EmailSettingsTab = () => {
     return (
         <Card>
             <CardContent className="p-6 space-y-6">
-                <Alert className="bg-blue-50 border-blue-200 text-blue-800">
-                    <Info className="h-4 w-4 !text-blue-800" />
+                <Alert className="bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-200">
+                    <Info className="h-4 w-4 !text-blue-800 dark:!text-blue-200" />
                     <AlertDescription>
                         Escolha aqui como prefere realizar envio de e-mail através da automação de comunicação ao cliente.
                     </AlertDescription>
@@ -658,14 +658,14 @@ const EmailSettingsTab = () => {
                 </RadioGroup>
 
                 {sendMethod === 'custom' && (
-                    <div className="space-y-6 pt-4 border-t border-dashed">
-                        <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800">
-                            <Info className="h-4 w-4 !text-yellow-800" />
+                    <div className="space-y-6 pt-6 border-t border-dashed">
+                        <Alert className="bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-700 dark:text-yellow-200">
+                            <Info className="h-4 w-4 !text-yellow-800 dark:!text-yellow-200" />
                             <AlertDescription>
                                 Não nos responsabilizamos pelo envio realizado através de e-mail próprio.
                             </AlertDescription>
                         </Alert>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr,2fr,1fr,1fr,auto] gap-4 items-end">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr,2fr,1fr,2fr,auto] gap-4 items-end">
                             <div className="space-y-2">
                                 <Label htmlFor="smtp-email">E-mail</Label>
                                 <Input id="smtp-email" placeholder="seuemail@provedor.com" />
@@ -682,12 +682,12 @@ const EmailSettingsTab = () => {
                                 <Label htmlFor="smtp-pass">Senha</Label>
                                 <Input id="smtp-pass" type="password" />
                             </div>
-                            <Button variant="outline" className="bg-green-600 text-white hover:bg-green-700">Testar</Button>
+                            <Button variant="outline" className="bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800">Testar</Button>
                         </div>
                     </div>
                 )}
                 
-                <div className="flex justify-start">
+                <div className="flex justify-start pt-6">
                     <Button onClick={handleSave}>Salvar</Button>
                 </div>
             </CardContent>
@@ -752,5 +752,6 @@ export default function AgenciaPage() {
     
 
     
+
 
 
