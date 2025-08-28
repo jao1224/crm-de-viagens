@@ -26,6 +26,7 @@ import { countries } from '@/lib/countries';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Separator } from '@/components/ui/separator';
+import type { DateRange } from 'react-day-picker';
 
 
 const mockPeopleData = [
@@ -318,7 +319,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
         onOpenChange(false);
     };
 
-    const activeTabClasses = "data-[state=active]:bg-primary data-[state=active]:text-chart-2";
+    const activeTabClasses = "data-[state=active]:bg-primary data-[state=active]:text-yellow-400";
 
     return (
         <>
@@ -797,12 +798,99 @@ const ViewPersonDialog = ({ open, onOpenChange, person }: { open: boolean, onOpe
     )
 }
 
+const FilterDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader className="flex-row items-center justify-between">
+                    <DialogTitle className="text-xl font-bold text-foreground">Filtros</DialogTitle>
+                    <button onClick={() => onOpenChange(false)} className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Fechar</span>
+                    </button>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-phone">Telefone</Label>
+                        <Input id="filter-phone" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-tag">Etiqueta</Label>
+                        <Select>
+                            <SelectTrigger id="filter-tag"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-stars">Estrelas</Label>
+                        <Select>
+                            <SelectTrigger id="filter-stars"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-sales-channel">Canal de Venda</Label>
+                        <Select>
+                            <SelectTrigger id="filter-sales-channel"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-city">Cidade</Label>
+                        <Select>
+                            <SelectTrigger id="filter-city"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="filter-country">País</Label>
+                        <Select>
+                            <SelectTrigger id="filter-country"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Aniversário</Label>
+                        <div className="flex items-center gap-2">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {dateRange?.from ? format(dateRange.from, 'dd/MM/yyyy') : 'dd/mm/aaaa'}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={dateRange?.from} onSelect={day => setDateRange(prev => ({...prev, from: day}))} /></PopoverContent>
+                            </Popover>
+                            <span className="text-muted-foreground">até</span>
+                             <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {dateRange?.to ? format(dateRange.to, 'dd/MM/yyyy') : 'dd/mm/aaaa'}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0"><Calendar mode="single" selected={dateRange?.to} onSelect={day => setDateRange(prev => ({...prev, to: day}))} /></PopoverContent>
+                            </Popover>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button onClick={() => onOpenChange(false)} className="w-full">Pesquisar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function PessoasPage() {
     const [people, setPeople] = useState(mockPeopleData);
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [personToEdit, setPersonToEdit] = useState<Person | null>(null);
     const [isViewPersonDialogOpen, setIsViewPersonDialogOpen] = useState(false);
     const [personToView, setPersonToView] = useState<Person | null>(null);
+    const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
 
     const handleNewPerson = () => {
         setPersonToEdit(null);
@@ -888,7 +976,7 @@ export default function PessoasPage() {
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <Button variant="outline" size="icon">
+                            <Button variant="outline" size="icon" onClick={() => setIsFilterDialogOpen(true)}>
                                 <Filter className="h-4 w-4" />
                             </Button>
                             <Button>Pesquisar</Button>
@@ -981,9 +1069,14 @@ export default function PessoasPage() {
                 onOpenChange={setIsViewPersonDialogOpen}
                 person={personToView}
             />
+             <FilterDialog
+                open={isFilterDialogOpen}
+                onOpenChange={setIsFilterDialogOpen}
+            />
         </>
     );
 }
     
+
 
 
