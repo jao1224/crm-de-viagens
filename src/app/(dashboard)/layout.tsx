@@ -1,8 +1,29 @@
 
+'use client';
+
 import { SimpleDashboardNav } from "@/components/dashboard-nav";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { SidebarProvider, Sidebar, SidebarContent } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarContent, useSidebar } from "@/components/ui/sidebar";
 import { ChatWidget } from "@/components/chat-widget";
+import React from "react";
+import { cn } from "@/lib/utils";
+
+function DashboardMainContent({ children }: { children: React.ReactNode }) {
+    const { state: sidebarState } = useSidebar();
+
+    return (
+        <div 
+            className={cn(
+                "flex-1 flex flex-col bg-muted/30 transition-[padding-left] duration-200 ease-linear",
+                sidebarState === 'expanded' ? 'md:pl-[16rem]' : 'md:pl-[3.5rem]'
+            )}
+        >
+            <main className="flex-1 p-4 md:p-6 relative">
+                {children}
+            </main>
+        </div>
+    );
+}
 
 export default function DashboardLayout({
   children,
@@ -19,11 +40,9 @@ export default function DashboardLayout({
                       <SimpleDashboardNav />
                   </SidebarContent>
               </Sidebar>
-              <div className="flex-1 flex flex-col bg-muted/30">
-                  <main className="flex-1 p-4 md:p-6 relative">
-                      {children}
-                  </main>
-              </div>
+              <DashboardMainContent>
+                  {children}
+              </DashboardMainContent>
           </div>
         </div>
           <ChatWidget />
