@@ -308,7 +308,7 @@ export default function CotacoesPage() {
         </CardContent>
       </Card>
       
-      <div className="flex-1 flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
+      <div className="flex-grow flex gap-4 overflow-x-auto pb-4">
         {Object.keys(statusConfig).map(statusKey => (
             <QuoteColumn 
                 key={statusKey} 
@@ -324,6 +324,3 @@ export default function CotacoesPage() {
     </div>
   );
 }
-
-    
-    
