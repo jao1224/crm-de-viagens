@@ -331,9 +331,8 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                     <form ref={formRef} className="max-h-[70vh] overflow-y-auto pr-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start pt-4">
                             <div className="space-y-2 lg:col-span-1">
-                                <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
-                                <div className="flex items-center gap-2">
-                                    <Input id="person-name" className="flex-1" value={personName} onChange={(e) => setPersonName(e.target.value)} />
+                                <div className="flex items-center gap-2 mb-2">
+                                     <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
                                     <TooltipProvider>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
@@ -351,6 +350,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                                         </Tooltip>
                                     </TooltipProvider>
                                 </div>
+                                <Input id="person-name" className="flex-1" value={personName} onChange={(e) => setPersonName(e.target.value)} />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="birth-date">Data Nascimento</Label>
@@ -1075,6 +1075,7 @@ export default function PessoasPage() {
     );
 }
     
+
 
 
 
