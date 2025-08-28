@@ -12,10 +12,13 @@ import { cn } from '@/lib/utils';
 
 export default function LinkPessoaPage() {
     const { toast } = useToast();
-    const link = typeof window !== 'undefined' ? `${window.location.origin}/cadastro-pessoa` : '';
+    // Use a relative path for the link to avoid hydration issues and simplify logic.
+    const relativeLink = '/cadastro-pessoa';
 
     const copyLink = () => {
-        navigator.clipboard.writeText(link);
+        // Construct the full URL only when the user clicks to copy.
+        const fullLink = `${window.location.origin}${relativeLink}`;
+        navigator.clipboard.writeText(fullLink);
         toast({
             title: "Link Copiado!",
             description: "O link de cadastro foi copiado para a área de transferência.",
@@ -39,7 +42,7 @@ export default function LinkPessoaPage() {
                                 Copiar link
                             </Button>
                             <Link 
-                                href={link} 
+                                href={relativeLink} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
