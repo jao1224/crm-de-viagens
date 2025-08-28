@@ -2,12 +2,13 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Copy, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function LinkPessoaPage() {
     const { toast } = useToast();
@@ -37,12 +38,15 @@ export default function LinkPessoaPage() {
                                 <Copy className="mr-2 h-4 w-4" />
                                 Copiar link
                             </Button>
-                            <Button variant="outline" size="sm" asChild>
-                                <a href={link} target="_blank" rel="noopener noreferrer">
-                                    <ExternalLink className="mr-2 h-4 w-4" />
-                                    Abrir em nova aba
-                                </a>
-                            </Button>
+                            <Link 
+                                href={link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+                            >
+                                <ExternalLink className="mr-2 h-4 w-4" />
+                                Abrir em nova aba
+                            </Link>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -59,4 +63,3 @@ export default function LinkPessoaPage() {
         </div>
     );
 }
-
