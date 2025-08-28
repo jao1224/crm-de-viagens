@@ -8,13 +8,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
+import Link from 'next/link';
 
 export default function FormaPagamentoPage() {
     return (
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Forma de Pagamento</h1>
-                <Button>Novo</Button>
+                <Button asChild>
+                    <Link href="/forma-pagamento/novo">Novo</Link>
+                </Button>
             </header>
 
             <Card>
