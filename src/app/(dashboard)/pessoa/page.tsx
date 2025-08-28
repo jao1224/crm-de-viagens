@@ -318,6 +318,8 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
         onOpenChange(false);
     };
 
+    const activeTabClasses = "data-[state=active]:bg-primary data-[state=active]:text-chart-2";
+
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
@@ -392,14 +394,14 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                         
                         <Tabs defaultValue="contato">
                              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 md:grid-cols-8 h-auto border-2 border-primary/20 shadow-lg shadow-primary/10">
-                                <TabsTrigger value="contato" className="flex-col h-auto gap-1.5 py-2"><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
-                                <TabsTrigger value="documentos" className="flex-col h-auto gap-1.5 py-2"><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
-                                <TabsTrigger value="informacoes" className="flex-col h-auto gap-1.5 py-2"><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
-                                <TabsTrigger value="endereco" className="flex-col h-auto gap-1.5 py-2"><Home className="w-5 h-5"/>Endereço</TabsTrigger>
-                                <TabsTrigger value="familia" className="flex-col h-auto gap-1.5 py-2"><Users className="w-5 h-5"/>Família</TabsTrigger>
-                                <TabsTrigger value="cotacoes" className="flex-col h-auto gap-1.5 py-2"><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
-                                <TabsTrigger value="anexos" className="flex-col h-auto gap-1.5 py-2"><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
-                                <TabsTrigger value="observacao" className="flex-col h-auto gap-1.5 py-2"><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
+                                <TabsTrigger value="contato" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><UserRound className="w-5 h-5"/>Contato</TabsTrigger>
+                                <TabsTrigger value="documentos" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><BookUser className="w-5 h-5"/>Documentos</TabsTrigger>
+                                <TabsTrigger value="informacoes" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><Briefcase className="w-5 h-5"/>Informações</TabsTrigger>
+                                <TabsTrigger value="endereco" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><Home className="w-5 h-5"/>Endereço</TabsTrigger>
+                                <TabsTrigger value="familia" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><Users className="w-5 h-5"/>Família</TabsTrigger>
+                                <TabsTrigger value="cotacoes" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><FileTextIcon className="w-5 h-5"/>Cotações</TabsTrigger>
+                                <TabsTrigger value="anexos" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><FileArchive className="w-5 h-5"/>Anexos</TabsTrigger>
+                                <TabsTrigger value="observacao" className={cn("flex-col h-auto gap-1.5 py-2", activeTabClasses)}><Milestone className="w-5 h-5"/>Observação</TabsTrigger>
                             </TabsList>
                             <TabsContent value="contato" className="pt-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -983,4 +985,5 @@ export default function PessoasPage() {
     );
 }
     
+
 
