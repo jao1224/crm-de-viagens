@@ -1,4 +1,3 @@
-
 'use client';
 
 import React from 'react';
@@ -13,8 +12,7 @@ export default function CartaoPage() {
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Cartões de Crédito</h1>
                 <Button asChild>
-                    {/* O link de destino para 'novo' pode ser ajustado quando a página de criação for implementada */}
-                    <Link href="#">Novo</Link>
+                    <Link href="/cartao/novo">Novo</Link>
                 </Button>
             </header>
 
