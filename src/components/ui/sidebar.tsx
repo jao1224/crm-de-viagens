@@ -382,7 +382,7 @@ const SidebarContent = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="content"
-      className={cn("flex-1 overflow-y-auto", className)}
+      className={cn("flex-1 overflow-y-auto no-scrollbar", className)}
       {...props}
     >
       {children}
