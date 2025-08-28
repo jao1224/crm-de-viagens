@@ -14,56 +14,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const NewLinkDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-xl">
-                <DialogHeader>
-                    <DialogTitle className="text-xl font-bold text-foreground">Cadastro de Link de Solicitação de Orçamento</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-6 pt-4">
-                     <div className="space-y-2">
-                        <Label htmlFor="descricao">Descrição <span className="text-destructive">*</span></Label>
-                        <Input id="descricao" />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="afiliado">Afiliado (Pessoa)</Label>
-                            <Select>
-                                <SelectTrigger id="afiliado">
-                                    <SelectValue placeholder="Selecione a pessoa para vincular ao link" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {/* Options would be populated here */}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="canal-venda">Canal de Venda</Label>
-                            <Select>
-                                <SelectTrigger id="canal-venda">
-                                    <SelectValue placeholder="Selecione o canal de venda para vincular ao link" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                     {/* Options would be populated here */}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                </div>
-                 <DialogFooter className="mt-4">
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    );
-};
-
-
 export default function LinkCotacaoPage() {
     const { toast } = useToast();
-    const [isNewLinkDialogOpen, setIsNewLinkDialogOpen] = React.useState(false);
     // Use a relative path for the link to avoid hydration issues and simplify logic.
     const relativeLink = '/solicitacao-orcamento';
 
@@ -82,7 +34,9 @@ export default function LinkCotacaoPage() {
             <div className="space-y-6">
                 <header className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold text-primary">Links de Solicitação de Cotação</h1>
-                    <Button onClick={() => setIsNewLinkDialogOpen(true)}>Novo</Button>
+                    <Button asChild>
+                        <Link href="/link-cotacao/novo">Novo</Link>
+                    </Button>
                 </header>
 
                 <Card>
@@ -109,7 +63,6 @@ export default function LinkCotacaoPage() {
                     </CardContent>
                 </Card>
             </div>
-            <NewLinkDialog open={isNewLinkDialogOpen} onOpenChange={setIsNewLinkDialogOpen} />
         </>
     );
 }
