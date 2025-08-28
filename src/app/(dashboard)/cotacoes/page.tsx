@@ -23,7 +23,7 @@ const statusConfig: { [key in Quote['status']]: { title: string; borderColor: st
   'em-cotacao': { title: 'EM COTAÇÃO', borderColor: 'border-orange-500', bgColor: 'bg-orange-100 dark:bg-orange-800/50', textColor: 'text-orange-600 dark:text-orange-400' },
   'aguardando-cliente': { title: 'AGUARDANDO CLIENTE', borderColor: 'border-blue-500', bgColor: 'bg-blue-100 dark:bg-blue-800/50', textColor: 'text-blue-600 dark:text-blue-400' },
   aprovado: { title: 'APROVADO', borderColor: 'border-green-600', bgColor: 'bg-green-100 dark:bg-green-800/50', textColor: 'text-green-700 dark:text-green-500' },
-  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-100 dark:bg-red-800/50', textColor: 'text-red-700 dark:text-red-500' },
+  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-100 dark:bg-red-800/ ৫০', textColor: 'text-red-700 dark:text-red-500' },
 };
 
 const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void }) => {
@@ -90,7 +90,7 @@ const QuoteColumn = ({
 
   return (
     <div 
-      className={cn("flex-1 min-w-[300px] rounded-lg", config.bgColor)}
+      className={cn("flex-1 min-w-[250px] rounded-lg", config.bgColor)}
       onDrop={(e) => onDrop(e, status)}
       onDragOver={onDragOver}
     >
