@@ -61,3 +61,15 @@ export type User = {
   status: 'active' | 'inactive';
   permission: string;
 }
+
+export type CreditCard = {
+  id: string;
+  descricao: string;
+  ultimosDigitos: string;
+  fechamento: string;
+  vencimento: string;
+  limite: string;
+  anuidade: string;
+  observacao: string;
+  isActive: boolean;
+};
