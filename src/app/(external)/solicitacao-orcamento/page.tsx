@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,9 +18,53 @@ import { ptBR } from 'date-fns/locale';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
 
+interface QuoteFormSettings {
+    services: {
+        hospedagem: boolean;
+        transporte: boolean;
+        passeios: boolean;
+        seguros: boolean;
+        cruzeiro: boolean;
+        roteiro: boolean;
+    };
+    showDiscount: boolean;
+}
+
+const serviceLabels: { [key in keyof QuoteFormSettings['services']]: string } = {
+    hospedagem: "Hospedagem",
+    transporte: "Transporte",
+    passeios: "Passeios",
+    seguros: "Seguros",
+    cruzeiro: "Cruzeiro",
+    roteiro: "Roteiro Personalizado"
+};
+
 export default function SolicitacaoOrcamentoPage() {
     const [idaDate, setIdaDate] = React.useState<Date>();
     const [voltaDate, setVoltaDate] = React.useState<Date>();
+    const [settings, setSettings] = useState<QuoteFormSettings | null>(null);
+
+    useEffect(() => {
+        const savedSettings = localStorage.getItem('quoteFormSettings');
+        if (savedSettings) {
+            setSettings(JSON.parse(savedSettings));
+        } else {
+            // Fallback para configurações padrão se nada estiver salvo
+            setSettings({
+                services: {
+                    hospedagem: true,
+                    transporte: true,
+                    passeios: true,
+                    seguros: true,
+                    cruzeiro: false,
+                    roteiro: false,
+                },
+                showDiscount: false,
+            });
+        }
+    }, []);
+
+    const enabledServices = settings ? Object.entries(settings.services).filter(([_, isEnabled]) => isEnabled) : [];
 
     return (
         <div className="max-w-4xl mx-auto flex flex-col items-center space-y-6">
@@ -141,27 +185,19 @@ export default function SolicitacaoOrcamentoPage() {
                             <Label htmlFor="flexibilidade-datas">Possuo flexibilidade de datas próximas</Label>
                         </div>
                         
-                        <div>
-                            <Label className="font-semibold">Serviços adicionais</Label>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="hospedagem" />
-                                    <Label htmlFor="hospedagem" className="font-normal">Hospedagem</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="transporte" />
-                                    <Label htmlFor="transporte" className="font-normal">Transporte</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="passeios" />
-                                    <Label htmlFor="passeios" className="font-normal">Passeios</Label>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Checkbox id="seguros" />
-                                    <Label htmlFor="seguros" className="font-normal">Seguros</Label>
+                        {enabledServices.length > 0 && (
+                            <div>
+                                <Label className="font-semibold">Serviços adicionais</Label>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+                                    {enabledServices.map(([key, _]) => (
+                                         <div key={key} className="flex items-center space-x-2">
+                                            <Checkbox id={key} />
+                                            <Label htmlFor={key} className="font-normal">{serviceLabels[key as keyof QuoteFormSettings['services']]}</Label>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="space-y-2">
                             <Label htmlFor="observacao">Observação</Label>
@@ -180,3 +216,4 @@ export default function SolicitacaoOrcamentoPage() {
         </div>
     );
 }
+

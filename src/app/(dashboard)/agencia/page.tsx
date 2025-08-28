@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -413,6 +413,32 @@ const QuoteFormTab = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [fieldToEdit, setFieldToEdit] = useState<AdditionalField | null>(null);
 
+    const initialServices = {
+        hospedagem: true,
+        transporte: true,
+        passeios: true,
+        seguros: true,
+        cruzeiro: false,
+        roteiro: false,
+    };
+    
+    const [services, setServices] = useState(initialServices);
+    const [showDiscount, setShowDiscount] = useState(false);
+
+    // Carregar configurações salvas no localStorage
+    useEffect(() => {
+        const savedSettings = localStorage.getItem('quoteFormSettings');
+        if (savedSettings) {
+            const { services: savedServices, showDiscount: savedShowDiscount } = JSON.parse(savedSettings);
+            if (savedServices) setServices(savedServices);
+            if (savedShowDiscount !== undefined) setShowDiscount(savedShowDiscount);
+        }
+    }, []);
+
+    const handleServiceChange = (serviceId: keyof typeof services) => {
+        setServices(prev => ({ ...prev, [serviceId]: !prev[serviceId] }));
+    };
+
     const handleSaveField = (field: AdditionalField) => {
         setAdditionalFields(prev => {
             const index = prev.findIndex(f => f.id === field.id);
@@ -440,6 +466,10 @@ const QuoteFormTab = () => {
     };
 
     const handleSave = () => {
+        // Salvar no localStorage
+        const settings = { services, showDiscount, additionalFields };
+        localStorage.setItem('quoteFormSettings', JSON.stringify(settings));
+        
         toast({
             title: "Sucesso!",
             description: "Formulário de cotação salvo com sucesso.",
@@ -468,32 +498,32 @@ const QuoteFormTab = () => {
                     <Label className="font-semibold">Serviços adicionais</Label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-hospedagem" defaultChecked />
+                            <Checkbox id="svc-hospedagem" checked={services.hospedagem} onCheckedChange={() => handleServiceChange('hospedagem')} />
                             <Label htmlFor="svc-hospedagem" className="font-normal">Hospedagem</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-transporte" defaultChecked />
+                            <Checkbox id="svc-transporte" checked={services.transporte} onCheckedChange={() => handleServiceChange('transporte')} />
                             <Label htmlFor="svc-transporte" className="font-normal">Transporte</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-passeios" defaultChecked />
+                            <Checkbox id="svc-passeios" checked={services.passeios} onCheckedChange={() => handleServiceChange('passeios')} />
                             <Label htmlFor="svc-passeios" className="font-normal">Passeios</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-seguros" defaultChecked />
+                            <Checkbox id="svc-seguros" checked={services.seguros} onCheckedChange={() => handleServiceChange('seguros')} />
                             <Label htmlFor="svc-seguros" className="font-normal">Seguros</Label>
                         </div>
                         <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-cruzeiro" />
+                            <Checkbox id="svc-cruzeiro" checked={services.cruzeiro} onCheckedChange={() => handleServiceChange('cruzeiro')} />
                             <Label htmlFor="svc-cruzeiro" className="font-normal">Cruzeiro</Label>
                         </div>
                          <div className="flex items-center space-x-2">
-                            <Checkbox id="svc-roteiro" />
+                            <Checkbox id="svc-roteiro" checked={services.roteiro} onCheckedChange={() => handleServiceChange('roteiro')}/>
                             <Label htmlFor="svc-roteiro" className="font-normal">Roteiro Personalizado</Label>
                         </div>
                     </div>
                      <div className="flex items-center space-x-2 pt-2">
-                        <Switch id="show-discount" />
+                        <Switch id="show-discount" checked={showDiscount} onCheckedChange={setShowDiscount} />
                         <Label htmlFor="show-discount" className="font-normal">Exibir cupom de desconto</Label>
                     </div>
                 </div>
@@ -790,6 +820,7 @@ export default function AgenciaPage() {
     
 
     
+
 
 
 
