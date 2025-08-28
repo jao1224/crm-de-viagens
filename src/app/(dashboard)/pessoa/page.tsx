@@ -328,9 +328,8 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-bold text-foreground">{personToEdit ? 'Editar Pessoa' : 'Nova Pessoa'}</DialogTitle>
                     </DialogHeader>
-                    <form ref={formRef}>
-                    <div className="py-4 space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                    <form ref={formRef} className="max-h-[70vh] overflow-y-auto pr-6 space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start pt-4">
                             <div className="space-y-2 lg:col-span-1">
                                 <Label htmlFor="person-name">Nome <span className="text-destructive">*</span></Label>
                                 <div className="flex items-center gap-2">
@@ -683,7 +682,6 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                             <Textarea placeholder="Observações sobre esta pessoa..." />
                             </TabsContent>
                         </Tabs>
-                    </div>
                     </form>
                     <DialogFooter>
                         <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
@@ -1077,6 +1075,7 @@ export default function PessoasPage() {
     );
 }
     
+
 
 
 
