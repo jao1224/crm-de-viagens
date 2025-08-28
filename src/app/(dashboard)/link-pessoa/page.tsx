@@ -37,7 +37,7 @@ export default function LinkPessoaPage() {
             <Card>
                 <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1 space-y-3">
-                        <p className="font-semibold text-lg text-foreground">casdastro</p>
+                        <p className="font-semibold text-lg text-foreground">Cadastro</p>
                         <div className="flex flex-wrap gap-2">
                             <Button variant="outline" size="sm" onClick={copyLink}>
                                 <Copy className="mr-2 h-4 w-4" />
