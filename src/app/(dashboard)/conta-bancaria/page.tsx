@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pencil, Trash2 } from 'lucide-react';
+import Link from 'next/link';
 
 // Mock data based on the image
 const initialAccounts = [
@@ -40,7 +41,9 @@ export default function ContaBancariaPage() {
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Contas</h1>
-                <Button>Novo</Button>
+                <Button asChild>
+                    <Link href="/conta-bancaria/novo">Novo</Link>
+                </Button>
             </header>
 
             <Card>
