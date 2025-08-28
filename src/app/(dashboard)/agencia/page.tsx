@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown, FileEdit, GripVertical } from 'lucide-react';
+import { Mail, Globe, Instagram, Trash2, Image as ImageIcon, Search, Check, ChevronsUpDown, FileEdit, GripVertical, ExternalLink, Link as LinkIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Logo } from '@/components/logo';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -549,6 +549,79 @@ const QuoteFormTab = () => {
     )
 }
 
+const SettingsTab = () => {
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        toast({
+            title: "Sucesso!",
+            description: "Configurações salvas com sucesso.",
+        });
+    };
+
+    return (
+        <Card>
+            <CardContent className="p-6 space-y-8">
+                <div className="space-y-6">
+                     <div className="space-y-2 max-w-sm">
+                        <Label htmlFor="moeda">Moeda</Label>
+                        <Select defaultValue="brl">
+                            <SelectTrigger id="moeda">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="brl">Real Brasileiro (R$)</SelectItem>
+                                <SelectItem value="usd">Dólar Americano (US$)</SelectItem>
+                                <SelectItem value="eur">Euro (€)</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="pixel-meta">Pixel Meta Ads</Label>
+                            <Input id="pixel-meta" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="google-tag">Google Tag Manager</Label>
+                            <Input id="google-tag" />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                        <Switch id="allow-post" />
+                        <Label htmlFor="allow-post" className="font-normal">Permitir receber solicitações de cotações/pessoas via POST externo</Label>
+                         <Button variant="outline" size="sm" asChild>
+                            <a href="#" target="_blank">
+                                Documentação <ExternalLink className="ml-2 h-3 w-3" />
+                            </a>
+                        </Button>
+                    </div>
+
+                     <div className="space-y-2">
+                        <Label htmlFor="webhook-link">
+                            Link do Webhook
+                             <Button variant="outline" size="sm" className="ml-2" asChild>
+                                <a href="#" target="_blank">
+                                    Documentação <ExternalLink className="ml-2 h-3 w-3" />
+                                </a>
+                            </Button>
+                        </Label>
+                        <div className="relative">
+                            <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input id="webhook-link" className="pl-9" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-start">
+                    <Button onClick={handleSave}>Salvar</Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
 const PlaceholderTab = ({ title }: { title: string }) => (
     <Card>
         <CardHeader>
@@ -590,7 +663,7 @@ export default function AgenciaPage() {
                     <QuoteFormTab />
                 </TabsContent>
                 <TabsContent value="configuracoes" className="mt-6">
-                    <PlaceholderTab title="Configurações" />
+                    <SettingsTab />
                 </TabsContent>
                  <TabsContent value="email" className="mt-6">
                     <PlaceholderTab title="Configuração de E-mail" />
@@ -606,3 +679,4 @@ export default function AgenciaPage() {
     
 
     
+
