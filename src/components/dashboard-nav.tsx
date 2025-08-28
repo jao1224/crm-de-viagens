@@ -50,6 +50,7 @@ import {
   BookText,
   ExternalLink,
   Bell,
+  Award,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -102,7 +103,7 @@ const registrationItems: NavItem[] = [
     { href: '/cartao', label: 'Cartão', icon: CreditCard },
     { href: '/forma-pagamento', 'label': 'Forma de Pagamento', icon: Banknote },
     { href: '/pessoa', label: 'Pessoa', icon: User },
-    { href: '/programa', label: 'Programa', icon: Trash2 },
+    { href: '/programa', label: 'Programa', icon: Award },
     { href: '/produto-servico', label: 'Produto/Serviço', icon: ShoppingCart },
     { href: '/receita-despesa-cadastro', label: 'Receita/Despesa', icon: Receipt },
     { href: '/mensagem', label: 'Mensagem', icon: MessageSquare },
