@@ -83,3 +83,19 @@ export type BankAccount = {
   balanceDate: string;
   isActive: boolean;
 };
+
+export interface PersonLink {
+    id: string;
+    description: string;
+    instructions: string;
+    personType: string;
+    isActive: boolean;
+}
+
+export interface QuoteLink {
+    id: string;
+    description: string;
+    affiliate?: string;
+    salesChannel?: string;
+    isPrincipal: boolean;
+}
