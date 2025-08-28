@@ -135,11 +135,15 @@ export function SimpleDashboardNav() {
     return pathname.startsWith(href) && (href !== '/' || pathname === '/');
   }
 
+  const isGroupActive = (items: NavItem[]) => {
+      return items.some(item => isActive(item.href));
+  }
+
   return (
     <SidebarMenu>
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(navItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(navItems) && "text-sidebar-accent-foreground")}>
                     Principal
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -165,8 +169,8 @@ export function SimpleDashboardNav() {
 
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(accompanimentItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(accompanimentItems) && "text-sidebar-accent-foreground")}>
                     Acompanhamento
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -190,8 +194,8 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                 <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(financialItems) && "bg-sidebar-accent")}>
+                 <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(financialItems) && "text-sidebar-accent-foreground")}>
                     Financeiro
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -215,8 +219,8 @@ export function SimpleDashboardNav() {
         </Collapsible>
         
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(documentItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(documentItems) && "text-sidebar-accent-foreground")}>
                     Documentos
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -240,8 +244,8 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(registrationItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(registrationItems) && "text-sidebar-accent-foreground")}>
                     Cadastros
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -265,8 +269,8 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(automationItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(automationItems) && "text-sidebar-accent-foreground")}>
                     Automação
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
@@ -290,8 +294,8 @@ export function SimpleDashboardNav() {
         </Collapsible>
 
         <Collapsible className="w-full" defaultOpen>
-            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent")}>
-                <span className="text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground">
+            <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(helpItems) && "bg-sidebar-accent")}>
+                <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(helpItems) && "text-sidebar-accent-foreground")}>
                     Ajuda
                 </span>
                 <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
