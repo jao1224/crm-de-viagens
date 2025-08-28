@@ -73,3 +73,13 @@ export type CreditCard = {
   observacao: string;
   isActive: boolean;
 };
+
+export type BankAccount = {
+  id: string;
+  name: string;
+  agency: string;
+  accountNumber: string;
+  initialBalance: string;
+  balanceDate: string;
+  isActive: boolean;
+};

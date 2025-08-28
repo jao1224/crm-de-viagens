@@ -1,40 +1,44 @@
+
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pencil, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-
-// Mock data based on the image
-const initialAccounts = [
-  {
-    id: 1,
-    name: 'Banco Itau PJ - Matriz',
-    agency: '5854',
-    accountNumber: '99660-9',
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: 'Principal',
-    agency: '',
-    accountNumber: '',
-    isActive: true,
-  },
-];
+import { useRouter } from 'next/navigation';
+import type { BankAccount } from '@/lib/types';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function ContaBancariaPage() {
-    const [accounts, setAccounts] = useState(initialAccounts);
+    const [accounts, setAccounts] = useState<BankAccount[]>([]);
+    const router = useRouter();
 
-    const handleToggleActive = (id: number) => {
-        setAccounts(prevAccounts => 
-            prevAccounts.map(account => 
-                account.id === id ? { ...account, isActive: !account.isActive } : account
-            )
+    useEffect(() => {
+        const storedAccounts = localStorage.getItem('bankAccounts');
+        if (storedAccounts) {
+            setAccounts(JSON.parse(storedAccounts));
+        }
+    }, []);
+
+    const handleDelete = (accountId: string) => {
+        const updatedAccounts = accounts.filter(acc => acc.id !== accountId);
+        setAccounts(updatedAccounts);
+        localStorage.setItem('bankAccounts', JSON.stringify(updatedAccounts));
+    };
+
+    const handleEdit = (accountId: string) => {
+        router.push(`/conta-bancaria/novo?id=${accountId}`);
+    };
+
+    const handleToggleActive = (id: string) => {
+        const updatedAccounts = accounts.map(account =>
+            account.id === id ? { ...account, isActive: !account.isActive } : account
         );
+        setAccounts(updatedAccounts);
+        localStorage.setItem('bankAccounts', JSON.stringify(updatedAccounts));
     };
 
     return (
@@ -60,33 +64,53 @@ export default function ContaBancariaPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {accounts.map((account) => (
-                                    <TableRow key={account.id}>
-                                        <TableCell className="font-medium">{account.name}</TableCell>
-                                        <TableCell>{account.agency}</TableCell>
-                                        <TableCell>{account.accountNumber}</TableCell>
-                                        <TableCell>
-                                            <Switch 
-                                                checked={account.isActive} 
-                                                onCheckedChange={() => handleToggleActive(account.id)}
-                                            />
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
+                                {accounts.length > 0 ? (
+                                    accounts.map((account) => (
+                                        <TableRow key={account.id}>
+                                            <TableCell className="font-medium">{account.name}</TableCell>
+                                            <TableCell>{account.agency}</TableCell>
+                                            <TableCell>{account.accountNumber}</TableCell>
+                                            <TableCell>
+                                                <Switch
+                                                    checked={account.isActive}
+                                                    onCheckedChange={() => handleToggleActive(account.id)}
+                                                />
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(account.id)}>
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente a conta.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => handleDelete(account.id)}>Continuar</AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="h-24 text-center">
+                                            Não há contas cadastradas.
                                         </TableCell>
                                     </TableRow>
-                                ))}
-                                {/* Empty row for new entry */}
-                                 <TableRow>
-                                    <TableCell colSpan={5} className="p-2 h-10"></TableCell>
-                                </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </div>
