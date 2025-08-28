@@ -13,8 +13,7 @@ export default function ProgramaPage() {
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Programas Aéreos</h1>
                 <Button asChild>
-                    {/* O link para a página de novo programa será criado posteriormente */}
-                    <Link href="#">Novo</Link>
+                    <Link href="/programa/novo">Novo</Link>
                 </Button>
             </header>
 
