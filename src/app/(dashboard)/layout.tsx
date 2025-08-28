@@ -15,7 +15,6 @@ function DashboardMainContent({ children }: { children: React.ReactNode }) {
             "flex flex-col flex-1 transition-[margin-left] duration-300 ease-in-out",
             state === 'expanded' ? 'md:ml-64' : 'md:ml-14'
         )}>
-            <DashboardHeader />
             <main className="flex-1 p-4 md:p-6 bg-muted/30">
                 {children}
             </main>
@@ -36,9 +35,12 @@ export default function DashboardLayout({
                     <SimpleDashboardNav />
                 </SidebarContent>
             </Sidebar>
-            <DashboardMainContent>
-                {children}
-            </DashboardMainContent>
+            <div className="flex flex-col w-full">
+                <DashboardHeader />
+                <DashboardMainContent>
+                    {children}
+                </DashboardMainContent>
+            </div>
         </div>
         <ChatWidget />
       </SidebarProvider>
