@@ -215,7 +215,7 @@ export default function CotacoesPage() {
   }
 
   return (
-    <div className="flex flex-col h-full gap-4 overflow-hidden">
+    <div className="flex flex-col h-full gap-4">
       <header className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-primary">Cotações</h1>
         <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function CotacoesPage() {
         </CardContent>
       </Card>
       
-      <div className="flex-1 flex gap-4 overflow-x-auto pb-4">
+      <div className="flex-1 flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
         {Object.keys(statusConfig).map(statusKey => (
             <QuoteColumn 
                 key={statusKey} 
@@ -325,4 +325,5 @@ export default function CotacoesPage() {
   );
 }
 
+    
     
