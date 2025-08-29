@@ -178,7 +178,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                         onClick={() => editor.chain().focus().unsetColor().run()}
                         className={cn(
                             "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            !editor.isActive('textStyle') && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
                         )}
                     >
                         <Paintbrush className="h-4 w-4" />
@@ -216,7 +216,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                         onClick={() => editor.chain().focus().unsetHighlight().run()}
                         className={cn(
                             "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !activeHighlightColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            !editor.isActive('highlight') && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
                         )}
                     >
                         <Paintbrush className="h-4 w-4" />
