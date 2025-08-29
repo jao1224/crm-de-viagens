@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -1155,15 +1155,28 @@ const historyItems = [
     }
 ];
 
-const libraryImages = [
-  { id: '1', src: 'https://placehold.co/600x400.png', alt: 'Rio de Janeiro', hint: 'Rio de Janeiro' },
-  { id: '2', src: 'https://placehold.co/600x400.png', alt: 'Torre de Belém, Lisboa', hint: 'Lisbon' },
-  { id: '3', src: 'https://placehold.co/600x400.png', alt: 'Torre de Belém, Lisboa, ao entardecer', hint: 'Lisbon' },
-  { id: '4', src: 'https://placehold.co/600x400.png', alt: 'Ponte Estaiada, São Paulo', hint: 'Sao Paulo' },
-];
+interface GalleryImage {
+  id: string;
+  src: string;
+  alt: string;
+  description: string;
+  quoteCount: number;
+  size: string;
+  type: 'Destino' | 'Hotel' | 'Passeio';
+  dataAiHint: string;
+}
 
 const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
+    const [allImages, setAllImages] = useState<GalleryImage[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        if (open) {
+            const storedImages = JSON.parse(localStorage.getItem('galleryImages') || '[]') as GalleryImage[];
+            setAllImages(storedImages);
+        }
+    }, [open]);
     
     const toggleImageSelection = (id: string) => {
         setSelectedImages(prev => 
@@ -1171,6 +1184,11 @@ const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChang
         );
     }
     
+    const filteredImages = allImages.filter(image => 
+        image.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        image.alt.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
          <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-4xl">
@@ -1185,37 +1203,42 @@ const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChang
                         <div className="flex-1 space-y-1.5">
                              <Label htmlFor="search-library">Imagens de Destaque</Label>
                              <div className="flex gap-2">
-                                <Input id="search-library" placeholder="Pesquisar pela descrição" />
-                                <Button>Pesquisar</Button>
+                                <Input id="search-library" placeholder="Pesquisar pela descrição" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                              </div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-96 overflow-y-auto pr-2">
-                        {libraryImages.map(image => {
-                            const isSelected = selectedImages.includes(image.id);
-                            return (
-                                <div 
-                                    key={image.id} 
-                                    className="relative rounded-lg overflow-hidden cursor-pointer group"
-                                    onClick={() => toggleImageSelection(image.id)}
-                                >
-                                    <Image 
-                                        src={image.src} 
-                                        alt={image.alt} 
-                                        width={600} 
-                                        height={400} 
-                                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                                        data-ai-hint={image.hint}
-                                    />
-                                    {isSelected && (
-                                        <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1.5">
-                                            <Check className="h-4 w-4" />
-                                        </div>
-                                    )}
-                                </div>
-                            )
-                        })}
-                    </div>
+                     {filteredImages.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-96 overflow-y-auto pr-2">
+                            {filteredImages.map(image => {
+                                const isSelected = selectedImages.includes(image.id);
+                                return (
+                                    <div 
+                                        key={image.id} 
+                                        className="relative rounded-lg overflow-hidden cursor-pointer group"
+                                        onClick={() => toggleImageSelection(image.id)}
+                                    >
+                                        <Image 
+                                            src={image.src} 
+                                            alt={image.alt} 
+                                            width={600} 
+                                            height={400} 
+                                            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                                            data-ai-hint={image.dataAiHint}
+                                        />
+                                        {isSelected && (
+                                            <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1.5">
+                                                <Check className="h-4 w-4" />
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                     ) : (
+                        <div className="text-center py-16 text-muted-foreground">
+                            Nenhuma imagem encontrada.
+                        </div>
+                     )}
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Voltar</Button>
