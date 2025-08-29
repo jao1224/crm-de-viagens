@@ -131,9 +131,9 @@ export default function ReceitaDespesaPage() {
                             />
                             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'hsl(var(--accent))', opacity: 0.2 }}/>
                             <Legend verticalAlign="bottom" height={36} />
-                            <Bar dataKey="receita" name="Receita" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                            <Bar dataKey="despesa" name="Despesa" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                            <Line type="monotone" dataKey="lucro" name="Lucro" stroke="#f97316" strokeWidth={2} dot={{ r: 4, fill: '#f97316' }} activeDot={{ r: 6 }} />
+                            <Bar dataKey="receita" name="Receita" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                            <Bar dataKey="despesa" name="Despesa" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+                            <Line type="monotone" dataKey="lucro" name="Lucro" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--accent))' }} activeDot={{ r: 6 }} />
                         </ComposedChart>
                     </ResponsiveContainer>
                 </div>
