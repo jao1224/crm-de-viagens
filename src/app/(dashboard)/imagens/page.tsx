@@ -131,6 +131,7 @@ export default function ImagensPage() {
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const { toast } = useToast();
     const isAdmin = currentUser.permission === 'Admin';
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     const handleSelectionChange = (id: string, checked: boolean) => {
         setSelectedImages(prev =>
@@ -164,15 +165,55 @@ export default function ImagensPage() {
         });
     }
 
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+
+        const newImages: GalleryImage[] = Array.from(files).map(file => ({
+            id: `${Date.now()}-${file.name}`,
+            src: URL.createObjectURL(file),
+            alt: file.name,
+            description: '',
+            quoteCount: 0,
+            size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+            type: 'Destino',
+            dataAiHint: '',
+        }));
+
+        setImages(prev => [...newImages, ...prev]);
+
+        toast({
+            title: "Sucesso!",
+            description: `${files.length} imagem(ns) adicionada(s) com sucesso.`
+        });
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-bold text-primary">Galeria de Imagens</h1>
         {isAdmin && (
-            <Button>
-              <Upload className="mr-2 h-4 w-4" />
-              Incluir
-            </Button>
+            <>
+                <input 
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload-input"
+                    accept="image/*"
+                    multiple
+                />
+                <Button asChild>
+                    <label htmlFor="image-upload-input" className="cursor-pointer">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Incluir
+                    </label>
+                </Button>
+            </>
         )}
       </header>
 
