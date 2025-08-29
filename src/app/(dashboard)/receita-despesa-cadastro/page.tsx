@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -15,6 +14,21 @@ import { useRouter } from 'next/navigation';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 
+const initialCategories: RevenueExpenseCategory[] = [
+    { id: '1', type: 'receita', name: '2 VISTOS PROC. TRABALHO', active: true },
+    { id: '2', type: 'receita', name: 'documentações', active: true },
+    { id: '3', type: 'receita', name: 'Hospedagem', active: true },
+    { id: '4', type: 'receita', name: 'passagem', active: true },
+    { id: '5', type: 'receita', name: 'SEGURO VIAGEM', active: true },
+    { id: '6', type: 'receita', name: 'Venda de Passagem', active: true },
+    { id: '7', type: 'receita', name: 'VISTO AMERICANO', active: true },
+    { id: '8', type: 'receita', name: 'VISTO PROC. TRABALHO', active: true },
+    { id: '9', type: 'receita', name: 'VOLTA COMBINADA', active: true },
+    { id: '10', type: 'despesa', name: 'Comissão de Venda', active: true },
+    { id: '11', type: 'despesa', name: 'Pagamento Fornecedor', active: true },
+    { id: '12', type: 'despesa', name: 'Salário', active: true },
+];
+
 export default function ReceitaDespesaCadastroPage() {
     const [categories, setCategories] = useState<RevenueExpenseCategory[]>([]);
     const router = useRouter();
@@ -24,6 +38,10 @@ export default function ReceitaDespesaCadastroPage() {
         const storedCategories = localStorage.getItem('revenueExpenseCategories');
         if (storedCategories) {
             setCategories(JSON.parse(storedCategories));
+        } else {
+            // If no categories are in localStorage, set the initial ones
+            localStorage.setItem('revenueExpenseCategories', JSON.stringify(initialCategories));
+            setCategories(initialCategories);
         }
     }, []);
 
