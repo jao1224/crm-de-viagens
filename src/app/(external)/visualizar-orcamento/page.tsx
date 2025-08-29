@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -54,7 +55,7 @@ export default function VisualizarOrcamentoPage() {
     }
     
     const hasPaxInfo = data.adultos > 0 || data.criancas > 0 || data.bebes > 0;
-    const hasDetails = data.detalhesViagem || data.formaPagamento || data.termos || data.outrasInfo;
+    const hasDetails = data.detalhesViagem || data.formaPagamento || data.termos || data.outrasInfo || data.servicosAdicionais;
 
     const getHtml = (markdown?: string) => {
       if (!markdown) return { __html: '' };
@@ -95,16 +96,6 @@ export default function VisualizarOrcamentoPage() {
                     </section>
                 )}
                 
-                {data.servicosAdicionais && (
-                     <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl">Serviços Adicionais</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.servicosAdicionais)} />
-                        </CardContent>
-                    </Card>
-                )}
                 
                 {data.roteiro && (
                     <Card>
@@ -124,6 +115,12 @@ export default function VisualizarOrcamentoPage() {
                     <section>
                          <h2 className="text-2xl font-semibold text-primary mb-4">Informações Importantes</h2>
                          <div className="space-y-4">
+                            {data.servicosAdicionais && (
+                                <Card>
+                                    <CardHeader><CardTitle>Serviços Adicionais</CardTitle></CardHeader>
+                                    <CardContent><div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.servicosAdicionais)} /></CardContent>
+                                </Card>
+                            )}
                             {data.detalhesViagem && (
                                 <Card>
                                     <CardHeader><CardTitle>Detalhes da Viagem</CardTitle></CardHeader>
