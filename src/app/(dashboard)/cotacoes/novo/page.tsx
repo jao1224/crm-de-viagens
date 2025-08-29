@@ -28,6 +28,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Image from 'next/image';
 import { countries } from '@/lib/countries';
+import RichTextEditor from '@/components/rich-text-editor';
 
 
 const steps = [
@@ -1166,7 +1167,7 @@ interface GalleryImage {
   dataAiHint: string;
 }
 
-const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boolean, onOpenChange: (open: boolean) => void, onImageSelect: (src: string) => void }) => {
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const [allImages, setAllImages] = useState<GalleryImage[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -1178,10 +1179,9 @@ const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChang
         }
     }, [open]);
     
-    const toggleImageSelection = (id: string) => {
-        setSelectedImages(prev => 
-            prev.includes(id) ? prev.filter(imageId => imageId !== id) : [...prev, id]
-        );
+    const handleImageClick = (image: GalleryImage) => {
+        onImageSelect(image.src);
+        onOpenChange(false);
     }
     
     const filteredImages = allImages.filter(image => 
@@ -1209,13 +1209,11 @@ const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChang
                     </div>
                      {filteredImages.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-96 overflow-y-auto pr-2">
-                            {filteredImages.map(image => {
-                                const isSelected = selectedImages.includes(image.id);
-                                return (
+                            {filteredImages.map(image => (
                                     <div 
                                         key={image.id} 
                                         className="relative rounded-lg overflow-hidden cursor-pointer group"
-                                        onClick={() => toggleImageSelection(image.id)}
+                                        onClick={() => handleImageClick(image)}
                                     >
                                         <Image 
                                             src={image.src} 
@@ -1225,14 +1223,12 @@ const ImageLibraryDialog = ({ open, onOpenChange }: { open: boolean, onOpenChang
                                             className="w-full h-full object-cover transition-transform group-hover:scale-105"
                                             data-ai-hint={image.dataAiHint}
                                         />
-                                        {isSelected && (
-                                            <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1.5">
-                                                <Check className="h-4 w-4" />
-                                            </div>
-                                        )}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <Check className="h-10 w-10 text-white" />
+                                        </div>
                                     </div>
                                 )
-                            })}
+                            )}
                         </div>
                      ) : (
                         <div className="text-center py-16 text-muted-foreground">
@@ -1261,13 +1257,14 @@ export default function NovaCotacaoPage() {
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
+    
     const [quoteData, setQuoteData] = useState({
-        titulo: '',
+        titulo: 'Visto para procurar trabalho em Portugal',
         imagem: '',
         adultos: 1,
         criancas: 0,
         bebes: 0,
-        servicosAdicionais: '',
+        servicosAdicionais: 'Visto Procura de trabalho',
         roteiro: '',
         detalhesViagem: '',
         formaPagamento: '',
@@ -1284,27 +1281,17 @@ export default function NovaCotacaoPage() {
         setQuoteData(prev => ({ ...prev, [id]: Number(value) }));
     };
 
+    const handleRichTextChange = (value: string, field: keyof typeof quoteData) => {
+        setQuoteData(prev => ({...prev, [field]: value}));
+    };
+
+    const handleImageSelect = (src: string) => {
+        setQuoteData(prev => ({...prev, imagem: src}));
+    };
+
+
     const handlePreview = () => {
-        // Coleta todos os dados do formulário
-        const currentQuoteData = {
-            titulo: (document.getElementById('titulo') as HTMLInputElement)?.value,
-            // A imagem é mais complexa, vamos simplificar por enquanto
-            imagem: '', 
-            adultos: parseInt((document.getElementById('adultos') as HTMLInputElement)?.value || '1'),
-            criancas: parseInt((document.getElementById('criancas') as HTMLInputElement)?.value || '0'),
-            bebes: parseInt((document.getElementById('bebes') as HTMLInputElement)?.value || '0'),
-            servicosAdicionais: (document.getElementById('descricao-servicos') as HTMLTextAreaElement)?.value,
-            roteiro: (document.querySelector('textarea[placeholder="Descreva o roteiro dia a dia..."]') as HTMLTextAreaElement)?.value,
-            detalhesViagem: (document.getElementById('detalhes-viagem') as HTMLTextAreaElement)?.value,
-            formaPagamento: (document.getElementById('forma-pagamento') as HTMLTextAreaElement)?.value,
-            termos: (document.getElementById('termos') as HTMLTextAreaElement)?.value,
-            outrasInfo: (document.getElementById('outras-info') as HTMLTextAreaElement)?.value,
-        };
-
-        // Salva os dados no localStorage para a página de visualização poder acessá-los
-        localStorage.setItem('quotePreviewData', JSON.stringify(currentQuoteData));
-
-        // Abre a página de visualização em uma nova aba
+        localStorage.setItem('quotePreviewData', JSON.stringify(quoteData));
         window.open('/visualizar-orcamento', '_blank');
     };
 
@@ -1456,15 +1443,19 @@ export default function NovaCotacaoPage() {
                             <CardContent className="space-y-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="titulo">Título</Label>
-                                    <Input id="titulo" placeholder="Informe um título para o orçamento" onChange={handleInputChange} />
+                                    <Input id="titulo" placeholder="Informe um título para o orçamento" value={quoteData.titulo} onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="imagem-upload"><ImageIcon className="inline-block mr-2 h-4 w-4" />Imagem</Label>
                                     <Card className="border-dashed">
                                         <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-                                            <p className="text-muted-foreground mb-4">Nenhuma imagem incluída.</p>
+                                            {quoteData.imagem ? (
+                                                <Image src={quoteData.imagem} alt="Imagem do Orçamento" width={200} height={150} className="rounded-md mb-4"/>
+                                            ) : (
+                                                <p className="text-muted-foreground mb-4">Nenhuma imagem incluída.</p>
+                                            )}
                                             <div className="flex gap-2">
-                                                <Input id="imagem-upload" type="file" className="hidden" />
+                                                <Input id="imagem-upload" type="file" className="hidden" onChange={e => e.target.files && handleImageSelect(URL.createObjectURL(e.target.files[0]))} />
                                                 <Button asChild variant="outline">
                                                     <label htmlFor="imagem-upload" className="cursor-pointer">
                                                         <Upload className="mr-2 h-4 w-4"/>
@@ -1483,15 +1474,15 @@ export default function NovaCotacaoPage() {
                                     <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="adultos">Adultos</Label>
-                                            <Input id="adultos" type="number" defaultValue={1} onChange={(e) => handleNumericInputChange('adultos', e.target.value)} />
+                                            <Input id="adultos" type="number" value={quoteData.adultos} onChange={(e) => handleNumericInputChange('adultos', e.target.value)} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="criancas">Crianças <span className="text-muted-foreground text-xs">(2 a 11 anos)</span></Label>
-                                            <Input id="criancas" type="number" defaultValue={0} onChange={(e) => handleNumericInputChange('criancas', e.target.value)} />
+                                            <Input id="criancas" type="number" value={quoteData.criancas} onChange={(e) => handleNumericInputChange('criancas', e.target.value)} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="bebes">Bebês <span className="text-muted-foreground text-xs">(0 a 23 meses)</span></Label>
-                                            <Input id="bebes" type="number" defaultValue={0} onChange={(e) => handleNumericInputChange('bebes', e.target.value)} />
+                                            <Input id="bebes" type="number" value={quoteData.bebes} onChange={(e) => handleNumericInputChange('bebes', e.target.value)} />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -1616,8 +1607,8 @@ export default function NovaCotacaoPage() {
                                         </AccordionTrigger>
                                         <AccordionContent className="p-4 space-y-4">
                                             <div className="space-y-2">
-                                                <Label htmlFor="descricao-servicos">Descrição dos Serviços</Label>
-                                                <Textarea id="descricao-servicos" defaultValue="Visto Procura de trabalho" onChange={handleInputChange} />
+                                                <Label htmlFor="servicosAdicionais">Descrição dos Serviços</Label>
+                                                <Textarea id="servicosAdicionais" value={quoteData.servicosAdicionais} onChange={handleInputChange} />
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
@@ -1637,26 +1628,26 @@ export default function NovaCotacaoPage() {
                                                     <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5"></AccordionTrigger>
                                                 </div>
                                                 <AccordionContent className="pt-2">
-                                                    <Textarea placeholder="Descreva o roteiro dia a dia..." />
+                                                    <RichTextEditor value={quoteData.roteiro} onChange={(v) => handleRichTextChange(v, 'roteiro')} />
                                                 </AccordionContent>
                                             </AccordionItem>
                                         </Accordion>
 
                                         <div className="space-y-2 pt-4">
-                                            <Label htmlFor="detalhes-viagem">Detalhes da Viagem</Label>
-                                            <Textarea id="detalhes-viagem" onChange={handleInputChange} />
+                                            <Label htmlFor="detalhesViagem">Detalhes da Viagem</Label>
+                                            <Textarea id="detalhesViagem" value={quoteData.detalhesViagem} onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="forma-pagamento">Forma de Pagamento</Label>
-                                            <Textarea id="forma-pagamento" onChange={handleInputChange} />
+                                            <Label htmlFor="formaPagamento">Forma de Pagamento</Label>
+                                            <Textarea id="formaPagamento" value={quoteData.formaPagamento} onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="termos">Termos e Condições</Label>
-                                            <Textarea id="termos" onChange={handleInputChange} />
+                                            <Textarea id="termos" value={quoteData.termos} onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label htmlFor="outras-info">Outras Informações</Label>
-                                            <Textarea id="outras-info" onChange={handleInputChange} />
+                                            <Label htmlFor="outrasInfo">Outras Informações</Label>
+                                            <Textarea id="outrasInfo" value={quoteData.outrasInfo} onChange={handleInputChange} />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -2002,7 +1993,7 @@ export default function NovaCotacaoPage() {
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
-            <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} />
+            <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
         </>
     );
 }

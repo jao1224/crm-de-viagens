@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, Users, User, Baby, Utensils, MessageSquare } from 'lucide-react';
+import { marked } from 'marked';
 
 interface QuotePreviewData {
     titulo: string;
@@ -55,6 +56,11 @@ export default function VisualizarOrcamentoPage() {
     const hasPaxInfo = data.adultos > 0 || data.criancas > 0 || data.bebes > 0;
     const hasDetails = data.detalhesViagem || data.formaPagamento || data.termos || data.outrasInfo;
 
+    const getHtml = (markdown?: string) => {
+      if (!markdown) return { __html: '' };
+      return { __html: marked(markdown) };
+    }
+
     return (
         <div className="bg-background text-foreground font-sans max-w-4xl mx-auto p-4 sm:p-8">
             <header className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 pb-8 border-b-2 border-primary">
@@ -95,7 +101,7 @@ export default function VisualizarOrcamentoPage() {
                             <CardTitle className="text-2xl">Serviços Adicionais</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="whitespace-pre-wrap">{data.servicosAdicionais}</p>
+                            <div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.servicosAdicionais)} />
                         </CardContent>
                     </Card>
                 )}
@@ -108,7 +114,7 @@ export default function VisualizarOrcamentoPage() {
                         <CardContent>
                             <div
                                 className="prose prose-lg max-w-none"
-                                dangerouslySetInnerHTML={{ __html: data.roteiro }}
+                                dangerouslySetInnerHTML={getHtml(data.roteiro)}
                             />
                         </CardContent>
                     </Card>
@@ -121,25 +127,25 @@ export default function VisualizarOrcamentoPage() {
                             {data.detalhesViagem && (
                                 <Card>
                                     <CardHeader><CardTitle>Detalhes da Viagem</CardTitle></CardHeader>
-                                    <CardContent><p className="whitespace-pre-wrap">{data.detalhesViagem}</p></CardContent>
+                                    <CardContent><div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.detalhesViagem)} /></CardContent>
                                 </Card>
                             )}
                             {data.formaPagamento && (
                                 <Card>
                                     <CardHeader><CardTitle>Forma de Pagamento</CardTitle></CardHeader>
-                                    <CardContent><p className="whitespace-pre-wrap">{data.formaPagamento}</p></CardContent>
+                                    <CardContent><div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.formaPagamento)} /></CardContent>
                                 </Card>
                             )}
                             {data.termos && (
                                 <Card>
                                     <CardHeader><CardTitle>Termos e Condições</CardTitle></CardHeader>
-                                    <CardContent><p className="whitespace-pre-wrap">{data.termos}</p></CardContent>
+                                    <CardContent><div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.termos)} /></CardContent>
                                 </Card>
                             )}
                             {data.outrasInfo && (
                                 <Card>
                                     <CardHeader><CardTitle>Outras Informações</CardTitle></CardHeader>
-                                    <CardContent><p className="whitespace-pre-wrap">{data.outrasInfo}</p></CardContent>
+                                    <CardContent><div className="prose max-w-none" dangerouslySetInnerHTML={getHtml(data.outrasInfo)} /></CardContent>
                                 </Card>
                             )}
                          </div>
@@ -155,4 +161,3 @@ export default function VisualizarOrcamentoPage() {
         </div>
     );
 }
-
