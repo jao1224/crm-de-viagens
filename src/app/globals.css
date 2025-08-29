@@ -26,7 +26,7 @@
     --accent: 285 100% 49%; /* Electric Purple: #BF00FF */
     --accent-foreground: 0 0% 98%;
     
-    --destructive: 0 84% 60%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 275 47% 90%; /* Soft Lilac border #E6D9F7 */
@@ -34,9 +34,9 @@
     --ring: 273 82% 40%;
 
     --chart-1: 273 82% 26%;  /* Deep Indigo */
-    --chart-2: 45 99% 51%;   /* Gold/Yellow: #FFC107 */
+    --chart-2: 45 90% 45%;   /* Gold/Yellow (darker) */
     --chart-3: 145 63% 42%;  /* Green for "concluído" */
-    --chart-4: 0 84% 60%;    /* Red for "reprovado" */
+    --chart-4: 0 70% 50%;    /* Red for "reprovado" (darker) */
     --chart-5: 275 47% 70%;  /* Lilac for other states */
 
     --radius: 0.75rem;
@@ -74,7 +74,7 @@
     --accent: 285 100% 60%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 74% 50%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 275 47% 25%;
@@ -82,9 +82,9 @@
     --ring: 273 82% 60%;
     
     --chart-1: 273 82% 60%;
-    --chart-2: 45 99% 51%;
+    --chart-2: 45 90% 48%;
     --chart-3: 145 63% 49%;
-    --chart-4: 0 74% 50%;
+    --chart-4: 0 70% 50%;
     --chart-5: 275 47% 60%;
 
     /* Sidebar remains the same in dark mode */
