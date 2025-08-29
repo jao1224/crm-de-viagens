@@ -150,3 +150,11 @@ export interface RejectionReason {
     name: string;
     isActive: boolean;
 }
+
+export interface Tag {
+    id: string;
+    name: string;
+    type: 'Pessoa' | 'Cotação';
+    color: string;
+    isActive: boolean;
+}
