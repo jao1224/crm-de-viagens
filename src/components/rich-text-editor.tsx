@@ -27,7 +27,8 @@ import {
   Highlighter,
   RemoveFormatting,
   ChevronDown,
-  Paintbrush
+  Paintbrush,
+  Check,
 } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
@@ -55,8 +56,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         Color,
         Highlight.configure({ 
             multicolor: true,
-             HTMLAttributes: {
-                style: 'color: inherit',
+            HTMLAttributes: {
                 'data-color': '',
             },
         }),
@@ -84,24 +84,21 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
   }
   
   const textColors = [
-    { name: 'Red', color: '#ef4444' },
-    { name: 'Orange', color: '#f97316' },
-    { name: 'Yellow', color: '#eab308' },
-    { name: 'Green', color: '#22c55e' },
-    { name: 'Blue', color: '#3b82f6' },
-    { name: 'Purple', color: '#8b5cf6' },
-    { name: 'Pink', color: '#ec4899' },
+    { name: 'Vermelho', color: '#ef4444' },
+    { name: 'Laranja', color: '#f97316' },
+    { name: 'Amarelo', color: '#eab308' },
+    { name: 'Verde', color: '#22c55e' },
+    { name: 'Azul', color: '#3b82f6' },
+    { name: 'Roxo', color: '#8b5cf6' },
+    { name: 'Rosa', color: '#ec4899' },
   ];
   
   const highlightColors = [
-    { name: 'Default', color: '#ffc078' },
-    { name: 'Red', color: '#f87171' },
-    { name: 'Orange', color: '#fb923c' },
-    { name: 'Yellow', color: '#facc15' },
-    { name: 'Green', color: '#4ade80' },
-    { name: 'Blue', color: '#60a5fa' },
-    { name: 'Purple', color: '#a78bfa' },
-    { name: 'Pink', color: '#f472b6' },
+    { name: 'Amarelo', color: '#fde047' },
+    { name: 'Verde', color: '#86efac' },
+    { name: 'Azul', color: '#93c5fd' },
+    { name: 'Roxo', color: '#c4b5fd' },
+    { name: 'Rosa', color: '#f9a8d4' },
   ];
 
   return (
@@ -153,16 +150,18 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         <Separator orientation="vertical" className="h-6" />
         <Popover>
             <PopoverTrigger asChild>
-                 <Button variant="ghost" size="sm">
-                    {editor.isActive('heading', {level: 1}) ? 'Título 1' : editor.isActive('heading', {level: 2}) ? 'Título 2' : editor.isActive('heading', {level: 3}) ? 'Título 3' : 'Parágrafo'}
-                    <ChevronDown className="h-4 w-4 ml-2" />
+                 <Button variant="ghost" size="sm" className="w-28 justify-between">
+                    <span>
+                      {editor.isActive('heading', {level: 1}) ? 'Título 1' : editor.isActive('heading', {level: 2}) ? 'Título 2' : editor.isActive('heading', {level: 3}) ? 'Título 3' : 'Parágrafo'}
+                    </span>
+                    <ChevronDown className="h-4 w-4" />
                  </Button>
             </PopoverTrigger>
             <PopoverContent className="w-40 p-1">
-                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().setParagraph().run()}>Parágrafo</Button>
-                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}>Título 1</Button>
-                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}>Título 2</Button>
-                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}>Título 3</Button>
+                 <Button variant="ghost" className="w-full justify-start text-base" onClick={() => editor.chain().focus().setParagraph().run()}>Parágrafo</Button>
+                 <Button variant="ghost" className="w-full justify-start text-xl font-bold" onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}>Título 1</Button>
+                 <Button variant="ghost" className="w-full justify-start text-lg font-semibold" onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}>Título 2</Button>
+                 <Button variant="ghost" className="w-full justify-start text-base font-semibold" onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}>Título 3</Button>
             </PopoverContent>
         </Popover>
          <Separator orientation="vertical" className="h-6" />
@@ -186,8 +185,8 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                 <button
                                     onClick={() => editor.chain().focus().unsetColor().run()}
                                     className={cn(
-                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                                        !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
+                                        !activeTextColor && 'ring-2 ring-primary ring-offset-1'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
@@ -202,13 +201,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                 <TooltipTrigger asChild>
                                     <button
                                         onClick={() => editor.chain().focus().setColor(color).run()}
-                                        className={cn(
-                                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
-                                            activeTextColor === color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                                        )}
+                                        className="h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 relative"
                                         style={{ backgroundColor: color }}
                                         aria-label={name}
-                                    />
+                                    >
+                                       {activeTextColor === color && <Check className="h-4 w-4 text-white mix-blend-difference" />}
+                                    </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>{name}</p>
@@ -239,8 +237,8 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                 <button
                                     onClick={() => editor.chain().focus().unsetHighlight().run()}
                                     className={cn(
-                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                                        !activeHighlightColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
+                                         !activeHighlightColor && 'ring-2 ring-primary ring-offset-1'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
@@ -255,13 +253,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                 <TooltipTrigger asChild>
                                     <button
                                         onClick={() => editor.chain().focus().toggleHighlight({ color }).run()}
-                                        className={cn(
-                                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
-                                            activeHighlightColor === color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                                        )}
+                                        className="h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 relative"
                                         style={{ backgroundColor: color }}
                                         aria-label={name}
-                                    />
+                                    >
+                                       {activeHighlightColor === color && <Check className="h-4 w-4 text-black mix-blend-difference" />}
+                                    </button>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>{name}</p>
