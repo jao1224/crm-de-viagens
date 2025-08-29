@@ -237,6 +237,35 @@ const AddressTab = () => {
         setAddress(prev => ({ ...prev, [id]: value }));
     }
 
+    const handleCepSearch = async () => {
+        const cep = address.cep.replace(/\D/g, '');
+        if (cep.length !== 8) {
+            toast({ title: "Erro", description: "CEP inválido.", variant: "destructive"});
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            if (!response.ok) throw new Error('Erro ao buscar CEP');
+            const data = await response.json();
+            if (data.erro) {
+                toast({ title: "Erro", description: "CEP não encontrado.", variant: "destructive"});
+                return;
+            }
+            setAddress(prev => ({
+                ...prev,
+                logradouro: data.logradouro,
+                bairro: data.bairro,
+                localidade: data.localidade,
+                uf: data.uf,
+            }));
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Erro", description: "Falha ao buscar o CEP. Tente novamente.", variant: "destructive" });
+        }
+    };
+
+
     const getFlagUrl = (countryCode: string) => `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
 
     const handleSave = () => {
@@ -272,7 +301,7 @@ const AddressTab = () => {
                         <Label htmlFor="cep">CEP</Label>
                         <div className="relative">
                             <Input id="cep" value={address.cep} onChange={handleAddressChange} />
-                            <Button type="button" size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                            <Button type="button" size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" onClick={handleCepSearch}>
                                 <Search className="h-4 w-4 text-muted-foreground" />
                             </Button>
                         </div>
@@ -816,13 +845,3 @@ export default function AgenciaPage() {
         </div>
     );
 }
-
-    
-
-    
-
-
-
-
-
-
