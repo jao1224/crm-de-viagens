@@ -7,10 +7,11 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Trash2, FileText, Upload } from 'lucide-react';
+import { Trash2, FileText, Upload, ImageIcon as ImageIconLucide } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { currentUser } from '@/lib/mock-data';
 
 interface GalleryImage {
   id: string;
@@ -33,7 +34,7 @@ const initialImages: GalleryImage[] = [
   { id: '7', src: 'https://placehold.co/600x400/FFCC00/FFFFFF/png', alt: 'Passeio de barco em Angra dos Reis', description: '', quoteCount: 8, size: '0.98 MB', type: 'Passeio', dataAiHint: 'boat tour' },
 ];
 
-const ImageCard = ({ image, isSelected, onSelectionChange, onDelete }: { image: GalleryImage, isSelected: boolean, onSelectionChange: (id: string, checked: boolean) => void, onDelete: (id: string) => void }) => {
+const ImageCard = ({ image, isSelected, onSelectionChange, onDelete, canEdit }: { image: GalleryImage, isSelected: boolean, onSelectionChange: (id: string, checked: boolean) => void, onDelete: (id: string) => void, canEdit: boolean }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState(image.description);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -62,11 +63,13 @@ const ImageCard = ({ image, isSelected, onSelectionChange, onDelete }: { image: 
   return (
     <Card className="overflow-hidden">
       <div className="relative">
-        <Checkbox
-          className="absolute top-2 left-2 z-10 bg-white"
-          checked={isSelected}
-          onCheckedChange={(checked) => onSelectionChange(image.id, !!checked)}
-        />
+        {canEdit && (
+            <Checkbox
+            className="absolute top-2 left-2 z-10 bg-white"
+            checked={isSelected}
+            onCheckedChange={(checked) => onSelectionChange(image.id, !!checked)}
+            />
+        )}
         <Image src={image.src} alt={image.alt} width={600} height={400} className="aspect-video object-cover" data-ai-hint={image.dataAiHint} />
       </div>
       <CardContent className="p-3 space-y-2">
@@ -79,9 +82,14 @@ const ImageCard = ({ image, isSelected, onSelectionChange, onDelete }: { image: 
             onKeyDown={handleKeyDown}
             placeholder="Clique para informar uma descrição"
             className="text-sm"
+            disabled={!canEdit}
           />
         ) : (
-          <p className="text-sm text-muted-foreground h-6 truncate cursor-pointer hover:text-foreground" onClick={() => setIsEditing(true)}>
+          <p 
+            className="text-sm text-muted-foreground h-6 truncate hover:text-foreground" 
+            onClick={() => canEdit && setIsEditing(true)}
+            style={{ cursor: canEdit ? 'pointer' : 'default' }}
+          >
             {description || 'Clique para informar uma descrição'}
           </p>
         )}
@@ -91,25 +99,27 @@ const ImageCard = ({ image, isSelected, onSelectionChange, onDelete }: { image: 
             <span className="flex items-center gap-1"><FileText className="h-3 w-3" /> {image.quoteCount} orçamento(s)</span>
             <span>{image.size}</span>
         </div>
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive">
-                    <Trash2 className="h-4 w-4" />
-                </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                <AlertDialogDescription>
-                    Esta ação não pode ser desfeita. Isso excluirá permanentemente a imagem.
-                </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={() => onDelete(image.id)}>Excluir</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+        {canEdit && (
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive">
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a imagem.
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onDelete(image.id)}>Excluir</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        )}
       </CardFooter>
     </Card>
   );
@@ -120,6 +130,7 @@ export default function ImagensPage() {
     const [images, setImages] = useState(initialImages);
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const { toast } = useToast();
+    const isAdmin = currentUser.permission === 'Admin';
 
     const handleSelectionChange = (id: string, checked: boolean) => {
         setSelectedImages(prev =>
@@ -157,10 +168,12 @@ export default function ImagensPage() {
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-bold text-primary">Galeria de Imagens</h1>
-        <Button>
-          <Upload className="mr-2 h-4 w-4" />
-          Incluir
-        </Button>
+        {isAdmin && (
+            <Button>
+              <Upload className="mr-2 h-4 w-4" />
+              Incluir
+            </Button>
+        )}
       </header>
 
       <Card>
@@ -186,35 +199,37 @@ export default function ImagensPage() {
                 </div>
                  <Button>Pesquisar</Button>
            </div>
-           <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                    <Checkbox
-                        id="marcar-todos"
-                        checked={selectedImages.length === images.length && images.length > 0}
-                        onCheckedChange={handleSelectAll}
-                    />
-                    <label htmlFor="marcar-todos" className="text-sm font-medium">Marcar Todos</label>
-                </div>
-                 <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                         <Button variant="destructive" disabled={selectedImages.length === 0}>
-                            Excluir ({selectedImages.length})
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                        <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Esta ação não pode ser desfeita. Isso excluirá permanentemente as {selectedImages.length} imagens selecionadas.
-                        </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteSelected}>Excluir</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-           </div>
+           {isAdmin && (
+            <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="marcar-todos"
+                            checked={selectedImages.length === images.length && images.length > 0}
+                            onCheckedChange={handleSelectAll}
+                        />
+                        <label htmlFor="marcar-todos" className="text-sm font-medium">Marcar Todos</label>
+                    </div>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" disabled={selectedImages.length === 0}>
+                                Excluir ({selectedImages.length})
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Esta ação não pode ser desfeita. Isso excluirá permanentemente as {selectedImages.length} imagens selecionadas.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleDeleteSelected}>Excluir</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+            </div>
+           )}
         </CardContent>
       </Card>
       
@@ -227,15 +242,16 @@ export default function ImagensPage() {
                 isSelected={selectedImages.includes(image.id)}
                 onSelectionChange={handleSelectionChange}
                 onDelete={handleDeleteSingle}
+                canEdit={isAdmin}
             />
             ))}
         </div>
       ) : (
         <Card>
             <CardContent className="h-60 flex flex-col items-center justify-center text-center text-muted-foreground p-6">
-                <ImageIcon className="h-12 w-12 mb-4 text-primary/30" />
+                <ImageIconLucide className="h-12 w-12 mb-4 text-primary/30" />
                 <p className="text-lg font-medium">Nenhuma imagem encontrada.</p>
-                <p className="text-sm">Clique em "Incluir" para adicionar sua primeira imagem.</p>
+                {isAdmin && <p className="text-sm">Clique em "Incluir" para adicionar sua primeira imagem.</p>}
             </CardContent>
         </Card>
       )}

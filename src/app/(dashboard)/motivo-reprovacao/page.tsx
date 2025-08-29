@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import type { RejectionReason } from '@/lib/types';
+import { currentUser } from '@/lib/mock-data';
 
 
 const initialReasons: RejectionReason[] = [
@@ -26,6 +27,7 @@ export default function MotivoReprovacaoPage() {
     const [reasons, setReasons] = useState<RejectionReason[]>([]);
     const router = useRouter();
     const { toast } = useToast();
+    const isAdmin = currentUser.permission === 'Admin';
 
     useEffect(() => {
         const storedReasons = localStorage.getItem('rejectionReasons');
@@ -63,9 +65,11 @@ export default function MotivoReprovacaoPage() {
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Motivos de Reprovação</h1>
-                <Button asChild>
-                    <Link href="/motivo-reprovacao/novo">Novo</Link>
-                </Button>
+                {isAdmin && (
+                    <Button asChild>
+                        <Link href="/motivo-reprovacao/novo">Novo</Link>
+                    </Button>
+                )}
             </header>
 
             <Card>
@@ -76,7 +80,7 @@ export default function MotivoReprovacaoPage() {
                                 <TableRow>
                                     <TableHead className="w-[70%]">Nome</TableHead>
                                     <TableHead>Ativo</TableHead>
-                                    <TableHead className="text-right">Ações</TableHead>
+                                    {isAdmin && <TableHead className="text-right">Ações</TableHead>}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -88,39 +92,42 @@ export default function MotivoReprovacaoPage() {
                                                 <Switch
                                                     checked={reason.isActive}
                                                     onCheckedChange={() => handleToggleActive(reason.id)}
+                                                    disabled={!isAdmin}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(reason.id)}>
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente o motivo de reprovação.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                <AlertDialogAction onClick={() => handleDelete(reason.id)}>Continuar</AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </div>
-                                            </TableCell>
+                                            {isAdmin && (
+                                                <TableCell className="text-right">
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(reason.id)}>
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Esta ação não pode ser desfeita. Isso excluirá permanentemente o motivo de reprovação.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                    <AlertDialogAction onClick={() => handleDelete(reason.id)}>Continuar</AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={3} className="h-24 text-center">
+                                        <TableCell colSpan={isAdmin ? 3 : 2} className="h-24 text-center">
                                             Não há motivos de reprovação cadastrados.
                                         </TableCell>
                                     </TableRow>

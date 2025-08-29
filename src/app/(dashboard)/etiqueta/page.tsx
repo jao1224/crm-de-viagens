@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import type { Tag } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { currentUser } from '@/lib/mock-data';
 
 const initialTags: Tag[] = [
     { id: '1', name: 'VIP', type: 'Pessoa', color: '#FFD700', isActive: true },
@@ -27,6 +28,7 @@ export default function EtiquetaPage() {
     const [tags, setTags] = useState<Tag[]>([]);
     const router = useRouter();
     const { toast } = useToast();
+    const isAdmin = currentUser.permission === 'Admin';
 
     useEffect(() => {
         const storedTags = localStorage.getItem('tags');
@@ -64,9 +66,11 @@ export default function EtiquetaPage() {
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Etiquetas</h1>
-                <Button asChild>
-                    <Link href="/etiqueta/novo">Novo</Link>
-                </Button>
+                {isAdmin && (
+                    <Button asChild>
+                        <Link href="/etiqueta/novo">Novo</Link>
+                    </Button>
+                )}
             </header>
 
             <Card>
@@ -116,7 +120,7 @@ export default function EtiquetaPage() {
                                         <TableHead className="w-[50%]">Nome</TableHead>
                                         <TableHead>Tipo</TableHead>
                                         <TableHead>Ativo</TableHead>
-                                        <TableHead className="text-right">Ações</TableHead>
+                                        {isAdmin && <TableHead className="text-right">Ações</TableHead>}
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -132,34 +136,37 @@ export default function EtiquetaPage() {
                                                 <Switch
                                                     checked={tag.isActive}
                                                     onCheckedChange={() => handleToggleActive(tag.id)}
+                                                    disabled={!isAdmin}
                                                 />
                                             </TableCell>
-                                            <TableCell className="text-right">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(tag.id)}>
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger asChild>
-                                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente a etiqueta.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                                <AlertDialogAction onClick={() => handleDelete(tag.id)}>Continuar</AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
-                                                </div>
-                                            </TableCell>
+                                            {isAdmin && (
+                                                <TableCell className="text-right">
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(tag.id)}>
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger asChild>
+                                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </Button>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a etiqueta.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                                    <AlertDialogAction onClick={() => handleDelete(tag.id)}>Continuar</AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    </div>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     ))}
                                 </TableBody>

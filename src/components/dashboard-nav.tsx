@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -58,6 +57,7 @@ import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
+import { currentUser } from '@/lib/mock-data';
 
 
 const navItems: NavItem[] = [
@@ -129,17 +129,18 @@ const helpItems: NavItem[] = [
 ];
 
 const navGroups = [
-    { title: 'Principal', items: navItems },
-    { title: 'Acompanhamento', items: accompanimentItems },
-    { title: 'Financeiro', items: financialItems },
-    { title: 'Documentos', items: documentItems },
-    { title: 'Cadastros', items: registrationItems },
-    { title: 'Automação', items: automationItems },
-    { title: 'Ajuda', items: helpItems },
+    { title: 'Principal', items: navItems, adminOnly: false },
+    { title: 'Acompanhamento', items: accompanimentItems, adminOnly: false },
+    { title: 'Financeiro', items: financialItems, adminOnly: true },
+    { title: 'Documentos', items: documentItems, adminOnly: true },
+    { title: 'Cadastros', items: registrationItems, adminOnly: true },
+    { title: 'Automação', items: automationItems, adminOnly: true },
+    { title: 'Ajuda', items: helpItems, adminOnly: false },
 ];
 
 export function SimpleDashboardNav() {
   const pathname = usePathname();
+  const isAdmin = currentUser.permission === 'Admin';
   
   const isActive = (href: string) => {
     // Handle the dashboard link specifically
@@ -157,34 +158,39 @@ export function SimpleDashboardNav() {
 
   return (
     <SidebarMenu>
-        {navGroups.map((group) => (
-            <Collapsible className="w-full" key={group.title} defaultOpen>
-                <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(group.items) && "bg-sidebar-accent")}>
-                    <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(group.items) && "text-sidebar-accent-foreground")}>
-                        {group.title}
-                    </span>
-                    <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
-                </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-1 py-1">
-                    {group.items.map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                            <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
-                                <SidebarMenuButton
-                                    isActive={isActive(item.href)}
-                                    tooltip={{ children: item.label, side: "right", align: "center" }}
-                                    className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
-                                >
-                                    <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
-                                    <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
-                                    {item.badge && <Badge className="bg-yellow-400 text-primary font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
-                                    {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
-                                </SidebarMenuButton>
-                            </Link>
-                        </SidebarMenuItem>
-                    ))}
-                </CollapsibleContent>
-            </Collapsible>
-        ))}
+        {navGroups.map((group) => {
+            if (group.adminOnly && !isAdmin) {
+                return null;
+            }
+            return (
+                <Collapsible className="w-full" key={group.title} defaultOpen>
+                    <CollapsibleTrigger className={cn(buttonVariants({variant: 'ghost'}), "w-full justify-between h-10 px-2 hover:bg-sidebar-accent", isGroupActive(group.items) && "bg-sidebar-accent")}>
+                        <span className={cn("text-sm font-semibold text-sidebar-foreground/70 group-hover:text-sidebar-foreground", isGroupActive(group.items) && "text-sidebar-accent-foreground")}>
+                            {group.title}
+                        </span>
+                        <ChevronDown className="h-4 w-4 text-sidebar-foreground/70" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-1 py-1">
+                        {group.items.map((item) => (
+                            <SidebarMenuItem key={item.href}>
+                                <Link href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
+                                    <SidebarMenuButton
+                                        isActive={isActive(item.href)}
+                                        tooltip={{ children: item.label, side: "right", align: "center" }}
+                                        className={cn(isActive(item.href) && 'text-sidebar-primary font-semibold')}
+                                    >
+                                        <item.icon className={cn(isActive(item.href) ? 'text-sidebar-primary' : 'text-sidebar-foreground')}/>
+                                        <span className={cn(isActive(item.href) && 'text-sidebar-primary')}>{item.label}</span>
+                                        {item.badge && <Badge className="bg-yellow-400 text-primary font-bold text-xs size-5 flex items-center justify-center p-0 ml-auto">{item.badge}</Badge>}
+                                        {item.external && <ExternalLink className="h-3 w-3 text-muted-foreground" />}
+                                    </SidebarMenuButton>
+                                </Link>
+                            </SidebarMenuItem>
+                        ))}
+                    </CollapsibleContent>
+                </Collapsible>
+            )
+        })}
     </SidebarMenu>
   );
 }
