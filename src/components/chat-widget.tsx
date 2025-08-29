@@ -25,6 +25,7 @@ export function ChatWidget() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isClick, setIsClick] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const dragRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -60,13 +61,12 @@ export function ChatWidget() {
     });
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (dragging) {
-      setIsClick(false); // If mouse moves, it's a drag, not a click
+      setIsClick(false); 
       let newX = e.clientX - offset.x;
       let newY = e.clientY - offset.y;
-
-      // Clamp position within viewport
+      
       newX = Math.max(24, Math.min(newX, window.innerWidth - 80));
       newY = Math.max(24, Math.min(newY, window.innerHeight - 80));
       
@@ -80,6 +80,29 @@ export function ChatWidget() {
       setAberto(prev => !prev);
     }
   };
+  
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => handleMouseMove(e);
+    const handleGlobalMouseUp = () => {
+        if (dragging) {
+            handleMouseUp();
+        }
+    };
+
+    if (dragging) {
+        window.addEventListener('mousemove', handleGlobalMouseMove);
+        window.addEventListener('mouseup', handleGlobalMouseUp);
+    } else {
+        window.removeEventListener('mousemove', handleGlobalMouseMove);
+        window.removeEventListener('mouseup', handleGlobalMouseUp);
+    }
+    
+    return () => {
+        window.removeEventListener('mousemove', handleGlobalMouseMove);
+        window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+}, [dragging, handleMouseUp]);
+
 
   function enviarMensagem() {
     if (!input.trim()) return;
@@ -110,6 +133,7 @@ export function ChatWidget() {
   }
   
   const getChatPosition = () => {
+    if (!isClient) return {};
     const isTopHalf = position.y < window.innerHeight / 2;
     const isLeftHalf = position.x < window.innerWidth / 2;
 
@@ -137,13 +161,9 @@ export function ChatWidget() {
   }
 
   return (
-    <div 
-        onMouseMove={handleMouseMove} 
-        onMouseUp={handleMouseUp}
-        onMouseLeave={() => setDragging(false)}
-        className={cn('fixed inset-0 pointer-events-none z-10', dragging && 'pointer-events-auto')}
-    >
+    <div>
       <Button
+          ref={dragRef}
           style={{ top: position.y, left: position.x }}
           onMouseDown={handleMouseDown}
           size="icon"
