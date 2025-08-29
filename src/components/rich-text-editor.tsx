@@ -74,6 +74,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     { name: 'Blue', color: '#3b82f6' },
     { name: 'Purple', color: '#8b5cf6' },
     { name: 'Pink', color: '#ec4899' },
+    { name: 'Black', color: '#000000' },
   ];
   
   const highlightColors = [
@@ -165,37 +166,28 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
-                 <div className="flex items-center gap-2">
-                    <div className="grid grid-cols-4 gap-1">
+                 <div className="grid grid-cols-4 gap-1">
+                    <button
+                        onClick={() => editor.chain().focus().unsetColor().run()}
+                        className={cn(
+                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
+                            !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                        )}
+                    >
+                        <Paintbrush className="h-4 w-4" />
+                    </button>
+                    {textColors.map(({ name, color }) => (
                         <button
-                            onClick={() => editor.chain().focus().unsetColor().run()}
+                            key={name}
+                            onClick={() => editor.chain().focus().setColor(color).run()}
                             className={cn(
-                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                                !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
+                                editor.isActive('textStyle', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
                             )}
-                        >
-                            <Paintbrush className="h-4 w-4" />
-                        </button>
-                        {textColors.map(({ name, color }) => (
-                            <button
-                                key={name}
-                                onClick={() => editor.chain().focus().setColor(color).run()}
-                                className={cn(
-                                    "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
-                                    editor.isActive('textStyle', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                                )}
-                                style={{ backgroundColor: color }}
-                                aria-label={name}
-                            />
-                        ))}
-                    </div>
-                     <Separator orientation="vertical" className="h-6 mx-2" />
-                    <input
-                        type="color"
-                        className="w-6 h-6 border-none bg-transparent cursor-pointer p-0"
-                        onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
-                        value={activeTextColor || '#000000'}
-                    />
+                            style={{ backgroundColor: color }}
+                            aria-label={name}
+                        />
+                    ))}
                  </div>
             </PopoverContent>
         </Popover>
