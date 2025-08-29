@@ -21,7 +21,7 @@ import {
   AlignJustify,
 } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
-import { Separator } from './ui/separator';
+import { Separator } from '@/components/ui/separator';
 
 const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
   const editor = useEditor({
