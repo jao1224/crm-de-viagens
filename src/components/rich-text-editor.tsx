@@ -32,6 +32,7 @@ import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
   const editor = useEditor({
@@ -64,6 +65,17 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
   if (!editor) {
     return null;
   }
+  
+  const highlightColors = [
+    { name: 'Default', color: '#ffc078' },
+    { name: 'Red', color: '#f87171' },
+    { name: 'Orange', color: '#fb923c' },
+    { name: 'Yellow', color: '#facc15' },
+    { name: 'Green', color: '#4ade80' },
+    { name: 'Blue', color: '#60a5fa' },
+    { name: 'Purple', color: '#a78bfa' },
+    { name: 'Pink', color: '#f472b6' },
+  ];
 
   return (
     <div>
@@ -129,17 +141,33 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
          <Separator orientation="vertical" className="h-6" />
          <input
             type="color"
-            className="w-6 h-6 border-none bg-transparent"
+            className="w-6 h-6 border-none bg-transparent cursor-pointer"
             onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
             value={editor.getAttributes('textStyle').color || '#000000'}
           />
-         <Toggle
-            size="sm"
-            pressed={editor.isActive('highlight')}
-            onPressedChange={() => editor.chain().focus().toggleHighlight({ color: '#ffc078' }).run()}
-        >
-            <Highlighter className="h-4 w-4" />
-        </Toggle>
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
+                    <Highlighter className="h-4 w-4" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+                <div className="grid grid-cols-4 gap-1">
+                    {highlightColors.map(({ name, color }) => (
+                         <button
+                            key={name}
+                            onClick={() => editor.chain().focus().toggleHighlight({ color }).run()}
+                            className={cn(
+                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
+                                editor.isActive('highlight', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            )}
+                            style={{ backgroundColor: color }}
+                            aria-label={name}
+                         />
+                    ))}
+                </div>
+            </PopoverContent>
+        </Popover>
         <Separator orientation="vertical" className="h-6" />
         <Toggle
           size="sm"
