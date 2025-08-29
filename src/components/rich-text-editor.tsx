@@ -34,6 +34,7 @@ import { Separator } from '@/components/ui/separator';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
   const [activeTextColor, setActiveTextColor] = React.useState<string | undefined>(undefined);
@@ -54,8 +55,9 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         Color,
         Highlight.configure({ 
             multicolor: true,
-            HTMLAttributes: {
+             HTMLAttributes: {
                 style: 'color: inherit',
+                'data-color': '',
             },
         }),
     ],
@@ -177,29 +179,44 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
-                 <div className="grid grid-cols-4 gap-1">
-                    <button
-                        onClick={() => editor.chain().focus().unsetColor().run()}
-                        className={cn(
-                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !editor.getAttributes('textStyle').color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                        )}
-                    >
-                        <Paintbrush className="h-4 w-4" />
-                    </button>
-                    {textColors.map(({ name, color }) => (
-                        <button
-                            key={name}
-                            onClick={() => editor.chain().focus().setColor(color).run()}
-                            className={cn(
-                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
-                                editor.isActive('textStyle', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                            )}
-                            style={{ backgroundColor: color }}
-                            aria-label={name}
-                        />
-                    ))}
-                 </div>
+                <TooltipProvider>
+                    <div className="grid grid-cols-4 gap-1">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={() => editor.chain().focus().unsetColor().run()}
+                                    className={cn(
+                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
+                                        !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                    )}
+                                >
+                                    <Paintbrush className="h-4 w-4" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Remover Cor</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        {textColors.map(({ name, color }) => (
+                            <Tooltip key={name}>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        onClick={() => editor.chain().focus().setColor(color).run()}
+                                        className={cn(
+                                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
+                                            activeTextColor === color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                        )}
+                                        style={{ backgroundColor: color }}
+                                        aria-label={name}
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{name}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        ))}
+                    </div>
+                </TooltipProvider>
             </PopoverContent>
         </Popover>
         <Popover>
@@ -215,29 +232,44 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
-                <div className="grid grid-cols-4 gap-1">
-                    <button
-                        onClick={() => editor.chain().focus().unsetHighlight().run()}
-                        className={cn(
-                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !editor.getAttributes('highlight').color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                        )}
-                    >
-                        <Paintbrush className="h-4 w-4" />
-                    </button>
-                    {highlightColors.map(({ name, color }) => (
-                         <button
-                            key={name}
-                            onClick={() => editor.chain().focus().toggleHighlight({ color }).run()}
-                            className={cn(
-                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
-                                editor.isActive('highlight', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
-                            )}
-                            style={{ backgroundColor: color }}
-                            aria-label={name}
-                         />
-                    ))}
-                </div>
+                <TooltipProvider>
+                    <div className="grid grid-cols-4 gap-1">
+                         <Tooltip>
+                            <TooltipTrigger asChild>
+                                <button
+                                    onClick={() => editor.chain().focus().unsetHighlight().run()}
+                                    className={cn(
+                                        "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
+                                        !activeHighlightColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                    )}
+                                >
+                                    <Paintbrush className="h-4 w-4" />
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Remover Destaque</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        {highlightColors.map(({ name, color }) => (
+                            <Tooltip key={name}>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        onClick={() => editor.chain().focus().toggleHighlight({ color }).run()}
+                                        className={cn(
+                                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
+                                            activeHighlightColor === color && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                        )}
+                                        style={{ backgroundColor: color }}
+                                        aria-label={name}
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{name}</p>
+                                </TooltipContent>
+                             </Tooltip>
+                        ))}
+                    </div>
+                </TooltipProvider>
             </PopoverContent>
         </Popover>
         <Separator orientation="vertical" className="h-6" />
