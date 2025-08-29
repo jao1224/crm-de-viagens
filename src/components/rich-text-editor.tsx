@@ -66,6 +66,17 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     return null;
   }
   
+  const textColors = [
+    { name: 'Default', color: '#000000' },
+    { name: 'Red', color: '#ef4444' },
+    { name: 'Orange', color: '#f97316' },
+    { name: 'Yellow', color: '#eab308' },
+    { name: 'Green', color: '#22c55e' },
+    { name: 'Blue', color: '#3b82f6' },
+    { name: 'Purple', color: '#8b5cf6' },
+    { name: 'Pink', color: '#ec4899' },
+  ];
+  
   const highlightColors = [
     { name: 'Default', color: '#ffc078' },
     { name: 'Red', color: '#f87171' },
@@ -139,12 +150,38 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
             </PopoverContent>
         </Popover>
          <Separator orientation="vertical" className="h-6" />
-         <input
-            type="color"
-            className="w-6 h-6 border-none bg-transparent cursor-pointer"
-            onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
-            value={editor.getAttributes('textStyle').color || '#000000'}
-          />
+         <Popover>
+            <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
+                    <Palette className="h-4 w-4" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-2">
+                 <div className="flex items-center gap-2">
+                    <div className="grid grid-cols-4 gap-1">
+                        {textColors.map(({ name, color }) => (
+                            <button
+                                key={name}
+                                onClick={() => editor.chain().focus().setColor(color).run()}
+                                className={cn(
+                                    "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110",
+                                    editor.isActive('textStyle', { color }) && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                                )}
+                                style={{ backgroundColor: color }}
+                                aria-label={name}
+                            />
+                        ))}
+                    </div>
+                     <Separator orientation="vertical" className="h-6 mx-2" />
+                    <input
+                        type="color"
+                        className="w-6 h-6 border-none bg-transparent cursor-pointer p-0"
+                        onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
+                        value={editor.getAttributes('textStyle').color || '#000000'}
+                    />
+                 </div>
+            </PopoverContent>
+        </Popover>
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
