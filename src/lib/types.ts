@@ -1,4 +1,3 @@
-
 import type { LucideIcon } from "lucide-react";
 
 export type TravelPackage = {
@@ -135,5 +134,12 @@ export interface RevenueExpenseCategory {
 export interface SalesChannel {
     id: string;
     name: string;
+    isActive: boolean;
+}
+
+export interface Contract {
+    id: string;
+    name: string;
+    content: string;
     isActive: boolean;
 }
