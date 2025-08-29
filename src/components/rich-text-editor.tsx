@@ -65,12 +65,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
       onChange(editor.getHTML());
       setActiveTextColor(editor.getAttributes('textStyle').color);
       const highlightAttrs = editor.getAttributes('highlight');
-      setActiveHighlightColor(highlightAttrs['data-color'] || highlightAttrs.color);
+      setActiveHighlightColor(highlightAttrs.color);
     },
      onSelectionUpdate: ({ editor }) => {
       setActiveTextColor(editor.getAttributes('textStyle').color);
       const highlightAttrs = editor.getAttributes('highlight');
-      setActiveHighlightColor(highlightAttrs['data-color'] || highlightAttrs.color);
+      setActiveHighlightColor(highlightAttrs.color);
     },
     editorProps: {
       attributes: {
@@ -195,7 +195,6 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetColor().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                        !activeTextColor && 'bg-muted'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
@@ -248,7 +247,6 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetHighlight().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                         !activeHighlightColor && 'bg-muted'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
