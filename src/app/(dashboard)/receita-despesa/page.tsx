@@ -133,7 +133,7 @@ export default function ReceitaDespesaPage() {
                             <Legend verticalAlign="bottom" height={36} />
                             <Bar dataKey="receita" name="Receita" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
                             <Bar dataKey="despesa" name="Despesa" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-                            <Line type="monotone" dataKey="lucro" name="Lucro" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--accent))' }} activeDot={{ r: 6 }} />
+                            <Line type="monotone" dataKey="lucro" name="Lucro" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={{ r: 4, fill: 'hsl(var(--chart-2))' }} activeDot={{ r: 6 }} />
                         </ComposedChart>
                     </ResponsiveContainer>
                 </div>
