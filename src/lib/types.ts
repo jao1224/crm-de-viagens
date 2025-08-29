@@ -1,3 +1,4 @@
+
 import type { LucideIcon } from "lucide-react";
 
 export type TravelPackage = {
@@ -141,5 +142,11 @@ export interface Contract {
     id: string;
     name: string;
     content: string;
+    isActive: boolean;
+}
+
+export interface RejectionReason {
+    id: string;
+    name: string;
     isActive: boolean;
 }
