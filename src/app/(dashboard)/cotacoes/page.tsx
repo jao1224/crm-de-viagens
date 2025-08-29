@@ -18,20 +18,30 @@ import { ptBR } from 'date-fns/locale';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import Link from 'next/link';
 
+// Configuração para estilização de cada status do Kanban.
 const statusConfig: { [key in Quote['status']]: { title: string; borderColor: string; bgColor: string; textColor: string; } } = {
   aguardando: { title: 'AGUARDANDO', borderColor: 'border-gray-500', bgColor: 'bg-gray-100 dark:bg-gray-800/50', textColor: 'text-gray-600 dark:text-gray-400' },
   'em-cotacao': { title: 'EM COTAÇÃO', borderColor: 'border-orange-500', bgColor: 'bg-orange-100 dark:bg-orange-800/50', textColor: 'text-orange-600 dark:text-orange-400' },
   'aguardando-cliente': { title: 'AGUARDANDO CLIENTE', borderColor: 'border-blue-500', bgColor: 'bg-blue-100 dark:bg-blue-800/50', textColor: 'text-blue-600 dark:text-blue-400' },
   aprovado: { title: 'APROVADO', borderColor: 'border-green-600', bgColor: 'bg-green-100 dark:bg-green-800/50', textColor: 'text-green-700 dark:text-green-500' },
-  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-100 dark:bg-red-800/ ৫০', textColor: 'text-red-700 dark:text-red-500' },
+  reprovado: { title: 'REPROVADO', borderColor: 'border-red-600', bgColor: 'bg-red-100 dark:bg-red-800/50', textColor: 'text-red-700 dark:text-red-500' },
 };
 
+/**
+ * Componente QuoteCard: Representa um único card arrastável no quadro Kanban.
+ * @param {object} props - Propriedades do componente.
+ * @param {Quote} props.quote - Os dados da cotação a serem exibidos.
+ * @param {Function} props.onDragStart - A função a ser chamada quando o arrasto do card começa.
+ */
 const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void }) => {
   const config = statusConfig[quote.status];
   return (
     <Card 
       className="mb-3 cursor-grab active:cursor-grabbing transition-shadow duration-200 hover:shadow-lg bg-card"
+      // PASSO 1: Tornar o elemento arrastável.
       draggable="true"
+      // PASSO 2: Definir a função que será executada quando o arrasto iniciar.
+      // Passamos o evento (e) e o ID da cotação para a função pai.
       onDragStart={(e) => onDragStart(e, quote.id)}
     >
       <CardContent className="p-3">
@@ -72,6 +82,15 @@ const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: Reac
   );
 };
 
+/**
+ * Componente QuoteColumn: Representa uma coluna do quadro Kanban.
+ * @param {object} props - Propriedades do componente.
+ * @param {Quote['status']} props.status - O status que esta coluna representa (ex: 'aguardando').
+ * @param {Quote[]} props.quotes - O array de cotações que pertencem a esta coluna.
+ * @param {Function} props.onDrop - A função a ser chamada quando um card é solto nesta coluna.
+ * @param {Function} props.onDragOver - A função a ser chamada quando um card é arrastado sobre esta coluna.
+ * @param {Function} props.onDragStart - A função passada para os componentes QuoteCard.
+ */
 const QuoteColumn = ({ 
   status, 
   quotes, 
@@ -91,7 +110,11 @@ const QuoteColumn = ({
   return (
     <div 
       className={cn("flex-1 min-w-[250px] rounded-lg", config.bgColor)}
+      // PASSO 4: Definir a função a ser chamada quando um card é solto aqui.
+      // Passamos o evento (e) e o status desta coluna para a função pai.
       onDrop={(e) => onDrop(e, status)}
+      // PASSO 5: Definir a função para quando um card é arrastado sobre esta área.
+      // É crucial para permitir que o onDrop funcione.
       onDragOver={onDragOver}
     >
       <div className={cn('flex justify-between items-center p-3 rounded-t-lg border-t-4', config.borderColor)}>
@@ -179,20 +202,44 @@ export default function CotacoesPage() {
     setIsClient(true);
   }, []);
 
+  // O estado central que controla todos os cards
   const [quotes, setQuotes] = React.useState<Quote[]>(mockQuotes);
 
+  /**
+   * Função onDragStart: Chamada quando um card começa a ser arrastado.
+   * Armazena o ID do card no objeto `dataTransfer` para que possamos recuperá-lo no drop.
+   * @param {React.DragEvent<HTMLDivElement>} e - O evento de arrasto.
+   * @param {string} quoteId - O ID do card que está sendo arrastado.
+   */
   const onDragStart = (e: React.DragEvent<HTMLDivElement>, quoteId: string) => {
+    // PASSO 3: Guardar o ID do card. O primeiro argumento é uma chave, o segundo é o valor.
     e.dataTransfer.setData("quoteId", quoteId);
   };
   
+  /**
+   * Função onDragOver: Chamada quando um card é arrastado sobre uma coluna.
+   * Chamar `e.preventDefault()` é ESSENCIAL para permitir que o evento onDrop seja disparado.
+   * @param {React.DragEvent<HTMLDivElement>} e - O evento de arrasto.
+   */
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    // PASSO 6: Permitir que o elemento seja um alvo de "soltar".
     e.preventDefault(); 
   };
   
+  /**
+   * Função onDrop: Chamada quando um card é solto em uma nova coluna.
+   * Esta é a função principal que atualiza o estado e move o card.
+   * @param {React.DragEvent<HTMLDivElement>} e - O evento de soltar.
+   * @param {Quote['status']} newStatus - O status da coluna onde o card foi solto.
+   */
   const onDrop = (e: React.DragEvent<HTMLDivElement>, newStatus: Quote['status']) => {
     e.preventDefault();
+    // PASSO 7: Recuperar o ID do card que guardamos no onDragStart.
     const quoteId = e.dataTransfer.getData("quoteId");
     
+    // PASSO 8: Atualizar o estado.
+    // Iteramos sobre o array de cotações. Se o ID da cotação corresponder ao que arrastamos,
+    // criamos um novo objeto para ela com o `newStatus`. Caso contrário, mantemos a cotação como está.
     setQuotes(prevQuotes => 
       prevQuotes.map(quote => 
         quote.id === quoteId ? { ...quote, status: newStatus } : quote
@@ -200,6 +247,11 @@ export default function CotacoesPage() {
     );
   };
 
+  /**
+   * Agrupa as cotações por status usando `React.useMemo` para otimização.
+   * Este objeto é usado para passar a lista de cotações correta para cada coluna.
+   * Ex: { aguardando: [quote1, quote2], 'em-cotacao': [quote3] }
+   */
   const quotesByStatus = React.useMemo(() => {
       return quotes.reduce((acc, quote) => {
         if (!acc[quote.status]) {
@@ -308,12 +360,16 @@ export default function CotacoesPage() {
         </CardContent>
       </Card>
       
+      {/* Renderização das colunas do Kanban */}
       <div className="flex-grow flex gap-4 overflow-x-auto pb-4">
+        {/* Mapeia a configuração de status para criar cada coluna dinamicamente */}
         {Object.keys(statusConfig).map(statusKey => (
             <QuoteColumn 
                 key={statusKey} 
                 status={statusKey as Quote['status']} 
+                // Passa apenas os cards que correspondem ao status da coluna
                 quotes={quotesByStatus[statusKey as Quote['status']] || []}
+                // Passa as funções de drag and drop como props para as colunas
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onDragStart={onDragStart}
