@@ -1,8 +1,9 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -11,6 +12,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import type { Contract } from '@/lib/types';
+import { Info } from 'lucide-react';
 
 export default function NovoContratoPage() {
     const router = useRouter();
@@ -75,18 +77,21 @@ export default function NovoContratoPage() {
             </header>
 
             <Card>
-                 <CardHeader>
-                    <CardTitle>Conteúdo do Modelo</CardTitle>
-                    <CardDescription>Crie o modelo de contrato que será utilizado na geração de contratos para os clientes.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="p-6 space-y-6">
                      <div className="space-y-2">
                         <Label htmlFor="nome">Nome <span className="text-destructive">*</span></Label>
-                        <Input id="nome" value={name} onChange={e => setName(e.target.value)} placeholder="Ex: Contrato de Prestação de Serviços de Viagem" />
+                        <Input id="nome" value={name} onChange={e => setName(e.target.value)} placeholder="-" />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="content">Modelo do Contrato</Label>
-                        <Textarea id="content" rows={15} value={content} onChange={e => setContent(e.target.value)} placeholder="Insira o texto do contrato aqui. Você pode usar variáveis como {{CLIENTE_NOME}}, {{VALOR_TOTAL}}, etc."/>
+                         <div className="flex justify-between items-center">
+                            <Label htmlFor="content">Modelo <span className="text-destructive">*</span></Label>
+                            <Button variant="link" size="sm" className="p-0 h-auto">Importar modelo padrão</Button>
+                         </div>
+                         <Button variant="default" size="sm" className="h-auto py-1">
+                             <Info className="mr-2 h-4 w-4" />
+                            Palavras Reservadas
+                        </Button>
+                        <Textarea id="content" rows={15} value={content} onChange={e => setContent(e.target.value)} />
                     </div>
                     <div className="flex items-center space-x-2">
                         <Switch id="ativo" checked={isActive} onCheckedChange={setIsActive} />
