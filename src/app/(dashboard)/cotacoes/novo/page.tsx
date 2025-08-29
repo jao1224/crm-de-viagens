@@ -1261,6 +1261,52 @@ export default function NovaCotacaoPage() {
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
+    const [quoteData, setQuoteData] = useState({
+        titulo: '',
+        imagem: '',
+        adultos: 1,
+        criancas: 0,
+        bebes: 0,
+        servicosAdicionais: '',
+        roteiro: '',
+        detalhesViagem: '',
+        formaPagamento: '',
+        termos: '',
+        outrasInfo: '',
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target;
+        setQuoteData(prev => ({ ...prev, [id]: value }));
+    };
+
+    const handleNumericInputChange = (id: 'adultos' | 'criancas' | 'bebes', value: string) => {
+        setQuoteData(prev => ({ ...prev, [id]: Number(value) }));
+    };
+
+    const handlePreview = () => {
+        // Coleta todos os dados do formulário
+        const currentQuoteData = {
+            titulo: (document.getElementById('titulo') as HTMLInputElement)?.value,
+            // A imagem é mais complexa, vamos simplificar por enquanto
+            imagem: '', 
+            adultos: parseInt((document.getElementById('adultos') as HTMLInputElement)?.value || '1'),
+            criancas: parseInt((document.getElementById('criancas') as HTMLInputElement)?.value || '0'),
+            bebes: parseInt((document.getElementById('bebes') as HTMLInputElement)?.value || '0'),
+            servicosAdicionais: (document.getElementById('descricao-servicos') as HTMLTextAreaElement)?.value,
+            roteiro: (document.querySelector('textarea[placeholder="Descreva o roteiro dia a dia..."]') as HTMLTextAreaElement)?.value,
+            detalhesViagem: (document.getElementById('detalhes-viagem') as HTMLTextAreaElement)?.value,
+            formaPagamento: (document.getElementById('forma-pagamento') as HTMLTextAreaElement)?.value,
+            termos: (document.getElementById('termos') as HTMLTextAreaElement)?.value,
+            outrasInfo: (document.getElementById('outras-info') as HTMLTextAreaElement)?.value,
+        };
+
+        // Salva os dados no localStorage para a página de visualização poder acessá-los
+        localStorage.setItem('quotePreviewData', JSON.stringify(currentQuoteData));
+
+        // Abre a página de visualização em uma nova aba
+        window.open('/visualizar-orcamento', '_blank');
+    };
 
 
     return (
@@ -1404,13 +1450,13 @@ export default function NovaCotacaoPage() {
                                 </div>
                                 <div className="flex gap-2">
                                     <Button variant="outline"><ListFilter className="mr-2 h-4 w-4"/>Opções</Button>
-                                    <Button><Eye className="mr-2 h-4 w-4"/>Visualizar</Button>
+                                    <Button onClick={handlePreview}><Eye className="mr-2 h-4 w-4"/>Visualizar</Button>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="titulo">Título</Label>
-                                    <Input id="titulo" placeholder="Informe um título para o orçamento" />
+                                    <Input id="titulo" placeholder="Informe um título para o orçamento" onChange={handleInputChange} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="imagem-upload"><ImageIcon className="inline-block mr-2 h-4 w-4" />Imagem</Label>
@@ -1437,15 +1483,15 @@ export default function NovaCotacaoPage() {
                                     <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div className="space-y-2">
                                             <Label htmlFor="adultos">Adultos</Label>
-                                            <Input id="adultos" type="number" defaultValue={1} />
+                                            <Input id="adultos" type="number" defaultValue={1} onChange={(e) => handleNumericInputChange('adultos', e.target.value)} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="criancas">Crianças <span className="text-muted-foreground text-xs">(2 a 11 anos)</span></Label>
-                                            <Input id="criancas" type="number" defaultValue={0} />
+                                            <Input id="criancas" type="number" defaultValue={0} onChange={(e) => handleNumericInputChange('criancas', e.target.value)} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="bebes">Bebês <span className="text-muted-foreground text-xs">(0 a 23 meses)</span></Label>
-                                            <Input id="bebes" type="number" defaultValue={0} />
+                                            <Input id="bebes" type="number" defaultValue={0} onChange={(e) => handleNumericInputChange('bebes', e.target.value)} />
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -1571,7 +1617,7 @@ export default function NovaCotacaoPage() {
                                         <AccordionContent className="p-4 space-y-4">
                                             <div className="space-y-2">
                                                 <Label htmlFor="descricao-servicos">Descrição dos Serviços</Label>
-                                                <Textarea id="descricao-servicos" defaultValue="Visto Procura de trabalho" />
+                                                <Textarea id="descricao-servicos" defaultValue="Visto Procura de trabalho" onChange={handleInputChange} />
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
@@ -1598,19 +1644,19 @@ export default function NovaCotacaoPage() {
 
                                         <div className="space-y-2 pt-4">
                                             <Label htmlFor="detalhes-viagem">Detalhes da Viagem</Label>
-                                            <Textarea id="detalhes-viagem" />
+                                            <Textarea id="detalhes-viagem" onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="forma-pagamento">Forma de Pagamento</Label>
-                                            <Textarea id="forma-pagamento" />
+                                            <Textarea id="forma-pagamento" onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="termos">Termos e Condições</Label>
-                                            <Textarea id="termos" />
+                                            <Textarea id="termos" onChange={handleInputChange} />
                                         </div>
                                         <div className="space-y-2">
                                             <Label htmlFor="outras-info">Outras Informações</Label>
-                                            <Textarea id="outras-info" />
+                                            <Textarea id="outras-info" onChange={handleInputChange} />
                                         </div>
                                     </CardContent>
                                 </Card>
