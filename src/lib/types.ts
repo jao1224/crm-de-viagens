@@ -124,3 +124,10 @@ export interface ProductService {
     value: string;
     isActive: boolean;
 }
+
+export interface RevenueExpenseCategory {
+    id: string;
+    type: 'receita' | 'despesa';
+    name: string;
+    active: boolean;
+}

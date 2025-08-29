@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -9,35 +9,53 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Pencil, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-
-
-const mockCategories = [
-    { id: 1, type: 'receita', name: '2 VISTOS PROC. TRABALHO', active: true },
-    { id: 2, type: 'receita', name: 'documentações', active: true },
-    { id: 3, type: 'receita', name: 'Hospedagem', active: true },
-    { id: 4, type: 'receita', name: 'passagem', active: true },
-    { id: 5, type: 'receita', name: 'SEGURO VIAGEM', active: true },
-    { id: 6, type: 'receita', name: 'Venda de Passagem', active: true },
-    { id: 7, type: 'receita', name: 'VISTO AMERICANO', active: true },
-    { id: 8, type: 'receita', name: 'VISTO PROC. TRABALHO', active: true },
-    { id: 9, type: 'receita', name: 'VOLTA COMBINADA', active: true },
-    { id: 10, type: 'despesa', name: 'Comissão de Venda', active: true },
-    { id: 11, type: 'despesa', name: 'Pagamento Fornecedor', active: true },
-    { id: 12, type: 'despesa', name: 'Salário', active: true },
-];
+import type { RevenueExpenseCategory } from '@/lib/types';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ReceitaDespesaCadastroPage() {
-    const [categories, setCategories] = useState(mockCategories);
+    const [categories, setCategories] = useState<RevenueExpenseCategory[]>([]);
+    const router = useRouter();
+    const { toast } = useToast();
 
-    const handleToggleActive = (id: number) => {
-        setCategories(prev => prev.map(cat => cat.id === id ? { ...cat, active: !cat.active } : cat));
+    useEffect(() => {
+        const storedCategories = localStorage.getItem('revenueExpenseCategories');
+        if (storedCategories) {
+            setCategories(JSON.parse(storedCategories));
+        }
+    }, []);
+
+    const handleToggleActive = (id: string) => {
+        const updatedCategories = categories.map(cat => 
+            cat.id === id ? { ...cat, active: !cat.active } : cat
+        );
+        setCategories(updatedCategories);
+        localStorage.setItem('revenueExpenseCategories', JSON.stringify(updatedCategories));
+    };
+
+    const handleEdit = (id: string) => {
+        router.push(`/receita-despesa/novo?id=${id}`);
+    };
+
+    const handleDelete = (id: string) => {
+        const updatedCategories = categories.filter(cat => cat.id !== id);
+        setCategories(updatedCategories);
+        localStorage.setItem('revenueExpenseCategories', JSON.stringify(updatedCategories));
+        toast({
+            title: "Sucesso!",
+            description: "Categoria excluída com sucesso."
+        });
     };
 
     return (
         <div className="space-y-6">
             <header className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-primary">Categoria de Receita/Despesa</h1>
-                <Button>Novo</Button>
+                <Button asChild>
+                    <Link href="/receita-despesa/novo">Novo</Link>
+                </Button>
             </header>
 
             <Card>
@@ -53,7 +71,7 @@ export default function ReceitaDespesaCadastroPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {categories.map((category) => (
+                                {categories.length > 0 ? categories.map((category) => (
                                     <TableRow key={category.id}>
                                         <TableCell>
                                             <Badge
@@ -73,16 +91,38 @@ export default function ReceitaDespesaCadastroPage() {
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(category.id)}>
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive h-8 w-8">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                Esta ação não pode ser desfeita. Isso excluirá permanentemente a categoria.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                            <AlertDialogAction onClick={() => handleDelete(category.id)}>Continuar</AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )) : (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="h-24 text-center">
+                                            Não há categorias cadastradas.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </div>
@@ -91,4 +131,3 @@ export default function ReceitaDespesaCadastroPage() {
         </div>
     );
 }
-
