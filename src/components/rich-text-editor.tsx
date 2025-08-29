@@ -30,7 +30,6 @@ import {
   Paintbrush,
   Check,
 } from 'lucide-react';
-import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -65,11 +64,13 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
       setActiveTextColor(editor.getAttributes('textStyle').color);
-      setActiveHighlightColor(editor.getAttributes('highlight').color);
+      const highlightAttrs = editor.getAttributes('highlight');
+      setActiveHighlightColor(highlightAttrs['data-color'] || highlightAttrs.color);
     },
      onSelectionUpdate: ({ editor }) => {
       setActiveTextColor(editor.getAttributes('textStyle').color);
-      setActiveHighlightColor(editor.getAttributes('highlight').color);
+      const highlightAttrs = editor.getAttributes('highlight');
+      setActiveHighlightColor(highlightAttrs['data-color'] || highlightAttrs.color);
     },
     editorProps: {
       attributes: {
@@ -104,53 +105,61 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
   return (
     <div>
       <div className="flex flex-wrap items-center gap-1 border border-input p-1 rounded-t-md">
-        <Toggle
+        <Button
+          variant="ghost"
           size="sm"
-          onPressedChange={() => editor.chain().focus().undo().run()}
+          onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
+          className="p-2 h-auto"
         >
           <Undo className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          onPressedChange={() => editor.chain().focus().redo().run()}
+          onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
+          className="p-2 h-auto"
         >
           <Redo className="h-4 w-4" />
-        </Toggle>
+        </Button>
         <Separator orientation="vertical" className="h-6" />
-        <Toggle
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('bold')}
-          onPressedChange={() => editor.chain().focus().toggleBold().run()}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={cn("p-2 h-auto", editor.isActive('bold') && 'bg-muted')}
         >
           <Bold className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('italic')}
-          onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={cn("p-2 h-auto", editor.isActive('italic') && 'bg-muted')}
         >
           <Italic className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('underline')}
-          onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={cn("p-2 h-auto", editor.isActive('underline') && 'bg-muted')}
         >
            <UnderlineIcon className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('strike')}
-          onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={cn("p-2 h-auto", editor.isActive('strike') && 'bg-muted')}
         >
           <Strikethrough className="h-4 w-4" />
-        </Toggle>
+        </Button>
         <Separator orientation="vertical" className="h-6" />
         <Popover>
             <PopoverTrigger asChild>
-                 <Button variant="ghost" size="sm" className="w-28 justify-between">
+                 <Button variant="ghost" size="sm" className="w-28 justify-between h-auto py-2">
                     <span>
                       {editor.isActive('heading', {level: 1}) ? 'Título 1' : editor.isActive('heading', {level: 2}) ? 'Título 2' : editor.isActive('heading', {level: 3}) ? 'Título 3' : 'Parágrafo'}
                     </span>
@@ -186,7 +195,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetColor().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                        !activeTextColor && 'bg-accent/20'
+                                        !activeTextColor && 'bg-muted'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
@@ -239,7 +248,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetHighlight().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                         !activeHighlightColor && 'bg-accent/20'
+                                         !activeHighlightColor && 'bg-muted'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
@@ -272,56 +281,64 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
             </PopoverContent>
         </Popover>
         <Separator orientation="vertical" className="h-6" />
-        <Toggle
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive({ textAlign: 'left' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('left').run()}
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={cn("p-2 h-auto", editor.isActive({ textAlign: 'left' }) && 'bg-muted')}
         >
           <AlignLeft className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive({ textAlign: 'center' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('center').run()}
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={cn("p-2 h-auto", editor.isActive({ textAlign: 'center' }) && 'bg-muted')}
         >
           <AlignCenter className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive({ textAlign: 'right' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('right').run()}
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={cn("p-2 h-auto", editor.isActive({ textAlign: 'right' }) && 'bg-muted')}
         >
           <AlignRight className="h-4 w-4" />
-        </Toggle>
-         <Toggle
+        </Button>
+         <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive({ textAlign: 'justify' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('justify').run()}
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          className={cn("p-2 h-auto", editor.isActive({ textAlign: 'justify' }) && 'bg-muted')}
         >
           <AlignJustify className="h-4 w-4" />
-        </Toggle>
+        </Button>
         <Separator orientation="vertical" className="h-6" />
-        <Toggle
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('bulletList')}
-          onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className={cn("p-2 h-auto", editor.isActive('bulletList') && 'bg-muted')}
         >
           <List className="h-4 w-4" />
-        </Toggle>
-        <Toggle
+        </Button>
+        <Button
+          variant="ghost"
           size="sm"
-          pressed={editor.isActive('orderedList')}
-          onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+          className={cn("p-2 h-auto", editor.isActive('orderedList') && 'bg-muted')}
         >
           <ListOrdered className="h-4 w-4" />
-        </Toggle>
+        </Button>
         <Separator orientation="vertical" className="h-6" />
-        <Toggle
+        <Button
+          variant="ghost"
           size="sm"
-          onPressedChange={() => editor.chain().focus().unsetAllMarks().run()}
+          onClick={() => editor.chain().focus().unsetAllMarks().run()}
+          className="p-2 h-auto"
         >
           <RemoveFormatting className="h-4 w-4" />
-        </Toggle>
+        </Button>
       </div>
       <EditorContent editor={editor} />
     </div>
