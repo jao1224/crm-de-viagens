@@ -212,6 +212,15 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
                 <div className="grid grid-cols-4 gap-1">
+                    <button
+                        onClick={() => editor.chain().focus().unsetHighlight().run()}
+                        className={cn(
+                            "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
+                            !activeHighlightColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                        )}
+                    >
+                        <Paintbrush className="h-4 w-4" />
+                    </button>
                     {highlightColors.map(({ name, color }) => (
                          <button
                             key={name}
