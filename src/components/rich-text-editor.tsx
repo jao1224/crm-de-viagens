@@ -52,7 +52,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         }),
         TextStyle,
         Color,
-        Highlight.configure({ multicolor: true }),
+        Highlight.configure({ 
+            multicolor: true,
+            HTMLAttributes: {
+                style: 'color: inherit',
+            },
+        }),
     ],
     content: value,
     onUpdate: ({ editor }) => {
@@ -84,7 +89,6 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     { name: 'Blue', color: '#3b82f6' },
     { name: 'Purple', color: '#8b5cf6' },
     { name: 'Pink', color: '#ec4899' },
-    { name: 'Black', color: '#000000' },
   ];
   
   const highlightColors = [
@@ -178,7 +182,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                         onClick={() => editor.chain().focus().unsetColor().run()}
                         className={cn(
                             "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !editor.isActive('textStyle') && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
                         )}
                     >
                         <Paintbrush className="h-4 w-4" />
@@ -216,7 +220,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                         onClick={() => editor.chain().focus().unsetHighlight().run()}
                         className={cn(
                             "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
-                            !editor.isActive('highlight') && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            !activeHighlightColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
                         )}
                     >
                         <Paintbrush className="h-4 w-4" />
