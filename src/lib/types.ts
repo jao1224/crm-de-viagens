@@ -131,3 +131,9 @@ export interface RevenueExpenseCategory {
     name: string;
     active: boolean;
 }
+
+export interface SalesChannel {
+    id: string;
+    name: string;
+    isActive: boolean;
+}
