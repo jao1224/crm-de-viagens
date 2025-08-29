@@ -14,7 +14,6 @@ import {
   Italic,
   Strikethrough,
   Underline as UnderlineIcon,
-  Heading2,
   List,
   ListOrdered,
   Undo,
@@ -26,7 +25,8 @@ import {
   Palette,
   Highlighter,
   RemoveFormatting,
-  ChevronDown
+  ChevronDown,
+  Paintbrush
 } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
@@ -67,7 +67,6 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
   }
   
   const textColors = [
-    { name: 'Default', color: '#000000' },
     { name: 'Red', color: '#ef4444' },
     { name: 'Orange', color: '#f97316' },
     { name: 'Yellow', color: '#eab308' },
@@ -168,6 +167,15 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
             <PopoverContent className="w-auto p-2">
                  <div className="flex items-center gap-2">
                     <div className="grid grid-cols-4 gap-1">
+                        <button
+                            onClick={() => editor.chain().focus().unsetColor().run()}
+                            className={cn(
+                                "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center",
+                                !activeTextColor && 'ring-2 ring-ring ring-offset-2 ring-offset-background'
+                            )}
+                        >
+                            <Paintbrush className="h-4 w-4" />
+                        </button>
                         {textColors.map(({ name, color }) => (
                             <button
                                 key={name}
