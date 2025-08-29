@@ -186,10 +186,11 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetColor().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                        !activeTextColor && 'ring-2 ring-primary ring-offset-1'
+                                        !activeTextColor && 'bg-accent/20'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
+                                     {!activeTextColor && <Check className="h-4 w-4 text-primary absolute" />}
                                 </button>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -238,10 +239,11 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                                     onClick={() => editor.chain().focus().unsetHighlight().run()}
                                     className={cn(
                                         "h-6 w-6 rounded-sm border border-border transition-transform hover:scale-110 flex items-center justify-center relative",
-                                         !activeHighlightColor && 'ring-2 ring-primary ring-offset-1'
+                                         !activeHighlightColor && 'bg-accent/20'
                                     )}
                                 >
                                     <Paintbrush className="h-4 w-4" />
+                                    {!activeHighlightColor && <Check className="h-4 w-4 text-primary absolute" />}
                                 </button>
                             </TooltipTrigger>
                             <TooltipContent>
