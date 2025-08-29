@@ -8,6 +8,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
+import React from 'react';
 
 import {
   Bold,
@@ -35,6 +36,9 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
+  const [activeTextColor, setActiveTextColor] = React.useState<string | undefined>(undefined);
+  const [activeHighlightColor, setActiveHighlightColor] = React.useState<string | undefined>(undefined);
+
   const editor = useEditor({
     extensions: [
         StarterKit.configure({
@@ -53,6 +57,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     content: value,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
+      setActiveTextColor(editor.getAttributes('textStyle').color);
+      setActiveHighlightColor(editor.getAttributes('highlight').color);
+    },
+     onSelectionUpdate: ({ editor }) => {
+      setActiveTextColor(editor.getAttributes('textStyle').color);
+      setActiveHighlightColor(editor.getAttributes('highlight').color);
     },
     editorProps: {
       attributes: {
@@ -87,9 +97,6 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     { name: 'Purple', color: '#a78bfa' },
     { name: 'Pink', color: '#f472b6' },
   ];
-
-  const activeTextColor = editor.getAttributes('textStyle').color;
-  const activeHighlightColor = editor.getAttributes('highlight').color;
 
   return (
     <div>
