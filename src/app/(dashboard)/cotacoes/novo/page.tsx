@@ -29,6 +29,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
+import { mockPeople } from '@/lib/mock-data';
+import type { Person } from '@/lib/types';
 
 
 const steps = [
@@ -296,7 +298,7 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
     }
 
     return (
-        <div className="relative w-full">
+        <div className="relative flex items-center w-full">
             <Input
                 value={inputValue}
                 onChange={handleInputChange}
@@ -1262,6 +1264,9 @@ export default function NovaCotacaoPage() {
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
+    const [passengers, setPassengers] = useState<Person[]>([]);
+    const [selectedPassengerId, setSelectedPassengerId] = useState<string | null>(null);
+    const [selectedClientId, setSelectedClientId] = useState('nao-informado');
     
     const [quoteData, setQuoteData] = useState({
         titulo: 'Visto para procurar trabalho em Portugal',
@@ -1276,6 +1281,21 @@ export default function NovaCotacaoPage() {
         termos: '',
         outrasInfo: '',
     });
+
+    useEffect(() => {
+        setQuoteData(prev => ({
+            ...prev,
+            adultos: passengers.filter(p => p.type === 'adulto').length,
+            criancas: passengers.filter(p => p.type === 'crianca').length,
+            bebes: passengers.filter(p => p.type === 'bebe').length,
+        }));
+    }, [passengers]);
+    
+    useEffect(() => {
+        if (passengers.length > 0 && selectedClientId === 'nao-informado') {
+            setSelectedClientId(String(passengers[0].id));
+        }
+    }, [passengers, selectedClientId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
@@ -1299,6 +1319,19 @@ export default function NovaCotacaoPage() {
     const handlePreview = () => {
         localStorage.setItem('quotePreviewData', JSON.stringify(quoteData));
         window.open('/visualizar-orcamento', '_blank');
+    };
+    
+    const handleAddPassenger = () => {
+        if (selectedPassengerId) {
+            const personToAdd = mockPeople.find(p => String(p.id) === selectedPassengerId);
+            if (personToAdd && !passengers.some(p => p.id === personToAdd.id)) {
+                setPassengers(prev => [...prev, personToAdd]);
+            }
+        }
+    };
+    
+    const handleRemovePassenger = (id: number) => {
+        setPassengers(prev => prev.filter(p => p.id !== id));
     };
 
 
@@ -1365,12 +1398,15 @@ export default function NovaCotacaoPage() {
                             <div className="space-y-1.5 lg:col-span-1">
                                 <Label>Cliente</Label>
                                 <div className="flex items-center gap-2">
-                                    <Select defaultValue="nao-informado">
+                                     <Select value={selectedClientId} onValueChange={setSelectedClientId}>
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="nao-informado">Não informado</SelectItem>
+                                            {passengers.map(p => (
+                                                <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                     <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
@@ -1614,7 +1650,7 @@ export default function NovaCotacaoPage() {
                                         <AccordionContent className="p-4 space-y-4">
                                             <div className="space-y-2">
                                                 <Label htmlFor="servicosAdicionais">Descrição dos Serviços</Label>
-                                                <Textarea id="servicosAdicionais" value={quoteData.servicosAdicionais} onChange={handleInputChange} />
+                                                <Textarea id="servicosAdicionais" value={quoteData.servicosAdicionais} onChange={e => handleRichTextChange(e.target.value, 'servicosAdicionais')} />
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
@@ -1682,40 +1718,43 @@ export default function NovaCotacaoPage() {
                                     <Users className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Passageiros</CardTitle>
                                 </div>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon">
-                                            <MoreVertical className="h-5 w-5" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem>
-                                            Configurar
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <Label>Passageiro</Label>
                                     <div className="flex items-center gap-2">
-                                        <Select>
+                                        <Select onValueChange={setSelectedPassengerId}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {/* Options go here */}
+                                                {mockPeople.map(p => (
+                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                         <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}>
                                             <UserPlus className="h-4 w-4" />
                                         </Button>
-                                        <Button>Adicionar</Button>
+                                        <Button onClick={handleAddPassenger}>Adicionar</Button>
                                     </div>
                                 </div>
-                                <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                    <p className="text-muted-foreground">Nenhum passageiro informado.</p>
-                                </div>
+                                 {passengers.length > 0 ? (
+                                    <div className="border rounded-md">
+                                        {passengers.map(p => (
+                                            <div key={p.id} className="flex items-center justify-between p-3 border-b last:border-b-0">
+                                                <p className="font-medium">{p.name}</p>
+                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleRemovePassenger(p.id)}>
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum passageiro informado.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>

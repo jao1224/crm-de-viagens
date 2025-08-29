@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useEffect, useState, Suspense } from 'react';
@@ -108,12 +109,14 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
-                                <Select defaultValue="lima" name="assignee">
+                                <Select name="assignee">
                                     <SelectTrigger id="assignee">
-                                        <SelectValue />
+                                        <SelectValue placeholder="Selecione" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="lima">Lima</SelectItem>
+                                       {mockUsers.map(user => (
+                                         <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                                       ))}
                                     </SelectContent>
                                 </Select>
                             </div>
