@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, 'useState', useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import type { Contract } from '@/lib/types';
 import { Info } from 'lucide-react';
+import RichTextEditor from '@/components/rich-text-editor';
 
 const defaultContractTemplate = `Contrato de Prestação de Serviços de Turismo
 
@@ -272,7 +273,10 @@ export default function NovoContratoPage() {
                              <Info className="mr-2 h-4 w-4" />
                             Palavras Reservadas
                         </Button>
-                        <Textarea id="content" rows={15} value={content} onChange={e => setContent(e.target.value)} />
+                        <RichTextEditor
+                            value={content}
+                            onChange={setContent}
+                         />
                     </div>
                     <div className="flex items-center space-x-2">
                         <Switch id="ativo" checked={isActive} onCheckedChange={setIsActive} />
