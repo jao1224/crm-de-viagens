@@ -36,13 +36,25 @@ export default function ReceitaDespesaCadastroPage() {
     const { toast } = useToast();
 
     useEffect(() => {
-        const storedCategories = localStorage.getItem('revenueExpenseCategories');
-        if (storedCategories) {
-            setCategories(JSON.parse(storedCategories));
-        } else {
-            // If no categories are in localStorage, set the initial ones
+        const storedCategoriesRaw = localStorage.getItem('revenueExpenseCategories');
+        let storedCategories: RevenueExpenseCategory[] = [];
+
+        if (storedCategoriesRaw) {
+            try {
+                storedCategories = JSON.parse(storedCategoriesRaw);
+            } catch (e) {
+                console.error("Error parsing categories from localStorage", e);
+                storedCategories = [];
+            }
+        }
+        
+        if (storedCategories.length === 0) {
+            // If storage is empty or parsing failed, load initial data
             localStorage.setItem('revenueExpenseCategories', JSON.stringify(initialCategories));
             setCategories(initialCategories);
+        } else {
+            // Otherwise, load the stored data
+            setCategories(storedCategories);
         }
     }, []);
 
