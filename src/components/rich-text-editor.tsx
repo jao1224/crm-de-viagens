@@ -5,6 +5,10 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import TextStyle from '@tiptap/extension-text-style';
+import { Color } from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
+
 import {
   Bold,
   Italic,
@@ -19,18 +23,31 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
+  Palette,
+  Highlighter,
+  RemoveFormatting,
+  ChevronDown
 } from 'lucide-react';
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 
 const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
   const editor = useEditor({
     extensions: [
-        StarterKit, 
+        StarterKit.configure({
+            heading: {
+                levels: [1, 2, 3],
+            },
+        }),
         Underline,
         TextAlign.configure({
             types: ['heading', 'paragraph'],
         }),
+        TextStyle,
+        Color,
+        Highlight.configure({ multicolor: true }),
     ],
     content: value,
     onUpdate: ({ editor }) => {
@@ -95,12 +112,33 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
           <Strikethrough className="h-4 w-4" />
         </Toggle>
         <Separator orientation="vertical" className="h-6" />
-        <Toggle
-          size="sm"
-          pressed={editor.isActive('heading', { level: 2 })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        <Popover>
+            <PopoverTrigger asChild>
+                 <Button variant="ghost" size="sm">
+                    {editor.isActive('heading', {level: 1}) ? 'Título 1' : editor.isActive('heading', {level: 2}) ? 'Título 2' : editor.isActive('heading', {level: 3}) ? 'Título 3' : 'Parágrafo'}
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                 </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-40 p-1">
+                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().setParagraph().run()}>Parágrafo</Button>
+                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}>Título 1</Button>
+                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}>Título 2</Button>
+                 <Button variant="ghost" className="w-full justify-start" onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}>Título 3</Button>
+            </PopoverContent>
+        </Popover>
+         <Separator orientation="vertical" className="h-6" />
+         <input
+            type="color"
+            className="w-6 h-6 border-none bg-transparent"
+            onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
+            value={editor.getAttributes('textStyle').color || '#000000'}
+          />
+         <Toggle
+            size="sm"
+            pressed={editor.isActive('highlight')}
+            onPressedChange={() => editor.chain().focus().toggleHighlight({ color: '#ffc078' }).run()}
         >
-          <Heading2 className="h-4 w-4" />
+            <Highlighter className="h-4 w-4" />
         </Toggle>
         <Separator orientation="vertical" className="h-6" />
         <Toggle
@@ -145,6 +183,13 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
           onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         >
           <ListOrdered className="h-4 w-4" />
+        </Toggle>
+        <Separator orientation="vertical" className="h-6" />
+        <Toggle
+          size="sm"
+          onPressedChange={() => editor.chain().focus().unsetAllMarks().run()}
+        >
+          <RemoveFormatting className="h-4 w-4" />
         </Toggle>
       </div>
       <EditorContent editor={editor} />
