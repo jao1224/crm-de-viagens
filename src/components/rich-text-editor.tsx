@@ -88,6 +88,9 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
     { name: 'Pink', color: '#f472b6' },
   ];
 
+  const activeTextColor = editor.getAttributes('textStyle').color;
+  const activeHighlightColor = editor.getAttributes('highlight').color;
+
   return (
     <div>
       <div className="flex flex-wrap items-center gap-1 border border-input p-1 rounded-t-md">
@@ -154,6 +157,12 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
             <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
                     <Palette className="h-4 w-4" />
+                    {activeTextColor && (
+                      <div
+                        className="h-1 w-4 mt-1 rounded-full"
+                        style={{ backgroundColor: activeTextColor }}
+                      />
+                    )}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
@@ -184,8 +193,14 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         </Popover>
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
+                 <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
                     <Highlighter className="h-4 w-4" />
+                     {activeHighlightColor && (
+                      <div
+                        className="h-1 w-4 mt-1 rounded-full"
+                        style={{ backgroundColor: activeHighlightColor }}
+                      />
+                    )}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
