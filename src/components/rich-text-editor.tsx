@@ -194,7 +194,7 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
                         type="color"
                         className="w-6 h-6 border-none bg-transparent cursor-pointer p-0"
                         onInput={(event: React.ChangeEvent<HTMLInputElement>) => editor.chain().focus().setColor(event.target.value).run()}
-                        value={editor.getAttributes('textStyle').color || '#000000'}
+                        value={activeTextColor || '#000000'}
                     />
                  </div>
             </PopoverContent>
