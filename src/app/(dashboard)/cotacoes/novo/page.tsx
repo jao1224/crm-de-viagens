@@ -1171,13 +1171,18 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
     const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const [allImages, setAllImages] = useState<GalleryImage[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if (open) {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        if (open && isClient) {
             const storedImages = JSON.parse(localStorage.getItem('galleryImages') || '[]') as GalleryImage[];
             setAllImages(storedImages);
         }
-    }, [open]);
+    }, [open, isClient]);
     
     const handleImageClick = (image: GalleryImage) => {
         onImageSelect(image.src);
@@ -1280,10 +1285,11 @@ export default function NovaCotacaoPage() {
     const handleNumericInputChange = (id: 'adultos' | 'criancas' | 'bebes', value: string) => {
         setQuoteData(prev => ({ ...prev, [id]: Number(value) }));
     };
-
+    
     const handleRichTextChange = (value: string, field: keyof typeof quoteData) => {
         setQuoteData(prev => ({...prev, [field]: value}));
     };
+
 
     const handleImageSelect = (src: string) => {
         setQuoteData(prev => ({...prev, imagem: src}));
@@ -1628,7 +1634,10 @@ export default function NovaCotacaoPage() {
                                                     <AccordionTrigger className="p-0 hover:no-underline [&>svg]:h-5 [&>svg]:w-5"></AccordionTrigger>
                                                 </div>
                                                 <AccordionContent className="pt-2">
-                                                    <RichTextEditor value={quoteData.roteiro} onChange={(v) => handleRichTextChange(v, 'roteiro')} />
+                                                    <RichTextEditor 
+                                                        value={quoteData.roteiro} 
+                                                        onChange={(v) => handleRichTextChange(v, 'roteiro')} 
+                                                    />
                                                 </AccordionContent>
                                             </AccordionItem>
                                         </Accordion>
