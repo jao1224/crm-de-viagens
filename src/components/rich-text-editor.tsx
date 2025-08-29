@@ -154,11 +154,11 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
          <Separator orientation="vertical" className="h-6" />
          <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
+                <Button variant="ghost" size="icon" className="h-8 w-8 p-1 flex flex-col items-center">
                     <Palette className="h-4 w-4" />
                     {activeTextColor && (
                       <div
-                        className="h-1 w-4 mt-1 rounded-full"
+                        className="h-1 w-4 mt-0.5 rounded-full"
                         style={{ backgroundColor: activeTextColor }}
                       />
                     )}
@@ -201,11 +201,11 @@ const RichTextEditor = ({ value, onChange }: { value: string; onChange: (value: 
         </Popover>
         <Popover>
             <PopoverTrigger asChild>
-                 <Button variant="ghost" size="icon" className="h-8 w-8 p-1">
+                 <Button variant="ghost" size="icon" className="h-8 w-8 p-1 flex flex-col items-center">
                     <Highlighter className="h-4 w-4" />
                      {activeHighlightColor && (
                       <div
-                        className="h-1 w-4 mt-1 rounded-full"
+                        className="h-1 w-4 mt-0.5 rounded-full"
                         style={{ backgroundColor: activeHighlightColor }}
                       />
                     )}
