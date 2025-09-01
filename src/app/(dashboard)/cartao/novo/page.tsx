@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -43,7 +44,7 @@ const CurrencyInput = ({ label, ...props }: { label: string } & React.InputHTMLA
             <Label htmlFor={label.toLowerCase()}>{label}</Label>
             <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">R$</span>
-                <Input id={label.toLowerCase()} defaultValue="0,00" className="pl-9" {...props}/>
+                <Input id={label.toLowerCase()} className="pl-9" {...props}/>
             </div>
         </div>
     );
