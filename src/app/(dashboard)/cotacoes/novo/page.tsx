@@ -1251,6 +1251,8 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
     )
 }
 
+type FlightDialogType = 'ida' | 'volta' | 'interno';
+
 const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpenChange: (open: boolean) => void, title: string }) => {
     const [searchDate, setSearchDate] = useState<Date>();
     const [departureDate, setDepartureDate] = useState<Date>();
@@ -1390,7 +1392,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpen
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-checkin">Notificação Check-in</Label>
-                                <Select defaultValue="48h">
+                                <Select defaultValue="nao-notificar">
                                     <SelectTrigger id="flight-checkin"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                          <SelectItem value="nao-notificar">Não Notificar</SelectItem>
@@ -1432,7 +1434,7 @@ export default function NovaCotacaoPage() {
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
-    const [isFlightInfoDialogOpen, setIsFlightInfoDialogOpen] = useState(false);
+    const [flightDialogState, setFlightDialogState] = useState<{ open: boolean; type: FlightDialogType | null }>({ open: false, type: null });
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
     const [passengers, setPassengers] = useState<Person[]>([]);
@@ -1452,6 +1454,21 @@ export default function NovaCotacaoPage() {
         termos: '',
         outrasInfo: '',
     });
+    
+    const flightDialogTitles: Record<FlightDialogType, string> = {
+      ida: 'Voo de Ida',
+      volta: 'Voo de Volta',
+      interno: 'Voo Interno',
+    };
+
+    const openFlightDialog = (type: FlightDialogType) => {
+        setFlightDialogState({ open: true, type });
+    };
+
+    const closeFlightDialog = () => {
+        setFlightDialogState({ open: false, type: null });
+    };
+
 
     useEffect(() => {
         setQuoteData(prev => ({
@@ -1708,7 +1725,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                         <div className="flex gap-2">
                                             <Button variant="outline">Incluir via Localizador</Button>
-                                            <Button onClick={() => setIsFlightInfoDialogOpen(true)}>Incluir</Button>
+                                            <Button onClick={() => openFlightDialog('ida')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
@@ -1726,7 +1743,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                         <div className="flex gap-2">
                                             <Button variant="outline">Incluir via Localizador</Button>
-                                            <Button>Incluir</Button>
+                                            <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
@@ -1742,7 +1759,7 @@ export default function NovaCotacaoPage() {
                                             <Plane className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
                                         </div>
-                                        <Button>Incluir</Button>
+                                        <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-6 border-dashed border-2 rounded-md">
@@ -2213,7 +2230,13 @@ export default function NovaCotacaoPage() {
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
-            <FlightInfoDialog open={isFlightInfoDialogOpen} onOpenChange={setIsFlightInfoDialogOpen} title="Voo de Ida" />
+            {flightDialogState.type && (
+                <FlightInfoDialog
+                    open={flightDialogState.open}
+                    onOpenChange={closeFlightDialog}
+                    title={flightDialogTitles[flightDialogState.type]}
+                />
+            )}
         </>
     );
 }
