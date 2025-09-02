@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Calendar as CalendarIcon, Filter, MoreHorizontal, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane } from 'lucide-react';
+import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -75,12 +75,11 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
 
 const FlightCard = ({ flight }: { flight: Flight }) => (
     <div className="flex items-start gap-4">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center justify-start h-full">
             <div className={cn(
-                "h-4 w-4 rounded-full border-2",
+                "h-4 w-4 rounded-full border-2 z-10",
                 isToday(flight.dateTime) ? "bg-yellow-500 border-yellow-700" : isPast(flight.dateTime) ? "bg-gray-400 border-gray-600" : "bg-green-500 border-green-700"
             )}></div>
-            <div className="w-px h-full bg-border flex-1"></div>
         </div>
         <div className="flex-1 -mt-1.5">
             <Card className="mb-4">
@@ -230,14 +229,14 @@ export default function VoosPage() {
             </div>
             
             <div className="space-y-6">
-                {Object.keys(groupedFlights).map(dateKey => (
+                {Object.keys(groupedFlights).map((dateKey, index) => (
                     <div key={dateKey}>
                         <div className="flex items-center gap-3 mb-4">
                             <h2 className="font-semibold text-lg text-primary">{format(new Date(dateKey), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</h2>
                             <div className="flex-1 h-px bg-border"></div>
                         </div>
                         <div className="relative">
-                             <div className="absolute left-1.5 top-0 bottom-0 w-px bg-border"></div>
+                             <div className="absolute left-[7px] top-4 bottom-0 w-px bg-border -z-10"></div>
                             {groupedFlights[dateKey].map(flight => (
                                 <FlightCard key={flight.id} flight={flight} />
                             ))}
