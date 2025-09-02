@@ -2232,8 +2232,12 @@ export default function NovaCotacaoPage() {
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
                 <FlightInfoDialog
-                    open={!!flightDialogType}
-                    onOpenChange={(open) => !open && closeFlightDialog()}
+                    open={true}
+                    onOpenChange={(open) => {
+                        if (!open) {
+                            closeFlightDialog();
+                        }
+                    }}
                     title={flightDialogTitles[flightDialogType]}
                 />
             )}
