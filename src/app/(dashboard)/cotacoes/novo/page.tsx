@@ -17,7 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -1251,6 +1251,169 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
     )
 }
 
+const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpenChange: (open: boolean) => void, title: string }) => {
+    const [searchDate, setSearchDate] = useState<Date>();
+    const [departureDate, setDepartureDate] = useState<Date>();
+    const [arrivalDate, setArrivalDate] = useState<Date>();
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-4xl">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">{title}</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div className="space-y-2">
+                            <Label htmlFor="flight-search-no">Nº do Voo</Label>
+                            <Input id="flight-search-no" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="flight-search-company">Companhia</Label>
+                            <Select>
+                                <SelectTrigger id="flight-search-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                                <SelectContent></SelectContent>
+                            </Select>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="flight-search-date">Data do Voo</Label>
+                             <div className="flex gap-2">
+                                <DatePickerInput value={searchDate} onSelect={setSearchDate} />
+                                <Button>Buscar</Button>
+                             </div>
+                        </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Esta funcionalidade está em modo experimental e pode ser descontinuada a qualquer momento.</p>
+                    
+                    <Separator />
+
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-origin">Origem <span className="text-destructive">*</span></Label>
+                                <Input id="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-destination">Destino <span className="text-destructive">*</span></Label>
+                                <Input id="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                            </div>
+                        </div>
+
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-departure-date">Embarque <span className="text-destructive">*</span></Label>
+                                <div className="flex gap-2">
+                                    <DatePickerInput value={departureDate} onSelect={setDepartureDate} />
+                                    <div className="relative">
+                                        <Input type="time" className="pr-8"/>
+                                        <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                </div>
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="flight-arrival-date">Chegada <span className="text-destructive">*</span></Label>
+                                <div className="flex gap-2">
+                                    <DatePickerInput value={arrivalDate} onSelect={setArrivalDate} />
+                                     <div className="relative">
+                                        <Input type="time" className="pr-8"/>
+                                        <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                             <div className="space-y-2">
+                                <Label htmlFor="flight-duration">Duração</Label>
+                                <Input id="flight-duration" />
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="flight-company">Companhia</Label>
+                                <Select>
+                                    <SelectTrigger id="flight-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                                    <SelectContent></SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-no">Nº do Voo</Label>
+                                <Input id="flight-no" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-locator">Localizador</Label>
+                                <Input id="flight-locator" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-purchase-no">Nº da Compra</Label>
+                                <Input id="flight-purchase-no" />
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-[repeat(3,auto),1fr] gap-6 items-end">
+                            <div className="space-y-2 w-20">
+                                 <Label htmlFor="bag-personal" className="flex justify-center"><User className="h-5 w-5"/></Label>
+                                <Input id="bag-personal" defaultValue={1} type="number" />
+                            </div>
+                             <div className="space-y-2 w-20">
+                                 <Label htmlFor="bag-carryon" className="flex justify-center"><Luggage className="h-5 w-5"/></Label>
+                                <Input id="bag-carryon" defaultValue={1} type="number" />
+                            </div>
+                            <div className="space-y-2 w-20">
+                                 <Label htmlFor="bag-checked" className="flex justify-center"><Luggage className="h-5 w-5"/></Label>
+                                <Input id="bag-checked" defaultValue={0} type="number" />
+                            </div>
+                        </div>
+
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                             <div className="space-y-2">
+                                <Label htmlFor="flight-class">Classe</Label>
+                                <Select defaultValue="economica">
+                                    <SelectTrigger id="flight-class"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="economica">Econômica</SelectItem>
+                                        <SelectItem value="executiva">Executiva</SelectItem>
+                                        <SelectItem value="primeira">Primeira Classe</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-connections">Conexões</Label>
+                                <Select defaultValue="direto">
+                                    <SelectTrigger id="flight-connections"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="direto">Voo direto</SelectItem>
+                                        <SelectItem value="1-conexao">1 Conexão</SelectItem>
+                                        <SelectItem value="2-conexoes">2+ Conexões</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="flight-checkin">Notificação Check-in</Label>
+                                <Select defaultValue="48h">
+                                    <SelectTrigger id="flight-checkin"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                         <SelectItem value="48h">Notificar Check-in 48h</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="flight-obs">Observação</Label>
+                                <Input id="flight-obs" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+
+
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -1262,6 +1425,7 @@ export default function NovaCotacaoPage() {
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
+    const [isFlightInfoDialogOpen, setIsFlightInfoDialogOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
     const [passengers, setPassengers] = useState<Person[]>([]);
@@ -1537,7 +1701,7 @@ export default function NovaCotacaoPage() {
                                         </div>
                                         <div className="flex gap-2">
                                             <Button variant="outline">Incluir via Localizador</Button>
-                                            <Button>Incluir</Button>
+                                            <Button onClick={() => setIsFlightInfoDialogOpen(true)}>Incluir</Button>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
@@ -2042,6 +2206,7 @@ export default function NovaCotacaoPage() {
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
+            <FlightInfoDialog open={isFlightInfoDialogOpen} onOpenChange={setIsFlightInfoDialogOpen} title="Voo de Ida" />
         </>
     );
 }
