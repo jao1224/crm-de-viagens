@@ -341,6 +341,7 @@ const initialAddressState = {
 };
 
 const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
     const [passportIssueDate, setPassportIssueDate] = useState<Date>();
@@ -380,6 +381,14 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
             alert('Falha ao buscar o CEP. Tente novamente.');
         }
     };
+    
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Nova pessoa salva com sucesso.",
+        });
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -683,7 +692,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -691,8 +700,17 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 }
 
 const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
     const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
     
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Custo salvo com sucesso.",
+        });
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -789,7 +807,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -797,8 +815,17 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
 }
 
 const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
     const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
     
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Valor de venda salvo com sucesso.",
+        });
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -872,7 +899,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -880,8 +907,17 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
 }
 
 const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
     const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
     
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Bonificação salva com sucesso.",
+        });
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -967,7 +1003,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -976,8 +1012,17 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 
 
 const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
     const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
     
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Pagamento de bonificação salvo com sucesso.",
+        });
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -1063,7 +1108,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1071,6 +1116,15 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
 }
 
 const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    const { toast } = useToast();
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Serviço da fatura salvo com sucesso.",
+        });
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -1124,7 +1178,7 @@ const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenCha
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1254,9 +1308,18 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
 const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpenChange: (open: boolean) => void; title: string }) => {
+    const { toast } = useToast();
     const [searchDate, setSearchDate] = useState<Date>();
     const [departureDate, setDepartureDate] = useState<Date>();
     const [arrivalDate, setArrivalDate] = useState<Date>();
+
+    const handleSave = () => {
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Voo salvo com sucesso.",
+        });
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1374,8 +1437,8 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                                     <SelectContent>
                                         <SelectItem value="economica">Econômica</SelectItem>
                                         <SelectItem value="economica-premium">Econômica Premium</SelectItem>
-                                        <SelectItem value="primeira">Primeira Classe</SelectItem>
                                         <SelectItem value="executiva">Executiva</SelectItem>
+                                        <SelectItem value="primeira">Primeira Classe</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1414,7 +1477,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                 </div>
                 <DialogFooter>
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1427,7 +1490,6 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
     const [exitDate, setExitDate] = useState<Date>();
 
     const handleSaveHotel = () => {
-        // Here you would normally save the data
         onOpenChange(false);
         toast({
             title: "Sucesso!",
@@ -1529,6 +1591,7 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
 }
 
 export default function NovaCotacaoPage() {
+    const { toast } = useToast();
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
     const [activeTab, setActiveTab] = useState('orcamento');
@@ -1824,7 +1887,7 @@ export default function NovaCotacaoPage() {
                                 </Card>
                                 
                                 <Card>
-                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <ArrowRight className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Ida</CardTitle>
@@ -1842,7 +1905,7 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <ArrowLeft className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
