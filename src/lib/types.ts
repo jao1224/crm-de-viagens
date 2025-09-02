@@ -162,8 +162,7 @@ export interface Tag {
 export type Flight = {
     id: string;
     dateTime: Date;
-    passengerName: string;
-    passengerCount: number;
+    passengers: string[];
     whatsappIcon: boolean;
     from: string;
     to: string;
@@ -171,4 +170,11 @@ export type Flight = {
     airline: string;
     locator: string;
     status: 'check-in-open' | 'notify-check-in' | 'completed' | 'scheduled';
+};
+
+export type Person = {
+  id: number;
+  name: string;
+  type?: 'adulto' | 'crianca' | 'bebe';
+  // Adicione quaisquer outros campos que você precise para uma pessoa
 };

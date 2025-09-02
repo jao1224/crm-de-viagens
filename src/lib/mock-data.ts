@@ -1,5 +1,5 @@
 
-import type { Appointment, Quote, Project, User, Flight } from './types';
+import type { Appointment, Quote, Project, User, Flight, Person, TravelPackage } from './types';
 
 export const currentUser: User = {
     id: 'user-lima',
@@ -106,34 +106,136 @@ export const mockUsers: User[] = [
     }
 ]
 
-export const mockPeople = [
-    { 
-      id: 1, 
-      name: 'Aalyah Evelyn Bulhões Domingues', 
-      rating: 5, 
-      types: ['Passageiro'], 
-      cpfCnpj: '123.456.789-00', 
-      phone: '(85) 99123-4567', 
-      active: true,
-      email: 'aalyah.evelyn@example.com',
-      sexo: 'Feminino',
-      nascimento: '2004-07-13',
-      rg: '2004123456789',
-      orgaoEmissor: 'SSP/CE',
-      id_estrangeiro: '',
-      nacionalidade: 'Brasil',
-      estadoCivil: 'Solteira',
-      passaporte: 'GJ407853',
-      emissaoPassaporte: '2024-05-21',
-      vencimentoPassaporte: '2034-05-21',
-      visto: 'Não possui',
-      validadeVisto: '',
-    },
+export const mockPeople: Person[] = [
+  { 
+    id: 1, 
+    name: 'Aalyah Evelyn Bulhões Domingues', 
+  },
+  { 
+    id: 2, 
+    name: 'Herlingue Carvalho Azevedo',
+  },
 ];
 
 export const mockFlights: Flight[] = [
-    { id: '1', dateTime: new Date('2025-08-23T17:15:00Z'), passengerName: 'Kelly Freires Diogo Tossi', passengerCount: 1, whatsappIcon: true, from: 'São Paulo (VCP)', to: 'Lisboa (LIS)', flightType: 'Ida', airline: 'Latam', locator: '7XIE9', status: 'notify-check-in' },
-    { id: '2', dateTime: new Date('2025-09-10T20:30:00Z'), passengerName: 'Herlingue Carvalho Azevedo', passengerCount: 2, whatsappIcon: false, from: 'São Paulo (VCP)', to: 'Porto (OPO)', flightType: 'Ida', airline: 'TAP', locator: 'T196W', status: 'scheduled' },
-    { id: '3', dateTime: new Date('2025-07-31T20:30:00Z'), passengerName: 'João da Silva', passengerCount: 1, whatsappIcon: true, from: 'Rio de Janeiro (GIG)', to: 'Salvador (SSA)', flightType: 'Ida', airline: 'GOL', locator: 'G3H4J', status: 'completed' },
-     { id: '4', dateTime: new Date('2025-08-22T10:00:00Z'), passengerName: 'Maria Antônia', passengerCount: 1, whatsappIcon: false, from: 'Belo Horizonte (CNF)', to: 'São Paulo (CGH)', flightType: 'Volta', airline: 'Azul', locator: 'AZ25B', status: 'check-in-open' },
+    { id: '1', dateTime: new Date('2025-08-23T17:15:00Z'), passengers: ['Kelly Freires Diogo Tossi'], whatsappIcon: true, from: 'São Paulo (VCP)', to: 'Lisboa (LIS)', flightType: 'Ida', airline: 'Latam', locator: '7XIE9', status: 'notify-check-in' },
+    { id: '2', dateTime: new Date('2025-09-10T20:30:00Z'), passengers: ['Herlingue Carvalho Azevedo', 'Acompanhante 1'], whatsappIcon: false, from: 'São Paulo (VCP)', to: 'Porto (OPO)', flightType: 'Ida', airline: 'TAP', locator: 'T196W', status: 'scheduled' },
+    { id: '3', dateTime: new Date('2025-07-31T20:30:00Z'), passengers: ['João da Silva'], whatsappIcon: true, from: 'Rio de Janeiro (GIG)', to: 'Salvador (SSA)', flightType: 'Ida', airline: 'GOL', locator: 'G3H4J', status: 'completed' },
+     { id: '4', dateTime: new Date('2025-08-22T10:00:00Z'), passengers: ['Maria Antônia', 'José Carlos', 'Pedro Antunes'], whatsappIcon: false, from: 'Belo Horizonte (CNF)', to: 'São Paulo (CGH)', flightType: 'Volta', airline: 'Azul', locator: 'AZ25B', status: 'check-in-open' },
+];
+
+export const mockTravelPackages: TravelPackage[] = [
+    // Pacotes de Praia
+    {
+      id: 'praia001',
+      title: 'Semana Relax em Cancún',
+      destination: 'Cancún, México',
+      price: 4500,
+      imageUrl: 'https://placehold.co/600x400/0077be/FFFFFF/png',
+      type: 'Praia',
+      status: 'Disponível',
+      duration: 7,
+      travelers: 2,
+      dataAiHint: 'Cancun beach'
+    },
+    {
+      id: 'praia002',
+      title: 'Aventura em Fernando de Noronha',
+      destination: 'Fernando de Noronha, Brasil',
+      price: 6800,
+      imageUrl: 'https://placehold.co/600x400/008080/FFFFFF/png',
+      type: 'Praia',
+      status: 'Disponível',
+      duration: 5,
+      travelers: 2,
+      dataAiHint: 'Noronha Brazil'
+    },
+    // Pacotes de Montanha
+    {
+      id: 'montanha001',
+      title: 'Esqui em Bariloche',
+      destination: 'Bariloche, Argentina',
+      price: 5200,
+      imageUrl: 'https://placehold.co/600x400/4682b4/FFFFFF/png',
+      type: 'Montanha',
+      status: 'Disponível',
+      duration: 8,
+      travelers: 2,
+      dataAiHint: 'Bariloche snow'
+    },
+    {
+      id: 'montanha002',
+      title: 'Trekking nos Alpes Suíços',
+      destination: 'Interlaken, Suíça',
+      price: 8500,
+      imageUrl: 'https://placehold.co/600x400/2e8b57/FFFFFF/png',
+      type: 'Montanha',
+      status: 'Esgotado',
+      duration: 10,
+      travelers: 2,
+      dataAiHint: 'Swiss Alps'
+    },
+    // Pacotes de Negócios
+    {
+      id: 'negocios001',
+      title: 'Business Trip para São Paulo',
+      destination: 'São Paulo, Brasil',
+      price: 2200,
+      imageUrl: 'https://placehold.co/600x400/333333/FFFFFF/png',
+      type: 'Negócios',
+      status: 'Disponível',
+      duration: 3,
+      travelers: 1,
+      dataAiHint: 'Sao Paulo business'
+    },
+    // Pacotes de Cidade
+    {
+      id: 'cidade001',
+      title: 'Cultura em Roma',
+      destination: 'Roma, Itália',
+      price: 7300,
+      imageUrl: 'https://placehold.co/600x400/ff4500/FFFFFF/png',
+      type: 'Cidade',
+      status: 'Disponível',
+      duration: 7,
+      travelers: 2,
+      dataAiHint: 'Rome colosseum'
+    },
+    {
+      id: 'cidade002',
+      title: 'Luzes de Tóquio',
+      destination: 'Tóquio, Japão',
+      price: 9800,
+      imageUrl: 'https://placehold.co/600x400/ff1493/FFFFFF/png',
+      type: 'Cidade',
+      status: 'Disponível',
+      duration: 10,
+      travelers: 2,
+      dataAiHint: 'Tokyo neon'
+    },
+     // Pacotes para Família
+    {
+      id: 'familia001',
+      title: 'Magia na Disney',
+      destination: 'Orlando, EUA',
+      price: 12500,
+      imageUrl: 'https://placehold.co/600x400/1e90ff/FFFFFF/png',
+      type: 'Família',
+      status: 'Disponível',
+      duration: 10,
+      travelers: 4,
+      dataAiHint: 'Disney castle'
+    },
+    {
+      id: 'familia002',
+      title: 'Resorts All-Inclusive na Bahia',
+      destination: 'Porto Seguro, Brasil',
+      price: 8800,
+      imageUrl: 'https://placehold.co/600x400/32cd32/FFFFFF/png',
+      type: 'Família',
+      status: 'Disponível',
+      duration: 7,
+      travelers: 4,
+      dataAiHint: 'Bahia resort'
+    },
 ];

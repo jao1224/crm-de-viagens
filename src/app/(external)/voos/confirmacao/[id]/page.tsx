@@ -5,7 +5,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Logo } from '@/components/logo';
-import { Plane, Printer, Copy, AlertTriangle } from 'lucide-react';
+import { Plane, Printer, Copy, AlertTriangle, User } from 'lucide-react';
 import { mockFlights } from '@/lib/mock-data';
 import type { Flight } from '@/lib/types';
 import { format } from 'date-fns';
@@ -70,8 +70,15 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
 
             <main className="py-8 space-y-8">
                 <div className="p-6 border rounded-xl bg-muted/30">
-                    <p className="text-sm text-muted-foreground mb-1">Passageiro(s)</p>
-                    <p className="font-bold text-2xl text-foreground">{flight.passengerName} {flight.passengerCount > 1 && `(+${flight.passengerCount - 1})`}</p>
+                    <p className="text-sm text-muted-foreground mb-2">Passageiro(s)</p>
+                    <div className="space-y-2">
+                        {flight.passengers.map((passenger, index) => (
+                             <div key={index} className="flex items-center gap-3">
+                                <User className="h-5 w-5 text-muted-foreground" />
+                                <p className="font-bold text-xl text-foreground">{passenger}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 
                 <div className="space-y-4">

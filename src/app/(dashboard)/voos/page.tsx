@@ -60,8 +60,8 @@ const FlightCard = ({ flight, onConfirmClick }: { flight: Flight, onConfirmClick
                         <p className="text-muted-foreground font-medium text-sm -mt-1">{format(flight.dateTime, 'HH:mm')}</p>
                     </div>
                     <div>
-                        <p className="font-semibold flex items-center gap-1.5">{flight.passengerName} {flight.whatsappIcon && <MessageSquare className="h-4 w-4 text-green-500" />}</p>
-                        <p className="text-sm text-muted-foreground">{flight.passengerCount} passageiro(s)</p>
+                        <p className="font-semibold flex items-center gap-1.5">{flight.passengers[0]} {flight.whatsappIcon && <MessageSquare className="h-4 w-4 text-green-500" />}</p>
+                        <p className="text-sm text-muted-foreground">{flight.passengers.length} passageiro(s)</p>
                     </div>
                     <div>
                          <p className="font-semibold">{flight.from} → {flight.to}</p>
