@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { Calendar as CalendarIcon, Filter, MoreHorizontal, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays } from 'date-fns';
@@ -249,4 +250,3 @@ export default function VoosPage() {
         </div>
     );
 }
-
