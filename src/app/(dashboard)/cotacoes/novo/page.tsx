@@ -761,13 +761,8 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 }
 
 const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
     const handleSave = () => {
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Custo salvo com sucesso.",
-        });
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -892,13 +887,8 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
 }
 
 const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-     const { toast } = useToast();
     const handleSave = () => {
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Valor de venda salvo com sucesso.",
-        });
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1000,13 +990,8 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
 }
 
 const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-     const { toast } = useToast();
     const handleSave = () => {
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Bonificação salva com sucesso.",
-        });
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1121,13 +1106,8 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 
 
 const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-     const { toast } = useToast();
     const handleSave = () => {
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Pagamento de bonificação salvo com sucesso.",
-        });
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1241,13 +1221,8 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
 }
 
 const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-     const { toast } = useToast();
     const handleSave = () => {
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Serviço da fatura salvo com sucesso.",
-        });
     }
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1436,6 +1411,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
     const formRef = useRef<HTMLFormElement>(null);
     const [departureDate, setDepartureDate] = useState<Date | undefined>();
     const [arrivalDate, setArrivalDate] = useState<Date | undefined>();
+    const [flightSearchDate, setFlightSearchDate] = useState<Date | undefined>();
     
     const handleSave = () => {
         if (!formRef.current) return;
@@ -1501,16 +1477,19 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                                         <Button
                                             variant={"outline"}
                                             className={cn(
-                                                "w-full justify-start text-left font-normal"
+                                                "w-full justify-start text-left font-normal",
+                                                !flightSearchDate && "text-muted-foreground"
                                             )}
                                         >
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            <span>dd/mm/aaaa</span>
+                                            {flightSearchDate ? format(flightSearchDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
                                         <Calendar
                                             mode="single"
+                                            selected={flightSearchDate}
+                                            onSelect={setFlightSearchDate}
                                             initialFocus
                                             locale={ptBR}
                                         />
