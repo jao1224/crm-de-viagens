@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage, RefreshCw, PencilLine } from 'lucide-react';
 import Link from 'next/link';
@@ -1406,13 +1406,33 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
-const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void }) => {
+const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, flightToEdit }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void, flightToEdit: FlightData | null }) => {
     const { toast } = useToast();
     const formRef = useRef<HTMLFormElement>(null);
     const [departureDate, setDepartureDate] = useState<Date | undefined>();
     const [arrivalDate, setArrivalDate] = useState<Date | undefined>();
     const [flightSearchDate, setFlightSearchDate] = useState<Date | undefined>();
     
+    useEffect(() => {
+        if (flightToEdit) {
+            const parseDate = (dateStr: string) => {
+                try {
+                    return parse(dateStr, 'dd/MM/yyyy', new Date());
+                } catch {
+                    return undefined;
+                }
+            }
+            setDepartureDate(parseDate(flightToEdit.departureDate));
+            setArrivalDate(parseDate(flightToEdit.arrivalDate));
+            // You can populate other fields here from flightToEdit
+        } else {
+             setDepartureDate(undefined);
+             setArrivalDate(undefined);
+             setFlightSearchDate(undefined);
+        }
+    }, [flightToEdit]);
+
+
     const handleSave = () => {
         if (!formRef.current) return;
 
@@ -1432,7 +1452,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
         }
 
         const flightData: FlightData = {
-            id: Date.now().toString(),
+            id: flightToEdit?.id || Date.now().toString(),
             type: flightType,
             origin,
             destination,
@@ -1507,11 +1527,11 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <Label htmlFor="flight-origin">Origem <span className="text-destructive">*</span></Label>
-                                <Input id="flight-origin" name="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                                <Input id="flight-origin" name="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" defaultValue={flightToEdit?.origin} />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-destination">Destino <span className="text-destructive">*</span></Label>
-                                <Input id="flight-destination" name="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                                <Input id="flight-destination" name="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" defaultValue={flightToEdit?.destination} />
                             </div>
                         </div>
 
@@ -1543,7 +1563,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                                         </PopoverContent>
                                     </Popover>
                                     <div className="relative">
-                                        <Input type="time" name="flight-departure-time" className="pr-8" required/>
+                                        <Input type="time" name="flight-departure-time" className="pr-8" required defaultValue={flightToEdit?.departureTime} />
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
@@ -1575,7 +1595,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                                         </PopoverContent>
                                     </Popover>
                                      <div className="relative">
-                                        <Input type="time" name="flight-arrival-time" className="pr-8" required/>
+                                        <Input type="time" name="flight-arrival-time" className="pr-8" required defaultValue={flightToEdit?.arrivalTime} />
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
@@ -1589,22 +1609,22 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="flight-company">Companhia</Label>
-                                <Select name="flight-company">
+                                <Select name="flight-company" defaultValue={flightToEdit?.airline}>
                                     <SelectTrigger id="flight-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
                                     <SelectContent></SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-no">Nº do Voo</Label>
-                                <Input id="flight-no" name="flight-no" />
+                                <Input id="flight-no" name="flight-no" defaultValue={flightToEdit?.flightNumber} />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-locator">Localizador</Label>
-                                <Input id="flight-locator" name="flight-locator" />
+                                <Input id="flight-locator" name="flight-locator" defaultValue={flightToEdit?.locator} />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-purchase-no">Nº da Compra</Label>
-                                <Input id="flight-purchase-no" name="flight-purchase-no" />
+                                <Input id="flight-purchase-no" name="flight-purchase-no" defaultValue={flightToEdit?.purchaseNumber} />
                             </div>
                         </div>
                         
@@ -1850,11 +1870,11 @@ const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpen
     )
 }
 
-const FlightItem = ({ flight, onRemove }: { flight: FlightData, onRemove: (id: string) => void }) => {
+const FlightItem = ({ flight, onRemove, onEdit }: { flight: FlightData, onRemove: (id: string) => void, onEdit: (flight: FlightData) => void }) => {
     return (
         <div className="border p-4 rounded-lg relative pr-12">
             <div className="absolute top-2 right-2 flex gap-1">
-                <Button variant="ghost" size="icon" className="h-6 w-6"><PencilLine className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onEdit(flight)}><PencilLine className="h-4 w-4" /></Button>
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => onRemove(flight.id)}><Trash2 className="h-4 w-4" /></Button>
             </div>
             <p className="font-bold text-lg">{flight.origin} → {flight.destination}</p>
@@ -1897,6 +1917,7 @@ export default function NovaCotacaoPage() {
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [flightDialogType, setFlightDialogType] = useState<FlightDialogType | null>(null);
+    const [flightToEdit, setFlightToEdit] = useState<FlightData | null>(null);
     const [isHotelInfoDialogOpen, setIsHotelInfoDialogOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
@@ -1927,10 +1948,17 @@ export default function NovaCotacaoPage() {
     };
 
     const openFlightDialog = (type: FlightDialogType) => {
+        setFlightToEdit(null); // Ensure we're adding a new one
         setFlightDialogType(type);
+    };
+    
+    const handleEditFlight = (flight: FlightData) => {
+        setFlightToEdit(flight);
+        setFlightDialogType(flight.type);
     };
 
     const closeFlightDialog = () => {
+        setFlightToEdit(null);
         setFlightDialogType(null);
     };
 
@@ -1988,9 +2016,16 @@ export default function NovaCotacaoPage() {
     };
 
     const handleSaveFlight = (data: FlightData) => {
-        setFlights(prev => [...prev, data]);
-        toast({ title: "Sucesso!", description: "Voo salvo com sucesso." });
+        setFlights(prev => {
+            const exists = prev.some(f => f.id === data.id);
+            if (exists) {
+                return prev.map(f => (f.id === data.id ? data : f));
+            }
+            return [...prev, data];
+        });
+        toast({ title: "Sucesso!", description: `Voo ${flightToEdit ? 'atualizado' : 'salvo'} com sucesso.` });
     };
+
 
     const handleRemoveFlight = (id: string) => {
         setFlights(prev => prev.filter(f => f.id !== id));
@@ -2224,7 +2259,7 @@ export default function NovaCotacaoPage() {
                                             </div>
                                         ) : (
                                             flights.filter(f => f.type === 'ida').map(flight => (
-                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} onEdit={handleEditFlight} />
                                             ))
                                         )}
                                     </CardContent>
@@ -2248,7 +2283,7 @@ export default function NovaCotacaoPage() {
                                             </div>
                                         ) : (
                                             flights.filter(f => f.type === 'volta').map(flight => (
-                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} onEdit={handleEditFlight} />
                                             ))
                                         )}
                                     </CardContent>
@@ -2271,7 +2306,7 @@ export default function NovaCotacaoPage() {
                                             </div>
                                         ) : (
                                             flights.filter(f => f.type === 'interno').map(flight => (
-                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} onEdit={handleEditFlight} />
                                             ))
                                         )}
                                     </CardContent>
@@ -2799,9 +2834,10 @@ export default function NovaCotacaoPage() {
                 <FlightInfoDialog
                     open={!!flightDialogType}
                     onOpenChange={(open) => !open && closeFlightDialog()}
-                    title={flightDialogTitles[flightDialogType]}
+                    title={flightToEdit ? `Editar ${flightDialogTitles[flightDialogType]}`: flightDialogTitles[flightDialogType]}
                     flightType={flightDialogType}
                     onSave={handleSaveFlight}
+                    flightToEdit={flightToEdit}
                 />
             )}
             {isHotelInfoDialogOpen && (
