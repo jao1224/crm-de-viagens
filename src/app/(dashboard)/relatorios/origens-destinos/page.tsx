@@ -8,25 +8,97 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Calendar as CalendarIcon, GripVertical } from 'lucide-react';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import { Badge } from '@/components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const mockData = [
-    { location: "Lisboa (LIS)", count: 16 },
-    { location: "Fortaleza (FOR)", count: 8 },
-    { location: "São Paulo (VCP)", count: 8 },
-    { location: "São Paulo (GRU)", count: 7 },
-    { location: "Belo Horizonte (CNF)", count: 6 },
-    { location: "Recife (REC)", count: 3 },
-    { location: "Vitória (VIX)", count: 3 },
-    { location: "Rio De Janeiro (GIG)", count: 2 },
-    { location: "Belem (BEL)", count: 2 },
+    { 
+        location: "Lisboa (LIS)", 
+        count: 16,
+        quotes: [
+            { id: 'cfgq3', client: 'Analine de Albuquerque Linhares', date: '05/08', value: 23766.18 },
+            { id: 'bdchj', client: 'JULIO VENANCIO MENEZES', date: '22/08', value: 18540.00 },
+            { id: '8a4wl', client: 'Lidiane da Silva Seidenfuhss', date: '05/08', value: 11400.00 },
+        ]
+    },
+    { 
+        location: "Fortaleza (FOR)", 
+        count: 8,
+        quotes: [
+            { id: '07e6b', client: 'Maria Brandão Silva Gaspar', date: '05/08', value: 4800.00 },
+        ]
+    },
+    { 
+        location: "São Paulo (VCP)", 
+        count: 8,
+        quotes: []
+    },
+    { 
+        location: "São Paulo (GRU)", 
+        count: 7,
+        quotes: []
+    },
+    { 
+        location: "Belo Horizonte (CNF)", 
+        count: 6,
+        quotes: []
+    },
+    { 
+        location: "Recife (REC)", 
+        count: 3,
+        quotes: []
+    },
+    { 
+        location: "Vitória (VIX)", 
+        count: 3,
+        quotes: []
+    },
+    { 
+        location: "Rio De Janeiro (GIG)", 
+        count: 2,
+        quotes: []
+    },
+    { 
+        location: "Belem (BEL)", 
+        count: 2,
+        quotes: []
+    },
 ];
+
+const QuoteTable = ({ quotes }: { quotes: { id: string, client: string, date: string, value: number }[] }) => {
+    if (quotes.length === 0) {
+        return <p className="text-sm text-muted-foreground text-center py-4">Nenhuma cotação encontrada para esta localidade.</p>
+    }
+    return (
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead className="w-[100px]">ID</TableHead>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead>Data</TableHead>
+                    <TableHead className="text-right">Valor</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {quotes.map((quote) => (
+                    <TableRow key={quote.id}>
+                        <TableCell className="font-mono">{quote.id}</TableCell>
+                        <TableCell>{quote.client}</TableCell>
+                        <TableCell>{quote.date}</TableCell>
+                        <TableCell className="text-right font-medium">{quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    )
+}
 
 export default function OrigensDestinosPage() {
     const [date, setDate] = useState<DateRange | undefined>({
@@ -134,19 +206,23 @@ export default function OrigensDestinosPage() {
                 </CardContent>
             </Card>
 
-            <div className="space-y-2">
+            <Accordion type="single" collapsible className="w-full space-y-2">
                 {mockData.map((item, index) => (
                     <Card key={index}>
-                        <CardContent className="p-3 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <GripVertical className="h-5 w-5 text-muted-foreground" />
-                                <span className="font-medium text-foreground">{item.location}</span>
-                            </div>
-                            <Badge variant="default" className="text-sm">{item.count}</Badge>
-                        </CardContent>
+                         <AccordionItem value={`item-${index}`} className="border-b-0">
+                            <AccordionTrigger className="p-3 hover:no-underline">
+                                <div className="flex items-center justify-between w-full">
+                                    <span className="font-semibold text-foreground text-base">{item.location}</span>
+                                    <Badge variant="default" className="text-sm">{item.count}</Badge>
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="px-3 pb-3">
+                               <QuoteTable quotes={item.quotes} />
+                            </AccordionContent>
+                        </AccordionItem>
                     </Card>
                 ))}
-            </div>
+            </Accordion>
         </div>
     );
 }
