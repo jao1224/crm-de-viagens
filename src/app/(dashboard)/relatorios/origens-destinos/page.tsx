@@ -70,6 +70,76 @@ const mockData = [
         count: 2,
         quotes: []
     },
+    { 
+        location: "Porto (OPO)", 
+        count: 2,
+        quotes: []
+    },
+    { 
+        location: "Madrid (MAD)", 
+        count: 2,
+        quotes: []
+    },
+    { 
+        location: "Natal (NAT)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Manaus (MAO)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Ribeirao Preto (RAO)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Joinville (JOI)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Florianópolis (FLN)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Brasilia (BSB)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Uberlandia (UDI)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Maringa (MGF)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Orlando (MCO)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Paris (CDG)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Frankfurt (FRA)", 
+        count: 1,
+        quotes: []
+    },
+    { 
+        location: "Salvador (SSA)", 
+        count: 1,
+        quotes: []
+    },
 ];
 
 const QuoteTable = ({ quotes }: { quotes: { id: string, client: string, date: string, value: number }[] }) => {
