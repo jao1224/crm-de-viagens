@@ -1735,14 +1735,16 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <ArrowLeft className="h-5 w-5 text-green-600" />
-                                            <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <Button variant="outline">Incluir via Localizador</Button>
-                                            <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
+                                     <CardHeader>
+                                        <div className="flex flex-row items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <ArrowLeft className="h-5 w-5 text-green-600" />
+                                                <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Button variant="outline">Incluir via Localizador</Button>
+                                                <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
+                                            </div>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
@@ -1753,12 +1755,14 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <Plane className="h-5 w-5 text-green-600" />
-                                            <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
+                                    <CardHeader>
+                                        <div className="flex flex-row items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Plane className="h-5 w-5 text-green-600" />
+                                                <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
+                                            </div>
+                                            <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
                                         </div>
-                                        <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-6 border-dashed border-2 rounded-md">
