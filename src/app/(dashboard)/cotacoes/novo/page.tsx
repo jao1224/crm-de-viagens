@@ -1433,7 +1433,7 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
             title: "Sucesso!",
             description: "Hospedagem salva com sucesso.",
         });
-    }
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1824,12 +1824,12 @@ export default function NovaCotacaoPage() {
                                 </Card>
                                 
                                 <Card>
-                                    <CardHeader className="flex-row items-center justify-between">
+                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <ArrowRight className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Ida</CardTitle>
                                         </div>
-                                        <div className="flex gap-2">
+                                        <div className="flex items-center gap-2">
                                             <Button variant="outline">Incluir via Localizador</Button>
                                             <Button onClick={() => openFlightDialog('ida')}>Incluir</Button>
                                         </div>
@@ -1842,7 +1842,7 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                     <CardHeader className="flex-row items-center justify-between">
+                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <ArrowLeft className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
@@ -1860,12 +1860,14 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                    <CardHeader className="flex-row items-center justify-between">
+                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <Plane className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
                                         </div>
-                                        <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
+                                        <div className="flex items-center gap-2">
+                                           <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
+                                        </div>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-6 border-dashed border-2 rounded-md">
