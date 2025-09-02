@@ -314,30 +314,30 @@ const airlines = [
 ];
 
 const airportLocations = [
-    { value: 'LIS', label: 'Lisboa (LIS)' },
-    { value: 'FOR', label: 'Fortaleza (FOR)' },
-    { value: 'VCP', label: 'São Paulo (VCP)' },
-    { value: 'GRU', label: 'São Paulo (GRU)' },
-    { value: 'CNF', label: 'Belo Horizonte (CNF)' },
-    { value: 'REC', label: 'Recife (REC)' },
-    { value: 'VIX', label: 'Vitória (VIX)' },
-    { value: 'GIG', label: 'Rio De Janeiro (GIG)' },
     { value: 'BEL', label: 'Belem (BEL)' },
-    { value: 'OPO', label: 'Porto (OPO)' },
-    { value: 'MAD', label: 'Madrid (MAD)' },
-    { value: 'NAT', label: 'Natal (NAT)' },
-    { value: 'MAO', label: 'Manaus (MAO)' },
-    { value: 'RAO', label: 'Ribeirao Preto (RAO)' },
-    { value: 'JOI', label: 'Joinville (JOI)' },
-    { value: 'FLN', label: 'Florianópolis (FLN)' },
     { value: 'BSB', label: 'Brasilia (BSB)' },
-    { value: 'UDI', label: 'Uberlandia (UDI)' },
-    { value: 'MGF', label: 'Maringa (MGF)' },
-    { value: 'MCO', label: 'Orlando (MCO)' },
+    { value: 'CNF', label: 'Belo Horizonte (CNF)' },
     { value: 'CDG', label: 'Paris (CDG)' },
+    { value: 'FLN', label: 'Florianópolis (FLN)' },
+    { value: 'FOR', label: 'Fortaleza (FOR)' },
     { value: 'FRA', label: 'Frankfurt (FRA)' },
+    { value: 'GIG', label: 'Rio De Janeiro (GIG)' },
+    { value: 'GRU', label: 'São Paulo (GRU)' },
+    { value: 'JOI', label: 'Joinville (JOI)' },
+    { value: 'LIS', label: 'Lisboa (LIS)' },
+    { value: 'MAD', label: 'Madrid (MAD)' },
+    { value: 'MAO', label: 'Manaus (MAO)' },
+    { value: 'MCO', label: 'Orlando (MCO)' },
+    { value: 'MGF', label: 'Maringa (MGF)' },
+    { value: 'NAT', label: 'Natal (NAT)' },
+    { value: 'OPO', label: 'Porto (OPO)' },
+    { value: 'RAO', label: 'Ribeirao Preto (RAO)' },
+    { value: 'REC', label: 'Recife (REC)' },
     { value: 'SSA', label: 'Salvador (SSA)' },
-];
+    { value: 'UDI', label: 'Uberlandia (UDI)' },
+    { value: 'VCP', label: 'São Paulo (VCP)' },
+    { value: 'VIX', label: 'Vitória (VIX)' },
+].sort((a, b) => a.label.localeCompare(b.label));
 
 
 const initialAddressState = {
@@ -1456,11 +1456,14 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
-const AirlineCombobox = ({ value, onValueChange, ...props }: { value?: string, onValueChange: (value: string) => void }) => {
+const AirlineCombobox = ({ value, onValueChange }: { value?: string, onValueChange: (value: string) => void }) => {
     const [open, setOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredAirlines = airlines.filter(airline => airline.label.toLowerCase().includes(searchTerm.toLowerCase()));
 
     return (
-        <Popover open={open} onOpenChange={setOpen} {...props}>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -1474,11 +1477,15 @@ const AirlineCombobox = ({ value, onValueChange, ...props }: { value?: string, o
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0">
                 <Command>
-                    <CommandInput placeholder="Buscar companhia..." />
+                    <CommandInput 
+                        placeholder="Buscar companhia..." 
+                        value={searchTerm}
+                        onValueChange={setSearchTerm}
+                    />
                     <CommandList>
                         <CommandEmpty>Nenhuma companhia encontrada.</CommandEmpty>
                         <CommandGroup>
-                            {airlines.map((airline) => (
+                            {filteredAirlines.map((airline) => (
                                 <CommandItem
                                     key={airline.value}
                                     value={airline.label}
