@@ -313,6 +313,32 @@ const airlines = [
   { value: "ua", "label": "United Airlines" },
 ];
 
+const airportLocations = [
+    { value: 'LIS', label: 'Lisboa (LIS)' },
+    { value: 'FOR', label: 'Fortaleza (FOR)' },
+    { value: 'VCP', label: 'São Paulo (VCP)' },
+    { value: 'GRU', label: 'São Paulo (GRU)' },
+    { value: 'CNF', label: 'Belo Horizonte (CNF)' },
+    { value: 'REC', label: 'Recife (REC)' },
+    { value: 'VIX', label: 'Vitória (VIX)' },
+    { value: 'GIG', label: 'Rio De Janeiro (GIG)' },
+    { value: 'BEL', label: 'Belem (BEL)' },
+    { value: 'OPO', label: 'Porto (OPO)' },
+    { value: 'MAD', label: 'Madrid (MAD)' },
+    { value: 'NAT', label: 'Natal (NAT)' },
+    { value: 'MAO', label: 'Manaus (MAO)' },
+    { value: 'RAO', label: 'Ribeirao Preto (RAO)' },
+    { value: 'JOI', label: 'Joinville (JOI)' },
+    { value: 'FLN', label: 'Florianópolis (FLN)' },
+    { value: 'BSB', label: 'Brasilia (BSB)' },
+    { value: 'UDI', label: 'Uberlandia (UDI)' },
+    { value: 'MGF', label: 'Maringa (MGF)' },
+    { value: 'MCO', label: 'Orlando (MCO)' },
+    { value: 'CDG', label: 'Paris (CDG)' },
+    { value: 'FRA', label: 'Frankfurt (FRA)' },
+    { value: 'SSA', label: 'Salvador (SSA)' },
+];
+
 
 const initialAddressState = {
     cep: '',
@@ -1478,6 +1504,56 @@ const AirlineCombobox = ({ value, onValueChange, ...props }: { value?: string, o
     );
 };
 
+const AirportCombobox = ({ value, onValueChange, placeholder }: { value: string, onValueChange: (value: string) => void, placeholder?: string }) => {
+    const [open, setOpen] = useState(false)
+  
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between font-normal"
+          >
+            {value
+              ? airportLocations.find((airport) => airport.label.toLowerCase() === value.toLowerCase())?.label
+              : placeholder || "Selecione o aeroporto"}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[300px] p-0">
+          <Command>
+            <CommandInput placeholder="Buscar aeroporto..." />
+            <CommandList>
+              <CommandEmpty>Nenhum aeroporto encontrado.</CommandEmpty>
+              <CommandGroup>
+                {airportLocations.map((airport) => (
+                  <CommandItem
+                    key={airport.value}
+                    value={airport.label}
+                    onSelect={(currentValue) => {
+                      onValueChange(currentValue === value ? "" : currentValue)
+                      setOpen(false)
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === airport.label ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    {airport.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    )
+}
+
 
 const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, flightToEdit }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void, flightToEdit: FlightData | null }) => {
     const { toast } = useToast();
@@ -1486,6 +1562,8 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
     const [arrivalDate, setArrivalDate] = useState<Date | undefined>();
     const [flightSearchDate, setFlightSearchDate] = useState<Date | undefined>();
     const [selectedAirline, setSelectedAirline] = useState<string | undefined>();
+    const [origin, setOrigin] = useState('');
+    const [destination, setDestination] = useState('');
     
     useEffect(() => {
         if (flightToEdit) {
@@ -1500,12 +1578,15 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
             setDepartureDate(parseDate(flightToEdit.departureDate));
             setArrivalDate(parseDate(flightToEdit.arrivalDate));
             setSelectedAirline(flightToEdit.airline);
-            // You can populate other fields here from flightToEdit
+            setOrigin(flightToEdit.origin)
+            setDestination(flightToEdit.destination)
         } else {
              setDepartureDate(undefined);
              setArrivalDate(undefined);
              setFlightSearchDate(undefined);
              setSelectedAirline(undefined);
+             setOrigin('');
+             setDestination('');
         }
     }, [flightToEdit]);
 
@@ -1514,8 +1595,6 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
         if (!formRef.current) return;
 
         const formData = new FormData(formRef.current);
-        const origin = formData.get('flight-origin') as string;
-        const destination = formData.get('flight-destination') as string;
         const departureTime = formData.get('flight-departure-time') as string;
         const arrivalTime = formData.get('flight-arrival-time') as string;
 
@@ -1601,11 +1680,11 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <Label htmlFor="flight-origin">Origem <span className="text-destructive">*</span></Label>
-                                <Input id="flight-origin" name="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" defaultValue={flightToEdit?.origin} />
+                                <AirportCombobox value={origin} onValueChange={setOrigin} placeholder="Selecione a origem"/>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-destination">Destino <span className="text-destructive">*</span></Label>
-                                <Input id="flight-destination" name="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" defaultValue={flightToEdit?.destination} />
+                                <AirportCombobox value={destination} onValueChange={setDestination} placeholder="Selecione o destino"/>
                             </div>
                         </div>
 
