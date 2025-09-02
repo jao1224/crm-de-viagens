@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage, RefreshCw, PencilLine } from 'lucide-react';
 import Link from 'next/link';
@@ -290,71 +290,6 @@ const nationalities = [
     { value: "zimbabwean", label: "Zimbabuana" }
 ];
 
-const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { value: Date | undefined, onSelect: (date: Date | undefined) => void, placeholder?: string }) => {
-    const [inputValue, setInputValue] = useState(value ? format(value, "dd/MM/yyyy") : "");
-
-    React.useEffect(() => {
-        setInputValue(value ? format(value, "dd/MM/yyyy") : "");
-    }, [value]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let v = e.target.value.replace(/\D/g, '').slice(0, 8);
-        if (v.length > 2 && v.length <= 4) v = `${v.slice(0, 2)}/${v.slice(2)}`;
-        else if (v.length > 4) v = `${v.slice(0, 2)}/${v.slice(2, 4)}/${v.slice(4)}`;
-        setInputValue(v);
-    };
-
-    const handleInputBlur = () => {
-        if (inputValue.length === 10) {
-            try {
-                const parsedDate = parse(inputValue, "dd/MM/yyyy", new Date());
-                 if (!isNaN(parsedDate.getTime())) {
-                    onSelect(parsedDate);
-                } else {
-                    onSelect(undefined);
-                    setInputValue("");
-                }
-            } catch (error) {
-                 onSelect(undefined);
-                 setInputValue("");
-            }
-        }
-    };
-    
-    const handleDateSelect = (date: Date | undefined) => {
-        onSelect(date);
-    }
-
-    return (
-        <Popover>
-            <PopoverTrigger asChild>
-                <div className="relative flex items-center w-full">
-                    <Input
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onBlur={handleInputBlur}
-                        placeholder={placeholder}
-                        className="pr-8"
-                    />
-                    <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                </div>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar
-                    mode="single"
-                    selected={value}
-                    onSelect={handleDateSelect}
-                    initialFocus
-                    locale={ptBR}
-                    captionLayout="dropdown-buttons"
-                    fromYear={new Date().getFullYear() - 100}
-                    toYear={new Date().getFullYear() + 20}
-                />
-            </PopoverContent>
-        </Popover>
-    );
-};
-
 const initialAddressState = {
     cep: '',
     logradouro: '',
@@ -447,8 +382,33 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                             </div>
                         </div>
                         <div className="space-y-2">
-                             <Label htmlFor="birth-date">Data Nascimento</Label>
-                            <DatePickerInput value={birthDate} onSelect={setBirthDate} />
+                            <Label htmlFor="birth-date">Data Nascimento</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full justify-start text-left font-normal",
+                                            !birthDate && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {birthDate ? format(birthDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={birthDate}
+                                        onSelect={setBirthDate}
+                                        initialFocus
+                                        locale={ptBR}
+                                        captionLayout="dropdown-buttons"
+                                        fromYear={new Date().getFullYear() - 100}
+                                        toYear={new Date().getFullYear() + 20}
+                                    />
+                                </PopoverContent>
+                            </Popover>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="person-gender">Sexo</Label>
@@ -593,11 +553,61 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="doc-passport-issue">Emissão Passaporte</Label>
-                                    <DatePickerInput value={passportIssueDate} onSelect={setPassportIssueDate} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !passportIssueDate && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {passportIssueDate ? format(passportIssueDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={passportIssueDate}
+                                                onSelect={setPassportIssueDate}
+                                                initialFocus
+                                                locale={ptBR}
+                                                captionLayout="dropdown-buttons"
+                                                fromYear={new Date().getFullYear() - 100}
+                                                toYear={new Date().getFullYear() + 20}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                                  <div className="space-y-2">
                                     <Label htmlFor="doc-passport-expiry">Vencimento Passaporte</Label>
-                                    <DatePickerInput value={passportExpiryDate} onSelect={setPassportExpiryDate} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !passportExpiryDate && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {passportExpiryDate ? format(passportExpiryDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={passportExpiryDate}
+                                                onSelect={setPassportExpiryDate}
+                                                initialFocus
+                                                locale={ptBR}
+                                                captionLayout="dropdown-buttons"
+                                                fromYear={new Date().getFullYear() - 100}
+                                                toYear={new Date().getFullYear() + 20}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                                  <div className="space-y-2">
                                     <Label htmlFor="doc-passport-nat">Nacionalidade do Passaporte</Label>
@@ -620,7 +630,32 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="doc-visa-validity">Validade do Visto</Label>
-                                    <DatePickerInput value={visaValidityDate} onSelect={setVisaValidityDate} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !visaValidityDate && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {visaValidityDate ? format(visaValidityDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={visaValidityDate}
+                                                onSelect={setVisaValidityDate}
+                                                initialFocus
+                                                locale={ptBR}
+                                                captionLayout="dropdown-buttons"
+                                                fromYear={new Date().getFullYear() - 100}
+                                                toYear={new Date().getFullYear() + 20}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                             </div>
                         </TabsContent>
@@ -809,7 +844,26 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="cost-due-date">Vencimento</Label>
-                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
+                                     <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                <span>24/08/2025</span>
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="cost-payment-method">Forma de Pagamento</Label>
@@ -896,7 +950,26 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="sale-due-date">Vencimento <span className="text-destructive">*</span></Label>
-                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
+                                     <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                <span>24/08/2025</span>
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -999,7 +1072,26 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="bonus-due-date">Vencimento <span className="text-destructive">*</span></Label>
-                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
+                                     <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                <span>24/08/2025</span>
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="bonus-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
@@ -1101,7 +1193,26 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="paid-bonus-due-date">Vencimento</Label>
-                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
+                                     <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                <span>24/08/2025</span>
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="paid-bonus-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
@@ -1385,7 +1496,26 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                          <div className="space-y-2">
                             <Label htmlFor="flight-search-date">Data do Voo</Label>
                              <div className="flex gap-2">
-                                <DatePickerInput value={undefined} onSelect={() => {}} />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            <span>dd/mm/aaaa</span>
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                            mode="single"
+                                            initialFocus
+                                            locale={ptBR}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                                 <Button>Buscar</Button>
                              </div>
                         </div>
@@ -1410,7 +1540,29 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                             <div className="space-y-2">
                                 <Label htmlFor="flight-departure-date">Embarque <span className="text-destructive">*</span></Label>
                                 <div className="flex gap-2">
-                                    <DatePickerInput value={departureDate} onSelect={setDepartureDate} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !departureDate && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {departureDate ? format(departureDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={departureDate}
+                                                onSelect={setDepartureDate}
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                     <div className="relative">
                                         <Input type="time" name="flight-departure-time" className="pr-8"/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -1420,7 +1572,29 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                              <div className="space-y-2">
                                 <Label htmlFor="flight-arrival-date">Chegada <span className="text-destructive">*</span></Label>
                                 <div className="flex gap-2">
-                                    <DatePickerInput value={arrivalDate} onSelect={setArrivalDate} />
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !arrivalDate && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {arrivalDate ? format(arrivalDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={arrivalDate}
+                                                onSelect={setArrivalDate}
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
                                      <div className="relative">
                                         <Input type="time" name="flight-arrival-time" className="pr-8"/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -1587,7 +1761,29 @@ const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpen
                         <div className="space-y-2">
                             <Label htmlFor="hotel-entry-date">Entrada</Label>
                             <div className="flex gap-2">
-                                <DatePickerInput value={checkInDate} onSelect={setCheckInDate} />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !checkInDate && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {checkInDate ? format(checkInDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                            mode="single"
+                                            selected={checkInDate}
+                                            onSelect={setCheckInDate}
+                                            initialFocus
+                                            locale={ptBR}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                                 <div className="relative">
                                     <Input type="time" name="hotel-entry-time" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -1597,7 +1793,29 @@ const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpen
                         <div className="space-y-2">
                             <Label htmlFor="hotel-exit-date">Saída</Label>
                             <div className="flex gap-2">
-                                <DatePickerInput value={checkOutDate} onSelect={setCheckOutDate} />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !checkOutDate && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {checkOutDate ? format(checkOutDate, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                            mode="single"
+                                            selected={checkOutDate}
+                                            onSelect={setCheckOutDate}
+                                            initialFocus
+                                            locale={ptBR}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                                 <div className="relative">
                                     <Input type="time" name="hotel-exit-time" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -2467,11 +2685,55 @@ export default function NovaCotacaoPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
                                         <Label htmlFor="fatura-emissao">Emissão</Label>
-                                        <DatePickerInput value={faturaEmissao} onSelect={setFaturaEmissao} />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !faturaEmissao && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {faturaEmissao ? format(faturaEmissao, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={faturaEmissao}
+                                                    onSelect={(d) => d && setFaturaEmissao(d)}
+                                                    initialFocus
+                                                    locale={ptBR}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="fatura-vencimento">Vencimento <span className="text-destructive">*</span></Label>
-                                        <DatePickerInput value={faturaVencimento} onSelect={setFaturaVencimento} />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !faturaVencimento && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {faturaVencimento ? format(faturaVencimento, "dd/MM/yyyy") : <span>dd/mm/aaaa</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={faturaVencimento}
+                                                    onSelect={(d) => d && setFaturaVencimento(d)}
+                                                    initialFocus
+                                                    locale={ptBR}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
