@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage, RefreshCw } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage, RefreshCw, PencilLine } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,6 +31,33 @@ import RichTextEditor from '@/components/rich-text-editor';
 import { mockPeople } from '@/lib/mock-data';
 import type { Person } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+
+interface FlightData {
+    id: string;
+    type: 'ida' | 'volta' | 'interno';
+    origin: string;
+    destination: string;
+    departureDate: string;
+    departureTime: string;
+    arrivalDate: string;
+    arrivalTime: string;
+    airline?: string;
+    flightNumber?: string;
+    locator?: string;
+    purchaseNumber?: string;
+}
+
+interface HotelData {
+    id: string;
+    name: string;
+    checkIn: string;
+    checkInTime: string;
+    checkOut: string;
+    checkOutTime: string;
+    nights: number;
+    rooms: number;
+    description: string;
+}
 
 
 const steps = [
@@ -699,18 +726,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
-const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
-    
-    const handleSave = () => {
-        onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Custo salvo com sucesso.",
-        });
-    }
-
+const CostInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: () => void }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -786,7 +802,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="cost-due-date">Vencimento</Label>
-                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="cost-payment-method">Forma de Pagamento</Label>
@@ -807,25 +823,14 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={onSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
 
-const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
-    
-    const handleSave = () => {
-        onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Valor de venda salvo com sucesso.",
-        });
-    }
-
+const SaleValueInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: () => void }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -876,7 +881,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="sale-due-date">Vencimento <span className="text-destructive">*</span></Label>
-                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
                                 </div>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -899,25 +904,14 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={onSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
 
-const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
-    
-    const handleSave = () => {
-        onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Bonificação salva com sucesso.",
-        });
-    }
-
+const BonusInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: () => void }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -982,7 +976,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="bonus-due-date">Vencimento <span className="text-destructive">*</span></Label>
-                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="bonus-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
@@ -1003,7 +997,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={onSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1011,18 +1005,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 }
 
 
-const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    const [vencimentoDate, setVencimentoDate] = useState<Date>(new Date(2025, 7, 24));
-    
-    const handleSave = () => {
-        onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Pagamento de bonificação salvo com sucesso.",
-        });
-    }
-
+const PaidBonusInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: () => void }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -1087,7 +1070,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="paid-bonus-due-date">Vencimento</Label>
-                                    <DatePickerInput value={vencimentoDate} onSelect={setVencimentoDate} />
+                                    <DatePickerInput value={new Date(2025, 7, 24)} onSelect={() => {}} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="paid-bonus-payment-method">Forma de Pagamento <span className="text-destructive">*</span></Label>
@@ -1108,23 +1091,14 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={onSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
 
-const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    const handleSave = () => {
-        onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Serviço da fatura salvo com sucesso.",
-        });
-    }
-
+const InvoiceServiceDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: () => void }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-2xl">
@@ -1178,7 +1152,7 @@ const InvoiceServiceDialog = ({ open, onOpenChange }: { open: boolean, onOpenCha
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={onSave}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1307,18 +1281,47 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
-const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpenChange: (open: boolean) => void; title: string }) => {
+const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void }) => {
     const { toast } = useToast();
-    const [searchDate, setSearchDate] = useState<Date>();
-    const [departureDate, setDepartureDate] = useState<Date>();
-    const [arrivalDate, setArrivalDate] = useState<Date>();
-
+    const formRef = React.useRef<HTMLFormElement>(null);
+    
     const handleSave = () => {
+        if (!formRef.current) return;
+
+        const formData = new FormData(formRef.current);
+        const origin = formData.get('flight-origin') as string;
+        const destination = formData.get('flight-destination') as string;
+        const departureDate = formData.get('flight-departure-date') as string;
+        const departureTime = formData.get('flight-departure-time') as string;
+        const arrivalDate = formData.get('flight-arrival-date') as string;
+        const arrivalTime = formData.get('flight-arrival-time') as string;
+
+        if (!origin || !destination || !departureDate || !departureTime || !arrivalDate || !arrivalTime) {
+            toast({
+                title: "Campos obrigatórios",
+                description: "Por favor, preencha todos os campos marcados com *.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const flightData: FlightData = {
+            id: Date.now().toString(),
+            type: flightType,
+            origin,
+            destination,
+            departureDate,
+            departureTime,
+            arrivalDate,
+            arrivalTime,
+            airline: formData.get('flight-company') as string || undefined,
+            flightNumber: formData.get('flight-no') as string || undefined,
+            locator: formData.get('flight-locator') as string || undefined,
+            purchaseNumber: formData.get('flight-purchase-no') as string || undefined,
+        };
+        
+        onSave(flightData);
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Voo salvo com sucesso.",
-        });
     }
 
     return (
@@ -1327,15 +1330,15 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-foreground">{title}</DialogTitle>
                 </DialogHeader>
-                <div className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
+                <form ref={formRef} className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                         <div className="space-y-2">
                             <Label htmlFor="flight-search-no">Nº do Voo</Label>
-                            <Input id="flight-search-no" />
+                            <Input id="flight-search-no" name="flight-search-no" />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="flight-search-company">Companhia</Label>
-                            <Select>
+                            <Select name="flight-search-company">
                                 <SelectTrigger id="flight-search-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
                                 <SelectContent></SelectContent>
                             </Select>
@@ -1343,7 +1346,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                          <div className="space-y-2">
                             <Label htmlFor="flight-search-date">Data do Voo</Label>
                              <div className="flex gap-2">
-                                <DatePickerInput value={searchDate} onSelect={setSearchDate} />
+                                <DatePickerInput value={undefined} onSelect={() => {}} />
                                 <Button>Buscar</Button>
                              </div>
                         </div>
@@ -1356,11 +1359,11 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <Label htmlFor="flight-origin">Origem <span className="text-destructive">*</span></Label>
-                                <Input id="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                                <Input id="flight-origin" name="flight-origin" placeholder="Comece a digitar para selecionar ou digite manualmente" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-destination">Destino <span className="text-destructive">*</span></Label>
-                                <Input id="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" />
+                                <Input id="flight-destination" name="flight-destination" placeholder="Comece a digitar para selecionar ou digite manualmente" />
                             </div>
                         </div>
 
@@ -1368,9 +1371,9 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                             <div className="space-y-2">
                                 <Label htmlFor="flight-departure-date">Embarque <span className="text-destructive">*</span></Label>
                                 <div className="flex gap-2">
-                                    <DatePickerInput value={departureDate} onSelect={setDepartureDate} />
+                                    <DatePickerInput value={undefined} onSelect={() => {}} />
                                     <div className="relative">
-                                        <Input type="time" className="pr-8"/>
+                                        <Input type="time" name="flight-departure-time" className="pr-8"/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
@@ -1378,9 +1381,9 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                              <div className="space-y-2">
                                 <Label htmlFor="flight-arrival-date">Chegada <span className="text-destructive">*</span></Label>
                                 <div className="flex gap-2">
-                                    <DatePickerInput value={arrivalDate} onSelect={setArrivalDate} />
+                                    <DatePickerInput value={undefined} onSelect={() => {}} />
                                      <div className="relative">
-                                        <Input type="time" className="pr-8"/>
+                                        <Input type="time" name="flight-arrival-time" className="pr-8"/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
@@ -1390,41 +1393,41 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                              <div className="space-y-2">
                                 <Label htmlFor="flight-duration">Duração</Label>
-                                <Input id="flight-duration" />
+                                <Input id="flight-duration" name="flight-duration" />
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="flight-company">Companhia</Label>
-                                <Select>
+                                <Select name="flight-company">
                                     <SelectTrigger id="flight-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
                                     <SelectContent></SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-no">Nº do Voo</Label>
-                                <Input id="flight-no" />
+                                <Input id="flight-no" name="flight-no" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-locator">Localizador</Label>
-                                <Input id="flight-locator" />
+                                <Input id="flight-locator" name="flight-locator" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-purchase-no">Nº da Compra</Label>
-                                <Input id="flight-purchase-no" />
+                                <Input id="flight-purchase-no" name="flight-purchase-no" />
                             </div>
                         </div>
                         
                         <div className="grid grid-cols-1 md:grid-cols-[repeat(3,auto),1fr] gap-6 items-end">
                             <div className="space-y-2 w-20">
                                  <Label htmlFor="bag-personal" className="flex justify-center"><User className="h-5 w-5"/></Label>
-                                <Input id="bag-personal" defaultValue={1} type="number" />
+                                <Input id="bag-personal" name="bag-personal" defaultValue={1} type="number" />
                             </div>
                              <div className="space-y-2 w-20">
                                  <Label htmlFor="bag-carryon" className="flex justify-center"><Luggage className="h-5 w-5"/></Label>
-                                <Input id="bag-carryon" defaultValue={1} type="number" />
+                                <Input id="bag-carryon" name="bag-carryon" defaultValue={1} type="number" />
                             </div>
                             <div className="space-y-2 w-20">
                                  <Label htmlFor="bag-checked" className="flex justify-center"><Luggage className="h-5 w-5"/></Label>
-                                <Input id="bag-checked" defaultValue={0} type="number" />
+                                <Input id="bag-checked" name="bag-checked" defaultValue={0} type="number" />
                             </div>
                         </div>
 
@@ -1432,19 +1435,19 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                              <div className="space-y-2">
                                 <Label htmlFor="flight-class">Classe</Label>
-                                <Select defaultValue="economica">
+                                <Select defaultValue="economica" name="flight-class">
                                     <SelectTrigger id="flight-class"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="economica">Econômica</SelectItem>
                                         <SelectItem value="economica-premium">Econômica Premium</SelectItem>
-                                        <SelectItem value="executiva">Executiva</SelectItem>
                                         <SelectItem value="primeira">Primeira Classe</SelectItem>
+                                        <SelectItem value="executiva">Executiva</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-connections">Conexões</Label>
-                                <Select defaultValue="direto">
+                                <Select defaultValue="direto" name="flight-connections">
                                     <SelectTrigger id="flight-connections"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="direto">Voo direto</SelectItem>
@@ -1455,7 +1458,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-checkin">Notificação Check-in</Label>
-                                <Select defaultValue="nao-notificar">
+                                <Select defaultValue="nao-notificar" name="flight-checkin">
                                     <SelectTrigger id="flight-checkin"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                          <SelectItem value="nao-notificar">Não Notificar</SelectItem>
@@ -1470,11 +1473,11 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="flight-obs">Observação</Label>
-                                <Input id="flight-obs" />
+                                <Input id="flight-obs" name="flight-obs" />
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
                 <DialogFooter>
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
                     <Button onClick={handleSave}>Salvar</Button>
@@ -1484,12 +1487,38 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
     )
 }
 
-const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) => {
+const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (data: HotelData) => void }) => {
     const { toast } = useToast();
-    const [entryDate, setEntryDate] = useState<Date>();
-    const [exitDate, setExitDate] = useState<Date>();
+    const formRef = React.useRef<HTMLFormElement>(null);
 
     const handleSaveHotel = () => {
+        if (!formRef.current) return;
+        const formData = new FormData(formRef.current);
+
+        const name = formData.get('hotel-name') as string;
+        const checkIn = formData.get('hotel-entry-date') as string;
+        const checkInTime = formData.get('hotel-entry-time') as string;
+        const checkOut = formData.get('hotel-exit-date') as string;
+        const checkOutTime = formData.get('hotel-exit-time') as string;
+
+        if (!name) {
+            toast({ title: "Erro", description: "O nome do hotel é obrigatório.", variant: "destructive" });
+            return;
+        }
+
+        const hotelData: HotelData = {
+            id: Date.now().toString(),
+            name,
+            checkIn,
+            checkInTime,
+            checkOut,
+            checkOutTime,
+            nights: Number(formData.get('hotel-diarias') as string),
+            rooms: Number(formData.get('hotel-quartos') as string),
+            description: formData.get('hotel-description') as string,
+        };
+
+        onSave(hotelData);
         onOpenChange(false);
         toast({
             title: "Sucesso!",
@@ -1503,12 +1532,12 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-foreground">Hospedagem</DialogTitle>
                 </DialogHeader>
-                <div className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
+                <form ref={formRef} className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label htmlFor="hotel-name">Nome <span className="text-destructive">*</span></Label>
                             <div className="relative">
-                                <Input id="hotel-name" placeholder="Comece a digitar para selecionar" />
+                                <Input id="hotel-name" name="hotel-name" placeholder="Comece a digitar para selecionar" />
                                 <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
                                     <Search className="h-4 w-4 text-muted-foreground" />
                                 </Button>
@@ -1516,16 +1545,16 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="hotel-link">Link</Label>
-                            <Input id="hotel-link" />
+                            <Input id="hotel-link" name="hotel-link" />
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <Label htmlFor="hotel-entry-date">Entrada</Label>
                             <div className="flex gap-2">
-                                <DatePickerInput value={entryDate} onSelect={setEntryDate} />
+                                <DatePickerInput value={undefined} onSelect={() => {}} />
                                 <div className="relative">
-                                    <Input type="time" className="pr-8"/>
+                                    <Input type="time" name="hotel-entry-time" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
@@ -1533,9 +1562,9 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
                         <div className="space-y-2">
                             <Label htmlFor="hotel-exit-date">Saída</Label>
                             <div className="flex gap-2">
-                                <DatePickerInput value={exitDate} onSelect={setExitDate} />
+                                <DatePickerInput value={undefined} onSelect={() => {}} />
                                 <div className="relative">
-                                    <Input type="time" className="pr-8"/>
+                                    <Input type="time" name="hotel-exit-time" className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
@@ -1543,44 +1572,43 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="hotel-address">Endereço</Label>
-                        <Input id="hotel-address" />
+                        <Input id="hotel-address" name="hotel-address" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                         <div className="space-y-2">
                             <Label htmlFor="hotel-diarias" className="flex items-center gap-1">
                                 Diárias <RefreshCw className="h-3 w-3 text-muted-foreground cursor-pointer" />
                             </Label>
-                            <Input id="hotel-diarias" type="number" defaultValue={0} />
+                            <Input id="hotel-diarias" name="hotel-diarias" type="number" defaultValue={0} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="hotel-quartos">Quartos</Label>
-                            <Input id="hotel-quartos" type="number" defaultValue={0} />
+                            <Input id="hotel-quartos" name="hotel-quartos" type="number" defaultValue={0} />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="hotel-type">Tipo</Label>
-                            <Select>
+                            <Select name="hotel-type">
                                 <SelectTrigger id="hotel-type"><SelectValue placeholder="Não informado" /></SelectTrigger>
                                 <SelectContent></SelectContent>
                             </Select>
                         </div>
                          <div className="space-y-2">
                             <Label htmlFor="hotel-stars">Estrelas</Label>
-                            <Select>
+                            <Select name="hotel-stars">
                                 <SelectTrigger id="hotel-stars"><SelectValue placeholder="Não informado" /></SelectTrigger>
                                 <SelectContent></SelectContent>
                             </Select>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="hotel-reservation-no">Nº da Reserva</Label>
-                            <Input id="hotel-reservation-no" />
+                            <Input id="hotel-reservation-no" name="hotel-reservation-no" />
                         </div>
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="hotel-description">Descrição</Label>
-                        <Textarea id="hotel-description" rows={4} />
+                        <Textarea id="hotel-description" name="hotel-description" rows={4} />
                     </div>
-
-                </div>
+                </form>
                 <DialogFooter>
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
                     <Button onClick={handleSaveHotel}>Salvar</Button>
@@ -1589,6 +1617,40 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
         </Dialog>
     )
 }
+
+const FlightItem = ({ flight, onRemove }: { flight: FlightData, onRemove: (id: string) => void }) => {
+    return (
+        <div className="border p-4 rounded-lg relative pr-12">
+            <div className="absolute top-2 right-2 flex gap-1">
+                <Button variant="ghost" size="icon" className="h-6 w-6"><PencilLine className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => onRemove(flight.id)}><Trash2 className="h-4 w-4" /></Button>
+            </div>
+            <p className="font-bold text-lg">{flight.origin} → {flight.destination}</p>
+            <p className="text-sm text-muted-foreground">
+                <span className="capitalize">{flight.type}</span> | Saída: {flight.departureDate} às {flight.departureTime} | Chegada: {flight.arrivalDate} às {flight.arrivalTime}
+            </p>
+            {flight.airline && <p className="text-xs text-muted-foreground">Cia: {flight.airline} | Voo: {flight.flightNumber} | Localizador: {flight.locator}</p>}
+        </div>
+    )
+}
+
+const HotelItem = ({ hotel, onRemove }: { hotel: HotelData, onRemove: (id: string) => void }) => {
+    return (
+         <div className="border p-4 rounded-lg relative pr-12">
+            <div className="absolute top-2 right-2 flex gap-1">
+                <Button variant="ghost" size="icon" className="h-6 w-6"><PencilLine className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => onRemove(hotel.id)}><Trash2 className="h-4 w-4" /></Button>
+            </div>
+            <p className="font-bold text-lg">{hotel.name}</p>
+            <p className="text-sm text-muted-foreground">
+                Check-in: {hotel.checkIn} às {hotel.checkInTime} | Check-out: {hotel.checkOut} às {hotel.checkOutTime}
+            </p>
+            <p className="text-xs text-muted-foreground">{hotel.nights} diárias | {hotel.rooms} quarto(s)</p>
+            {hotel.description && <p className="text-xs mt-2">{hotel.description}</p>}
+        </div>
+    )
+}
+
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
@@ -1609,6 +1671,8 @@ export default function NovaCotacaoPage() {
     const [passengers, setPassengers] = useState<Person[]>([]);
     const [selectedPassengerId, setSelectedPassengerId] = useState<string | null>(null);
     const [selectedClientId, setSelectedClientId] = useState('nao-informado');
+    const [flights, setFlights] = useState<FlightData[]>([]);
+    const [hotels, setHotels] = useState<HotelData[]>([]);
     
     const [quoteData, setQuoteData] = useState({
         titulo: 'Visto para procurar trabalho em Portugal',
@@ -1691,6 +1755,26 @@ export default function NovaCotacaoPage() {
         setPassengers(prev => prev.filter(p => p.id !== id));
     };
 
+    const handleSaveFlight = (data: FlightData) => {
+        setFlights(prev => [...prev, data]);
+        toast({ title: "Sucesso!", description: "Voo salvo com sucesso." });
+    };
+
+    const handleRemoveFlight = (id: string) => {
+        setFlights(prev => prev.filter(f => f.id !== id));
+    };
+
+    const handleSaveHotel = (data: HotelData) => {
+        setHotels(prev => [...prev, data]);
+    }
+    
+    const handleRemoveHotel = (id: string) => {
+        setHotels(prev => prev.filter(h => h.id !== id));
+    }
+
+    const handleSaveAndToast = (msg: string) => {
+        toast({ title: "Sucesso!", description: msg });
+    };
 
     return (
         <>
@@ -1897,14 +1981,20 @@ export default function NovaCotacaoPage() {
                                             <Button onClick={() => openFlightDialog('ida')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
-                                    <CardContent>
-                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                            <p className="text-muted-foreground">Nenhum voo incluído.</p>
-                                        </div>
+                                    <CardContent className="space-y-2">
+                                        {flights.filter(f => f.type === 'ida').length === 0 ? (
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum voo de ida incluído.</p>
+                                            </div>
+                                        ) : (
+                                            flights.filter(f => f.type === 'ida').map(flight => (
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                            ))
+                                        )}
                                     </CardContent>
                                 </Card>
 
-                                <Card>
+                                 <Card>
                                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                         <div className="flex items-center gap-2">
                                             <ArrowLeft className="h-5 w-5 text-green-600" />
@@ -1915,10 +2005,16 @@ export default function NovaCotacaoPage() {
                                             <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
-                                    <CardContent>
-                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                            <p className="text-muted-foreground">Nenhum voo incluído.</p>
-                                        </div>
+                                    <CardContent className="space-y-2">
+                                         {flights.filter(f => f.type === 'volta').length === 0 ? (
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum voo de volta incluído.</p>
+                                            </div>
+                                        ) : (
+                                            flights.filter(f => f.type === 'volta').map(flight => (
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                            ))
+                                        )}
                                     </CardContent>
                                 </Card>
 
@@ -1932,10 +2028,16 @@ export default function NovaCotacaoPage() {
                                            <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
-                                    <CardContent>
-                                        <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                            <p className="text-muted-foreground">Nenhum voo incluído.</p>
-                                        </div>
+                                    <CardContent className="space-y-2">
+                                        {flights.filter(f => f.type === 'interno').length === 0 ? (
+                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                <p className="text-muted-foreground">Nenhum voo interno incluído.</p>
+                                            </div>
+                                        ) : (
+                                            flights.filter(f => f.type === 'interno').map(flight => (
+                                                <FlightItem key={flight.id} flight={flight} onRemove={handleRemoveFlight} />
+                                            ))
+                                        )}
                                     </CardContent>
                                 </Card>
                                 
@@ -1946,11 +2048,22 @@ export default function NovaCotacaoPage() {
                                                 <Hotel className="h-5 w-5" /> Hospedagem
                                             </div>
                                         </AccordionTrigger>
-                                        <AccordionContent className="p-4">
-                                            <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                                <p className="text-muted-foreground mb-2">Nenhuma hospedagem incluída.</p>
-                                                <Button onClick={() => setIsHotelInfoDialogOpen(true)}>Incluir</Button>
-                                            </div>
+                                        <AccordionContent className="p-4 space-y-2">
+                                            {hotels.length === 0 ? (
+                                                <div className="text-center py-6 border-dashed border-2 rounded-md">
+                                                    <p className="text-muted-foreground mb-2">Nenhuma hospedagem incluída.</p>
+                                                    <Button onClick={() => setIsHotelInfoDialogOpen(true)}>Incluir</Button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    {hotels.map(hotel => (
+                                                        <HotelItem key={hotel.id} hotel={hotel} onRemove={handleRemoveHotel} />
+                                                    ))}
+                                                    <div className="flex justify-end">
+                                                        <Button onClick={() => setIsHotelInfoDialogOpen(true)}>Incluir mais</Button>
+                                                    </div>
+                                                </>
+                                            )}
                                         </AccordionContent>
                                     </AccordionItem>
                                     <AccordionItem value="transporte">
@@ -2396,26 +2509,29 @@ export default function NovaCotacaoPage() {
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
-            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} />
-            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
-            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
-            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
-            <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
+            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onSave={() => handleSaveAndToast("Custo salvo com sucesso.")} />
+            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onSave={() => handleSaveAndToast("Valor de venda salvo com sucesso.")} />
+            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onSave={() => handleSaveAndToast("Bonificação salva com sucesso.")} />
+            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onSave={() => handleSaveAndToast("Pagamento de bonificação salvo com sucesso.")} />
+            <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} onSave={() => handleSaveAndToast("Serviço da fatura salvo com sucesso.")} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
                 <FlightInfoDialog
                     open={!!flightDialogType}
-                    onOpenChange={(open) => {
-                        if (!open) {
-                            closeFlightDialog();
-                        }
-                    }}
+                    onOpenChange={(open) => !open && closeFlightDialog()}
                     title={flightDialogTitles[flightDialogType]}
+                    flightType={flightDialogType}
+                    onSave={handleSaveFlight}
                 />
             )}
             {isHotelInfoDialogOpen && (
-                <HotelInfoDialog open={isHotelInfoDialogOpen} onOpenChange={setIsHotelInfoDialogOpen} />
+                <HotelInfoDialog 
+                    open={isHotelInfoDialogOpen} 
+                    onOpenChange={setIsHotelInfoDialogOpen} 
+                    onSave={handleSaveHotel}
+                />
             )}
         </>
     );
 }
+
