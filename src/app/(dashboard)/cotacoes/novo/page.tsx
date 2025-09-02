@@ -33,6 +33,7 @@ import { mockPeople } from '@/lib/mock-data';
 import type { Person } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { useSearchParams } from 'next/navigation';
 
 
 interface FlightData {
@@ -2064,6 +2065,7 @@ const HotelItem = ({ hotel, onRemove }: { hotel: HotelData, onRemove: (id: strin
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
+    const searchParams = useSearchParams();
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
     const [activeTab, setActiveTab] = useState('orcamento');
@@ -2098,6 +2100,24 @@ export default function NovaCotacaoPage() {
         termos: '',
         outrasInfo: '',
     });
+
+    useEffect(() => {
+        const clientIdFromUrl = searchParams.get('clientId');
+        if (clientIdFromUrl) {
+            const client = mockPeople.find(p => p.id === clientIdFromUrl);
+            if (client) {
+                // Add to passengers list if not already there
+                setPassengers(prev => {
+                    if (prev.some(p => p.id === client.id)) {
+                        return prev;
+                    }
+                    return [...prev, client];
+                });
+                // Set as selected client
+                setSelectedClientId(client.id);
+            }
+        }
+    }, [searchParams]);
     
     const flightDialogTitles: Record<FlightDialogType, string> = {
       ida: 'Voo de Ida',
@@ -2169,7 +2189,7 @@ export default function NovaCotacaoPage() {
         }
     };
     
-    const handleRemovePassenger = (id: number) => {
+    const handleRemovePassenger = (id: string) => {
         setPassengers(prev => prev.filter(p => p.id !== id));
     };
 
@@ -3008,5 +3028,6 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
