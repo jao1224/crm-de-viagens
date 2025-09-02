@@ -1543,7 +1543,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                                         </PopoverContent>
                                     </Popover>
                                     <div className="relative">
-                                        <Input type="time" name="flight-departure-time" className="pr-8"/>
+                                        <Input type="time" name="flight-departure-time" className="pr-8" required/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
@@ -1575,7 +1575,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
                                         </PopoverContent>
                                     </Popover>
                                      <div className="relative">
-                                        <Input type="time" name="flight-arrival-time" className="pr-8"/>
+                                        <Input type="time" name="flight-arrival-time" className="pr-8" required/>
                                         <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     </div>
                                 </div>
