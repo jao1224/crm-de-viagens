@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -1433,7 +1433,7 @@ type FlightDialogType = 'ida' | 'volta' | 'interno';
 
 const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void }) => {
     const { toast } = useToast();
-    const formRef = React.useRef<HTMLFormElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
     const [departureDate, setDepartureDate] = useState<Date | undefined>();
     const [arrivalDate, setArrivalDate] = useState<Date | undefined>();
     
@@ -1702,7 +1702,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave }: { o
 
 const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (data: HotelData) => void }) => {
     const { toast } = useToast();
-    const formRef = React.useRef<HTMLFormElement>(null);
+    const formRef = useRef<HTMLFormElement>(null);
     const [checkInDate, setCheckInDate] = useState<Date>();
     const [checkOutDate, setCheckOutDate] = useState<Date>();
 
@@ -2835,4 +2835,3 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
-
