@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -883,12 +883,16 @@ const FilterDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (op
 }
 
 export default function PessoasPage() {
-    const [people, setPeople] = useState(mockPeopleData);
+    const [people, setPeople] = useState<Person[]>([]);
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [personToEdit, setPersonToEdit] = useState<Person | null>(null);
     const [isViewPersonDialogOpen, setIsViewPersonDialogOpen] = useState(false);
     const [personToView, setPersonToView] = useState<Person | null>(null);
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
+
+    useEffect(() => {
+        setPeople(mockPeopleData);
+    }, []);
 
     const handleNewPerson = () => {
         setPersonToEdit(null);
@@ -1075,6 +1079,7 @@ export default function PessoasPage() {
     );
 }
     
+
 
 
 
