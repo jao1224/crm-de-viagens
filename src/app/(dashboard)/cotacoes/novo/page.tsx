@@ -30,6 +30,7 @@ import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
 import { mockPeople } from '@/lib/mock-data';
 import type { Person } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
 
 
 const steps = [
@@ -1373,8 +1374,8 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                                     <SelectContent>
                                         <SelectItem value="economica">Econômica</SelectItem>
                                         <SelectItem value="economica-premium">Econômica Premium</SelectItem>
-                                        <SelectItem value="executiva">Executiva</SelectItem>
                                         <SelectItem value="primeira">Primeira Classe</SelectItem>
+                                        <SelectItem value="executiva">Executiva</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1421,8 +1422,18 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
 }
 
 const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) => {
+    const { toast } = useToast();
     const [entryDate, setEntryDate] = useState<Date>();
     const [exitDate, setExitDate] = useState<Date>();
+
+    const handleSaveHotel = () => {
+        // Here you would normally save the data
+        onOpenChange(false);
+        toast({
+            title: "Sucesso!",
+            description: "Hospedagem salva com sucesso.",
+        });
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1510,7 +1521,7 @@ const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: 
                 </div>
                 <DialogFooter>
                     <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button>Salvar</Button>
+                    <Button onClick={handleSaveHotel}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -1836,7 +1847,7 @@ export default function NovaCotacaoPage() {
                                             <ArrowLeft className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
                                         </div>
-                                        <div className="flex gap-2">
+                                        <div className="flex items-center gap-2">
                                             <Button variant="outline">Incluir via Localizador</Button>
                                             <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
                                         </div>
@@ -2337,7 +2348,9 @@ export default function NovaCotacaoPage() {
                     title={flightDialogTitles[flightDialogType]}
                 />
             )}
-            <HotelInfoDialog open={isHotelInfoDialogOpen} onOpenChange={setIsHotelInfoDialogOpen} />
+            {isHotelInfoDialogOpen && (
+                <HotelInfoDialog open={isHotelInfoDialogOpen} onOpenChange={setIsHotelInfoDialogOpen} />
+            )}
         </>
     );
 }
