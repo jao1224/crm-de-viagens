@@ -1,5 +1,5 @@
 
-import type { Appointment, Quote, Project, User } from './types';
+import type { Appointment, Quote, Project, User, Flight } from './types';
 
 export const currentUser: User = {
     id: 'user-lima',
@@ -126,8 +126,14 @@ export const mockPeople = [
       passaporte: 'GJ407853',
       emissaoPassaporte: '2024-05-21',
       vencimentoPassaporte: '2034-05-21',
-      nacionalidadePassaporte: 'Brasil',
       visto: 'Não possui',
       validadeVisto: '',
     },
+];
+
+export const mockFlights: Flight[] = [
+    { id: '1', dateTime: new Date('2025-08-23T17:15:00Z'), passengerName: 'Kelly Freires Diogo Tossi', passengerCount: 1, whatsappIcon: true, from: 'São Paulo (VCP)', to: 'Lisboa (LIS)', flightType: 'Ida', airline: 'Latam', locator: '7XIE9', status: 'notify-check-in' },
+    { id: '2', dateTime: new Date('2025-09-10T20:30:00Z'), passengerName: 'Herlingue Carvalho Azevedo', passengerCount: 2, whatsappIcon: false, from: 'São Paulo (VCP)', to: 'Porto (OPO)', flightType: 'Ida', airline: 'TAP', locator: 'T196W', status: 'scheduled' },
+    { id: '3', dateTime: new Date('2025-07-31T20:30:00Z'), passengerName: 'João da Silva', passengerCount: 1, whatsappIcon: true, from: 'Rio de Janeiro (GIG)', to: 'Salvador (SSA)', flightType: 'Ida', airline: 'GOL', locator: 'G3H4J', status: 'completed' },
+     { id: '4', dateTime: new Date('2025-08-22T10:00:00Z'), passengerName: 'Maria Antônia', passengerCount: 1, whatsappIcon: false, from: 'Belo Horizonte (CNF)', to: 'São Paulo (CGH)', flightType: 'Volta', airline: 'Azul', locator: 'AZ25B', status: 'check-in-open' },
 ];

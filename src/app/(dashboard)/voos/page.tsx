@@ -15,31 +15,8 @@ import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { Logo } from '@/components/logo';
-
-interface Flight {
-    id: string;
-    passengerName: string;
-    passengerCount: number;
-    flightCode: string;
-    from: string;
-    to: string;
-    flightType: 'Ida' | 'Volta';
-    airline: string;
-    locator: string;
-    dateTime: Date;
-    status: 'check-in-open' | 'notify-check-in' | 'completed' | 'scheduled';
-    whatsappIcon?: boolean;
-}
-
-const mockFlights: Flight[] = [
-    { id: '1', passengerName: 'Leidiane Tamara de Oliveira Milher', passengerCount: 1, flightCode: 'f80at', from: 'Lisboa (LIS)', to: 'São Paulo (VCP)', flightType: 'Ida', airline: 'Azul', locator: 'RLNDMW', dateTime: new Date('2025-09-01T10:00:00'), status: 'check-in-open'},
-    { id: '2', passengerName: 'Lyllyan Claudia Rafael de Freitas', passengerCount: 1, flightCode: 'eh23s', from: 'Porto (OPO)', to: 'Lisboa (LIS)', flightType: 'Ida', airline: 'TAP Portugal', locator: 'YQOVEZ', dateTime: new Date('2025-09-01T22:35:00'), status: 'check-in-open', whatsappIcon: true},
-    { id: '3', passengerName: 'Zenilda Aparecida Pires', passengerCount: 1, flightCode: 'uiw4h', from: 'Frankfurt (FRA)', to: 'São Paulo (GRU)', flightType: 'Volta', airline: 'LATAM Airlines', locator: 'ABCDEF', dateTime: new Date('2025-09-04T21:30:00'), status: 'notify-check-in'},
-    { id: '4', passengerName: 'HANNA VIETRO', passengerCount: 1, flightCode: 'ns6rm', from: 'Fortaleza (FOR)', to: 'São Paulo (GRU)', flightType: 'Ida', airline: 'LATAM Airlines', locator: 'GHIJKL', dateTime: new Date('2025-09-05T04:45:00'), status: 'notify-check-in'},
-];
+import { mockFlights } from '@/lib/mock-data';
+import type { Flight } from '@/lib/types';
 
 
 const FlightStatus = ({ status }: { status: Flight['status'] }) => {
@@ -64,94 +41,6 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
             </Button>
         </div>
     );
-}
-
-const ConfirmationDialog = ({ flight, open, onOpenChange }: { flight: Flight | null, open: boolean, onOpenChange: (open: boolean) => void }) => {
-    const { toast } = useToast();
-    
-    if (!flight) return null;
-
-    const confirmationLink = typeof window !== 'undefined' ? `${window.location.origin}/voos/confirmacao/${flight.id}` : '';
-    
-    const handlePrint = () => {
-        window.print();
-    }
-
-    const handleCopyLink = () => {
-        navigator.clipboard.writeText(confirmationLink);
-        toast({
-            title: "Link Copiado!",
-            description: "O link da confirmação foi copiado para a área de transferência.",
-        });
-    }
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-3xl print:shadow-none print:border-none">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-4">
-                        <Logo className="h-10 w-10 text-primary" />
-                        <span className="text-2xl font-bold">Confirmação de Reserva</span>
-                    </DialogTitle>
-                    <DialogDescription>
-                        Detalhes do seu voo com localizador {flight.locator}.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="py-4 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-lg bg-muted/50">
-                        <div>
-                            <p className="text-sm text-muted-foreground">Passageiro(s)</p>
-                            <p className="font-bold text-lg">{flight.passengerName} (+{flight.passengerCount - 1})</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Localizador</p>
-                            <p className="font-mono text-lg font-bold text-primary">{flight.locator}</p>
-                        </div>
-                    </div>
-                     <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <Plane className="h-6 w-6 text-primary" />
-                            <h3 className="text-xl font-semibold">Detalhes do Voo</h3>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border p-4 rounded-lg">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Data e Hora</p>
-                                <p className="font-medium">{format(flight.dateTime, "dd 'de' MMM, yyyy 'às' HH:mm", { locale: ptBR })}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground">Companhia Aérea</p>
-                                <p className="font-medium">{flight.airline}</p>
-                            </div>
-                             <div>
-                                <p className="text-sm text-muted-foreground">Tipo</p>
-                                <p className="font-medium">{flight.flightType}</p>
-                            </div>
-                        </div>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border p-4 rounded-lg">
-                            <div>
-                                <p className="text-sm text-muted-foreground">Origem</p>
-                                <p className="font-medium text-lg">{flight.from}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground">Destino</p>
-                                <p className="font-medium text-lg">{flight.to}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <DialogFooter className="print:hidden">
-                    <Button variant="outline" onClick={handleCopyLink}>
-                        <Copy className="mr-2 h-4 w-4" />
-                        Copiar Link
-                    </Button>
-                    <Button onClick={handlePrint}>
-                        <Printer className="mr-2 h-4 w-4" />
-                        Imprimir / Salvar PDF
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
 }
 
 const FlightCard = ({ flight, onConfirmClick }: { flight: Flight, onConfirmClick: (flight: Flight) => void }) => (
@@ -214,12 +103,9 @@ export default function VoosPage() {
         to: new Date(2025, 11, 1),
     });
     const [activeFilter, setActiveFilter] = useState<'realizados' | 'proximos' | 'distantes'>('proximos');
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-    const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 
     const handleConfirmClick = (flight: Flight) => {
-        setSelectedFlight(flight);
-        setIsConfirmOpen(true);
+        window.open(`/voos/confirmacao/${flight.id}`, '_blank');
     };
     
     const filteredFlights = useMemo(() => {
@@ -334,11 +220,6 @@ export default function VoosPage() {
                     </div>
                 ))}
             </div>
-             <ConfirmationDialog 
-                flight={selectedFlight}
-                open={isConfirmOpen}
-                onOpenChange={setIsConfirmOpen}
-            />
         </div>
     );
 }

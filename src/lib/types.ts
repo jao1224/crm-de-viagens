@@ -158,3 +158,17 @@ export interface Tag {
     color: string;
     isActive: boolean;
 }
+
+export type Flight = {
+    id: string;
+    dateTime: Date;
+    passengerName: string;
+    passengerCount: number;
+    whatsappIcon: boolean;
+    from: string;
+    to: string;
+    flightType: 'Ida' | 'Volta';
+    airline: string;
+    locator: string;
+    status: 'check-in-open' | 'notify-check-in' | 'completed' | 'scheduled';
+};
