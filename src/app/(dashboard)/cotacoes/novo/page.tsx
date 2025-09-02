@@ -1371,8 +1371,9 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpen
                                     <SelectTrigger id="flight-class"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="economica">Econômica</SelectItem>
-                                        <SelectItem value="executiva">Executiva</SelectItem>
+                                        <SelectItem value="economica-premium">Econômica Premium</SelectItem>
                                         <SelectItem value="primeira">Primeira Classe</SelectItem>
+                                        <SelectItem value="executiva">Executiva</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
