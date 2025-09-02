@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage } from 'lucide-react';
+import { Calendar as CalendarIcon, MoreVertical, UserPlus, Image as ImageIcon, Upload, Library, Eye, ListFilter, PlusCircle, ArrowRight, ArrowLeft, Plane, Hotel, TrainFront, Ship, Camera, HeartPulse, ShoppingCart, Minus, Plus, Info, AlertTriangle, Trash2, User, Mail, Globe, Instagram, Gem, Paperclip, ListTodo, MessageSquare, Star, ChevronsUpDown, ReceiptText, History, DollarSign, Pencil, FileText as FileTextIcon, HandCoins, Handshake, MessagesSquare, FileArchive, Check, Users, Search, Clock, Luggage, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -1373,8 +1373,8 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
                                     <SelectContent>
                                         <SelectItem value="economica">Econômica</SelectItem>
                                         <SelectItem value="economica-premium">Econômica Premium</SelectItem>
-                                        <SelectItem value="primeira">Primeira Classe</SelectItem>
                                         <SelectItem value="executiva">Executiva</SelectItem>
+                                        <SelectItem value="primeira">Primeira Classe</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1420,7 +1420,102 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpen
     )
 }
 
+const HotelInfoDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void; }) => {
+    const [entryDate, setEntryDate] = useState<Date>();
+    const [exitDate, setExitDate] = useState<Date>();
 
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-4xl">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">Hospedagem</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-6 max-h-[70vh] overflow-y-auto pr-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-name">Nome <span className="text-destructive">*</span></Label>
+                            <div className="relative">
+                                <Input id="hotel-name" placeholder="Comece a digitar para selecionar" />
+                                <Button size="icon" variant="ghost" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
+                                    <Search className="h-4 w-4 text-muted-foreground" />
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-link">Link</Label>
+                            <Input id="hotel-link" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-entry-date">Entrada</Label>
+                            <div className="flex gap-2">
+                                <DatePickerInput value={entryDate} onSelect={setEntryDate} />
+                                <div className="relative">
+                                    <Input type="time" className="pr-8"/>
+                                    <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-exit-date">Saída</Label>
+                            <div className="flex gap-2">
+                                <DatePickerInput value={exitDate} onSelect={setExitDate} />
+                                <div className="relative">
+                                    <Input type="time" className="pr-8"/>
+                                    <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="hotel-address">Endereço</Label>
+                        <Input id="hotel-address" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-diarias" className="flex items-center gap-1">
+                                Diárias <RefreshCw className="h-3 w-3 text-muted-foreground cursor-pointer" />
+                            </Label>
+                            <Input id="hotel-diarias" type="number" defaultValue={0} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-quartos">Quartos</Label>
+                            <Input id="hotel-quartos" type="number" defaultValue={0} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-type">Tipo</Label>
+                            <Select>
+                                <SelectTrigger id="hotel-type"><SelectValue placeholder="Não informado" /></SelectTrigger>
+                                <SelectContent></SelectContent>
+                            </Select>
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor="hotel-stars">Estrelas</Label>
+                            <Select>
+                                <SelectTrigger id="hotel-stars"><SelectValue placeholder="Não informado" /></SelectTrigger>
+                                <SelectContent></SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="hotel-reservation-no">Nº da Reserva</Label>
+                            <Input id="hotel-reservation-no" />
+                        </div>
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="hotel-description">Descrição</Label>
+                        <Textarea id="hotel-description" rows={4} />
+                    </div>
+
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export default function NovaCotacaoPage() {
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
@@ -1434,6 +1529,7 @@ export default function NovaCotacaoPage() {
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
     const [flightDialogType, setFlightDialogType] = useState<FlightDialogType | null>(null);
+    const [isHotelInfoDialogOpen, setIsHotelInfoDialogOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
     const [passengers, setPassengers] = useState<Person[]>([]);
@@ -1717,7 +1813,7 @@ export default function NovaCotacaoPage() {
                                 </Card>
                                 
                                 <Card>
-                                    <CardHeader className="flex flex-row items-center justify-between">
+                                    <CardHeader className="flex-row items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <ArrowRight className="h-5 w-5 text-green-600" />
                                             <CardTitle className="text-lg text-green-600">Voo de Ida</CardTitle>
@@ -1735,16 +1831,14 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                     <CardHeader>
-                                        <div className="flex flex-row items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <ArrowLeft className="h-5 w-5 text-green-600" />
-                                                <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                <Button variant="outline">Incluir via Localizador</Button>
-                                                <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
-                                            </div>
+                                     <CardHeader className="flex-row items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <ArrowLeft className="h-5 w-5 text-green-600" />
+                                            <CardTitle className="text-lg text-green-600">Voo de Volta</CardTitle>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button variant="outline">Incluir via Localizador</Button>
+                                            <Button onClick={() => openFlightDialog('volta')}>Incluir</Button>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
@@ -1755,14 +1849,12 @@ export default function NovaCotacaoPage() {
                                 </Card>
 
                                 <Card>
-                                    <CardHeader>
-                                        <div className="flex flex-row items-center justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <Plane className="h-5 w-5 text-green-600" />
-                                                <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
-                                            </div>
-                                            <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
+                                    <CardHeader className="flex-row items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <Plane className="h-5 w-5 text-green-600" />
+                                            <CardTitle className="text-lg text-green-600">Voo Interno</CardTitle>
                                         </div>
+                                        <Button onClick={() => openFlightDialog('interno')}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="text-center py-6 border-dashed border-2 rounded-md">
@@ -1778,9 +1870,10 @@ export default function NovaCotacaoPage() {
                                                 <Hotel className="h-5 w-5" /> Hospedagem
                                             </div>
                                         </AccordionTrigger>
-                                        <AccordionContent>
+                                        <AccordionContent className="p-4">
                                             <div className="text-center py-6 border-dashed border-2 rounded-md">
-                                                <p className="text-muted-foreground">Nenhuma hospedagem incluída.</p>
+                                                <p className="text-muted-foreground mb-2">Nenhuma hospedagem incluída.</p>
+                                                <Button onClick={() => setIsHotelInfoDialogOpen(true)}>Incluir</Button>
                                             </div>
                                         </AccordionContent>
                                     </AccordionItem>
@@ -2244,6 +2337,7 @@ export default function NovaCotacaoPage() {
                     title={flightDialogTitles[flightDialogType]}
                 />
             )}
+            <HotelInfoDialog open={isHotelInfoDialogOpen} onOpenChange={setIsHotelInfoDialogOpen} />
         </>
     );
 }
