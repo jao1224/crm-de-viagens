@@ -1253,7 +1253,7 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
-const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpenChange: (open: boolean) => void, title: string }) => {
+const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean; onOpenChange: (open: boolean) => void; title: string }) => {
     const [searchDate, setSearchDate] = useState<Date>();
     const [departureDate, setDepartureDate] = useState<Date>();
     const [arrivalDate, setArrivalDate] = useState<Date>();
@@ -1413,7 +1413,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpen
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
                     <Button>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
@@ -1434,7 +1434,7 @@ export default function NovaCotacaoPage() {
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
-    const [flightDialogState, setFlightDialogState] = useState<{ open: boolean; type: FlightDialogType | null }>({ open: false, type: null });
+    const [flightDialogType, setFlightDialogType] = useState<FlightDialogType | null>(null);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
     const [passengers, setPassengers] = useState<Person[]>([]);
@@ -1462,11 +1462,11 @@ export default function NovaCotacaoPage() {
     };
 
     const openFlightDialog = (type: FlightDialogType) => {
-        setFlightDialogState({ open: true, type });
+        setFlightDialogType(type);
     };
 
     const closeFlightDialog = () => {
-        setFlightDialogState({ open: false, type: null });
+        setFlightDialogType(null);
     };
 
 
@@ -2230,11 +2230,11 @@ export default function NovaCotacaoPage() {
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
-            {flightDialogState.type && (
+            {flightDialogType && (
                 <FlightInfoDialog
-                    open={flightDialogState.open}
-                    onOpenChange={closeFlightDialog}
-                    title={flightDialogTitles[flightDialogState.type]}
+                    open={!!flightDialogType}
+                    onOpenChange={(open) => !open && closeFlightDialog()}
+                    title={flightDialogTitles[flightDialogType]}
                 />
             )}
         </>
