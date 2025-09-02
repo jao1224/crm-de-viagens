@@ -1393,7 +1393,13 @@ const FlightInfoDialog = ({ open, onOpenChange, title }: { open: boolean, onOpen
                                 <Select defaultValue="48h">
                                     <SelectTrigger id="flight-checkin"><SelectValue /></SelectTrigger>
                                     <SelectContent>
+                                         <SelectItem value="nao-notificar">Não Notificar</SelectItem>
+                                         <SelectItem value="24h">Notificar Check-in 24h</SelectItem>
+                                         <SelectItem value="36h">Notificar Check-in 36h</SelectItem>
                                          <SelectItem value="48h">Notificar Check-in 48h</SelectItem>
+                                         <SelectItem value="72h">Notificar Check-in 72h</SelectItem>
+                                         <SelectItem value="em-periodo">Em Período de Check-in</SelectItem>
+                                         <SelectItem value="realizado">Check-in Realizado</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
