@@ -10,8 +10,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { mockQuotes } from '@/lib/mock-data';
-import type { Quote } from '@/lib/types';
+import { mockQuotes, mockPeople } from '@/lib/mock-data';
+import type { Quote, Person } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -33,7 +33,7 @@ const statusConfig: { [key in Quote['status']]: { title: string; borderColor: st
  * @param {Quote} props.quote - Os dados da cotação a serem exibidos.
  * @param {Function} props.onDragStart - A função a ser chamada quando o arrasto do card começa.
  */
-const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void }) => {
+const QuoteCard = ({ quote, onDragStart, client }: { quote: Quote, onDragStart: (e: React.DragEvent<HTMLDivElement>, quoteId: string) => void, client?: Person }) => {
   const config = statusConfig[quote.status];
   return (
     <Card 
@@ -48,12 +48,12 @@ const QuoteCard = ({ quote, onDragStart }: { quote: Quote, onDragStart: (e: Reac
         <div className="flex justify-between items-start mb-2">
             <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src={quote.client.avatarUrl} alt={quote.client.name} />
-                    <AvatarFallback>{quote.client.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={client?.avatarUrl} alt={client?.name} />
+                    <AvatarFallback>{client?.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col">
-                    <p className="font-bold text-sm text-foreground" title={quote.client.name}>
-                    {quote.client.name || 'Cliente não informado'}
+                    <p className="font-bold text-sm text-foreground" title={client?.name}>
+                    {client?.name || 'Cliente não informado'}
                     </p>
                     <span className="text-xs text-muted-foreground font-mono">ID: {quote.id}</span>
                 </div>
@@ -125,7 +125,10 @@ const QuoteColumn = ({
       </div>
       <div className="p-2 h-full">
         {quotes.length > 0 ? (
-          quotes.map(quote => <QuoteCard key={quote.id} quote={quote} onDragStart={onDragStart} />)
+          quotes.map(quote => {
+            const client = mockPeople.find(p => p.id === quote.clientId);
+            return <QuoteCard key={quote.id} quote={quote} onDragStart={onDragStart} client={client} />
+          })
         ) : (
           <div className="flex justify-center items-center h-24 text-sm text-muted-foreground/70">
             Arraste os cards para cá

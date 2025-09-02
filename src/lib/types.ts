@@ -34,10 +34,7 @@ export type NavItem = {
 export type Quote = {
   id: string;
   date: string;
-  client: {
-    name: string;
-    avatarUrl: string;
-  };
+  clientId: string;
   value: number;
   status: 'aguardando' | 'em-cotacao' | 'aguardando-cliente' | 'aprovado' | 'reprovado';
 };
@@ -173,8 +170,26 @@ export type Flight = {
 };
 
 export type Person = {
-  id: number;
+  id: string;
   name: string;
-  type?: 'adulto' | 'crianca' | 'bebe';
-  // Adicione quaisquer outros campos que você precise para uma pessoa
+  rating: number;
+  types: string[];
+  cpfCnpj: string;
+  phone: string;
+  email: string;
+  sexo: string;
+  nascimento: string;
+  rg: string;
+  orgaoEmissor: string;
+  id_estrangeiro: string;
+  nacionalidade: string;
+  estadoCivil: string;
+  passaporte: string;
+  emissaoPassaporte: string;
+  vencimentoPassaporte: string;
+  nacionalidadePassaporte: string;
+  visto: string;
+  validadeVisto: string;
+  active: boolean;
+  avatarUrl: string;
 };

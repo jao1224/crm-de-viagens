@@ -10,6 +10,25 @@ export const currentUser: User = {
     permission: 'Admin',
 };
 
+export const mockPeople: Person[] = [
+    { id: '1', name: 'Aalyah Evelyn Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '123.456.789-00', phone: '+55 85 91234-5678', email: 'aalyah@email.com', sexo: 'Feminino', nascimento: '2004-07-13', rg: '2004123456789', orgaoEmissor: 'SSP/CE', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: 'Solteira', passaporte: 'GJ407853', emissaoPassaporte: '2024-05-21', vencimentoPassaporte: '2034-05-20', nacionalidadePassaporte: 'Brasil', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
+    { id: '2', name: 'Aayslah Raquel Bulhões Domingues', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '3', name: 'Abdessalam bara', rating: 5, types: ['Cliente'], cpfCnpj: '', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Marrocos', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '4', name: 'ADEILSON', rating: 0, types: ['Cliente'], cpfCnpj: '', phone: '', email: '', sexo: '', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '5', name: 'ADEMIR', rating: 0, types: ['Passageiro', 'Cliente'], cpfCnpj: '', phone: '', email: '', sexo: '', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '6', name: 'Cliente não informado', rating: 0, types: [], cpfCnpj: '', phone: '', email: '', sexo: '', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: '', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '7', name: 'João Silva', rating: 4, types: ['Cliente'], cpfCnpj: '111.222.333-44', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '8', name: 'Maria Pereira', rating: 3, types: ['Cliente'], cpfCnpj: '222.333.444-55', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '9', name: 'Carlos Souza', rating: 5, types: ['Cliente', 'Passageiro'], cpfCnpj: '333.444.555-66', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '10', name: 'JULIO VENANCIO MENEZES', rating: 4, types: ['Cliente'], cpfCnpj: '444.555.666-77', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '11', name: 'Analine de Albuquerque Linhares', rating: 5, types: ['Cliente'], cpfCnpj: '555.666.777-88', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '12', name: 'Maria Brandão Silva Gaspar', rating: 3, types: ['Cliente'], cpfCnpj: '666.777.888-99', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '13', name: 'Lidiane da Silva Seidenfuhss', rating: 4, types: ['Cliente'], cpfCnpj: '777.888.999-00', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://placehold.co/32x32.png' },
+    { id: '14', name: 'Kelly Freires Diogo Tossi', rating: 5, types: ['Passageiro'], cpfCnpj: '', phone: '', email: '', sexo: 'Feminino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
+    { id: '15', name: 'Herlingue Carvalho Azevedo', rating: 4, types: ['Passageiro'], cpfCnpj: '', phone: '', email: '', sexo: 'Masculino', nascimento: '', rg: '', orgaoEmissor: '', id_estrangeiro: '', nacionalidade: 'Brasil', estadoCivil: '', passaporte: '', emissaoPassaporte: '', vencimentoPassaporte: '', nacionalidadePassaporte: '', visto: '', validadeVisto: '', active: true, avatarUrl: 'https://i.pinimg.com/736x/a2/3c/9f/a23c9f18b0d355639f041530c345129c.jpg' },
+];
+
+
 export const mockAppointments: Appointment[] = [
   { id: '1', title: 'Embarque Voo 7XIE9', customer: 'Kelly Freires Diogo Tossi', package: 'São Paulo (VCP) > Lisboa (LIS)', date: '2025-08-23T17:15:00Z', type: 'departure' },
   { id: '2', title: 'Embarque Voo T196W', customer: 'Herlingue Carvalho Azevedo', package: 'São Paulo (VCP) > Porto (OPO)', date: '2025-09-10T20:30:00Z', type: 'departure' },
@@ -33,15 +52,15 @@ export const mockAppointments: Appointment[] = [
 ];
 
 export const mockQuotes: Quote[] = [
-  { id: '3sah1', date: '22/08', client: { name: 'Cliente não informado', avatarUrl: 'https://placehold.co/32x32.png' }, value: 0, status: 'aguardando' },
-  { id: '1b2j3', date: '22/08', client: { name: 'João Silva', avatarUrl: 'https://placehold.co/32x32.png' }, value: 1500, status: 'em-cotacao' },
-  { id: '4k5l6', date: '21/08', client: { name: 'Maria Pereira', avatarUrl: 'https://placehold.co/32x32.png' }, value: 3200, status: 'aguardando-cliente' },
-  { id: '5chjn', date: '22/08', client: { name: 'ADEILSON', avatarUrl: 'https://placehold.co/32x32.png' }, value: 0, status: 'aprovado' },
-  { id: 'bdchj', date: '22/08', client: { name: 'JULIO VENANCIO MENEZES', avatarUrl: 'https://placehold.co/32x32.png' }, value: 18540, status: 'aprovado' },
-  { id: 'cfgq3', date: '05/08', client: { name: 'Analine de Albuquerque Linhares', avatarUrl: 'https://placehold.co/32x32.png' }, value: 23766.18, status: 'aprovado' },
-  { id: '07e6b', date: '05/08', client: { name: 'Maria Brandão Silva Gaspar', avatarUrl: 'https://placehold.co/32x32.png' }, value: 4800, status: 'aprovado' },
-  { id: '8a4wl', date: '05/08', client: { name: 'Lidiane da Silva Seidenfuhss', avatarUrl: 'https://placehold.co/32x32.png' }, value: 11400, status: 'aprovado' },
-  { id: '9p8o7', date: '19/08', client: { name: 'Carlos Souza', avatarUrl: 'https://placehold.co/32x32.png' }, value: 5000, status: 'reprovado' },
+  { id: '3sah1', date: '22/08', clientId: '6', value: 0, status: 'aguardando' },
+  { id: '1b2j3', date: '22/08', clientId: '7', value: 1500, status: 'em-cotacao' },
+  { id: '4k5l6', date: '21/08', clientId: '8', value: 3200, status: 'aguardando-cliente' },
+  { id: '5chjn', date: '22/08', clientId: '4', value: 0, status: 'aprovado' },
+  { id: 'bdchj', date: '22/08', clientId: '10', value: 18540, status: 'aprovado' },
+  { id: 'cfgq3', date: '05/08', clientId: '11', value: 23766.18, status: 'aprovado' },
+  { id: '07e6b', date: '05/08', clientId: '12', value: 4800, status: 'aprovado' },
+  { id: '8a4wl', date: '05/08', clientId: '13', value: 11400, status: 'aprovado' },
+  { id: '9p8o7', date: '19/08', clientId: '9', value: 5000, status: 'reprovado' },
 ];
 
 
@@ -105,17 +124,6 @@ export const mockUsers: User[] = [
         permission: 'Acessa somente suas cotações',
     }
 ]
-
-export const mockPeople: Person[] = [
-  { 
-    id: 1, 
-    name: 'Aalyah Evelyn Bulhões Domingues', 
-  },
-  { 
-    id: 2, 
-    name: 'Herlingue Carvalho Azevedo',
-  },
-];
 
 export const mockFlights: Flight[] = [
     { id: '1', dateTime: new Date('2025-08-23T17:15:00Z'), passengers: ['Kelly Freires Diogo Tossi'], whatsappIcon: true, from: 'São Paulo (VCP)', to: 'Lisboa (LIS)', flightType: 'Ida', airline: 'Latam', locator: '7XIE9', status: 'notify-check-in' },
@@ -239,3 +247,4 @@ export const mockTravelPackages: TravelPackage[] = [
       dataAiHint: 'Bahia resort'
     },
 ];
+
