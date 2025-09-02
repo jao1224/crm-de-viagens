@@ -32,6 +32,8 @@ import RichTextEditor from '@/components/rich-text-editor';
 import { mockPeople } from '@/lib/mock-data';
 import type { Person } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+
 
 interface FlightData {
     id: string;
@@ -289,6 +291,28 @@ const nationalities = [
     { value: "zambian", label: "Zambiana" },
     { value: "zimbabwean", label: "Zimbabuana" }
 ];
+
+const airlines = [
+  { value: "ad", label: "Azul" },
+  { value: "g3", label: "GOL" },
+  { value: "jj", label: "LATAM Airlines" },
+  { value: "tp", label: "TAP Portugal" },
+  { value: "ar", label: "Aerolineas Argentinas" },
+  { value: "am", label: "AeroMexico" },
+  { value: "ac", "label": "Air Canada" },
+  { value: "af", "label": "Air France" },
+  { value: "av", "label": "Avianca" },
+  { value: "ba", "label": "British Airways" },
+  { value: "cm", "label": "Copa Airlines" },
+  { value: "ek", "label": "Emirates" },
+  { value: "ib", "label": "Iberia" },
+  { value: "kl", "label": "KLM" },
+  { value: "lh", "label": "Lufthansa" },
+  { value: "qr", "label": "Qatar Airways" },
+  { value: "tk", "label": "Turkish Airlines" },
+  { value: "ua", "label": "United Airlines" },
+];
+
 
 const initialAddressState = {
     cep: '',
@@ -1406,16 +1430,67 @@ const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boole
 
 type FlightDialogType = 'ida' | 'volta' | 'interno';
 
+const AirlineCombobox = ({ value, onValueChange, ...props }: { value?: string, onValueChange: (value: string) => void }) => {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <Popover open={open} onOpenChange={setOpen} {...props}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between"
+                >
+                    {value ? airlines.find(a => a.label.toLowerCase() === value.toLowerCase())?.label : "Selecione"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] p-0">
+                <Command>
+                    <CommandInput placeholder="Buscar companhia..." />
+                    <CommandList>
+                        <CommandEmpty>Nenhuma companhia encontrada.</CommandEmpty>
+                        <CommandGroup>
+                            {airlines.map((airline) => (
+                                <CommandItem
+                                    key={airline.value}
+                                    value={airline.label}
+                                    onSelect={(currentValue) => {
+                                        onValueChange(currentValue === value ? "" : currentValue)
+                                        setOpen(false)
+                                    }}
+                                >
+                                    <Check
+                                        className={cn(
+                                            "mr-2 h-4 w-4",
+                                            value === airline.label ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                    {airline.label}
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    );
+};
+
+
 const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, flightToEdit }: { open: boolean; onOpenChange: (open: boolean) => void; title: string, flightType: FlightDialogType, onSave: (data: FlightData) => void, flightToEdit: FlightData | null }) => {
     const { toast } = useToast();
     const formRef = useRef<HTMLFormElement>(null);
     const [departureDate, setDepartureDate] = useState<Date | undefined>();
     const [arrivalDate, setArrivalDate] = useState<Date | undefined>();
     const [flightSearchDate, setFlightSearchDate] = useState<Date | undefined>();
+    const [selectedAirline, setSelectedAirline] = useState<string | undefined>();
     
     useEffect(() => {
         if (flightToEdit) {
             const parseDate = (dateStr: string) => {
+                if (!dateStr) return undefined;
                 try {
                     return parse(dateStr, 'dd/MM/yyyy', new Date());
                 } catch {
@@ -1424,11 +1499,13 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
             }
             setDepartureDate(parseDate(flightToEdit.departureDate));
             setArrivalDate(parseDate(flightToEdit.arrivalDate));
+            setSelectedAirline(flightToEdit.airline);
             // You can populate other fields here from flightToEdit
         } else {
              setDepartureDate(undefined);
              setArrivalDate(undefined);
              setFlightSearchDate(undefined);
+             setSelectedAirline(undefined);
         }
     }, [flightToEdit]);
 
@@ -1460,7 +1537,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
             departureTime,
             arrivalDate: format(arrivalDate, 'dd/MM/yyyy'),
             arrivalTime,
-            airline: formData.get('flight-company') as string || undefined,
+            airline: selectedAirline,
             flightNumber: formData.get('flight-no') as string || undefined,
             locator: formData.get('flight-locator') as string || undefined,
             purchaseNumber: formData.get('flight-purchase-no') as string || undefined,
@@ -1483,11 +1560,8 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                             <Input id="flight-search-no" name="flight-search-no" />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="flight-search-company">Companhia</Label>
-                            <Select name="flight-search-company">
-                                <SelectTrigger id="flight-search-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                                <SelectContent></SelectContent>
-                            </Select>
+                           <Label htmlFor="flight-search-company">Companhia</Label>
+                           <AirlineCombobox onValueChange={() => {}} />
                         </div>
                          <div className="space-y-2">
                             <Label htmlFor="flight-search-date">Data do Voo</Label>
@@ -1609,10 +1683,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                             </div>
                              <div className="space-y-2">
                                 <Label htmlFor="flight-company">Companhia</Label>
-                                <Select name="flight-company" defaultValue={flightToEdit?.airline}>
-                                    <SelectTrigger id="flight-company"><SelectValue placeholder="Selecione" /></SelectTrigger>
-                                    <SelectContent></SelectContent>
-                                </Select>
+                                <AirlineCombobox value={selectedAirline} onValueChange={setSelectedAirline} />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="flight-no">Nº do Voo</Label>
@@ -2850,3 +2921,4 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
