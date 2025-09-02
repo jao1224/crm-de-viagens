@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -2232,7 +2231,7 @@ export default function NovaCotacaoPage() {
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
                 <FlightInfoDialog
-                    open={true}
+                    open={!!flightDialogType}
                     onOpenChange={(open) => {
                         if (!open) {
                             closeFlightDialog();
