@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -325,34 +326,32 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
     }
 
     return (
-        <div className="relative flex items-center w-full">
-            <Input
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                placeholder={placeholder}
-                className="pr-8"
-            />
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
-                         <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                    <Calendar
-                        mode="single"
-                        selected={value}
-                        onSelect={handleDateSelect}
-                        initialFocus
-                        locale={ptBR}
-                        captionLayout="dropdown-buttons"
-                        fromYear={new Date().getFullYear() - 100}
-                        toYear={new Date().getFullYear() + 20}
+        <Popover>
+            <PopoverTrigger asChild>
+                <div className="relative flex items-center w-full">
+                    <Input
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                        placeholder={placeholder}
+                        className="pr-8"
                     />
-                </PopoverContent>
-            </Popover>
-        </div>
+                    <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+                <Calendar
+                    mode="single"
+                    selected={value}
+                    onSelect={handleDateSelect}
+                    initialFocus
+                    locale={ptBR}
+                    captionLayout="dropdown-buttons"
+                    fromYear={new Date().getFullYear() - 100}
+                    toYear={new Date().getFullYear() + 20}
+                />
+            </PopoverContent>
+        </Popover>
     );
 };
 
@@ -1520,10 +1519,6 @@ const HotelInfoDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpen
 
         onSave(hotelData);
         onOpenChange(false);
-        toast({
-            title: "Sucesso!",
-            description: "Hospedagem salva com sucesso.",
-        });
     };
 
     return (
@@ -1766,6 +1761,10 @@ export default function NovaCotacaoPage() {
 
     const handleSaveHotel = (data: HotelData) => {
         setHotels(prev => [...prev, data]);
+        toast({
+            title: "Sucesso!",
+            description: "Hospedagem salva com sucesso.",
+        });
     }
     
     const handleRemoveHotel = (id: string) => {
