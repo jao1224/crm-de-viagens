@@ -41,30 +41,20 @@ const mockFlights: Flight[] = [
 
 const FlightStatus = ({ status }: { status: Flight['status'] }) => {
     const statusConfig = {
-        'check-in-open': { icon: Clock, text: 'Em Período de Check-in', color: 'text-red-600' },
-        'notify-check-in': { icon: Bell, text: 'Notificar Check-in 48h', color: 'text-blue-600' },
-        'completed': { icon: Plane, text: 'Voo Realizado', color: 'text-gray-600' },
-        'scheduled': { icon: CalendarIcon, text: 'Agendado', color: 'text-green-600' },
+        'check-in-open': { icon: Clock, text: 'Em Período de Check-in', className: 'bg-red-100 text-red-800 border-red-200' },
+        'notify-check-in': { icon: Bell, text: 'Notificar Check-in 48h', className: 'bg-blue-100 text-blue-800 border-blue-200' },
+        'completed': { icon: Plane, text: 'Voo Realizado', className: 'bg-gray-100 text-gray-800 border-gray-200' },
+        'scheduled': { icon: CalendarIcon, text: 'Agendado', className: 'bg-green-100 text-green-800 border-green-200' },
     };
     const config = statusConfig[status];
     const Icon = config.icon;
 
     return (
-        <div className="flex items-center gap-2">
-            <div className={cn("flex items-center text-sm font-medium", config.color)}>
+        <div className="flex flex-col items-start gap-2">
+            <Badge className={cn("text-sm font-medium", config.className)}>
                 <Icon className="mr-2 h-4 w-4" />
-                <Select defaultValue={status}>
-                    <SelectTrigger className="border-0 bg-transparent p-0 h-auto focus:ring-0 focus:ring-offset-0">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="check-in-open">Em Período de Check-in</SelectItem>
-                        <SelectItem value="notify-check-in">Notificar Check-in 48h</SelectItem>
-                        <SelectItem value="completed">Voo Realizado</SelectItem>
-                         <SelectItem value="scheduled">Agendado</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
+                {config.text}
+            </Badge>
              <Button variant="link" size="sm" className="text-muted-foreground h-auto p-0">
                 <LinkIcon className="mr-1.5 h-3 w-3" />
                 Link para check-in
@@ -75,38 +65,36 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
 
 const FlightCard = ({ flight }: { flight: Flight }) => (
     <div className="flex items-start gap-4">
-        <div className="flex flex-col items-center justify-start h-full">
+       <div className="relative pt-1.5">
+            <div className="absolute left-[7px] top-5 bottom-0 w-px bg-border -z-10 h-full"></div>
             <div className={cn(
                 "h-4 w-4 rounded-full border-2 z-10",
                 isToday(flight.dateTime) ? "bg-yellow-500 border-yellow-700" : isPast(flight.dateTime) ? "bg-gray-400 border-gray-600" : "bg-green-500 border-green-700"
             )}></div>
         </div>
-        <div className="flex-1 -mt-1.5">
+        <div className="flex-1 -mt-1.5 w-full">
             <Card className="mb-4">
-                <CardContent className="p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-center">
-                    <div className="lg:col-span-1 flex items-center gap-4">
-                        <div>
-                            <p className="font-bold text-lg">{format(flight.dateTime, 'dd/MM/yyyy')}</p>
-                            <p className="text-muted-foreground font-medium text-lg">{format(flight.dateTime, 'HH:mm')}</p>
-                        </div>
-                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">{flight.flightCode}</Badge>
+                <CardContent className="p-4 grid grid-cols-1 md:grid-cols-[1fr,2fr,2fr,2fr,auto] gap-x-4 gap-y-2 items-center">
+                    <div className="font-semibold text-center">
+                        <p className="font-bold text-lg">{format(flight.dateTime, 'dd/MM')}</p>
+                        <p className="text-muted-foreground font-medium text-sm -mt-1">{format(flight.dateTime, 'HH:mm')}</p>
                     </div>
-                    <div className="lg:col-span-1">
+                    <div>
                         <p className="font-semibold flex items-center gap-1.5">{flight.passengerName} {flight.whatsappIcon && <MessageSquare className="h-4 w-4 text-green-500" />}</p>
                         <p className="text-sm text-muted-foreground">{flight.passengerCount} passageiro(s)</p>
                     </div>
-                    <div className="lg:col-span-1">
-                        <p className="font-semibold">{flight.from} → {flight.to}</p>
+                    <div>
+                         <p className="font-semibold">{flight.from} → {flight.to}</p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Badge variant={flight.flightType === 'Ida' ? 'default' : 'secondary'} className="h-5">{flight.flightType}</Badge>
                             <span>{flight.airline}</span>
                              <span className="font-mono text-xs">• {flight.locator}</span>
                         </div>
                     </div>
-                    <div className="lg:col-span-1">
+                    <div>
                         <FlightStatus status={flight.status} />
                     </div>
-                    <div className="lg:col-span-1 flex justify-end items-center gap-2">
+                    <div className="flex justify-end items-center gap-1">
                          <Button variant="ghost" size="icon"><ShieldCheck className="h-5 w-5 text-muted-foreground" /></Button>
                          <Button variant="ghost" size="icon"><Pencil className="h-5 w-5 text-muted-foreground" /></Button>
                     </div>
@@ -236,7 +224,6 @@ export default function VoosPage() {
                             <div className="flex-1 h-px bg-border"></div>
                         </div>
                         <div className="relative">
-                             <div className="absolute left-[7px] top-4 bottom-0 w-px bg-border -z-10"></div>
                             {groupedFlights[dateKey].map(flight => (
                                 <FlightCard key={flight.id} flight={flight} />
                             ))}
