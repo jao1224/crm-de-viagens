@@ -1820,8 +1820,9 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                                     <SelectTrigger id="flight-connections"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="direto">Voo direto</SelectItem>
-                                        <SelectItem value="1-conexao">1 Conexão</SelectItem>
-                                        <SelectItem value="2-conexoes">2+ Conexões</SelectItem>
+                                        <SelectItem value="1-parada">1 Parada</SelectItem>
+                                        <SelectItem value="2-paradas">2 Paradas</SelectItem>
+                                        <SelectItem value="3-paradas">3 Paradas</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -1834,7 +1835,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                                          <SelectItem value="24h">Notificar Check-in 24h</SelectItem>
                                          <SelectItem value="36h">Notificar Check-in 36h</SelectItem>
                                          <SelectItem value="48h">Notificar Check-in 48h</SelectItem>
-                                         <SelectItem value="72h">Notificar Check-in 72h</SelectItem>
+                                         <SelectItem value="72h">Em Período de Check-in</SelectItem>
                                          <SelectItem value="em-periodo">Em Período de Check-in</SelectItem>
                                          <SelectItem value="realizado">Check-in Realizado</SelectItem>
                                     </SelectContent>
@@ -3007,4 +3008,5 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
