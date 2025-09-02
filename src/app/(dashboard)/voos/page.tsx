@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { format, isPast, isToday, isFuture, differenceInDays } from 'date-fns';
+import { format, isPast, isToday, isFuture, differenceInDays, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 
@@ -66,7 +66,7 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
 const FlightCard = ({ flight }: { flight: Flight }) => (
     <div className="flex items-start gap-4">
        <div className="relative pt-1.5">
-            <div className="absolute left-[7px] top-5 bottom-0 w-px bg-border -z-10 h-full"></div>
+            <div className="absolute left-1/2 -translate-x-1/2 top-5 -bottom-4 w-px bg-border -z-10 h-full"></div>
             <div className={cn(
                 "h-4 w-4 rounded-full border-2 z-10",
                 isToday(flight.dateTime) ? "bg-yellow-500 border-yellow-700" : isPast(flight.dateTime) ? "bg-gray-400 border-gray-600" : "bg-green-500 border-green-700"
@@ -124,17 +124,20 @@ export default function VoosPage() {
     
     const filteredFlights = useMemo(() => {
         const now = new Date();
+        now.setHours(0, 0, 0, 0); // Normalize now to the start of the day
         return mockFlights.filter(flight => {
-            const daysDiff = differenceInDays(flight.dateTime, now);
+            const flightDate = new Date(flight.dateTime);
+            flightDate.setHours(0,0,0,0);
+            const daysDiff = differenceInDays(flightDate, now);
             
             if (activeFilter === 'realizados') {
                 return isPast(flight.dateTime) && !isToday(flight.dateTime);
             }
             if (activeFilter === 'proximos') {
-                return (isToday(flight.dateTime) || isFuture(flight.dateTime)) && daysDiff <= 7;
+                return daysDiff >= 0 && daysDiff <= 7;
             }
             if (activeFilter === 'distantes') {
-                return isFuture(flight.dateTime) && daysDiff > 7;
+                return daysDiff > 7;
             }
             return true;
         }).sort((a,b) => a.dateTime.getTime() - b.dateTime.getTime());
@@ -217,10 +220,10 @@ export default function VoosPage() {
             </div>
             
             <div className="space-y-6">
-                {Object.keys(groupedFlights).map((dateKey, index) => (
+                {Object.keys(groupedFlights).map((dateKey) => (
                     <div key={dateKey}>
                         <div className="flex items-center gap-3 mb-4">
-                            <h2 className="font-semibold text-lg text-primary">{format(new Date(dateKey), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</h2>
+                            <h2 className="font-semibold text-lg text-primary">{format(parseISO(dateKey), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}</h2>
                             <div className="flex-1 h-px bg-border"></div>
                         </div>
                         <div className="relative">
