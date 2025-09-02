@@ -50,6 +50,10 @@ import {
   ExternalLink,
   Bell,
   Award,
+  Handshake,
+  Star,
+  Map,
+  Goal,
 } from 'lucide-react';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import type { NavItem } from '@/lib/types';
@@ -75,6 +79,18 @@ const accompanimentItems: NavItem[] = [
     { href: '/cruzeiros', label: 'Cruzeiros', icon: Luggage },
     { href: '/seguros', label: 'Seguros', icon: HeartPulse },
 ];
+
+const reportItems: NavItem[] = [
+    { href: '/relatorios/solicitacoes', label: 'Solicitações', icon: Handshake },
+    { href: '/relatorios/pessoas-via-link', label: 'Pessoas via Link', icon: Users },
+    { href: '/relatorios/avaliacoes', label: 'Avaliações', icon: Star },
+    { href: '/relatorios/reprovacoes', label: 'Reprovações', icon: XCircle },
+    { href: '/relatorios/origens-destinos', label: 'Origens/Destinos', icon: Map },
+    { href: '/relatorios/comunicacao-email', label: 'Comunicação E-mail', icon: Mail },
+    { href: '/relatorios/comunicacao-whatsapp', label: 'Comun. Whatsapp', icon: MessageSquare },
+    { href: '/relatorios/metas', label: 'Metas', icon: Goal },
+];
+
 
 const financialItems: NavItem[] = [
     { href: '/vendas', label: 'Vendas', icon: Wallet },
@@ -131,6 +147,7 @@ const helpItems: NavItem[] = [
 const navGroups = [
     { title: 'Principal', items: navItems, adminOnly: false },
     { title: 'Acompanhamento', items: accompanimentItems, adminOnly: false },
+    { title: 'Relatórios', items: reportItems, adminOnly: true },
     { title: 'Financeiro', items: financialItems, adminOnly: true },
     { title: 'Documentos', items: documentItems, adminOnly: true },
     { title: 'Cadastros', items: registrationItems, adminOnly: true },
