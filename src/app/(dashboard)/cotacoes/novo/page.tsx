@@ -77,25 +77,31 @@ const steps = [
   { id: 5, name: 'Reprovado' },
 ];
 
-const Stepper = ({ currentStep }: { currentStep: number }) => (
+const Stepper = ({ currentStep, onStepClick }: { currentStep: number, onStepClick: (step: number) => void }) => (
     <div className="flex items-center w-full my-6">
         {steps.map((step, index) => (
             <React.Fragment key={step.id}>
                 <div className="flex flex-col items-center text-center">
-                    <div
+                    <button
+                        onClick={() => onStepClick(step.id)}
                         className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 transition-all",
-                            currentStep >= step.id ? "bg-primary border-primary text-primary-foreground" : "bg-muted border-border text-muted-foreground"
+                            "w-8 h-8 rounded-full flex items-center justify-center font-bold border-2 transition-all duration-300",
+                            currentStep >= step.id ? "bg-primary border-primary text-primary-foreground" : "bg-muted border-border text-muted-foreground hover:border-primary"
                         )}
                     >
-                        {step.id}
-                    </div>
-                    <p className={cn("text-xs mt-2 font-semibold", currentStep >= step.id ? "text-foreground" : "text-muted-foreground")}>
+                        {currentStep > step.id ? <Check className="h-5 w-5" /> : step.id}
+                    </button>
+                    <p className={cn("text-xs mt-2 font-semibold transition-colors", currentStep >= step.id ? "text-foreground" : "text-muted-foreground")}>
                         {step.name}
                     </p>
                 </div>
                 {index < steps.length - 1 && (
-                    <div className={cn("flex-1 h-0.5 mx-2", currentStep > index + 1 ? "bg-primary" : "bg-border")} />
+                    <div className="flex-1 h-0.5 mx-2 transition-colors duration-300 bg-border">
+                         <div
+                            className="h-full bg-primary transition-all duration-300"
+                            style={{ width: currentStep > index + 1 ? '100%' : '0%' }}
+                        />
+                    </div>
                 )}
             </React.Fragment>
         ))}
@@ -2250,8 +2256,10 @@ export default function NovaCotacaoPage() {
     });
     
     useEffect(() => {
+        // Since mockPeople is imported, we can directly use it.
+        // In a real app, this would be an API call.
         setAllPeople(mockPeople);
-
+        
         const storedAccounts = localStorage.getItem('bankAccounts');
         if (storedAccounts) {
             setBankAccounts(JSON.parse(storedAccounts));
@@ -2453,7 +2461,7 @@ export default function NovaCotacaoPage() {
 
                 <Card>
                     <CardContent className="p-4 md:p-6">
-                         <Stepper currentStep={currentStep} />
+                         <Stepper currentStep={currentStep} onStepClick={setCurrentStep} />
                         
                         <Separator className="my-6"/>
 
@@ -2478,7 +2486,6 @@ export default function NovaCotacaoPage() {
                                         </Select>
                                         <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
                                     </div>
-                                    {/* <p className="text-xs text-destructive">Informe o cliente da cotação</p> */}
                                 </div>
                             </div>
                             <div className="space-y-4">
@@ -3252,6 +3259,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
