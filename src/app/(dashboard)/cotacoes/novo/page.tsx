@@ -811,7 +811,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
-const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -863,7 +863,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                                             </SelectTrigger>
                                             <SelectContent></SelectContent>
                                         </Select>
-                                        <Button size="icon"><UserPlus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><UserPlus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -2225,6 +2225,11 @@ export default function NovaCotacaoPage() {
     const handleSaveAndToast = (msg: string) => {
         toast({ title: "Sucesso!", description: msg });
     };
+    
+    const openNewPersonDialogFromCost = () => {
+        setIsCostInfoDialogOpen(false);
+        setIsNewPersonDialogOpen(true);
+    }
 
     return (
         <>
@@ -3007,7 +3012,7 @@ export default function NovaCotacaoPage() {
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
-            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} />
+            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} />
             <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
@@ -3033,6 +3038,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
