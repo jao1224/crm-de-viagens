@@ -831,6 +831,7 @@ const CostInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                    <SelectItem value="milhas">Milhas</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
