@@ -2258,76 +2258,80 @@ export default function NovaCotacaoPage() {
                         
                         <Separator className="my-6"/>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-                             <div className="flex items-center gap-2 lg:col-span-1">
-                                <Badge variant="outline" className="text-lg font-mono font-semibold py-2">ispg5</Badge>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full justify-start text-left font-normal",
-                                                !date && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                            mode="single"
-                                            selected={date}
-                                            onSelect={(d) => d && setDate(d)}
-                                            initialFocus
-                                            locale={ptBR}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
-                            <div className="space-y-1.5 lg:col-span-1">
-                                <Label>Cliente</Label>
-                                <div className="flex items-center gap-2">
-                                     <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                 <div className="flex items-center gap-2">
+                                    <Badge variant="outline" className="text-lg font-mono font-semibold py-2">ispg5</Badge>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={"outline"}
+                                                className={cn(
+                                                    "w-full justify-start text-left font-normal",
+                                                    !date && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={date}
+                                                onSelect={(d) => d && setDate(d)}
+                                                initialFocus
+                                                locale={ptBR}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label>Usuário</Label>
+                                    <Select defaultValue="lima">
                                         <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="nao-informado">Não informado</SelectItem>
-                                            {passengers.map(p => (
-                                                <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
-                                            ))}
+                                            <SelectItem value="lima">Lima</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
                                 </div>
-                                <p className="text-xs text-destructive">Informe o cliente da cotação</p>
+                                <div className="sm:col-span-2 space-y-1.5">
+                                    <Label>Cliente</Label>
+                                    <div className="flex items-center gap-2">
+                                        <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="nao-informado">Não informado</SelectItem>
+                                                {passengers.map(p => (
+                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
+                                    </div>
+                                    <p className="text-xs text-destructive">Informe o cliente da cotação</p>
+                                </div>
                             </div>
-                            <div className="space-y-1.5">
-                                <Label>Canal de Venda</Label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Selecione"/>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="direto">Direto</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="space-y-1.5">
-                                <Label>Usuário</Label>
-                                <Select defaultValue="lima">
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="lima">Lima</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="text-right">
-                            <p className="text-sm text-muted-foreground">Valor Total</p>
-                            <p className="text-2xl font-bold text-primary">R$ 0</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <Label>Canal de Venda</Label>
+                                    <Select>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecione"/>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="direto">Direto</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="text-right sm:col-start-2">
+                                <p className="text-sm text-muted-foreground">Valor Total</p>
+                                <p className="text-2xl font-bold text-primary">R$ 0</p>
+                                </div>
                             </div>
                         </div>
                     </CardContent>
