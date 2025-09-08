@@ -882,9 +882,13 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolea
                                             <SelectTrigger id="cost-category">
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
-                                            <SelectContent></SelectContent>
+                                            <SelectContent>
+                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
+                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
+                                                <SelectItem value="salario">Salário</SelectItem>
+                                            </SelectContent>
                                         </Select>
-                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -938,7 +942,7 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolea
     )
 }
 
-const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const SaleValueInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -985,9 +989,13 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                                             <SelectTrigger id="sale-category">
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
-                                            <SelectContent></SelectContent>
+                                            <SelectContent>
+                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
+                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
+                                                <SelectItem value="salario">Salário</SelectItem>
+                                            </SelectContent>
                                         </Select>
-                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1041,7 +1049,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
     )
 }
 
-const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1081,7 +1089,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             </SelectTrigger>
                                             <SelectContent></SelectContent>
                                         </Select>
-                                        <Button size="icon"><UserPlus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><UserPlus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1100,9 +1108,13 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
                                             <SelectTrigger id="bonus-category">
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
-                                            <SelectContent></SelectContent>
+                                            <SelectContent>
+                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
+                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
+                                                <SelectItem value="salario">Salário</SelectItem>
+                                            </SelectContent>
                                         </Select>
-                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -1157,7 +1169,7 @@ const BonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
 }
 
 
-const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1197,7 +1209,7 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                                             </SelectTrigger>
                                             <SelectContent></SelectContent>
                                         </Select>
-                                        <Button size="icon"><UserPlus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><UserPlus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1216,9 +1228,13 @@ const PaidBonusInfoDialog = ({ open, onOpenChange }: { open: boolean, onOpenChan
                                             <SelectTrigger id="paid-bonus-category">
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
-                                            <SelectContent></SelectContent>
+                                            <SelectContent>
+                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
+                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
+                                                <SelectItem value="salario">Salário</SelectItem>
+                                            </SelectContent>
                                         </Select>
-                                        <Button size="icon"><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -2230,6 +2246,21 @@ export default function NovaCotacaoPage() {
         setIsCostInfoDialogOpen(false);
         setIsNewPersonDialogOpen(true);
     }
+    
+    const openNewPersonDialogFromBonus = () => {
+        setIsBonusInfoDialogOpen(false);
+        setIsNewPersonDialogOpen(true);
+    }
+
+    const openNewPersonDialogFromPaidBonus = () => {
+        setIsPaidBonusInfoDialogOpen(false);
+        setIsNewPersonDialogOpen(true);
+    }
+
+    const openNewPersonDialogFromSale = () => {
+        setIsSaleValueInfoDialogOpen(false);
+        setIsNewPersonDialogOpen(true);
+    }
 
     return (
         <>
@@ -2264,10 +2295,14 @@ export default function NovaCotacaoPage() {
                         
                         <Separator className="my-6"/>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
+                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                 <div className="flex items-center gap-2">
-                                    <Badge variant="outline" className="text-lg font-mono font-semibold py-2">ispg5</Badge>
+                                <div className="space-y-1.5 sm:col-span-2">
+                                    <Label>ID da Cotação</Label>
+                                    <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label>Data</Label>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -2323,7 +2358,7 @@ export default function NovaCotacaoPage() {
                                 </div>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-1.5">
+                               <div className="sm:col-span-2 space-y-1.5">
                                     <Label>Canal de Venda</Label>
                                     <Select>
                                         <SelectTrigger>
@@ -2334,7 +2369,7 @@ export default function NovaCotacaoPage() {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <div className="text-right sm:col-start-2">
+                                <div className="text-right sm:col-span-2 self-end">
                                 <p className="text-sm text-muted-foreground">Valor Total</p>
                                 <p className="text-2xl font-bold text-primary">R$ 0</p>
                                 </div>
@@ -3013,9 +3048,9 @@ export default function NovaCotacaoPage() {
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
             <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} />
-            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} />
-            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} />
-            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} />
+            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromSale} />
+            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} />
+            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
@@ -3038,6 +3073,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
