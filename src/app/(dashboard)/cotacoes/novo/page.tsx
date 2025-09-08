@@ -63,6 +63,11 @@ interface HotelData {
     description: string;
 }
 
+interface Category {
+    value: string;
+    label: string;
+}
+
 
 const steps = [
   { id: 1, name: 'Aguardando' },
@@ -299,7 +304,7 @@ const airlines = [
   { value: "jj", label: "LATAM Airlines" },
   { value: "tp", label: "TAP Portugal" },
   { value: "ar", label: "Aerolineas Argentinas" },
-  { value: "am", label: "AeroMexico" },
+  { value: "am", "label": "AeroMexico" },
   { value: "ac", "label": "Air Canada" },
   { value: "af", "label": "Air France" },
   { value: "av", "label": "Avianca" },
@@ -811,7 +816,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
-const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
+const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -883,12 +888,12 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolea
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
-                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
-                                                <SelectItem value="salario">Salário</SelectItem>
+                                                {categories.map(cat => (
+                                                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewCategoryClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -942,7 +947,7 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolea
     )
 }
 
-const SaleValueInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
+const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewCategoryClick: () => void, categories: Category[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -990,12 +995,12 @@ const SaleValueInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: b
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
-                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
-                                                <SelectItem value="salario">Salário</SelectItem>
+                                                {categories.map(cat => (
+                                                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewCategoryClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -1049,7 +1054,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: b
     )
 }
 
-const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
+const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1109,12 +1114,12 @@ const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boole
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
-                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
-                                                <SelectItem value="salario">Salário</SelectItem>
+                                                {categories.map(cat => (
+                                                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewCategoryClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -1169,7 +1174,7 @@ const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boole
 }
 
 
-const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void }) => {
+const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1229,12 +1234,12 @@ const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick }: { open: b
                                                 <SelectValue placeholder="Selecione" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="comissao_venda">Comissão de Venda</SelectItem>
-                                                <SelectItem value="pagamento_fornecedor">Pagamento Fornecedor</SelectItem>
-                                                <SelectItem value="salario">Salário</SelectItem>
+                                                {categories.map(cat => (
+                                                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" type="button" onClick={onNewPersonClick}><Plus className="h-4 w-4" /></Button>
+                                        <Button size="icon" type="button" onClick={onNewCategoryClick}><Plus className="h-4 w-4" /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -1837,10 +1842,10 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                                 <Select defaultValue="direto" name="flight-connections">
                                     <SelectTrigger id="flight-connections"><SelectValue /></SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="direto">Voo direto</SelectItem>
-                                        <SelectItem value="1-parada">1 Parada</SelectItem>
-                                        <SelectItem value="2-paradas">2 Paradas</SelectItem>
-                                        <SelectItem value="3-paradas">3 Paradas</SelectItem>
+                                         <SelectItem value="direto">Voo direto</SelectItem>
+                                         <SelectItem value="1-parada">1 Parada</SelectItem>
+                                         <SelectItem value="2-paradas">2 Paradas</SelectItem>
+                                         <SelectItem value="3-paradas">3 Paradas</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -2079,6 +2084,52 @@ const HotelItem = ({ hotel, onRemove }: { hotel: HotelData, onRemove: (id: strin
     )
 }
 
+const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (category: Category) => void }) => {
+    const { toast } = useToast();
+    const [name, setName] = useState('');
+
+    const handleSave = () => {
+        if (!name.trim()) {
+            toast({
+                title: "Nome Inválido",
+                description: "O nome da categoria não pode estar em branco.",
+                variant: "destructive",
+            });
+            return;
+        }
+        const newCategory = {
+            value: name.toLowerCase().replace(/\s+/g, '_'),
+            label: name,
+        };
+        onSave(newCategory);
+        setName('');
+        onOpenChange(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Nova Categoria</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-2">
+                    <Label htmlFor="category-name">Nome da Categoria <span className="text-destructive">*</span></Label>
+                    <Input
+                        id="category-name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Ex: Marketing"
+                    />
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
@@ -2103,6 +2154,12 @@ export default function NovaCotacaoPage() {
     const [selectedClientId, setSelectedClientId] = useState('nao-informado');
     const [flights, setFlights] = useState<FlightData[]>([]);
     const [hotels, setHotels] = useState<HotelData[]>([]);
+    const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([
+        { value: 'comissao_venda', label: 'Comissão de Venda' },
+        { value: 'pagamento_fornecedor', label: 'Pagamento Fornecedor' },
+        { value: 'salario', label: 'Salário' },
+    ]);
     
     const [quoteData, setQuoteData] = useState({
         titulo: 'Visto para procurar trabalho em Portugal',
@@ -2237,6 +2294,24 @@ export default function NovaCotacaoPage() {
     const handleRemoveHotel = (id: string) => {
         setHotels(prev => prev.filter(h => h.id !== id));
     }
+    
+    const handleSaveCategory = (newCategory: Category) => {
+        setCategories(prev => {
+            if (prev.some(cat => cat.value === newCategory.value)) {
+                toast({
+                    title: "Categoria já existe",
+                    description: "Esta categoria já foi adicionada.",
+                    variant: "destructive",
+                });
+                return prev;
+            }
+            toast({
+                title: "Sucesso!",
+                description: `Categoria "${newCategory.label}" adicionada.`,
+            });
+            return [...prev, newCategory];
+        });
+    };
 
     const handleSaveAndToast = (msg: string) => {
         toast({ title: "Sucesso!", description: msg });
@@ -2254,11 +2329,6 @@ export default function NovaCotacaoPage() {
 
     const openNewPersonDialogFromPaidBonus = () => {
         setIsPaidBonusInfoDialogOpen(false);
-        setIsNewPersonDialogOpen(true);
-    }
-
-    const openNewPersonDialogFromSale = () => {
-        setIsSaleValueInfoDialogOpen(false);
         setIsNewPersonDialogOpen(true);
     }
 
@@ -3047,10 +3117,10 @@ export default function NovaCotacaoPage() {
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
-            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} />
-            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromSale} />
-            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} />
-            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} />
+            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
+            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
+            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
+            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
@@ -3070,9 +3140,15 @@ export default function NovaCotacaoPage() {
                     onSave={handleSaveHotel}
                 />
             )}
+            <NewCategoryDialog
+                open={isNewCategoryDialogOpen}
+                onOpenChange={setIsNewCategoryDialogOpen}
+                onSave={handleSaveCategory}
+            />
         </>
     );
 }
+
 
 
 
