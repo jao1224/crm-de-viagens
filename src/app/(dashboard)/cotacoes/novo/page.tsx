@@ -2165,9 +2165,9 @@ export default function NovaCotacaoPage() {
     const [isHotelInfoDialogOpen, setIsHotelInfoDialogOpen] = useState(false);
     const [faturaEmissao, setFaturaEmissao] = useState<Date>(new Date(2025, 7, 25));
     const [faturaVencimento, setFaturaVencimento] = useState<Date>(new Date(2025, 7, 25));
+    const [allPeople, setAllPeople] = useState<Person[]>([]);
     const [passengers, setPassengers] = useState<Person[]>([]);
-    const [selectedPassengerId, setSelectedPassengerId] = useState<string | null>(null);
-    const [selectedClientId, setSelectedClientId] = useState('nao-informado');
+    const [selectedClientId, setSelectedClientId] = useState<string | undefined>(undefined);
     const [flights, setFlights] = useState<FlightData[]>([]);
     const [hotels, setHotels] = useState<HotelData[]>([]);
     const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
@@ -2193,29 +2193,38 @@ export default function NovaCotacaoPage() {
     });
     
     useEffect(() => {
+        // Mock fetching all people from an API or localStorage
+        setAllPeople(mockPeople);
+
         const storedAccounts = localStorage.getItem('bankAccounts');
         if (storedAccounts) {
             setBankAccounts(JSON.parse(storedAccounts));
         }
-    }, []);
 
-    useEffect(() => {
         const clientIdFromUrl = searchParams.get('clientId');
         if (clientIdFromUrl) {
             const client = mockPeople.find(p => p.id === clientIdFromUrl);
             if (client) {
-                // Add to passengers list if not already there
-                setPassengers(prev => {
-                    if (prev.some(p => p.id === client.id)) {
-                        return prev;
-                    }
-                    return [...prev, client];
-                });
-                // Set as selected client
                 setSelectedClientId(client.id);
+                 // Automatically add the client to passengers if not already there
+                if (!passengers.some(p => p.id === client.id)) {
+                    setPassengers(prev => [...prev, client]);
+                }
             }
         }
     }, [searchParams]);
+
+    const handleClientSelect = (clientId: string) => {
+        setSelectedClientId(clientId);
+        const personToAdd = allPeople.find(p => p.id === clientId);
+        if (personToAdd && !passengers.some(p => p.id === personToAdd.id)) {
+            setPassengers(prev => [...prev, personToAdd]);
+            toast({
+                title: "Passageiro Adicionado",
+                description: `${personToAdd.name} foi adicionado(a) à lista de passageiros.`,
+            });
+        }
+    };
     
     const flightDialogTitles: Record<FlightDialogType, string> = {
       ida: 'Voo de Ida',
@@ -2247,12 +2256,6 @@ export default function NovaCotacaoPage() {
             bebes: passengers.filter(p => p.type === 'bebe').length,
         }));
     }, [passengers]);
-    
-    useEffect(() => {
-        if (passengers.length > 0 && selectedClientId === 'nao-informado') {
-            setSelectedClientId(String(passengers[0].id));
-        }
-    }, [passengers, selectedClientId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
@@ -2279,8 +2282,8 @@ export default function NovaCotacaoPage() {
     };
     
     const handleAddPassenger = () => {
-        if (selectedPassengerId) {
-            const personToAdd = mockPeople.find(p => String(p.id) === selectedPassengerId);
+        if (selectedClientId) {
+            const personToAdd = allPeople.find(p => String(p.id) === selectedClientId);
             if (personToAdd && !passengers.some(p => p.id === personToAdd.id)) {
                 setPassengers(prev => [...prev, personToAdd]);
             }
@@ -2426,13 +2429,13 @@ export default function NovaCotacaoPage() {
                                 <div className="space-y-1.5">
                                     <Label>Cliente</Label>
                                     <div className="flex items-center gap-2">
-                                        <Select value={selectedClientId} onValueChange={setSelectedClientId}>
+                                        <Select value={selectedClientId} onValueChange={handleClientSelect}>
                                             <SelectTrigger>
-                                                <SelectValue />
+                                                <SelectValue placeholder="Selecione um cliente" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="nao-informado">Não informado</SelectItem>
-                                                {passengers.map(p => (
+                                                {allPeople.map(p => (
                                                     <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -2788,12 +2791,12 @@ export default function NovaCotacaoPage() {
                                 <div className="space-y-2">
                                     <Label>Passageiro</Label>
                                     <div className="flex items-center gap-2">
-                                        <Select onValueChange={setSelectedPassengerId}>
+                                        <Select onValueChange={handleClientSelect}>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione" />
+                                                <SelectValue placeholder="Selecione para adicionar um passageiro" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {mockPeople.map(p => (
+                                                {allPeople.map(p => (
                                                     <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
                                                 ))}
                                             </SelectContent>
@@ -2801,7 +2804,6 @@ export default function NovaCotacaoPage() {
                                         <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}>
                                             <UserPlus className="h-4 w-4" />
                                         </Button>
-                                        <Button onClick={handleAddPassenger}>Adicionar</Button>
                                     </div>
                                 </div>
                                  {passengers.length > 0 ? (
@@ -3176,6 +3178,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
