@@ -30,7 +30,7 @@ import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
 import { mockPeople } from '@/lib/mock-data';
-import type { Person } from '@/lib/types';
+import type { Person, BankAccount } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useSearchParams } from 'next/navigation';
@@ -816,7 +816,7 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
-const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
+const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -877,7 +877,11 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCli
                                         <SelectTrigger id="cost-account">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            {bankAccounts.map(account => (
+                                                <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -947,7 +951,7 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCli
     )
 }
 
-const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewCategoryClick: () => void, categories: Category[] }) => {
+const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -984,7 +988,11 @@ const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categorie
                                         <SelectTrigger id="sale-account">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                             {bankAccounts.map(account => (
+                                                <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1054,7 +1062,7 @@ const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categorie
     )
 }
 
-const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
+const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1103,7 +1111,11 @@ const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCl
                                         <SelectTrigger id="bonus-account">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            {bankAccounts.map(account => (
+                                                <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1174,7 +1186,7 @@ const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCl
 }
 
 
-const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[] }) => {
+const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
     }
@@ -1223,7 +1235,11 @@ const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCatego
                                         <SelectTrigger id="paid-bonus-account">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            {bankAccounts.map(account => (
+                                                <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -2160,6 +2176,7 @@ export default function NovaCotacaoPage() {
         { value: 'pagamento_fornecedor', label: 'Pagamento Fornecedor' },
         { value: 'salario', label: 'Salário' },
     ]);
+    const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
     
     const [quoteData, setQuoteData] = useState({
         titulo: 'Visto para procurar trabalho em Portugal',
@@ -2174,6 +2191,13 @@ export default function NovaCotacaoPage() {
         termos: '',
         outrasInfo: '',
     });
+    
+    useEffect(() => {
+        const storedAccounts = localStorage.getItem('bankAccounts');
+        if (storedAccounts) {
+            setBankAccounts(JSON.parse(storedAccounts));
+        }
+    }, []);
 
     useEffect(() => {
         const clientIdFromUrl = searchParams.get('clientId');
@@ -2366,49 +2390,40 @@ export default function NovaCotacaoPage() {
                         <Separator className="my-6"/>
 
                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="space-y-1.5 sm:col-span-2">
-                                    <Label>ID da Cotação</Label>
-                                    <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                           <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <Label>ID da Cotação</Label>
+                                        <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label>Data</Label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-full justify-start text-left font-normal",
+                                                        !date && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={date}
+                                                    onSelect={(d) => d && setDate(d)}
+                                                    initialFocus
+                                                    locale={ptBR}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
                                 </div>
                                 <div className="space-y-1.5">
-                                    <Label>Data</Label>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-full justify-start text-left font-normal",
-                                                    !date && "text-muted-foreground"
-                                                )}
-                                            >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0">
-                                            <Calendar
-                                                mode="single"
-                                                selected={date}
-                                                onSelect={(d) => d && setDate(d)}
-                                                initialFocus
-                                                locale={ptBR}
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                                <div className="space-y-1.5">
-                                    <Label>Usuário</Label>
-                                    <Select defaultValue="lima">
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="lima">Lima</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="sm:col-span-2 space-y-1.5">
                                     <Label>Cliente</Label>
                                     <div className="flex items-center gap-2">
                                         <Select value={selectedClientId} onValueChange={setSelectedClientId}>
@@ -2427,21 +2442,34 @@ export default function NovaCotacaoPage() {
                                     <p className="text-xs text-destructive">Informe o cliente da cotação</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                               <div className="sm:col-span-2 space-y-1.5">
-                                    <Label>Canal de Venda</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Selecione"/>
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="direto">Direto</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="text-right sm:col-span-2 self-end">
-                                <p className="text-sm text-muted-foreground">Valor Total</p>
-                                <p className="text-2xl font-bold text-primary">R$ 0</p>
+                            <div className="space-y-4">
+                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <Label>Canal de Venda</Label>
+                                        <Select>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione"/>
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="direto">Direto</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <Label>Usuário</Label>
+                                        <Select defaultValue="lima">
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="lima">Lima</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                               </div>
+                                <div className="text-right self-end mt-auto">
+                                    <p className="text-sm text-muted-foreground">Valor Total</p>
+                                    <p className="text-2xl font-bold text-primary">R$ 0</p>
                                 </div>
                             </div>
                         </div>
@@ -3117,10 +3145,10 @@ export default function NovaCotacaoPage() {
                 </Tabs>
             </div>
             <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
-            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
-            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
-            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
-            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} />
+            <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
+            <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
+            <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
+            <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
             {flightDialogType && (
@@ -3148,6 +3176,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
