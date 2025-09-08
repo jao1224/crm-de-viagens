@@ -357,7 +357,7 @@ const initialAddressState = {
     pais: 'Brasil'
 };
 
-const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (person: Person) => void }) => {
     const { toast } = useToast();
     const [rating, setRating] = useState(0);
     const [birthDate, setBirthDate] = useState<Date>();
@@ -400,6 +400,32 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     };
     
     const handleSave = () => {
+        // Here you would typically gather all form data and call onSave
+        const newPerson: Person = {
+            id: Date.now().toString(),
+            name: "Nova Pessoa", // Replace with form data
+            rating: rating,
+            types: ["Cliente"],
+            cpfCnpj: "",
+            phone: "",
+            email: "",
+            sexo: "Não informado",
+            nascimento: birthDate ? format(birthDate, "yyyy-MM-dd") : "",
+            rg: "",
+            orgaoEmissor: "",
+            id_estrangeiro: "",
+            nacionalidade: "",
+            estadoCivil: "",
+            passaporte: "",
+            emissaoPassaporte: "",
+            vencimentoPassaporte: "",
+            nacionalidadePassaporte: "",
+            visto: "",
+            validadeVisto: "",
+            active: true,
+            avatarUrl: `https://i.pravatar.cc/150?u=${Date.now()}`
+        };
+        onSave(newPerson);
         onOpenChange(false);
         toast({
             title: "Sucesso!",
@@ -2214,6 +2240,20 @@ export default function NovaCotacaoPage() {
         }
     }, [searchParams]);
 
+    const handleSavePerson = (personData: Person) => {
+        // This function will now update the main mock data source
+        const exists = mockPeople.some(p => p.id === personData.id);
+        if (exists) {
+            const personIndex = mockPeople.findIndex(p => p.id === personData.id);
+            mockPeople[personIndex] = personData;
+        } else {
+            mockPeople.unshift(personData);
+        }
+        
+        // Also update the local state to re-render the component
+        setAllPeople([...mockPeople]);
+    };
+
     const handleClientSelect = (clientId: string) => {
         setSelectedClientId(clientId);
         const personToAdd = allPeople.find(p => p.id === clientId);
@@ -2392,8 +2432,8 @@ export default function NovaCotacaoPage() {
                         
                         <Separator className="my-6"/>
 
-                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
-                           <div className="space-y-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-6">
+                            <div className="space-y-6">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
                                         <Label>ID da Cotação</Label>
@@ -2445,7 +2485,7 @@ export default function NovaCotacaoPage() {
                                     <p className="text-xs text-destructive">Informe o cliente da cotação</p>
                                 </div>
                             </div>
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
                                         <Label>Canal de Venda</Label>
@@ -3146,7 +3186,7 @@ export default function NovaCotacaoPage() {
                     </TabsContent>
                 </Tabs>
             </div>
-            <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} />
+            <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} onSave={handleSavePerson} />
             <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
@@ -3178,6 +3218,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
