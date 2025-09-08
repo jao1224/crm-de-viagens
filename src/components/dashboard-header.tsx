@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -55,9 +54,11 @@ export function DashboardHeader() {
           <ul className="flex items-center gap-6 text-base font-medium">
             {headerNavLinks.map(link => (
                 <li key={link.label}>
-                    <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-black transition-colors px-3 py-1.5 rounded-md hover:bg-yellow-400">
+                    <Link href={link.href} legacyBehavior passHref>
+                      <a className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-black transition-colors px-3 py-1.5 rounded-md hover:bg-yellow-400">
                         {link.label}
-                      </Link>
+                      </a>
+                    </Link>
                 </li>
             ))}
           </ul>
