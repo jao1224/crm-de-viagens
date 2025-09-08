@@ -55,7 +55,7 @@ export function DashboardHeader() {
           <ul className="flex items-center gap-6 text-base font-medium">
             {headerNavLinks.map(link => (
                 <li key={link.label}>
-                    <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                    <Link href={link.href} className="flex items-center gap-1.5 text-primary-foreground/80 hover:text-primary-foreground transition-colors px-3 py-1.5 rounded-md hover:bg-yellow-400 hover:text-black">
                         {link.label}
                     </Link>
                 </li>
