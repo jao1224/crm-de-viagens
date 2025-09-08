@@ -957,7 +957,15 @@ const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCli
                                         <SelectTrigger id="cost-payment-method">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            <SelectItem value="boleto">Boleto</SelectItem>
+                                            <SelectItem value="cartao-credito">Cartão de Crédito</SelectItem>
+                                            <SelectItem value="cartao-debito">Cartão de Débito</SelectItem>
+                                            <SelectItem value="cheque">Cheque</SelectItem>
+                                            <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                            <SelectItem value="pix">Pix</SelectItem>
+                                            <SelectItem value="transferencia">Transferência</SelectItem>
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1068,7 +1076,15 @@ const SaleValueInfoDialog = ({ open, onOpenChange, onNewCategoryClick, categorie
                                         <SelectTrigger id="sale-payment-method">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            <SelectItem value="boleto">Boleto</SelectItem>
+                                            <SelectItem value="cartao-credito">Cartão de Crédito</SelectItem>
+                                            <SelectItem value="cartao-debito">Cartão de Débito</SelectItem>
+                                            <SelectItem value="cheque">Cheque</SelectItem>
+                                            <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                            <SelectItem value="pix">Pix</SelectItem>
+                                            <SelectItem value="transferencia">Transferência</SelectItem>
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1191,7 +1207,15 @@ const BonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryCl
                                         <SelectTrigger id="bonus-payment-method">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            <SelectItem value="boleto">Boleto</SelectItem>
+                                            <SelectItem value="cartao-credito">Cartão de Crédito</SelectItem>
+                                            <SelectItem value="cartao-debito">Cartão de Débito</SelectItem>
+                                            <SelectItem value="cheque">Cheque</SelectItem>
+                                            <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                            <SelectItem value="pix">Pix</SelectItem>
+                                            <SelectItem value="transferencia">Transferência</SelectItem>
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1315,7 +1339,15 @@ const PaidBonusInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCatego
                                         <SelectTrigger id="paid-bonus-payment-method">
                                             <SelectValue placeholder="Selecione" />
                                         </SelectTrigger>
-                                        <SelectContent></SelectContent>
+                                        <SelectContent>
+                                            <SelectItem value="boleto">Boleto</SelectItem>
+                                            <SelectItem value="cartao-credito">Cartão de Crédito</SelectItem>
+                                            <SelectItem value="cartao-debito">Cartão de Débito</SelectItem>
+                                            <SelectItem value="cheque">Cheque</SelectItem>
+                                            <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                            <SelectItem value="pix">Pix</SelectItem>
+                                            <SelectItem value="transferencia">Transferência</SelectItem>
+                                        </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
@@ -1900,7 +1932,6 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
                                          <SelectItem value="24h">Notificar Check-in 24h</SelectItem>
                                          <SelectItem value="36h">Notificar Check-in 36h</SelectItem>
                                          <SelectItem value="48h">Notificar Check-in 48h</SelectItem>
-                                         <SelectItem value="72h">Em Período de Check-in</SelectItem>
                                          <SelectItem value="em-periodo">Em Período de Check-in</SelectItem>
                                          <SelectItem value="realizado">Check-in Realizado</SelectItem>
                                     </SelectContent>
@@ -2219,7 +2250,6 @@ export default function NovaCotacaoPage() {
     });
     
     useEffect(() => {
-        // Mock fetching all people from an API or localStorage
         setAllPeople(mockPeople);
 
         const storedAccounts = localStorage.getItem('bankAccounts');
@@ -2232,25 +2262,20 @@ export default function NovaCotacaoPage() {
             const client = mockPeople.find(p => p.id === clientIdFromUrl);
             if (client) {
                 setSelectedClientId(client.id);
-                 // Automatically add the client to passengers if not already there
-                if (!passengers.some(p => p.id === client.id)) {
+                 if (!passengers.some(p => p.id === client.id)) {
                     setPassengers(prev => [...prev, client]);
                 }
             }
         }
-    }, [searchParams]);
+    }, [searchParams, passengers]);
 
     const handleSavePerson = (personData: Person) => {
-        // This function will now update the main mock data source
-        const exists = mockPeople.some(p => p.id === personData.id);
-        if (exists) {
-            const personIndex = mockPeople.findIndex(p => p.id === personData.id);
+        const personIndex = mockPeople.findIndex(p => p.id === personData.id);
+        if (personIndex > -1) {
             mockPeople[personIndex] = personData;
         } else {
             mockPeople.unshift(personData);
         }
-        
-        // Also update the local state to re-render the component
         setAllPeople([...mockPeople]);
     };
 
@@ -2433,13 +2458,32 @@ export default function NovaCotacaoPage() {
                         <Separator className="my-6"/>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-6">
-                            <div className="space-y-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div className="space-y-1.5">
-                                        <Label>ID da Cotação</Label>
-                                        <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                             <div className="space-y-4">
+                                <div className="space-y-1.5">
+                                    <Label>ID da Cotação</Label>
+                                    <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                                </div>
+                                <div className="space-y-1.5">
+                                     <Label>Cliente <span className="text-destructive">*</span></Label>
+                                    <div className="flex items-center gap-2">
+                                        <Select value={selectedClientId} onValueChange={handleClientSelect}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Selecione um cliente" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {allPeople.map(p => (
+                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
                                     </div>
-                                    <div className="space-y-1.5">
+                                    {/* <p className="text-xs text-destructive">Informe o cliente da cotação</p> */}
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                     <div className="space-y-1.5">
                                         <Label>Data</Label>
                                         <Popover>
                                             <PopoverTrigger asChild>
@@ -2465,28 +2509,19 @@ export default function NovaCotacaoPage() {
                                             </PopoverContent>
                                         </Popover>
                                     </div>
-                                </div>
-                                <div className="space-y-1.5">
-                                    <Label>Cliente</Label>
-                                    <div className="flex items-center gap-2">
-                                        <Select value={selectedClientId} onValueChange={handleClientSelect}>
+                                     <div className="space-y-1.5">
+                                        <Label>Usuário</Label>
+                                        <Select defaultValue="lima">
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Selecione um cliente" />
+                                                <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="nao-informado">Não informado</SelectItem>
-                                                {allPeople.map(p => (
-                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
-                                                ))}
+                                                <SelectItem value="lima">Lima</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
                                     </div>
-                                    <p className="text-xs text-destructive">Informe o cliente da cotação</p>
                                 </div>
-                            </div>
-                            <div className="space-y-6">
-                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
                                         <Label>Canal de Venda</Label>
                                         <Select>
@@ -2498,21 +2533,10 @@ export default function NovaCotacaoPage() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="space-y-1.5">
-                                        <Label>Usuário</Label>
-                                        <Select defaultValue="lima">
-                                            <SelectTrigger>
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="lima">Lima</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                    <div className="text-right self-end mt-auto">
+                                        <p className="text-sm text-muted-foreground">Valor Total</p>
+                                        <p className="text-2xl font-bold text-primary">R$ 0</p>
                                     </div>
-                               </div>
-                                <div className="text-right self-end mt-auto">
-                                    <p className="text-sm text-muted-foreground">Valor Total</p>
-                                    <p className="text-2xl font-bold text-primary">R$ 0</p>
                                 </div>
                             </div>
                         </div>
@@ -3218,6 +3242,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
