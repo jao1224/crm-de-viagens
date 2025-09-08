@@ -2972,7 +2972,17 @@ export default function NovaCotacaoPage() {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="valor-comparacao" className="flex items-center gap-1.5">
-                                        Valor de Comparação <Info className="h-4 w-4 text-muted-foreground" />
+                                        Valor de Comparação
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Informe o preço praticado em outros sites,<br/>para que seja exibida a diferença em relação<br/>ao seu valor.</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     </Label>
                                     <Input id="valor-comparacao" defaultValue="R$ 0,00" />
                                 </div>
@@ -3242,6 +3252,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
