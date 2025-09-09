@@ -29,7 +29,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
-import { mockPeople, mockUsers } from '@/lib/mock-data';
+import { mockPeople, mockUsers, currentUser } from '@/lib/mock-data';
 import type { Person, BankAccount } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -83,6 +83,13 @@ interface Task {
     description?: string;
     isRecurring: boolean;
     attachment?: string;
+}
+
+interface Observation {
+    id: string;
+    text: string;
+    user: string;
+    timestamp: Date;
 }
 
 
@@ -1819,7 +1826,7 @@ const FlightInfoDialog = ({ open, onOpenChange, title, flightType, onSave, fligh
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-4xl">
+            <DialogContent className="sm:max-w-6xl">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-foreground">{title}</DialogTitle>
                 </DialogHeader>
@@ -2453,6 +2460,57 @@ const TaskItem = ({ task, onRemove }: { task: Task; onRemove: (id: string) => vo
 }
 
 
+const ObservationDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (observation: Omit<Observation, 'id' | 'timestamp' | 'user'>) => void; }) => {
+    const [text, setText] = useState('');
+    const { toast } = useToast();
+
+    const handleSave = () => {
+        if (!text.trim()) {
+            toast({
+                title: "Observação vazia",
+                description: "Por favor, escreva algo antes de salvar.",
+                variant: "destructive",
+            });
+            return;
+        }
+        onSave({ text });
+        setText('');
+        onOpenChange(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Observação</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-2">
+                    <Label htmlFor="observation-text">Escreva sua observação</Label>
+                    <Textarea
+                        id="observation-text"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        rows={6}
+                    />
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+const ObservationItem = ({ observation }: { observation: Observation }) => (
+    <div className="p-4 border-b last:border-b-0">
+        <p className="text-foreground whitespace-pre-wrap">{observation.text}</p>
+        <p className="text-xs text-muted-foreground mt-2">
+            Por {observation.user} em {format(observation.timestamp, "dd/MM/yyyy 'às' HH:mm")}
+        </p>
+    </div>
+);
+
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
@@ -2482,6 +2540,8 @@ export default function NovaCotacaoPage() {
     const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
     const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [isObservationDialogOpen, setIsObservationDialogOpen] = useState(false);
+    const [observations, setObservations] = useState<Observation[]>([]);
     const [categories, setCategories] = useState<Category[]>([
         { value: 'comissao_venda', label: 'Comissão de Venda' },
         { value: 'pagamento_fornecedor', label: 'Pagamento Fornecedor' },
@@ -2678,6 +2738,18 @@ export default function NovaCotacaoPage() {
     const handleRemoveTask = (id: string) => {
         setTasks(prev => prev.filter(t => t.id !== id));
     };
+    
+    const handleSaveObservation = (observation: Omit<Observation, 'id' | 'timestamp' | 'user'>) => {
+        const newObservation: Observation = {
+            ...observation,
+            id: Date.now().toString(),
+            timestamp: new Date(),
+            user: currentUser.name,
+        };
+        setObservations(prev => [newObservation, ...prev]);
+        toast({ title: "Observação salva!" });
+    };
+
 
     const handleSaveAndToast = (msg: string) => {
         toast({ title: "Sucesso!", description: msg });
@@ -3226,12 +3298,20 @@ export default function NovaCotacaoPage() {
                                     <MessageSquare className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Observações</CardTitle>
                                 </div>
-                                <Button>Incluir</Button>
+                                <Button onClick={() => setIsObservationDialogOpen(true)}>Incluir</Button>
                             </CardHeader>
-                            <CardContent>
-                                <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                    <p className="text-muted-foreground">Nenhuma observação incluída.</p>
-                                </div>
+                            <CardContent className="p-0">
+                                {observations.length > 0 ? (
+                                    <div className="divide-y">
+                                        {observations.map((obs) => (
+                                            <ObservationItem key={obs.id} observation={obs} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center p-8 border-dashed border-2 rounded-md m-6">
+                                        <p className="text-muted-foreground">Nenhuma observação incluída.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -3553,9 +3633,15 @@ export default function NovaCotacaoPage() {
                 onOpenChange={setIsNewTaskDialogOpen}
                 onSave={handleSaveTask}
             />
+             <ObservationDialog 
+                open={isObservationDialogOpen}
+                onOpenChange={setIsObservationDialogOpen}
+                onSave={handleSaveObservation}
+            />
         </>
     );
 }
+
 
 
 
