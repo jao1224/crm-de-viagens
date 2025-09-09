@@ -30,7 +30,7 @@ import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
 import { mockPeople, mockUsers, currentUser } from '@/lib/mock-data';
-import type { Person, BankAccount } from '@/lib/types';
+import type { Person, BankAccount, SalesChannel } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useSearchParams } from 'next/navigation';
@@ -2585,6 +2585,7 @@ export default function NovaCotacaoPage() {
         { value: 'salario', label: 'Salário' },
     ]);
     const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+    const [salesChannels, setSalesChannels] = useState<SalesChannel[]>([]);
     
     const [quoteData, setQuoteData] = useState({
         titulo: 'Visto para procurar trabalho em Portugal',
@@ -2607,6 +2608,11 @@ export default function NovaCotacaoPage() {
         if (storedAccounts) {
             setBankAccounts(JSON.parse(storedAccounts));
         }
+        
+        const storedChannels = localStorage.getItem('salesChannels');
+        if (storedChannels) {
+            setSalesChannels(JSON.parse(storedChannels).filter((c: SalesChannel) => c.isActive));
+        }
 
         const clientIdFromUrl = searchParams.get('clientId');
         if (clientIdFromUrl) {
@@ -2621,14 +2627,16 @@ export default function NovaCotacaoPage() {
     }, [searchParams]);
 
     const handleSavePerson = (personData: Person) => {
-        const updatedPeople = mockPeople.some(p => p.id === personData.id)
-            ? mockPeople.map(p => (p.id === personData.id ? personData : p))
-            : [personData, ...mockPeople];
-        
+        const exists = mockPeople.some(p => p.id === personData.id);
+        let updatedPeople;
+        if (exists) {
+            updatedPeople = mockPeople.map(p => (p.id === personData.id ? personData : p));
+        } else {
+            updatedPeople = [personData, ...mockPeople];
+        }
         // This is a mock, in a real scenario you would update the backend
         mockPeople.length = 0;
         Array.prototype.push.apply(mockPeople, updatedPeople);
-        
         setAllPeople([...mockPeople]);
     };
 
@@ -2923,7 +2931,11 @@ export default function NovaCotacaoPage() {
                                                 <SelectValue placeholder="Selecione"/>
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="direto">Direto</SelectItem>
+                                                {salesChannels.map(channel => (
+                                                    <SelectItem key={channel.id} value={channel.id}>
+                                                        {channel.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
