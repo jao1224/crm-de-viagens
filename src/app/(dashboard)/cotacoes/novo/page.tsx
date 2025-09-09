@@ -29,7 +29,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
-import { mockPeople } from '@/lib/mock-data';
+import { mockPeople, mockUsers } from '@/lib/mock-data';
 import type { Person, BankAccount } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -72,6 +72,17 @@ interface Attachment {
     id: string;
     fileName: string;
     description: string;
+}
+
+interface Task {
+    id: string;
+    type: string;
+    assignee: string;
+    date: Date;
+    subject: string;
+    description?: string;
+    isRecurring: boolean;
+    attachment?: string;
 }
 
 
@@ -2279,6 +2290,163 @@ const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOp
     );
 };
 
+const NewTaskDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (task: Task) => void }) => {
+    const formRef = useRef<HTMLFormElement>(null);
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [fileName, setFileName] = useState<string | null>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
+
+    const handleSaveTask = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+
+        const time = formData.get('time') as string;
+        const [hours, minutes] = time.split(':').map(Number);
+        const finalDate = new Date(date || Date.now());
+        finalDate.setHours(hours, minutes);
+
+        const newTask: Task = {
+            id: Date.now().toString(),
+            type: formData.get('task-type') as string,
+            assignee: formData.get('assignee') as string,
+            date: finalDate,
+            subject: formData.get('subject') as string,
+            description: formData.get('description') as string,
+            isRecurring: !!formData.get('recorrente'),
+            attachment: fileName ?? undefined,
+        };
+
+        onSave(newTask);
+        onOpenChange(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[650px]">
+                <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-foreground">Tarefa</DialogTitle>
+                </DialogHeader>
+                <form ref={formRef} onSubmit={handleSaveTask}>
+                    <div className="grid gap-6 py-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="task-type">Tipo de tarefa</Label>
+                                <Select defaultValue="tarefa" name="task-type">
+                                    <SelectTrigger id="task-type">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="tarefa">Tarefa</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="assignee">Responsável <span className="text-destructive">*</span></Label>
+                                <Select defaultValue="lima" name="assignee">
+                                    <SelectTrigger id="assignee">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {mockUsers.map(user => (
+                                            <SelectItem key={user.id} value={user.name}>{user.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                             <div className="space-y-2">
+                                <Label htmlFor="date">Data <span className="text-destructive">*</span></Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                        "w-full justify-start text-left font-normal",
+                                        !date && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {date ? format(date, "dd/MM/yyyy") : <span>Escolha uma data</span>}
+                                    </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        initialFocus
+                                        locale={ptBR}
+                                    />
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
+                                 <div className="relative">
+                                    <Input id="time" name="time" type="time" defaultValue={format(new Date(), 'HH:mm')} className="pr-8"/>
+                                    <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="subject">Assunto <span className="text-destructive">*</span></Label>
+                            <Input id="subject" name="subject" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="description">Descrição</Label>
+                            <Textarea id="description" name="description" rows={4} />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Switch id="recorrente" name="recorrente" />
+                            <Label htmlFor="recorrente">Tarefa recorrente</Label>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="attachment">Anexo</Label>
+                             <div className="flex items-center gap-2">
+                                <Input id="attachment" type="file" className="hidden" onChange={handleFileChange} />
+                                <Button asChild variant="outline">
+                                    <label htmlFor="attachment" className="cursor-pointer">Escolher Arquivo</label>
+                                </Button>
+                                <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                    {fileName ?? 'Nenhum arquivo escolhido'}
+                                </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de até 5MB</p>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                        <Button type="submit">Salvar</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+const TaskItem = ({ task, onRemove }: { task: Task; onRemove: (id: string) => void; }) => {
+    return (
+        <div className="border p-4 rounded-lg flex items-center justify-between">
+            <div className="space-y-1">
+                <p className="font-semibold">{task.subject}</p>
+                <p className="text-sm text-muted-foreground">
+                    Responsável: {task.assignee} - Vencimento: {format(task.date, "dd/MM/yyyy 'às' HH:mm")}
+                </p>
+            </div>
+            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => onRemove(task.id)}>
+                <Trash2 className="h-4 w-4" />
+            </Button>
+        </div>
+    )
+}
+
+
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
@@ -2306,6 +2474,8 @@ export default function NovaCotacaoPage() {
     const [hotels, setHotels] = useState<HotelData[]>([]);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
+    const [isNewTaskDialogOpen, setIsNewTaskDialogOpen] = useState(false);
+    const [tasks, setTasks] = useState<Task[]>([]);
     const [categories, setCategories] = useState<Category[]>([
         { value: 'comissao_venda', label: 'Comissão de Venda' },
         { value: 'pagamento_fornecedor', label: 'Pagamento Fornecedor' },
@@ -2492,6 +2662,15 @@ export default function NovaCotacaoPage() {
             });
             return [...prev, newCategory];
         });
+    };
+
+    const handleSaveTask = (task: Task) => {
+        setTasks(prev => [...prev, task]);
+        toast({ title: 'Tarefa Salva', description: 'Sua nova tarefa foi adicionada com sucesso.' });
+    };
+
+    const handleRemoveTask = (id: string) => {
+        setTasks(prev => prev.filter(t => t.id !== id));
     };
 
     const handleSaveAndToast = (msg: string) => {
@@ -3017,12 +3196,20 @@ export default function NovaCotacaoPage() {
                                     <ListTodo className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Tarefas</CardTitle>
                                 </div>
-                                <Button>Incluir</Button>
+                                <Button onClick={() => setIsNewTaskDialogOpen(true)}>Incluir</Button>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                    <p className="text-muted-foreground">Nenhuma tarefa incluída.</p>
-                                </div>
+                                {tasks.length > 0 ? (
+                                     <div className="space-y-2">
+                                        {tasks.map(task => (
+                                            <TaskItem key={task.id} task={task} onRemove={handleRemoveTask} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhuma tarefa incluída.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -3355,9 +3542,15 @@ export default function NovaCotacaoPage() {
                 onOpenChange={setIsNewCategoryDialogOpen}
                 onSave={handleSaveCategory}
             />
+            <NewTaskDialog 
+                open={isNewTaskDialogOpen}
+                onOpenChange={setIsNewTaskDialogOpen}
+                onSave={handleSaveTask}
+            />
         </>
     );
 }
+
 
 
 
