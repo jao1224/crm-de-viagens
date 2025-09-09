@@ -1,7 +1,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { mockAppointments } from "@/lib/mock-data";
 import type { Appointment } from "@/lib/types";
@@ -107,8 +107,17 @@ const eventTypeMapping: Record<Appointment['type'], { bgClass: string; textColor
 
 const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appointment, showDate?: boolean }) => {
     const eventDetails = eventTypeMapping[appointment.type];
+    const [formattedTime, setFormattedTime] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Formata a data apenas no cliente para evitar hydration mismatch.
+        const appointmentDate = new Date(appointment.date);
+        setFormattedTime(format(appointmentDate, 'HH:mm'));
+    }, [appointment.date]);
+
     const appointmentDate = new Date(appointment.date);
     const Icon = eventIcons[appointment.type];
+
 
     return (
         <div className={cn(
@@ -128,7 +137,7 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
                         {showDate && (
                             <span className="capitalize">{format(appointmentDate, "dd 'de' MMM", { locale: ptBR })} - </span>
                         )}
-                        {format(appointmentDate, 'HH:mm')}
+                        {formattedTime || '...'}
                     </span>
               </div>
               <div className="space-y-1 text-sm">
@@ -147,6 +156,7 @@ const AppointmentItem = ({ appointment, showDate = false }: { appointment: Appoi
 const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpenChange: (open: boolean) => void, onAddTask: (task: Appointment) => void }) => {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
     const [fileName, setFileName] = React.useState<string | null>(null);
+    const [time, setTime] = useState(() => format(new Date(), 'HH:mm'));
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -160,7 +170,6 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const subject = formData.get('subject') as string;
-        const time = formData.get('time') as string;
 
         if (!subject || !date || !time) {
             // Basic validation
@@ -183,6 +192,12 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
         onAddTask(newTask);
         onOpenChange(false); // Close dialog after saving
     };
+    
+    useEffect(() => {
+        if(open) {
+            setTime(format(new Date(), 'HH:mm'));
+        }
+    }, [open]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -244,7 +259,7 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                             <div className="space-y-2">
                                 <Label htmlFor="time">Hora <span className="text-destructive">*</span></Label>
                                  <div className="relative">
-                                    <Input id="time" name="time" type="time" defaultValue={format(new Date(), 'HH:mm')} className="pr-8"/>
+                                    <Input id="time" name="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} className="pr-8"/>
                                     <Clock className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 </div>
                             </div>
@@ -572,3 +587,4 @@ export default function AgendaPage() {
     
 
     
+
