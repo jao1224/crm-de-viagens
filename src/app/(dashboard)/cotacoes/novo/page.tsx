@@ -34,6 +34,7 @@ import type { Person, BankAccount } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useSearchParams } from 'next/navigation';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 
 interface FlightData {
@@ -2460,9 +2461,18 @@ const TaskItem = ({ task, onRemove }: { task: Task; onRemove: (id: string) => vo
 }
 
 
-const ObservationDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (observation: Omit<Observation, 'id' | 'timestamp' | 'user'>) => void; }) => {
+const ObservationDialog = ({ open, onOpenChange, onSave, observationToEdit }: { open: boolean; onOpenChange: (open: boolean) => void; onSave: (observation: Omit<Observation, 'id' | 'timestamp' | 'user'>) => void; observationToEdit: Observation | null; }) => {
     const [text, setText] = useState('');
     const { toast } = useToast();
+    
+    useEffect(() => {
+        if (observationToEdit) {
+            setText(observationToEdit.text);
+        } else {
+            setText('');
+        }
+    }, [observationToEdit]);
+
 
     const handleSave = () => {
         if (!text.trim()) {
@@ -2482,7 +2492,7 @@ const ObservationDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOp
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Observação</DialogTitle>
+                    <DialogTitle>{observationToEdit ? 'Editar Observação' : 'Nova Observação'}</DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-2">
                     <Label htmlFor="observation-text">Escreva sua observação</Label>
@@ -2502,9 +2512,35 @@ const ObservationDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOp
     );
 };
 
-const ObservationItem = ({ observation }: { observation: Observation }) => (
-    <div className="p-4 border-b last:border-b-0">
-        <p className="text-foreground whitespace-pre-wrap">{observation.text}</p>
+const ObservationItem = ({ observation, onEdit, onDelete }: { observation: Observation, onEdit: (observation: Observation) => void, onDelete: (id: string) => void }) => (
+    <div className="p-4 border-b last:border-b-0 group">
+        <div className="flex justify-between items-start">
+            <p className="text-foreground whitespace-pre-wrap flex-1">{observation.text}</p>
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onEdit(observation)}>
+                    <PencilLine className="h-4 w-4" />
+                </Button>
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Esta ação não pode ser desfeita. A observação será excluída permanentemente.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onDelete(observation.id)}>Excluir</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+        </div>
         <p className="text-xs text-muted-foreground mt-2">
             Por {observation.user} em {format(observation.timestamp, "dd/MM/yyyy 'às' HH:mm")}
         </p>
@@ -2542,6 +2578,7 @@ export default function NovaCotacaoPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isObservationDialogOpen, setIsObservationDialogOpen] = useState(false);
     const [observations, setObservations] = useState<Observation[]>([]);
+    const [observationToEdit, setObservationToEdit] = useState<Observation | null>(null);
     const [categories, setCategories] = useState<Category[]>([
         { value: 'comissao_venda', label: 'Comissão de Venda' },
         { value: 'pagamento_fornecedor', label: 'Pagamento Fornecedor' },
@@ -2740,15 +2777,38 @@ export default function NovaCotacaoPage() {
     };
     
     const handleSaveObservation = (observation: Omit<Observation, 'id' | 'timestamp' | 'user'>) => {
-        const newObservation: Observation = {
-            ...observation,
-            id: Date.now().toString(),
-            timestamp: new Date(),
-            user: currentUser.name,
-        };
-        setObservations(prev => [newObservation, ...prev]);
-        toast({ title: "Observação salva!" });
+        if (observationToEdit) {
+            // Update existing observation
+            setObservations(prev => prev.map(obs => obs.id === observationToEdit.id ? { ...obs, ...observation, timestamp: new Date(), user: currentUser.name } : obs));
+            toast({ title: "Observação atualizada!" });
+        } else {
+            // Add new observation
+            const newObservation: Observation = {
+                ...observation,
+                id: Date.now().toString(),
+                timestamp: new Date(),
+                user: currentUser.name,
+            };
+            setObservations(prev => [newObservation, ...prev]);
+            toast({ title: "Observação salva!" });
+        }
+        setObservationToEdit(null);
     };
+
+    const handleEditObservation = (observation: Observation) => {
+        setObservationToEdit(observation);
+        setIsObservationDialogOpen(true);
+    };
+    
+    const handleDeleteObservation = (id: string) => {
+        setObservations(prev => prev.filter(obs => obs.id !== id));
+        toast({ title: "Observação excluída." });
+    };
+
+    const handleNewObservation = () => {
+        setObservationToEdit(null);
+        setIsObservationDialogOpen(true);
+    }
 
 
     const handleSaveAndToast = (msg: string) => {
@@ -3298,13 +3358,13 @@ export default function NovaCotacaoPage() {
                                     <MessageSquare className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Observações</CardTitle>
                                 </div>
-                                <Button onClick={() => setIsObservationDialogOpen(true)}>Incluir</Button>
+                                <Button onClick={handleNewObservation}>Incluir</Button>
                             </CardHeader>
                             <CardContent className="p-0">
                                 {observations.length > 0 ? (
                                     <div className="divide-y">
                                         {observations.map((obs) => (
-                                            <ObservationItem key={obs.id} observation={obs} />
+                                            <ObservationItem key={obs.id} observation={obs} onEdit={handleEditObservation} onDelete={handleDeleteObservation} />
                                         ))}
                                     </div>
                                 ) : (
@@ -3637,25 +3697,8 @@ export default function NovaCotacaoPage() {
                 open={isObservationDialogOpen}
                 onOpenChange={setIsObservationDialogOpen}
                 onSave={handleSaveObservation}
+                observationToEdit={observationToEdit}
             />
         </>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
