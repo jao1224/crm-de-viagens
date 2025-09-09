@@ -858,7 +858,7 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
+                    <Button onClick={() => onOpenChange(false)}>Salvar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -2344,6 +2344,12 @@ const NewTaskDialog = ({ open, onOpenChange, onSave }: { open: boolean; onOpenCh
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="tarefa">Tarefa</SelectItem>
+                                        <SelectItem value="ligar">Ligar</SelectItem>
+                                        <SelectItem value="email">E-mail</SelectItem>
+                                        <SelectItem value="reuniao">Reunião</SelectItem>
+                                        <SelectItem value="almoco">Almoço</SelectItem>
+                                        <SelectItem value="visita">Visita</SelectItem>
+                                        <SelectItem value="whatsapp">Whatsapp</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -2831,7 +2837,7 @@ export default function NovaCotacaoPage() {
                                 <CardDescription>Detalhes da solicitação original do cliente.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Textarea readOnly className="bg-muted min-h-48" placeholder="Nenhuma solicitação encontrada." />
+                                <Textarea className="bg-muted min-h-48" placeholder="Nenhuma solicitação encontrada." />
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -3550,6 +3556,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
