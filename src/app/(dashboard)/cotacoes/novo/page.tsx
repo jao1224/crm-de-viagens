@@ -854,70 +854,6 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
     )
 }
 
-const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (attachment: Omit<Attachment, 'id'>) => void }) => {
-    const [fileName, setFileName] = useState<string | null>(null);
-    const [description, setDescription] = useState('');
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
-
-
-    const handleSave = () => {
-        if (fileName && description) {
-            onSave({ fileName, description });
-            onOpenChange(false);
-            // Reset state
-            setFileName(null);
-            setDescription('');
-            if(fileInputRef.current) {
-                fileInputRef.current.value = '';
-            }
-        } else {
-            alert('Por favor, selecione um arquivo e adicione uma descrição.');
-        }
-    };
-    
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            setFileName(event.target.files[0].name);
-        } else {
-            setFileName(null);
-        }
-    };
-
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Anexo</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="attachment-file">Selecione o arquivo <span className="text-destructive">*</span></Label>
-                         <div className="flex items-center gap-2">
-                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} ref={fileInputRef} />
-                            <Button asChild variant="outline">
-                                <label htmlFor="attachment-file" className="cursor-pointer">Escolher Arquivo</label>
-                            </Button>
-                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
-                                {fileName ?? 'Nenhum arquivo escolhido'}
-                            </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="attachment-description">Descrição <span className="text-destructive">*</span></Label>
-                        <Input id="attachment-description" placeholder="Não informada" value={description} onChange={(e) => setDescription(e.target.value)} />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-                    <Button onClick={handleSave}>Salvar</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
 const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
@@ -3422,6 +3358,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
