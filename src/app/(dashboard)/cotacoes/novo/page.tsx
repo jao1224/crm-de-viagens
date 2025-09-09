@@ -2256,8 +2256,6 @@ export default function NovaCotacaoPage() {
     });
     
     useEffect(() => {
-        // Since mockPeople is imported, we can directly use it.
-        // In a real app, this would be an API call.
         setAllPeople(mockPeople);
         
         const storedAccounts = localStorage.getItem('bankAccounts');
@@ -2275,16 +2273,17 @@ export default function NovaCotacaoPage() {
                 }
             }
         }
-    }, [searchParams, passengers]);
+    }, [searchParams]);
 
     const handleSavePerson = (personData: Person) => {
-        const personIndex = mockPeople.findIndex(p => p.id === personData.id);
-        if (personIndex > -1) {
-            mockPeople[personIndex] = personData;
-        } else {
-            mockPeople.unshift(personData);
-        }
-        setAllPeople([...mockPeople]);
+        setAllPeople(prev => {
+            const exists = prev.some(p => p.id === personData.id);
+            if (exists) {
+                return prev.map(p => (p.id === personData.id ? personData : p));
+            }
+            return [personData, ...prev];
+        });
+        mockPeople.unshift(personData)
     };
 
     const handleClientSelect = (clientId: string) => {
@@ -2466,31 +2465,13 @@ export default function NovaCotacaoPage() {
                         <Separator className="my-6"/>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-6">
-                             <div className="space-y-4">
-                                <div className="space-y-1.5">
-                                    <Label>ID da Cotação</Label>
-                                    <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
-                                </div>
-                                <div className="space-y-1.5">
-                                     <Label>Cliente <span className="text-destructive">*</span></Label>
-                                    <div className="flex items-center gap-2">
-                                        <Select value={selectedClientId} onValueChange={handleClientSelect}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Selecione um cliente" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {allPeople.map(p => (
-                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
-                                    </div>
-                                </div>
-                            </div>
                             <div className="space-y-4">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                     <div className="space-y-1.5">
+                                <div className="grid grid-cols-1 sm:grid-cols-[1fr,2fr] gap-4 items-end">
+                                    <div className="space-y-1.5">
+                                        <Label>ID da Cotação</Label>
+                                        <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
+                                    </div>
+                                    <div className="space-y-1.5">
                                         <Label>Data</Label>
                                         <Popover>
                                             <PopoverTrigger asChild>
@@ -2516,18 +2497,25 @@ export default function NovaCotacaoPage() {
                                             </PopoverContent>
                                         </Popover>
                                     </div>
-                                     <div className="space-y-1.5">
-                                        <Label>Usuário</Label>
-                                        <Select defaultValue="lima">
+                                </div>
+                                <div className="space-y-1.5">
+                                     <Label>Cliente <span className="text-destructive">*</span></Label>
+                                    <div className="flex items-center gap-2">
+                                        <Select value={selectedClientId} onValueChange={handleClientSelect}>
                                             <SelectTrigger>
-                                                <SelectValue />
+                                                <SelectValue placeholder="Selecione um cliente" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="lima">Lima</SelectItem>
+                                                {allPeople.map(p => (
+                                                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
+                                        <Button size="icon" variant="outline" onClick={() => setIsNewPersonDialogOpen(true)}><UserPlus/></Button>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="space-y-1.5">
                                         <Label>Canal de Venda</Label>
@@ -2540,10 +2528,21 @@ export default function NovaCotacaoPage() {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="text-right self-end mt-auto">
-                                        <p className="text-sm text-muted-foreground">Valor Total</p>
-                                        <p className="text-2xl font-bold text-primary">R$ 0</p>
+                                     <div className="space-y-1.5">
+                                        <Label>Usuário</Label>
+                                        <Select defaultValue="lima">
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="lima">Lima</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
+                                </div>
+                                 <div className="text-right mt-auto pt-5">
+                                    <p className="text-sm text-muted-foreground">Valor Total</p>
+                                    <p className="text-2xl font-bold text-primary">R$ 0</p>
                                 </div>
                             </div>
                         </div>
@@ -2571,9 +2570,7 @@ export default function NovaCotacaoPage() {
                                 <CardDescription>Detalhes da solicitação original do cliente.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Textarea readOnly className="bg-muted min-h-48">
-                                    Nenhuma solicitação encontrada.
-                                </Textarea>
+                                <Textarea readOnly className="bg-muted min-h-48" placeholder="Nenhuma solicitação encontrada." />
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -3259,6 +3256,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
