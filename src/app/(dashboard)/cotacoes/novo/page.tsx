@@ -68,6 +68,12 @@ interface Category {
     label: string;
 }
 
+interface Attachment {
+    id: string;
+    fileName: string;
+    description: string;
+}
+
 
 const steps = [
   { id: 1, name: 'Aguardando' },
@@ -848,6 +854,70 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
     )
 }
 
+const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (attachment: Omit<Attachment, 'id'>) => void }) => {
+    const [fileName, setFileName] = useState<string | null>(null);
+    const [description, setDescription] = useState('');
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+
+    const handleSave = () => {
+        if (fileName && description) {
+            onSave({ fileName, description });
+            onOpenChange(false);
+            // Reset state
+            setFileName(null);
+            setDescription('');
+            if(fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } else {
+            alert('Por favor, selecione um arquivo e adicione uma descrição.');
+        }
+    };
+    
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
+
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Anexo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="attachment-file">Selecione o arquivo <span className="text-destructive">*</span></Label>
+                         <div className="flex items-center gap-2">
+                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} ref={fileInputRef} />
+                            <Button asChild variant="outline">
+                                <label htmlFor="attachment-file" className="cursor-pointer">Escolher Arquivo</label>
+                            </Button>
+                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                {fileName ?? 'Nenhum arquivo escolhido'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="attachment-description">Descrição <span className="text-destructive">*</span></Label>
+                        <Input id="attachment-description" placeholder="Não informada" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 const CostInfoDialog = ({ open, onOpenChange, onNewPersonClick, onNewCategoryClick, categories, bankAccounts }: { open: boolean, onOpenChange: (open: boolean) => void, onNewPersonClick: () => void, onNewCategoryClick: () => void, categories: Category[], bankAccounts: BankAccount[] }) => {
     const handleSave = () => {
         onOpenChange(false);
@@ -1473,6 +1543,70 @@ interface GalleryImage {
   size: string;
   type: 'Destino' | 'Hotel' | 'Passeio';
   dataAiHint: string;
+}
+
+const AttachmentDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (attachment: Omit<Attachment, 'id'>) => void }) => {
+    const [fileName, setFileName] = useState<string | null>(null);
+    const [description, setDescription] = useState('');
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+
+    const handleSave = () => {
+        if (fileName && description) {
+            onSave({ fileName, description });
+            onOpenChange(false);
+            // Reset state
+            setFileName(null);
+            setDescription('');
+            if(fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        } else {
+            alert('Por favor, selecione um arquivo e adicione uma descrição.');
+        }
+    };
+    
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setFileName(event.target.files[0].name);
+        } else {
+            setFileName(null);
+        }
+    };
+
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Anexo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="attachment-file">Selecione o arquivo <span className="text-destructive">*</span></Label>
+                         <div className="flex items-center gap-2">
+                            <Input id="attachment-file" type="file" className="hidden" onChange={handleFileChange} ref={fileInputRef} />
+                            <Button asChild variant="outline">
+                                <label htmlFor="attachment-file" className="cursor-pointer">Escolher Arquivo</label>
+                            </Button>
+                            <span className="text-sm text-muted-foreground truncate" title={fileName ?? undefined}>
+                                {fileName ?? 'Nenhum arquivo escolhido'}
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Imagens, PDF e arquivos de textos de até 5MB</p>
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="attachment-description">Descrição <span className="text-destructive">*</span></Label>
+                        <Input id="attachment-description" placeholder="Não informada" value={description} onChange={(e) => setDescription(e.target.value)} />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 const ImageLibraryDialog = ({ open, onOpenChange, onImageSelect }: { open: boolean, onOpenChange: (open: boolean) => void, onImageSelect: (src: string) => void }) => {
@@ -2223,6 +2357,7 @@ export default function NovaCotacaoPage() {
     const [isPaidBonusInfoDialogOpen, setIsPaidBonusInfoDialogOpen] = useState(false);
     const [isInvoiceServiceDialogOpen, setIsInvoiceServiceDialogOpen] = useState(false);
     const [isImageLibraryOpen, setIsImageLibraryOpen] = useState(false);
+    const [isAttachmentDialogOpen, setIsAttachmentDialogOpen] = useState(false);
     const [flightDialogType, setFlightDialogType] = useState<FlightDialogType | null>(null);
     const [flightToEdit, setFlightToEdit] = useState<FlightData | null>(null);
     const [isHotelInfoDialogOpen, setIsHotelInfoDialogOpen] = useState(false);
@@ -2233,6 +2368,7 @@ export default function NovaCotacaoPage() {
     const [selectedClientId, setSelectedClientId] = useState<string | undefined>(undefined);
     const [flights, setFlights] = useState<FlightData[]>([]);
     const [hotels, setHotels] = useState<HotelData[]>([]);
+    const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
     const [categories, setCategories] = useState<Category[]>([
         { value: 'comissao_venda', label: 'Comissão de Venda' },
@@ -2276,15 +2412,17 @@ export default function NovaCotacaoPage() {
     }, [searchParams]);
 
     const handleSavePerson = (personData: Person) => {
-        setAllPeople(prev => {
-            const exists = prev.some(p => p.id === personData.id);
-            if (exists) {
-                return prev.map(p => (p.id === personData.id ? personData : p));
-            }
-            return [personData, ...prev];
-        });
-        mockPeople.unshift(personData)
+        const updatedPeople = mockPeople.some(p => p.id === personData.id)
+            ? mockPeople.map(p => (p.id === personData.id ? personData : p))
+            : [personData, ...mockPeople];
+        
+        // This is a mock, in a real scenario you would update the backend
+        mockPeople.length = 0;
+        Array.prototype.push.apply(mockPeople, updatedPeople);
+        
+        setAllPeople([...mockPeople]);
     };
+
 
     const handleClientSelect = (clientId: string) => {
         setSelectedClientId(clientId);
@@ -2394,6 +2532,14 @@ export default function NovaCotacaoPage() {
         setHotels(prev => prev.filter(h => h.id !== id));
     }
     
+    const handleSaveAttachment = (attachment: Omit<Attachment, 'id'>) => {
+        setAttachments(prev => [...prev, { ...attachment, id: Date.now().toString() }]);
+    };
+
+    const handleDeleteAttachment = (id: string) => {
+        setAttachments(prev => prev.filter(att => att.id !== id));
+    };
+    
     const handleSaveCategory = (newCategory: Category) => {
         setCategories(prev => {
             if (prev.some(cat => cat.value === newCategory.value)) {
@@ -2465,8 +2611,8 @@ export default function NovaCotacaoPage() {
                         <Separator className="my-6"/>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-6">
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-1 sm:grid-cols-[1fr,2fr] gap-4 items-end">
+                           <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
                                     <div className="space-y-1.5">
                                         <Label>ID da Cotação</Label>
                                         <Input placeholder="Será gerado ao salvar" readOnly className="font-mono bg-muted" />
@@ -2900,12 +3046,31 @@ export default function NovaCotacaoPage() {
                                     <Paperclip className="h-5 w-5 text-primary" />
                                     <CardTitle className="text-xl">Anexos</CardTitle>
                                 </div>
-                                <Button>Incluir</Button>
+                                <Button onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                             </CardHeader>
-                            <CardContent>
-                                <div className="text-center py-8 border-dashed border-2 rounded-md">
-                                    <p className="text-muted-foreground">Nenhum anexo incluído.</p>
-                                </div>
+                             <CardContent>
+                                {attachments.length > 0 ? (
+                                    <ul className="space-y-3">
+                                        {attachments.map(att => (
+                                            <li key={att.id} className="flex items-center justify-between p-2 rounded-md border bg-muted/50">
+                                                <div className="flex items-center gap-3">
+                                                    <Paperclip className="h-5 w-5 text-muted-foreground" />
+                                                    <div>
+                                                        <p className="text-sm font-medium text-foreground">{att.fileName}</p>
+                                                        <p className="text-xs text-muted-foreground">{att.description}</p>
+                                                    </div>
+                                                </div>
+                                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDeleteAttachment(att.id)}>
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="text-center py-8 border-dashed border-2 rounded-md">
+                                        <p className="text-muted-foreground">Nenhum anexo incluído.</p>
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -3231,6 +3396,7 @@ export default function NovaCotacaoPage() {
             <PaidBonusInfoDialog open={isPaidBonusInfoDialogOpen} onOpenChange={setIsPaidBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromPaidBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <InvoiceServiceDialog open={isInvoiceServiceDialogOpen} onOpenChange={setIsInvoiceServiceDialogOpen} />
             <ImageLibraryDialog open={isImageLibraryOpen} onOpenChange={setIsImageLibraryOpen} onImageSelect={handleImageSelect} />
+            <AttachmentDialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen} onSave={handleSaveAttachment} />
             {flightDialogType && (
                 <FlightInfoDialog
                     open={!!flightDialogType}
@@ -3256,6 +3422,7 @@ export default function NovaCotacaoPage() {
         </>
     );
 }
+
 
 
 
