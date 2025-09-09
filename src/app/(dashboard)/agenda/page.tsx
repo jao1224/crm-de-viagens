@@ -380,7 +380,7 @@ const filterOptions: { type: Appointment['type']; label: string; icon: React.Ele
     { type: 'flight', label: 'Voos', icon: Plane },
     { type: 'hotel', label: 'Hospedagens', icon: Hotel },
     { type: 'transport', label: 'Transportes', icon: TrainFront },
-    { type: 'tour', label: 'Experiências', icon: Camera },
+    { type: 'tour', label: 'Passeios', icon: Camera },
     { type: 'cruise', label: 'Cruzeiros', icon: Ship },
 ];
 
@@ -402,19 +402,19 @@ const filterStyles: Record<Appointment['type'], { active: string; inactive: stri
 const FilterToolbar = ({ activeFilters, onFilterToggle }: { activeFilters: Appointment['type'][]; onFilterToggle: (filter: Appointment['type']) => void; }) => {
     return (
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-center gap-2 flex-wrap">
+             <div className="flex items-center gap-1.5 flex-wrap">
                 {filterOptions.map(({ type, label, icon: Icon }) => (
                     <Button
                         key={type}
                         variant="outline"
                         size="sm"
                         className={cn(
-                          "shadow-sm transition-colors border",
+                          "shadow-sm transition-colors border text-xs h-8",
                           activeFilters.includes(type) ? filterStyles[type].active : filterStyles[type].inactive
                         )}
                         onClick={() => onFilterToggle(type)}
                     >
-                        <Icon className="mr-2 h-4 w-4" />
+                        <Icon className="mr-1.5 h-3.5 w-3.5" />
                         {label}
                     </Button>
                 ))}
