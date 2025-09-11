@@ -15,8 +15,8 @@ import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
-import { mockFlights, mockPeople } from '@/lib/mock-data';
-import type { Flight, Person } from '@/lib/types';
+import { mockFlights, mockPeople, mockUsers } from '@/lib/mock-data';
+import type { Flight, Person, User } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 
@@ -44,7 +44,7 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
     );
 }
 
-const FilterDialog = ({ open, onOpenChange, people }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[] }) => {
+const FilterDialog = ({ open, onOpenChange, people, users }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], users: User[] }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
@@ -89,8 +89,13 @@ const FilterDialog = ({ open, onOpenChange, people }: { open: boolean, onOpenCha
                     <div className="space-y-2">
                         <Label htmlFor="usuario">Usuário</Label>
                         <Select>
-                            <SelectTrigger id="usuario"><SelectValue placeholder="Todos" /></SelectTrigger>
-                            <SelectContent></SelectContent>
+                             <SelectTrigger id="usuario"><SelectValue placeholder="Todos" /></SelectTrigger>
+                             <SelectContent>
+                                <SelectItem value="todos">Todos</SelectItem>
+                                {users.map(user => (
+                                    <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>
+                                ))}
+                            </SelectContent>
                         </Select>
                     </div>
                 </div>
@@ -164,6 +169,7 @@ export default function VoosPage() {
     const [activeFilter, setActiveFilter] = useState<'realizados' | 'proximos' | 'distantes'>('proximos');
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
     const [people] = useState<Person[]>(mockPeople);
+    const [users] = useState<User[]>(mockUsers);
 
     const handleConfirmClick = (flight: Flight) => {
         window.open(`/voos/confirmacao/${flight.id}`, '_blank');
@@ -281,7 +287,7 @@ export default function VoosPage() {
                     </div>
                 ))}
             </div>
-            <FilterDialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen} people={people} />
+            <FilterDialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen} people={people} users={users} />
         </div>
     );
 }
