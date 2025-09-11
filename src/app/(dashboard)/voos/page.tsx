@@ -71,7 +71,12 @@ const FilterDialog = ({ open, onOpenChange, people, users }: { open: boolean, on
                         <Label htmlFor="tipo-voo">Tipo Voo</Label>
                         <Select>
                             <SelectTrigger id="tipo-voo"><SelectValue placeholder="Todos" /></SelectTrigger>
-                            <SelectContent></SelectContent>
+                             <SelectContent>
+                                <SelectItem value="todos">Todos</SelectItem>
+                                <SelectItem value="ida">Voo de Ida</SelectItem>
+                                <SelectItem value="volta">Voo de Volta</SelectItem>
+                                <SelectItem value="interno">Voo Interno</SelectItem>
+                            </SelectContent>
                         </Select>
                     </div>
                     <div className="space-y-2">
