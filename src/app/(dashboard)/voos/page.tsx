@@ -10,13 +10,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane, Printer, Copy } from 'lucide-react';
+import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane, Printer, Copy, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import { mockFlights } from '@/lib/mock-data';
 import type { Flight } from '@/lib/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 
 const FlightStatus = ({ status }: { status: Flight['status'] }) => {
@@ -41,6 +42,59 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
             </Button>
         </div>
     );
+}
+
+const FilterDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-bold text-foreground">Filtros</DialogTitle>
+                    <button onClick={() => onOpenChange(false)} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Fechar</span>
+                    </button>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="orcamento">Orçamento</Label>
+                        <Input id="orcamento" placeholder="Identificador do orçamento" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="companhia">Companhia</Label>
+                        <Select>
+                            <SelectTrigger id="companhia"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="tipo-voo">Tipo Voo</Label>
+                        <Select>
+                            <SelectTrigger id="tipo-voo"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="passageiro">Passageiro</Label>
+                        <Select>
+                            <SelectTrigger id="passageiro"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="usuario">Usuário</Label>
+                        <Select>
+                            <SelectTrigger id="usuario"><SelectValue placeholder="Todos" /></SelectTrigger>
+                            <SelectContent></SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button onClick={() => onOpenChange(false)} className="w-full">Pesquisar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 const FlightCard = ({ flight, onConfirmClick }: { flight: Flight, onConfirmClick: (flight: Flight) => void }) => (
@@ -103,6 +157,7 @@ export default function VoosPage() {
         to: new Date(2025, 11, 1),
     });
     const [activeFilter, setActiveFilter] = useState<'realizados' | 'proximos' | 'distantes'>('proximos');
+    const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
 
     const handleConfirmClick = (flight: Flight) => {
         window.open(`/voos/confirmacao/${flight.id}`, '_blank');
@@ -192,7 +247,7 @@ export default function VoosPage() {
                             </Select>
                         </div>
                         <div className="flex gap-2">
-                             <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
+                             <Button variant="outline" size="icon" onClick={() => setIsFilterDialogOpen(true)}><Filter className="h-4 w-4" /></Button>
                              <Button className="flex-1">Pesquisar</Button>
                         </div>
                     </div>
@@ -220,6 +275,7 @@ export default function VoosPage() {
                     </div>
                 ))}
             </div>
+            <FilterDialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen} />
         </div>
     );
 }
