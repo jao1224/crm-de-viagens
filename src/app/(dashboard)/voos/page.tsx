@@ -10,14 +10,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane, Printer, Copy, X } from 'lucide-react';
+import { Calendar as CalendarIcon, Filter, ShieldCheck, Pencil, MessageSquare, Clock, Bell, Link as LinkIcon, Plane, Printer, Copy, X, ChevronsUpDown, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format, isPast, isToday, isFuture, differenceInDays, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
-import { mockFlights, mockPeople, mockUsers } from '@/lib/mock-data';
-import type { Flight, Person, User } from '@/lib/types';
+import { mockFlights, mockPeople, mockUsers, mockQuotes } from '@/lib/mock-data';
+import type { Flight, Person, User, Quote } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 
 
 const FlightStatus = ({ status }: { status: Flight['status'] }) => {
@@ -44,7 +45,10 @@ const FlightStatus = ({ status }: { status: Flight['status'] }) => {
     );
 }
 
-const FilterDialog = ({ open, onOpenChange, people, users }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], users: User[] }) => {
+const FilterDialog = ({ open, onOpenChange, people, users, quotes }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], users: User[], quotes: Quote[] }) => {
+    const [openQuoteCommand, setOpenQuoteCommand] = useState(false)
+    const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null)
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
@@ -58,7 +62,54 @@ const FilterDialog = ({ open, onOpenChange, people, users }: { open: boolean, on
                 <div className="py-4 space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="orcamento">Orçamento</Label>
-                        <Input id="orcamento" placeholder="Identificador do orçamento" />
+                        <Popover open={openQuoteCommand} onOpenChange={setOpenQuoteCommand}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openQuoteCommand}
+                                className="w-full justify-between font-normal"
+                                >
+                                {selectedQuote
+                                    ? `#${selectedQuote.id} - ${selectedQuote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`
+                                    : "Selecione o orçamento"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[300px] p-0">
+                                <Command>
+                                <CommandInput placeholder="Buscar por ID ou cliente..." />
+                                <CommandList>
+                                    <CommandEmpty>Nenhum orçamento encontrado.</CommandEmpty>
+                                    <CommandGroup>
+                                    {quotes.map((quote) => {
+                                        const client = people.find(p => p.id === quote.clientId)
+                                        return (
+                                        <CommandItem
+                                            key={quote.id}
+                                            value={`${quote.id} ${client?.name}`}
+                                            onSelect={() => {
+                                                setSelectedQuote(quote.id === selectedQuote?.id ? null : quote)
+                                                setOpenQuoteCommand(false)
+                                            }}
+                                        >
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    selectedQuote?.id === quote.id ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                            <div className="flex flex-col">
+                                                <span className="font-mono text-xs">#{quote.id}</span>
+                                                <span className="text-sm">{client?.name} - {quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                                            </div>
+                                        </CommandItem>
+                                    )})}
+                                    </CommandGroup>
+                                </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="companhia">Companhia</Label>
@@ -175,6 +226,7 @@ export default function VoosPage() {
     const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
     const [people] = useState<Person[]>(mockPeople);
     const [users] = useState<User[]>(mockUsers);
+    const [quotes] = useState<Quote[]>(mockQuotes);
 
     const handleConfirmClick = (flight: Flight) => {
         window.open(`/voos/confirmacao/${flight.id}`, '_blank');
@@ -292,7 +344,7 @@ export default function VoosPage() {
                     </div>
                 ))}
             </div>
-            <FilterDialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen} people={people} users={users} />
+            <FilterDialog open={isFilterDialogOpen} onOpenChange={setIsFilterDialogOpen} people={people} users={users} quotes={quotes} />
         </div>
     );
 }
