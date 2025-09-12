@@ -216,6 +216,12 @@ const NewTaskDialog = ({ open, onOpenChange, onAddTask }: { open: boolean, onOpe
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="tarefa">Tarefa</SelectItem>
+                                        <SelectItem value="ligar">Ligar</SelectItem>
+                                        <SelectItem value="email">E-mail</SelectItem>
+                                        <SelectItem value="reuniao">Reunião</SelectItem>
+                                        <SelectItem value="almoco">Almoço</SelectItem>
+                                        <SelectItem value="visita">Visita</SelectItem>
+                                        <SelectItem value="whatsapp">Whatsapp</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -588,3 +594,6 @@ export default function AgendaPage() {
 
     
 
+
+
+    
