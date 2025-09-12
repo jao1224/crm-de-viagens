@@ -45,7 +45,35 @@ const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (dat
     );
 };
 
-const NovaReceitaDialog = ({ open, onOpenChange, people }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[] }) => {
+const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+    // This is a simplified version for demonstration.
+    // In a real app, this would be a more complex form.
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Cadastrar Nova Pessoa</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                     <div className="space-y-2">
+                        <Label htmlFor="new-person-name">Nome</Label>
+                        <Input id="new-person-name" placeholder="Nome completo" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="new-person-email">Email</Label>
+                        <Input id="new-person-email" type="email" placeholder="email@exemplo.com" />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={() => onOpenChange(false)}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+const NovaReceitaDialog = ({ open, onOpenChange, people, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], onNewPersonClick: () => void }) => {
     const [lancamentoDate, setLancamentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [vencimentoDate, setVencimentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [pagamentoDate, setPagamentoDate] = useState<Date | undefined>();
@@ -80,7 +108,7 @@ const NovaReceitaDialog = ({ open, onOpenChange, people }: { open: boolean, onOp
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <Button size="icon" variant="outline"><UserPlus className="h-4 w-4" /></Button>
+                                <Button size="icon" variant="outline" onClick={onNewPersonClick}><UserPlus className="h-4 w-4" /></Button>
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -201,6 +229,7 @@ const NovaReceitaDialog = ({ open, onOpenChange, people }: { open: boolean, onOp
 
 export default function ReceitasPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
     const [people, setPeople] = useState<Person[]>([]);
 
     useEffect(() => {
@@ -220,7 +249,16 @@ export default function ReceitasPage() {
                     </CardContent>
                 </Card>
             </div>
-            <NovaReceitaDialog open={isModalOpen} onOpenChange={setIsModalOpen} people={people} />
+            <NovaReceitaDialog 
+                open={isModalOpen} 
+                onOpenChange={setIsModalOpen} 
+                people={people}
+                onNewPersonClick={() => setIsNewPersonDialogOpen(true)}
+            />
+            <NewPersonDialog 
+                open={isNewPersonDialogOpen}
+                onOpenChange={setIsNewPersonDialogOpen}
+            />
         </>
     );
 }
