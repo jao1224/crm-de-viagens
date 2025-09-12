@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -14,6 +14,9 @@ import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip } from 'lucide-reac
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import { mockPeople } from '@/lib/mock-data';
+import type { Person } from '@/lib/types';
+
 
 const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (date?: Date) => void, placeholder: string }) => {
     return (
@@ -42,7 +45,7 @@ const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (dat
     );
 };
 
-const NovaReceitaDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) => {
+const NovaReceitaDialog = ({ open, onOpenChange, people }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[] }) => {
     const [lancamentoDate, setLancamentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [vencimentoDate, setVencimentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [pagamentoDate, setPagamentoDate] = useState<Date | undefined>();
@@ -72,7 +75,9 @@ const NovaReceitaDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange
                                         <SelectValue placeholder="Selecione" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {/* Options */}
+                                        {people.map(person => (
+                                            <SelectItem key={person.id} value={person.id}>{person.name}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <Button size="icon" variant="outline"><UserPlus className="h-4 w-4" /></Button>
@@ -196,6 +201,11 @@ const NovaReceitaDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange
 
 export default function ReceitasPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [people, setPeople] = useState<Person[]>([]);
+
+    useEffect(() => {
+        setPeople(mockPeople);
+    }, []);
 
     return (
         <>
@@ -210,7 +220,7 @@ export default function ReceitasPage() {
                     </CardContent>
                 </Card>
             </div>
-            <NovaReceitaDialog open={isModalOpen} onOpenChange={setIsModalOpen} />
+            <NovaReceitaDialog open={isModalOpen} onOpenChange={setIsModalOpen} people={people} />
         </>
     );
 }
