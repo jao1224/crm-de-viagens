@@ -3,14 +3,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle } from 'lucide-react';
+import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle, Trash2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
@@ -22,7 +22,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { countries } from '@/lib/countries';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle as AlertDialogTitleComponent } from '@/components/ui/alert-dialog';
 import { Separator } from '@/components/ui/separator';
 
 const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (date?: Date) => void, placeholder: string }) => {
@@ -680,7 +680,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                                                             </div>
                                                         </div>
                                                         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" type="button" onClick={() => handleDeleteAttachment(att.id)}>
-                                                            <X className="h-4 w-4" />
+                                                            <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </li>
                                                 ))}
@@ -1001,3 +1001,4 @@ export default function ReceitasPage() {
     );
 }
 
+    
