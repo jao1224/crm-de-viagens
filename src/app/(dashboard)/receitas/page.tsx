@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { mockPeople } from '@/lib/mock-data';
-import type { Person, RevenueExpenseCategory } from '@/lib/types';
+import type { Person, RevenueExpenseCategory, BankAccount } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -58,7 +58,7 @@ const nationalities = [
 ];
 
 const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { value: Date | undefined, onSelect: (date: Date | undefined) => void, placeholder?: string }) => {
-    const [inputValue, setInputValue] = useState(value ? format(value, "dd/MM/yyyy") : "");
+    const [inputValue, setInputValue] = React.useState(value ? format(value, "dd/MM/yyyy") : "");
 
     React.useEffect(() => {
         setInputValue(value ? format(value, "dd/MM/yyyy") : "");
@@ -709,7 +709,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
     )
 }
 
-const NovaReceitaDialog = ({ open, onOpenChange, people, categories, onNewPersonClick, onNewCategoryClick }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], categories: RevenueExpenseCategory[], onNewPersonClick: () => void, onNewCategoryClick: () => void }) => {
+const NovaReceitaDialog = ({ open, onOpenChange, people, categories, bankAccounts, onNewPersonClick, onNewCategoryClick }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], categories: RevenueExpenseCategory[], bankAccounts: BankAccount[], onNewPersonClick: () => void, onNewCategoryClick: () => void }) => {
     const [lancamentoDate, setLancamentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [vencimentoDate, setVencimentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [pagamentoDate, setPagamentoDate] = useState<Date | undefined>();
@@ -754,7 +754,9 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, categories, onNewPerson
                                     <SelectValue placeholder="Selecione" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {/* Options */}
+                                     {bankAccounts.filter(acc => acc.isActive).map(account => (
+                                        <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -936,12 +938,17 @@ export default function ReceitasPage() {
     const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
     const [people, setPeople] = useState<Person[]>([]);
     const [categories, setCategories] = useState<RevenueExpenseCategory[]>([]);
+    const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
     
     useEffect(() => {
         setPeople(mockPeople);
         const storedCategories = localStorage.getItem('revenueExpenseCategories');
         if (storedCategories) {
             setCategories(JSON.parse(storedCategories));
+        }
+        const storedAccounts = localStorage.getItem('bankAccounts');
+        if (storedAccounts) {
+            setBankAccounts(JSON.parse(storedAccounts));
         }
     }, []);
 
@@ -983,6 +990,7 @@ export default function ReceitasPage() {
                 onOpenChange={setIsModalOpen} 
                 people={people}
                 categories={categories}
+                bankAccounts={bankAccounts}
                 onNewPersonClick={() => setIsNewPersonDialogOpen(true)}
                 onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)}
             />
@@ -1000,5 +1008,3 @@ export default function ReceitasPage() {
         </>
     );
 }
-
-    
