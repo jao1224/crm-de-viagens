@@ -664,7 +664,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                             <TabsContent value="anexos" className="pt-4">
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between py-3">
-                                        <Label className="text-base font-semibold">Anexos</Label>
+                                        <CardTitle className="text-base">Anexos</CardTitle>
                                         <Button size="sm" type="button" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
@@ -827,7 +827,13 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, categories, bankAccount
                                         <SelectValue placeholder="Selecione" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {/* Options */}
+                                        <SelectItem value="boleto">Boleto</SelectItem>
+                                        <SelectItem value="cartao-credito">Cartão de Crédito</SelectItem>
+                                        <SelectItem value="cartao-debito">Cartão de Débito</SelectItem>
+                                        <SelectItem value="cheque">Cheque</SelectItem>
+                                        <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                                        <SelectItem value="pix">Pix</SelectItem>
+                                        <SelectItem value="transferencia">Transferência</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -996,5 +1002,3 @@ export default function ReceitasPage() {
         </>
     );
 }
-
-    
