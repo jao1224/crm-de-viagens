@@ -1,22 +1,21 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle, Trash2 } from 'lucide-react';
+import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle, Trash2, Pencil, Landmark } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { format, parse } from 'date-fns';
+import { format, parse, isPast } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { mockPeople } from '@/lib/mock-data';
-import type { Person, RevenueExpenseCategory, BankAccount } from '@/lib/types';
+import type { Person, RevenueExpenseCategory, BankAccount, Revenue } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Switch } from '@/components/ui/switch';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -24,6 +23,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { countries } from '@/lib/countries';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle as AlertDialogTitleComponent } from '@/components/ui/alert-dialog';
 import { Separator } from '@/components/ui/separator';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+
 
 const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (date?: Date) => void, placeholder: string }) => {
     return (
@@ -753,7 +756,7 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, categories, bankAccount
                                 <SelectTrigger id="conta">
                                     <SelectValue placeholder="Selecione" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                 <SelectContent>
                                      {bankAccounts.filter(acc => acc.isActive).map(account => (
                                         <SelectItem key={account.id} value={account.id}>{account.name}</SelectItem>
                                     ))}
@@ -902,7 +905,7 @@ const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOp
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Nova Categoria</DialogTitle>
+                    <DialogTitle>Nova Categoria de Receita</DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                     <div className="space-y-2">
@@ -923,6 +926,17 @@ const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOp
         </Dialog>
     );
 };
+
+const mockRevenues: Revenue[] = [
+    { id: '1', personId: 'sejzb', personName: 'Laudemir Rodrigues da Silva', description: 'Passagem aérea', bankAccount: 'Banco Itau PJ - Matriz', category: 'passagem', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 20), paymentStatus: 'Em aberto', value: 3411.51, received: false },
+    { id: '2', personId: 'z4edm', personName: 'FELIPE BUENO', description: 'NIF', bankAccount: 'Banco Itau PJ - Matriz', category: 'documentações', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 26), paymentStatus: 'Em aberto', value: 323.00, received: false },
+    { id: '3', personId: 'etjzq', personName: 'Adriana e Davi', description: 'Passagem', bankAccount: 'Banco Itau PJ - Matriz', category: 'Venda de Passagem', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 26), paymentStatus: 'Em aberto', value: 7520.99, received: false },
+    { id: '4', personId: 'kup1s', personName: 'marta emanuelle', description: 'VISTO PROC. PREMIUM', bankAccount: 'Banco Itau PJ - Matriz', category: 'VISTO PROC. TRABALHO', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 28), paymentStatus: 'Em aberto', value: 3864.00, received: false },
+    { id: '5', personId: '7j24q', personName: 'Frederico', description: 'VISTO PROC. TRABALHO', bankAccount: 'Banco Itau PJ - Matriz', category: 'VISTO PROC. TRABALHO', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 30), paymentStatus: 'Em aberto', value: 1917.00, received: false },
+    { id: '6', personId: 'dqryt', personName: 'Valdecy Félix da Cruz', description: 'VISTO PROC. TRABALHO', bankAccount: 'Banco Itau PJ - Matriz', category: 'VISTO PROC. TRABALHO', paymentMethod: '[Pix]', dueDate: new Date(2025, 5, 30), paymentStatus: 'Em aberto', value: 1450.00, received: false },
+    { id: '7', personId: 'vw5dp', personName: 'JOSEANE DA SILVA COSTA', description: 'VISTO PROC. TRABALHO', bankAccount: 'Banco Itau PJ - Matriz', category: 'VISTO PROC. TRABALHO', paymentMethod: '[Cartão de Crédito]', installment: 'Parcela 2 de 3', dueDate: new Date(2025, 6, 16), paymentStatus: 'Em aberto', value: 553.33, received: false },
+    { id: '8', personId: 'vw5dp', personName: 'JOSEANE DA SILVA COSTA', description: 'VISTO PROC. TRABALHO', bankAccount: 'Banco Itau PJ - Matriz', category: 'VISTO PROC. TRABALHO', paymentMethod: '[Cartão de Crédito]', installment: 'Parcela 3 de 3', dueDate: new Date(2025, 7, 16), paymentStatus: 'Em aberto', value: 553.33, received: false },
+];
 
 
 export default function ReceitasPage() {
@@ -945,6 +959,11 @@ export default function ReceitasPage() {
             setBankAccounts(JSON.parse(storedAccounts));
         }
     }, []);
+    
+    const handleOpenNewPersonDialog = () => {
+        setIsModalOpen(false); // Close the revenue modal first
+        setIsNewPersonDialogOpen(true);
+    };
 
     const handleSaveCategory = (newCategory: RevenueExpenseCategory) => {
         const updatedCategories = [...categories, newCategory];
@@ -964,18 +983,96 @@ export default function ReceitasPage() {
             title: 'Pessoa Salva!',
             description: `${personData.name} foi adicionado(a) com sucesso.`,
         });
+        setIsNewPersonDialogOpen(false); // Close person dialog
+        setIsModalOpen(true); // Re-open revenue dialog
     }
+    
+    const totalValue = mockRevenues.reduce((acc, revenue) => acc + revenue.value, 0);
 
     return (
         <>
             <div className="space-y-6">
                 <header className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold text-primary">Receitas</h1>
-                    <Button onClick={() => setIsModalOpen(true)}>Nova Receita</Button>
+                    <div className="flex items-center gap-2">
+                        <Button variant="destructive" size="sm">Atrasado</Button>
+                        <Button variant="secondary" size="sm" className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900">Vencimento hoje</Button>
+                        <Button variant="default" size="sm" className="bg-green-600 hover:bg-green-700">Em dia</Button>
+                        <Button onClick={() => setIsModalOpen(true)}>Nova Receita</Button>
+                    </div>
                 </header>
                 <Card>
-                    <CardContent className="h-96 flex items-center justify-center">
-                        <p className="text-muted-foreground">Nenhuma receita encontrada.</p>
+                    <CardContent className="p-0">
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-10"><Checkbox /></TableHead>
+                                        <TableHead className="w-1/4">Pessoa</TableHead>
+                                        <TableHead className="w-1/3">Descrição</TableHead>
+                                        <TableHead>Forma de Pagamento</TableHead>
+                                        <TableHead>Vencimento</TableHead>
+                                        <TableHead>Pagamento</TableHead>
+                                        <TableHead className="text-right">Valor</TableHead>
+                                        <TableHead className="text-center">Recebido</TableHead>
+                                        <TableHead className="w-20"></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {mockRevenues.map((revenue) => (
+                                        <TableRow key={revenue.id}>
+                                            <TableCell><Checkbox /></TableCell>
+                                            <TableCell>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 text-xs font-mono">{revenue.personId}</Badge>
+                                                    <span className="font-medium truncate">{revenue.personName}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <p className="font-semibold">{revenue.description}</p>
+                                                <div className="flex items-center gap-1 mt-1">
+                                                    <Badge variant="secondary" className="font-normal text-xs"><Landmark className="h-3 w-3 mr-1"/>{revenue.bankAccount}</Badge>
+                                                    <Badge variant="secondary" className="font-normal text-xs"><Tag className="h-3 w-3 mr-1"/>{revenue.category}</Badge>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                {revenue.paymentMethod}
+                                                {revenue.installment && <p className="text-xs text-muted-foreground">{revenue.installment}</p>}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant={isPast(revenue.dueDate) ? 'destructive' : 'outline'} className="font-medium">
+                                                    {format(revenue.dueDate, 'dd/MM/yyyy')}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">{revenue.paymentStatus}</Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right font-semibold text-blue-600">
+                                                {revenue.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                            </TableCell>
+                                            <TableCell className="text-center">
+                                                <Switch checked={revenue.received} />
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7"><Pencil className="h-4 w-4" /></Button>
+                                                    <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="font-bold text-right text-lg">Total</TableCell>
+                                        <TableCell className="text-right font-bold text-blue-600 text-lg">
+                                             {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </TableCell>
+                                        <TableCell colSpan={2}></TableCell>
+                                    </TableRow>
+                                </TableFooter>
+                            </Table>
+                        </div>
                     </CardContent>
                 </Card>
             </div>
@@ -985,7 +1082,7 @@ export default function ReceitasPage() {
                 people={people}
                 categories={categories}
                 bankAccounts={bankAccounts}
-                onNewPersonClick={() => setIsNewPersonDialogOpen(true)}
+                onNewPersonClick={handleOpenNewPersonDialog}
                 onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)}
             />
             <NewPersonDialog 

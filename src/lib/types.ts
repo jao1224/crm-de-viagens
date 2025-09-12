@@ -193,3 +193,18 @@ export type Person = {
   active: boolean;
   avatarUrl: string;
 };
+
+export type Revenue = {
+    id: string;
+    personId: string;
+    personName: string;
+    description: string;
+    bankAccount: string;
+    category: string;
+    paymentMethod: string;
+    installment?: string;
+    dueDate: Date;
+    paymentStatus: 'Em aberto' | 'Pago';
+    value: number;
+    received: boolean;
+};
