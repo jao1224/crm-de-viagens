@@ -15,8 +15,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { mockPeople } from '@/lib/mock-data';
-import type { Person } from '@/lib/types';
-
+import type { Person, RevenueExpenseCategory } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
 
 const DatePicker = ({ date, setDate, placeholder }: { date?: Date, setDate: (date?: Date) => void, placeholder: string }) => {
     return (
@@ -73,7 +73,71 @@ const NewPersonDialog = ({ open, onOpenChange }: { open: boolean, onOpenChange: 
     )
 }
 
-const NovaReceitaDialog = ({ open, onOpenChange, people, onNewPersonClick }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], onNewPersonClick: () => void }) => {
+const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (category: RevenueExpenseCategory) => void }) => {
+    const { toast } = useToast();
+    const [name, setName] = useState('');
+    const [type, setType] = useState<'receita' | 'despesa'>('receita');
+
+    const handleSave = () => {
+        if (!name.trim()) {
+            toast({
+                title: "Nome Inválido",
+                description: "O nome da categoria não pode estar em branco.",
+                variant: "destructive",
+            });
+            return;
+        }
+        const newCategory: RevenueExpenseCategory = {
+            id: Date.now().toString(),
+            name,
+            type,
+            active: true
+        };
+        onSave(newCategory);
+        setName('');
+        onOpenChange(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Nova Categoria</DialogTitle>
+                </DialogHeader>
+                <div className="py-4 space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="category-type">Tipo</Label>
+                        <Select value={type} onValueChange={(v) => setType(v as 'receita' | 'despesa')}>
+                             <SelectTrigger id="category-type">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="receita">Receita</SelectItem>
+                                <SelectItem value="despesa">Despesa</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="category-name">Nome da Categoria <span className="text-destructive">*</span></Label>
+                        <Input
+                            id="category-name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Ex: Venda de Pacote"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+                    <Button onClick={handleSave}>Salvar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+
+const NovaReceitaDialog = ({ open, onOpenChange, people, categories, onNewPersonClick, onNewCategoryClick }: { open: boolean, onOpenChange: (open: boolean) => void, people: Person[], categories: RevenueExpenseCategory[], onNewPersonClick: () => void, onNewCategoryClick: () => void }) => {
     const [lancamentoDate, setLancamentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [vencimentoDate, setVencimentoDate] = useState<Date | undefined>(new Date(2025, 8, 12));
     const [pagamentoDate, setPagamentoDate] = useState<Date | undefined>();
@@ -130,10 +194,12 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, onNewPersonClick }: { o
                                         <SelectValue placeholder="Selecione" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {/* Options */}
+                                         {categories.filter(c => c.type === 'receita').map(cat => (
+                                            <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <Button size="icon" variant="outline"><Plus className="h-4 w-4" /></Button>
+                                <Button size="icon" variant="outline" onClick={onNewCategoryClick}><Plus className="h-4 w-4" /></Button>
                             </div>
                         </div>
                          <div className="space-y-2">
@@ -228,13 +294,30 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, onNewPersonClick }: { o
 };
 
 export default function ReceitasPage() {
+    const { toast } = useToast();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isNewPersonDialogOpen, setIsNewPersonDialogOpen] = useState(false);
+    const [isNewCategoryDialogOpen, setIsNewCategoryDialogOpen] = useState(false);
     const [people, setPeople] = useState<Person[]>([]);
-
+    const [categories, setCategories] = useState<RevenueExpenseCategory[]>([]);
+    
     useEffect(() => {
         setPeople(mockPeople);
+        const storedCategories = localStorage.getItem('revenueExpenseCategories');
+        if (storedCategories) {
+            setCategories(JSON.parse(storedCategories));
+        }
     }, []);
+
+    const handleSaveCategory = (newCategory: RevenueExpenseCategory) => {
+        const updatedCategories = [...categories, newCategory];
+        setCategories(updatedCategories);
+        localStorage.setItem('revenueExpenseCategories', JSON.stringify(updatedCategories));
+        toast({
+            title: "Sucesso!",
+            description: `Categoria "${newCategory.name}" adicionada.`
+        });
+    };
 
     return (
         <>
@@ -253,11 +336,18 @@ export default function ReceitasPage() {
                 open={isModalOpen} 
                 onOpenChange={setIsModalOpen} 
                 people={people}
+                categories={categories}
                 onNewPersonClick={() => setIsNewPersonDialogOpen(true)}
+                onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)}
             />
             <NewPersonDialog 
                 open={isNewPersonDialogOpen}
                 onOpenChange={setIsNewPersonDialogOpen}
+            />
+            <NewCategoryDialog
+                open={isNewCategoryDialogOpen}
+                onOpenChange={setIsNewCategoryDialogOpen}
+                onSave={handleSaveCategory}
             />
         </>
     );
