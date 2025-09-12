@@ -1,15 +1,16 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle, Trash2, Pencil, Landmark } from 'lucide-react';
+import { Calendar as CalendarIcon, UserPlus, Plus, Paperclip, Gem, UserRound, BookUser, Link as LinkIcon, Home, Briefcase, Milestone, FileArchive, Copy, X, Users, Search, Handshake, FileText as FileTextIcon, Info, Mail, Globe, Instagram, MessageCircle, Trash2, Pencil, Landmark, Tag } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { format, parse, isPast } from 'date-fns';
@@ -667,7 +668,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                             <TabsContent value="anexos" className="pt-4">
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between py-3">
-                                        <CardTitle className="text-base">Anexos</CardTitle>
+                                        <Label className="text-base font-semibold">Anexos</Label>
                                         <Button size="sm" type="button" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
