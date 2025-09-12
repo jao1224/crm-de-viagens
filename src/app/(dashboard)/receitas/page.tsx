@@ -809,6 +809,7 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, categories, bankAccount
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="normal">Normal</SelectItem>
+                                        <SelectItem value="recorrente">Recorrente</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -995,3 +996,5 @@ export default function ReceitasPage() {
         </>
     );
 }
+
+    
