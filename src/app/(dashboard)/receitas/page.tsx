@@ -870,7 +870,6 @@ const NovaReceitaDialog = ({ open, onOpenChange, people, categories, bankAccount
 const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (category: RevenueExpenseCategory) => void }) => {
     const { toast } = useToast();
     const [name, setName] = useState('');
-    const [type, setType] = useState<'receita' | 'despesa'>('receita');
 
     const handleSave = () => {
         if (!name.trim()) {
@@ -884,7 +883,7 @@ const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOp
         const newCategory: RevenueExpenseCategory = {
             id: Date.now().toString(),
             name,
-            type,
+            type: 'receita', // Hardcoded to 'receita'
             active: true
         };
         onSave(newCategory);
@@ -899,18 +898,6 @@ const NewCategoryDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOp
                     <DialogTitle>Nova Categoria</DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="category-type">Tipo</Label>
-                        <Select value={type} onValueChange={(v) => setType(v as 'receita' | 'despesa')}>
-                             <SelectTrigger id="category-type">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="receita">Receita</SelectItem>
-                                <SelectItem value="despesa">Despesa</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="category-name">Nome da Categoria <span className="text-destructive">*</span></Label>
                         <Input
