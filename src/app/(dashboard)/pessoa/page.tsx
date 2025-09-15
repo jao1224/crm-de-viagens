@@ -27,8 +27,8 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Separator } from '@/components/ui/separator';
 import type { DateRange } from 'react-day-picker';
-import { mockPeople } from '@/lib/mock-data';
-import type { Person } from '@/lib/types';
+import { mockPeople, mockQuotes } from '@/lib/mock-data';
+import type { Person, Quote } from '@/lib/types';
 
 
 const nationalities = [
@@ -712,7 +712,7 @@ const PhoneCell = ({ phone }: { phone: string }) => {
     );
 };
 
-const ViewPersonDialog = ({ open, onOpenChange, person }: { open: boolean, onOpenChange: (open: boolean) => void, person: Person | null }) => {
+const ViewPersonDialog = ({ open, onOpenChange, person, quotes }: { open: boolean, onOpenChange: (open: boolean) => void, person: Person | null, quotes: Quote[] }) => {
     if (!person) return null;
 
     const InfoItem = ({ label, value, hasCopy = false }: { label: string, value: string | undefined, hasCopy?: boolean }) => {
@@ -736,6 +736,8 @@ const ViewPersonDialog = ({ open, onOpenChange, person }: { open: boolean, onOpe
             return dateString;
         }
     }
+    
+    const personQuotes = quotes.filter(q => q.clientId === person.id);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -751,36 +753,66 @@ const ViewPersonDialog = ({ open, onOpenChange, person }: { open: boolean, onOpe
                         <span className="sr-only">Fechar</span>
                     </button>
                 </DialogHeader>
-                <div className="py-4 space-y-4">
-                    <div className="grid grid-cols-2 gap-y-4">
-                        <InfoItem label="Telefone" value={person.phone} />
-                        <InfoItem label="E-mail" value={person.email} />
-                    </div>
-                     <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
-                        <InfoItem label="Sexo" value={person.sexo} />
-                        <InfoItem label="Nascimento" value={formatDate(person.nascimento)} hasCopy />
-                        <InfoItem label="Tipo" value={person.types.join(', ')} />
-                    </div>
-                    <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
-                        <InfoItem label="CPF/CNPJ" value={person.cpfCnpj} />
-                        <InfoItem label="RG" value={person.rg} />
-                        <InfoItem label="Órgão Emissor RG" value={person.orgaoEmissor} />
-                        <InfoItem label="ID Estrangeiro" value={person.id_estrangeiro} />
-                        <InfoItem label="Nacionalidade" value={person.nacionalidade} />
-                        <InfoItem label="Estado Civil" value={person.estadoCivil} />
-                    </div>
-                    <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
-                        <InfoItem label="Passaporte" value={person.passaporte} hasCopy/>
-                        <InfoItem label="Emissão Passaporte" value={formatDate(person.emissaoPassaporte)} />
-                        <InfoItem label="Vencimento Passaporte" value={formatDate(person.vencimentoPassaporte)} />
-                        <InfoItem label="Nacionalidade do Passaporte" value={person.nacionalidadePassaporte} />
-                        <InfoItem label="Visto" value={person.visto} />
-                        <InfoItem label="Validade do Visto" value={formatDate(person.validadeVisto)} />
-                    </div>
-                </div>
+                <Tabs defaultValue="pessoais" className="py-4">
+                     <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="pessoais">Dados Pessoais</TabsTrigger>
+                        <TabsTrigger value="cotacoes">Cotações</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="pessoais" className="mt-4 space-y-4">
+                        <div className="grid grid-cols-2 gap-y-4">
+                            <InfoItem label="Telefone" value={person.phone} />
+                            <InfoItem label="E-mail" value={person.email} />
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                            <InfoItem label="Sexo" value={person.sexo} />
+                            <InfoItem label="Nascimento" value={formatDate(person.nascimento)} hasCopy />
+                            <InfoItem label="Tipo" value={person.types.join(', ')} />
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                            <InfoItem label="CPF/CNPJ" value={person.cpfCnpj} />
+                            <InfoItem label="RG" value={person.rg} />
+                            <InfoItem label="Órgão Emissor RG" value={person.orgaoEmissor} />
+                            <InfoItem label="ID Estrangeiro" value={person.id_estrangeiro} />
+                            <InfoItem label="Nacionalidade" value={person.nacionalidade} />
+                            <InfoItem label="Estado Civil" value={person.estadoCivil} />
+                        </div>
+                        <Separator />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-4">
+                            <InfoItem label="Passaporte" value={person.passaporte} hasCopy/>
+                            <InfoItem label="Emissão Passaporte" value={formatDate(person.emissaoPassaporte)} />
+                            <InfoItem label="Vencimento Passaporte" value={formatDate(person.vencimentoPassaporte)} />
+                            <InfoItem label="Nacionalidade do Passaporte" value={person.nacionalidadePassaporte} />
+                            <InfoItem label="Visto" value={person.visto} />
+                            <InfoItem label="Validade do Visto" value={formatDate(person.validadeVisto)} />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="cotacoes" className="mt-4">
+                        {personQuotes.length > 0 ? (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>ID</TableHead>
+                                        <TableHead>Valor</TableHead>
+                                        <TableHead>Status</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {personQuotes.map(quote => (
+                                        <TableRow key={quote.id}>
+                                            <TableCell className="font-mono">{quote.id}</TableCell>
+                                            <TableCell>{quote.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</TableCell>
+                                            <TableCell><Badge>{quote.status}</Badge></TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        ) : (
+                            <p className="text-muted-foreground text-center p-8">Não há nenhuma cotação vinculada a esta pessoa.</p>
+                        )}
+                    </TabsContent>
+                </Tabs>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => onOpenChange(false)}>Fechar</Button>
                 </DialogFooter>
@@ -1063,6 +1095,7 @@ export default function PessoasPage() {
                 open={isViewPersonDialogOpen} 
                 onOpenChange={setIsViewPersonDialogOpen}
                 person={personToView}
+                quotes={mockQuotes}
             />
              <FilterDialog
                 open={isFilterDialogOpen}

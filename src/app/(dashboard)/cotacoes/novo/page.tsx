@@ -29,11 +29,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import Image from 'next/image';
 import { countries } from '@/lib/countries';
 import RichTextEditor from '@/components/rich-text-editor';
-import { mockPeople, mockUsers, currentUser } from '@/lib/mock-data';
-import type { Person, BankAccount, SalesChannel } from '@/lib/types';
+import { mockPeople, mockUsers, currentUser, mockQuotes } from '@/lib/mock-data';
+import type { Person, BankAccount, SalesChannel, Quote } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 
@@ -477,7 +477,7 @@ const DatePickerInput = ({ value, onSelect, placeholder = "dd/mm/aaaa" }: { valu
 };
 
 
-const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (person: Person) => void }) => {
+const NewPersonDialog = ({ open, onOpenChange, onSave, personToEdit }: { open: boolean, onOpenChange: (open: boolean) => void, onSave: (person: Person) => void, personToEdit: Person | null }) => {
     const { toast } = useToast();
     const formRef = React.useRef<HTMLFormElement>(null);
     const [rating, setRating] = useState(0);
@@ -490,6 +490,26 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const [personName, setPersonName] = useState('');
     const [cpfCnpj, setCpfCnpj] = useState('');
+
+     React.useEffect(() => {
+        if (personToEdit) {
+            setPersonName(personToEdit.name);
+            setRating(personToEdit.rating);
+            setCpfCnpj(personToEdit.cpfCnpj || '');
+            // Populate other fields as needed
+        } else {
+            // Reset fields for a new form
+            setPersonName('');
+            setRating(0);
+            setCpfCnpj('');
+            setBirthDate(undefined);
+            setPassportIssueDate(undefined);
+            setPassportExpiryDate(undefined);
+            setVisaValidityDate(undefined);
+            setAddress(initialAddressState);
+            setAttachments([]);
+        }
+    }, [personToEdit]);
 
     const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { id, value } = e.target;
@@ -556,7 +576,7 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
         }
         
         const newPerson: Person = {
-            id: Date.now().toString(),
+            id: personToEdit?.id || Date.now().toString(),
             name: personName,
             rating: rating,
             types: ['Passageiro'], 
@@ -600,7 +620,7 @@ const NewPersonDialog = ({ open, onOpenChange, onSave }: { open: boolean, onOpen
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent className="sm:max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold text-foreground">Nova Pessoa</DialogTitle>
+                        <DialogTitle className="text-2xl font-bold text-foreground">{personToEdit ? 'Editar Pessoa' : 'Nova Pessoa'}</DialogTitle>
                     </DialogHeader>
                     <form ref={formRef} className="max-h-[70vh] overflow-y-auto pr-6 space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start pt-4">
@@ -2645,6 +2665,7 @@ const ObservationItem = ({ observation, onEdit, onDelete }: { observation: Obser
 
 export default function NovaCotacaoPage() {
     const { toast } = useToast();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [date, setDate] = useState<Date>(new Date(2025, 7, 23));
     const [currentStep, setCurrentStep] = useState(2);
@@ -2719,20 +2740,21 @@ export default function NovaCotacaoPage() {
                 }
             }
         }
-    }, [searchParams]);
+    }, [searchParams, passengers]);
 
     const handleSavePerson = (personData: Person) => {
-        const exists = mockPeople.some(p => p.id === personData.id);
+        const exists = allPeople.some(p => p.id === personData.id);
         let updatedPeople;
         if (exists) {
-            updatedPeople = mockPeople.map(p => (p.id === personData.id ? personData : p));
+            updatedPeople = allPeople.map(p => (p.id === personData.id ? personData : p));
         } else {
-            updatedPeople = [personData, ...mockPeople];
+            updatedPeople = [personData, ...allPeople];
         }
-        // This is a mock, in a real scenario you would update the backend
-        mockPeople.length = 0;
-        Array.prototype.push.apply(mockPeople, updatedPeople);
-        setAllPeople([...mockPeople]);
+        setAllPeople(updatedPeople);
+        // In a real app, you'd also save this to your persistent storage (e.g., localStorage)
+        // localStorage.setItem('mockPeople', JSON.stringify(updatedPeople));
+        toast({ title: 'Pessoa Salva!', description: `${personData.name} foi salvo(a) com sucesso.` });
+        setIsNewPersonDialogOpen(false);
     };
 
 
@@ -2913,9 +2935,35 @@ export default function NovaCotacaoPage() {
         setIsObservationDialogOpen(true);
     }
 
+    const handleSaveQuote = (closeAfterSave: boolean) => {
+        if (!selectedClientId) {
+            toast({
+                title: "Cliente não selecionado",
+                description: "Por favor, selecione um cliente para a cotação.",
+                variant: "destructive",
+            });
+            return;
+        }
 
-    const handleSaveAndToast = (msg: string) => {
-        toast({ title: "Sucesso!", description: msg });
+        const newQuote: Quote = {
+            id: (mockQuotes.length + 1).toString(), // Simple ID generation
+            date: format(date, 'dd/MM'),
+            clientId: selectedClientId,
+            value: 0, // Calculate this properly later
+            status: 'em-cotacao', // Default status
+        };
+
+        // This is a mock save. In a real app, you'd send this to a backend.
+        mockQuotes.push(newQuote);
+        
+        toast({
+            title: "Sucesso!",
+            description: "Cotação salva com sucesso.",
+        });
+
+        if (closeAfterSave) {
+            router.push('/cotacoes');
+        }
     };
     
     const openNewPersonDialogFromCost = () => {
@@ -2940,7 +2988,7 @@ export default function NovaCotacaoPage() {
                     <h1 className="text-3xl font-bold text-primary">Cotação</h1>
                     <div className="flex items-center gap-2">
                         <Button variant="outline" asChild><Link href="/cotacoes">Cancelar</Link></Button>
-                        <Button>Salvar e Fechar</Button>
+                        <Button onClick={() => handleSaveQuote(true)}>Salvar e Fechar</Button>
                          <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="icon">
@@ -2948,7 +2996,7 @@ export default function NovaCotacaoPage() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                 <DropdownMenuItem>
+                                 <DropdownMenuItem onClick={() => handleSaveQuote(false)}>
                                     Salvar
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="text-destructive">
@@ -3765,7 +3813,7 @@ export default function NovaCotacaoPage() {
                     </TabsContent>
                 </Tabs>
             </div>
-            <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} onSave={handleSavePerson} />
+            <NewPersonDialog open={isNewPersonDialogOpen} onOpenChange={setIsNewPersonDialogOpen} onSave={handleSavePerson} personToEdit={null} />
             <CostInfoDialog open={isCostInfoDialogOpen} onOpenChange={setIsCostInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromCost} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <SaleValueInfoDialog open={isSaleValueInfoDialogOpen} onOpenChange={setIsSaleValueInfoDialogOpen} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
             <BonusInfoDialog open={isBonusInfoDialogOpen} onOpenChange={setIsBonusInfoDialogOpen} onNewPersonClick={openNewPersonDialogFromBonus} onNewCategoryClick={() => setIsNewCategoryDialogOpen(true)} categories={categories} bankAccounts={bankAccounts} />
