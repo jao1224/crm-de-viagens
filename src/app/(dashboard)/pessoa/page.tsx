@@ -642,7 +642,7 @@ const NewPersonDialog = ({ open, onOpenChange, personToEdit, onSave }: { open: b
                             <TabsContent value="anexos" className="pt-4">
                                 <Card>
                                     <CardHeader className="flex flex-row items-center justify-between py-3">
-                                        <CardTitle className="text-base">Anexos</CardTitle>
+                                        <Label className="text-base font-semibold">Anexos</Label>
                                         <Button size="sm" type="button" onClick={() => setIsAttachmentDialogOpen(true)}>Incluir</Button>
                                     </CardHeader>
                                     <CardContent>
